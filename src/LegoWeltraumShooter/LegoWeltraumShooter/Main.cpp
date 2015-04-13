@@ -15,7 +15,7 @@ int32 PURE_MAIN
     PuRe_ApplicationDescription description;
     description.Graphics.ResolutionWidth = 1024;
     description.Graphics.ResolutionHeight = 768;
-    description.Graphics.Module = PuRe_GraphicsModuleType::Direct3D11;
+    description.Graphics.Module = PuRe_GraphicsModuleType::OpenGL;
     description.Window.Title = "PuReEngine - Development";
     description.Window.Width = 1024;
     description.Window.Height = 768;

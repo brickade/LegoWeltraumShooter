@@ -57,6 +57,10 @@ namespace Game
         PuRe_Vector3F CameraMove;
         PuRe_GraphicsDescription gdesc = a_pGraphics->GetDescription();
 
+        if (a_pInput->MousePressed(a_pInput->LeftClick))
+        {
+            this->MouseClickPosition = a_pInput->GetMousePosition();
+        }
         if (a_pInput->MouseIsPressed(a_pInput->LeftClick))
         {
 
@@ -71,7 +75,6 @@ namespace Game
             this->m_pCamera->Rotate(cameraLook.X, cameraLook.Y, cameraLook.Z);
         }
         float32 speed = 10.0f*Seconds;
-        this->MouseClickPosition = a_pInput->GetMousePosition();
         //Handle Movement
         if (a_pInput->KeyIsPressed(a_pInput->W))
             CameraMove.Z += speed;
