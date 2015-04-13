@@ -1,0 +1,34 @@
+#include <PuReEngine/Platform.h>
+#include <PuReEngine/Core.h>
+// Application specific includes
+#include "include/MainScene.h"
+
+
+
+int32 PURE_MAIN
+{
+    //Memory Leak detection
+    //static unsigned int breakId = 162;
+    //_CrtSetBreakAlloc(breakId);
+
+    PuRe_IPlatform* pplatform = PuRe_CreatePlatform();
+    PuRe_ApplicationDescription description;
+    description.Graphics.ResolutionWidth = 1024;
+    description.Graphics.ResolutionHeight = 768;
+    description.Graphics.Module = PuRe_GraphicsModuleType::Direct3D11;
+    description.Window.Title = "PuReEngine - Development";
+    description.Window.Width = 1024;
+    description.Window.Height = 768;
+    description.Window.X = 100;
+    description.Window.Y = 50;
+    description.Window.Fullscreen = false;
+    PuRe_Application* papplication = new PuRe_Application(pplatform, description);
+    Game::CMainScene scene(papplication);
+
+    papplication->Run(&scene);
+
+    SAFE_DELETE(papplication);
+    SAFE_DELETE(pplatform);
+    //Print memory leak in output
+    //_CrtDumpMemoryLeaks();
+}
