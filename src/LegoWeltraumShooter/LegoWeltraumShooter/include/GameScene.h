@@ -1,30 +1,43 @@
-#pragma once
+#ifndef _GAMESCENE_H_
+#define _GAMESCENE_H_
 
 // Framework specific includes
 #include <PuReEngine/Core.h>
 #include <PuReEngine/Defines.h>
+#include <math.h>
+#include <algorithm>
 
-#include "EditorScene.h"
-#include "GameScene.h"
+#include "GameCamera.h"
 
 // Declare namespace Game
 namespace Game
 {
     /// @brief MainScene where the game functions are in, inherits from the Scene interface
     ///
-    class CMainScene : public PuRe_IScene
+    class CGameScene : public PuRe_IScene
     {
     private:
-        CEditorScene* m_pEditorScene;
-        CGameScene* m_pGameScene;
-        PuRe_IScene* m_pActiveScene;
+        PuRe_Skydome* m_pSkyDome;
+        int32 textureID;
+        PuRe_Rendertarget* m_pRenderTarget;
+        float32 rot;
+        PuRe_Model* m_pModel;
+        PuRe_IMaterial* m_pMaterial;
+        PuRe_IMaterial* m_pPostMaterial;
+        PuRe_Camera* m_pPostCamera;
+        /// @brief Position for the MouseClick
+        ///
+        PuRe_Vector2F MouseClickPosition;
+        /// @brief Cameras
+        ///
+        CGameCamera* m_pCamera;
         /// @brief Engine's Application
         ///
         PuRe_Application* m_pApplication;
     public:
         /// @brief Constructor to Initialize the MainScene
         ///
-        CMainScene(PuRe_Application* a_pApplication);
+        CGameScene(PuRe_Application* a_pApplication);
     public:
         /// @brief Initializes the scene.
         ///
@@ -55,3 +68,5 @@ namespace Game
     };
 
 }
+
+#endif /* _GAMESCENE_H_ */

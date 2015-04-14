@@ -13,36 +13,54 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Quelldateien\Scenes">
+      <UniqueIdentifier>{3070d823-a28c-4bb6-8f96-7344464be172}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\Scenes">
+      <UniqueIdentifier>{c12507cc-7fc7-4b14-808a-3fa08f453212}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Camera">
+      <UniqueIdentifier>{95b247b2-6821-47ec-a4e7-e301dd1518e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\Camera">
+      <UniqueIdentifier>{7dc95b62-6eae-46bd-a7fd-a10b170a9e9c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\MainScene.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="include\EditorScene.h">
-      <Filter>Headerdateien</Filter>
+      <Filter>Headerdateien\Scenes</Filter>
     </ClInclude>
-    <ClInclude Include="include\GameCamera.h">
-      <Filter>Headerdateien</Filter>
+    <ClInclude Include="include\GameScene.h">
+      <Filter>Headerdateien\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MainScene.h">
+      <Filter>Headerdateien\Scenes</Filter>
     </ClInclude>
     <ClInclude Include="include\EditorCamera.h">
-      <Filter>Headerdateien</Filter>
+      <Filter>Headerdateien\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GameCamera.h">
+      <Filter>Headerdateien\Camera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="MainScene.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="EditorScene.cpp">
-      <Filter>Quelldateien</Filter>
+      <Filter>Quelldateien\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="GameScene.cpp">
+      <Filter>Quelldateien\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="MainScene.cpp">
+      <Filter>Quelldateien\Scenes</Filter>
     </ClCompile>
     <ClCompile Include="EditorCamera.cpp">
-      <Filter>Quelldateien</Filter>
+      <Filter>Quelldateien\Camera</Filter>
     </ClCompile>
     <ClCompile Include="GameCamera.cpp">
-      <Filter>Quelldateien</Filter>
+      <Filter>Quelldateien\Camera</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
