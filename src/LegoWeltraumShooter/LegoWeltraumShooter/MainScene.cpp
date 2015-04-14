@@ -4,7 +4,7 @@ namespace Game
     CMainScene::CMainScene(PuRe_Application* a_pApplication)
     {
         this->m_pApplication = a_pApplication;
-        this->m_pEditorScene = new CEditorScene(a_pApplication);
+        this->m_pEditorScene = new CEditorScene(a_pApplication, 0);
         this->m_pGameScene = new CGameScene(a_pApplication);
     }
 
@@ -19,7 +19,7 @@ namespace Game
         this->m_pGameScene->Initialize(a_pGraphics, a_pSoundPlayer);
 
         this->m_pActiveScene = this->m_pGameScene;
-        //this->m_pActiveScene = this->m_pEditorScene;
+        this->m_pActiveScene = this->m_pEditorScene; //Comment out for Init GameScene
     }
 
     // **************************************************************************
