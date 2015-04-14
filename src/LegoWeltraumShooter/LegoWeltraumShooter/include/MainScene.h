@@ -6,7 +6,7 @@
 #include <math.h>
 #include <algorithm>
 
-#include "CGameCamera.h"
+#include "GameCamera.h"
 
 // Declare namespace Game
 namespace Game
