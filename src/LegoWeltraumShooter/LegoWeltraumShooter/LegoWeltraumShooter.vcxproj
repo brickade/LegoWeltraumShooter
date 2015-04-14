@@ -135,9 +135,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\CEditorCamera.h" />
+    <ClInclude Include="include\CGameCamera.h" />
     <ClInclude Include="include\MainScene.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CEditorCamera.cpp" />
+    <ClCompile Include="CGameCamera.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MainScene.cpp" />
   </ItemGroup>
