@@ -14,11 +14,9 @@ namespace Game
         PuRe_GraphicsDescription gdesc = a_pGraphics->GetDescription();
 
         //Camera
-        this->m_pCamera = new PuRe_Camera(PuRe_Vector2F((float32)gdesc.ResolutionWidth, (float32)gdesc.ResolutionHeight), PuRe_Camera_Perspective);
+        this->m_pCamera = new CGameCamera(PuRe_Vector2F((float32)gdesc.ResolutionWidth, (float32)gdesc.ResolutionHeight), PuRe_Camera_Perspective);
+        this->m_pCamera->Initialize();
         this->m_pPostCamera = new PuRe_Camera(PuRe_Vector2F((float32)gdesc.ResolutionWidth, (float32)gdesc.ResolutionHeight), PuRe_Camera_Orthogonal);
-        this->m_pCamera->SetFoV(45.0f);
-        this->m_pCamera->Move(PuRe_Vector3F(5.0f, 5.0f, -10.0f));
-        this->m_pCamera->Rotate(-20.0f, 20.0f, 0.0f);
         this->m_pMaterial = a_pGraphics->LoadMaterial("../data/effects/default/default");
         this->m_pPostMaterial = a_pGraphics->LoadMaterial("../data/effects/Post/default");
         this->m_pModel = new PuRe_Model(a_pGraphics, this->m_pMaterial, "../data/models/squirtle/Squirtle.obj");
@@ -50,42 +48,11 @@ namespace Game
             if (this->textureID > 2)
                 this->textureID = 0;
         }
-        //Seconds for frame independent movement
-        float32 Seconds = a_pTimer->GetElapsedSeconds();
-        this->rot += Seconds*1.0f;
+        
+        this->rot += a_pTimer->GetElapsedSeconds()*1.0f;
 
-        PuRe_Vector3F CameraMove;
-        PuRe_GraphicsDescription gdesc = a_pGraphics->GetDescription();
+        this->m_pCamera->Update(a_pGraphics, a_pWindow, a_pInput, a_pTimer);
 
-        if (a_pInput->MousePressed(a_pInput->LeftClick))
-        {
-            this->MouseClickPosition = a_pInput->GetMousePosition();
-        }
-        if (a_pInput->MouseIsPressed(a_pInput->LeftClick))
-        {
-
-            PuRe_Vector2F speed = (a_pInput->GetMousePosition() - this->MouseClickPosition);
-            speed.Normalize();
-            speed *= 100.0f;
-            PuRe_Vector3F cameraLook = PuRe_Vector3F();
-            if (speed.X != 0.0f)
-                cameraLook.X += speed.X*Seconds;
-            if (speed.Y != 0.0f)
-                cameraLook.Y += speed.Y*Seconds;
-            this->m_pCamera->Rotate(cameraLook.X, cameraLook.Y, cameraLook.Z);
-        }
-        float32 speed = 10.0f*Seconds;
-        //Handle Movement
-        if (a_pInput->KeyIsPressed(a_pInput->W))
-            CameraMove.Z += speed;
-        else if (a_pInput->KeyIsPressed(a_pInput->S))
-            CameraMove.Z -= speed;
-        if (a_pInput->KeyIsPressed(a_pInput->D))
-            CameraMove.X += speed;
-        else if (a_pInput->KeyIsPressed(a_pInput->A))
-            CameraMove.X -= speed;
-
-        this->m_pCamera->Move(CameraMove);
         for (int32 i = 0; i < 4; i++)
         {
             if (a_pInput->GamepadPressed(a_pInput->Pad_A, i))

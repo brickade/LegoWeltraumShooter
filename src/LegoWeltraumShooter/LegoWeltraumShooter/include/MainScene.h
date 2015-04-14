@@ -6,6 +6,8 @@
 #include <math.h>
 #include <algorithm>
 
+#include "CGameCamera.h"
+
 // Declare namespace Game
 namespace Game
 {
@@ -27,7 +29,7 @@ namespace Game
         PuRe_Vector2F MouseClickPosition;
         /// @brief Cameras
         ///
-        PuRe_Camera* m_pCamera;
+        CGameCamera* m_pCamera;
         /// @brief Engine's Application
         ///
         PuRe_Application* m_pApplication;
