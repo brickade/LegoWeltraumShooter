@@ -19,7 +19,7 @@ namespace Game
         this->m_pPostCamera = new PuRe_Camera(PuRe_Vector2F((float32)gdesc.ResolutionWidth, (float32)gdesc.ResolutionHeight), PuRe_Camera_Orthogonal);
         this->m_pMaterial = a_pGraphics->LoadMaterial("../data/effects/default/default");
         this->m_pPostMaterial = a_pGraphics->LoadMaterial("../data/effects/Post/default");
-        this->m_pModel = new PuRe_Model(a_pGraphics, this->m_pMaterial, "../data/models/squirtle/Squirtle.obj");
+        this->m_pModel = new PuRe_Model(a_pGraphics, this->m_pMaterial, "../data/models/brick1.obj");
         this->m_pRenderTarget = a_pGraphics->CreateRendertarget(this->m_pPostMaterial);
         this->m_pSkyDome = new PuRe_Skydome(a_pGraphics, this->m_pMaterial, "../data/textures/space.png");
         this->rot = 0.0f;
