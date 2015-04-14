@@ -16,7 +16,7 @@ uniform mat4 Translation;
 out vec2 UV;
 out vec3 Color;
 out vec3 Normal;
-out vec3 Position;
+out vec4 Position;
 
 void main()
 {
@@ -34,7 +34,7 @@ void main()
 
 	Normal = mat3(Model) * vertexNormal;
 
-	Position = Pos.xyz;
+	Position = Model * Pos;
 
 }
 
