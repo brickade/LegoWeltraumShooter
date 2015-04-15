@@ -37,18 +37,24 @@ namespace Game
 
         //Gamepad
         float32 gamepadSpeed = speed * 1;
-        MoveInput = a_pInput->GetGamepadRightThumb(this->m_playerIdx) * gamepadSpeed;
-        if (std::abs(MoveInput.X) < this->m_gamepadThreshold)
+        float32 gamepadZoomSpeed = gamepadSpeed * 0.6f;
+        PuRe_Vector2F gamepadInput;
+        gamepadInput = a_pInput->GetGamepadRightThumb(this->m_playerIdx);
+        if (std::abs(gamepadInput.X) < this->m_gamepadThreshold)
         {
-            MoveInput.X = 0;
+            gamepadInput.X = 0;
         }
-        if (std::abs(MoveInput.Y) < this->m_gamepadThreshold)
+        if (std::abs(gamepadInput.Y) < this->m_gamepadThreshold)
         {
-            MoveInput.Y = 0;
+            gamepadInput.Y = 0;
         }
+        MoveInput = gamepadInput * gamepadSpeed;
+
+        this->m_distance += a_pInput->GetGamepadRightThumb(this->m_playerIdx).Y * gamepadZoomSpeed;
 
         //Keyboard
         float32 keyboardSpeed = speed * 100;
+        float32 keyboardZoomSpeed = keyboardSpeed * 0.6f;
         if (a_pInput->KeyIsPressed(a_pInput->D))
             MoveInput.X += keyboardSpeed;
         else if (a_pInput->KeyIsPressed(a_pInput->A))
@@ -57,6 +63,10 @@ namespace Game
             MoveInput.Y += keyboardSpeed;
         else if (a_pInput->KeyIsPressed(a_pInput->S))
             MoveInput.Y -= keyboardSpeed;
+        if (a_pInput->KeyIsPressed(a_pInput->R))
+            this->m_distance -= keyboardZoomSpeed;
+        else if (a_pInput->KeyIsPressed(a_pInput->F))
+            this->m_distance += keyboardZoomSpeed;
 
         //Mouse
         float32 mouseSpeed = speed * 10;
@@ -71,9 +81,12 @@ namespace Game
         MoveInput *= 0.5f;
         this->SetPosition(PuRe_Vector3F(0, 0, 0));
         this->Rotate(MoveInput.Y, -MoveInput.X, 0);
+
+        this->m_distance = clamp(this->m_distance, 5, 50);
         PuRe_Vector3F rot = this->GetRotation();
-        rot.X = clamp(rot.X, -90, 90);
-        this->GetRotation(rot);
+        rot.X = clamp(rot.X, -89, 89);
+        this->SetRotation(rot);
+
         this->Move(this->GetDirection() * -this->m_distance);
     }
 }
