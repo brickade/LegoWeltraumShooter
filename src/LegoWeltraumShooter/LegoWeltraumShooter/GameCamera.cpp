@@ -35,12 +35,12 @@ namespace Game
 
     if (a_pInput->MousePressed(a_pInput->LeftClick))
     {
-      this->MouseClickPosition = a_pInput->GetMousePosition();
+      this->MouseClickPosition = a_pInput->GetAbsoluteMousePosition();
     }
     if (a_pInput->MouseIsPressed(a_pInput->LeftClick))
     {
       
-      PuRe_Vector2F speed = (a_pInput->GetMousePosition() - this->MouseClickPosition);
+        PuRe_Vector2F speed = (a_pInput->GetAbsoluteMousePosition() - this->MouseClickPosition);
       //speed.Normalize();
       //speed *= 100.0f;
       PuRe_Vector3F cameraLook = PuRe_Vector3F();

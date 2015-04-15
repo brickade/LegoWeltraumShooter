@@ -24,8 +24,6 @@ namespace Game
         int32 m_playerIdx;
         float32 m_gamepadThreshold;
         float32 m_distance;
-        PuRe_Vector2F m_lastMousePosition;
-
     };
 }
 

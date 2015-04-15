@@ -60,18 +60,20 @@ namespace Game
 
         //Mouse
         float32 mouseSpeed = speed * 10;
-        PuRe_Vector2F pos = a_pInput->GetMousePosition();
-        pos.X *= -1;
+        PuRe_Vector2F mouseDelta = a_pInput->GetRelativeMousePosition();
+        mouseDelta.X *= -1;
         if (a_pInput->MouseIsPressed(a_pInput->RightClick))
         {
-            MoveInput += (pos - this->m_lastMousePosition) * mouseSpeed;
+            MoveInput += mouseDelta * mouseSpeed;
         }
-        this->m_lastMousePosition = pos;
 
         //Apply
         MoveInput *= 0.5f;
         this->SetPosition(PuRe_Vector3F(0, 0, 0));
         this->Rotate(MoveInput.Y, -MoveInput.X, 0);
+        PuRe_Vector3F rot = this->GetRotation();
+        rot.X = clamp(rot.X, -90, 90);
+        this->GetRotation(rot);
         this->Move(this->GetDirection() * -this->m_distance);
     }
 }
