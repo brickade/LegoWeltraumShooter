@@ -32,7 +32,10 @@ namespace Game
     bool CEditorScene::Update(PuRe_IGraphics* a_pGraphics, PuRe_IWindow* a_pWindow, PuRe_IInput* a_pInput, PuRe_Timer* a_pTimer, PuRe_SoundPlayer* a_pSoundPlayer)
     {
         //Handle ESC Button
-        if (a_pInput->KeyPressed(a_pInput->ESC) || a_pInput->KeyPressed(a_pInput->F1))
+        if (a_pInput->KeyPressed(a_pInput->ESC)
+            || a_pInput->GamepadPressed(a_pInput->Pad_Back, this->m_playerIdx)
+            || a_pInput->KeyPressed(a_pInput->F1)
+            || a_pInput->GamepadPressed(a_pInput->Pad_Start, this->m_playerIdx))
         {
             return true;
         }
@@ -67,7 +70,7 @@ namespace Game
     // **************************************************************************
     void CEditorScene::Render(PuRe_IGraphics* a_pGraphics)
     {
-        PuRe_Color clear = PuRe_Color(0.0f, 0.4f, 1.0f);
+        PuRe_Color clear = PuRe_Color(0.1f, 0.1f, 0.1f);
         PuRe_GraphicsDescription gdesc = a_pGraphics->GetDescription();
 
         this->m_pRenderTarget->Apply(clear);

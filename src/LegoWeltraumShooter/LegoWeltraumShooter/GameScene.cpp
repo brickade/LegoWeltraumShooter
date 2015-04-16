@@ -1,9 +1,10 @@
 #include "include/GameScene.h"
 namespace Game
 {
-    CGameScene::CGameScene(PuRe_Application* a_pApplication)
+    CGameScene::CGameScene(PuRe_Application* a_pApplication, int32 a_playerIdx)
     {
         this->m_pApplication = a_pApplication;
+        this->m_playerIdx = a_playerIdx;
     }
 
     // **************************************************************************
@@ -32,7 +33,10 @@ namespace Game
     bool CGameScene::Update(PuRe_IGraphics* a_pGraphics, PuRe_IWindow* a_pWindow, PuRe_IInput* a_pInput, PuRe_Timer* a_pTimer, PuRe_SoundPlayer* a_pSoundPlayer)
     {
         //Handle ESC Button
-        if (a_pInput->KeyPressed(a_pInput->ESC) || a_pInput->KeyPressed(a_pInput->F1))
+        if (a_pInput->KeyPressed(a_pInput->ESC)
+            || a_pInput->GamepadPressed(a_pInput->Pad_Back, this->m_playerIdx)
+            || a_pInput->KeyPressed(a_pInput->F1)
+            || a_pInput->GamepadPressed(a_pInput->Pad_Start, this->m_playerIdx))
         {
             return true;
         }

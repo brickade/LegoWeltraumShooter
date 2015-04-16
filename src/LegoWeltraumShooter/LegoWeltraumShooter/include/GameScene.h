@@ -17,6 +17,7 @@ namespace Game
     class CGameScene : public PuRe_IScene
     {
     private:
+        int32 m_playerIdx;
         PuRe_Skydome* m_pSkyDome;
         int32 textureID;
         PuRe_Rendertarget* m_pRenderTarget;
@@ -37,7 +38,7 @@ namespace Game
     public:
         /// @brief Constructor to Initialize the MainScene
         ///
-        CGameScene(PuRe_Application* a_pApplication);
+        CGameScene(PuRe_Application* a_pApplication, int32 a_playerIdx);
     public:
         /// @brief Initializes the scene.
         ///

@@ -35,9 +35,9 @@ namespace Game
         PuRe_Vector2F MoveInput;
         float32 speed = a_pTimer->GetElapsedSeconds();
 
-        //Gamepad
-        float32 gamepadSpeed = speed * 1;
-        float32 gamepadZoomSpeed = gamepadSpeed * 0.6f;
+        //----------Gamepad
+        float32 gamepadSpeed = speed * 200;
+        float32 gamepadZoomSpeed = gamepadSpeed * 0.05f;
         PuRe_Vector2F gamepadInput;
         gamepadInput = a_pInput->GetGamepadRightThumb(this->m_playerIdx);
         if (std::abs(gamepadInput.X) < this->m_gamepadThreshold)
@@ -49,10 +49,11 @@ namespace Game
             gamepadInput.Y = 0;
         }
         MoveInput = gamepadInput * gamepadSpeed;
+        //Zoom
+        this->m_distance += a_pInput->GetGamepadLeftTrigger(this->m_playerIdx) * gamepadZoomSpeed;
+        this->m_distance -= a_pInput->GetGamepadRightTrigger(this->m_playerIdx) * gamepadZoomSpeed;
 
-        this->m_distance += a_pInput->GetGamepadRightThumb(this->m_playerIdx).Y * gamepadZoomSpeed;
-
-        //Keyboard
+        //----------Keyboard
         float32 keyboardSpeed = speed * 100;
         float32 keyboardZoomSpeed = keyboardSpeed * 0.6f;
         if (a_pInput->KeyIsPressed(a_pInput->D))
@@ -63,26 +64,30 @@ namespace Game
             MoveInput.Y += keyboardSpeed;
         else if (a_pInput->KeyIsPressed(a_pInput->S))
             MoveInput.Y -= keyboardSpeed;
+        //Zoom
         if (a_pInput->KeyIsPressed(a_pInput->R))
             this->m_distance -= keyboardZoomSpeed;
         else if (a_pInput->KeyIsPressed(a_pInput->F))
             this->m_distance += keyboardZoomSpeed;
 
-        //Mouse
-        float32 mouseSpeed = speed * 10;
+        //----------Mouse
+        float32 mouseSpeed = speed * 15;
+        float32 mouseZoomSpeed = mouseSpeed * 2;
         PuRe_Vector2F mouseDelta = a_pInput->GetRelativeMousePosition();
         mouseDelta.X *= -1;
         if (a_pInput->MouseIsPressed(a_pInput->RightClick))
         {
             MoveInput += mouseDelta * mouseSpeed;
         }
+        //Zoom
+        this->m_distance -= a_pInput->GetMouseScroll() * mouseZoomSpeed;
 
-        //Apply
+        //----------Apply
         MoveInput *= 0.5f;
         this->SetPosition(PuRe_Vector3F(0, 0, 0));
         this->Rotate(MoveInput.Y, -MoveInput.X, 0);
 
-        this->m_distance = clamp(this->m_distance, 5, 50);
+        this->m_distance = clamp(this->m_distance, 5, 40);
         PuRe_Vector3F rot = this->GetRotation();
         rot.X = clamp(rot.X, -89, 89);
         this->SetRotation(rot);

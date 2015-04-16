@@ -5,7 +5,7 @@ namespace Game
     {
         this->m_pApplication = a_pApplication;
         this->m_pEditorScene = new CEditorScene(a_pApplication, 0);
-        this->m_pGameScene = new CGameScene(a_pApplication);
+        this->m_pGameScene = new CGameScene(a_pApplication, 0);
     }
 
     // **************************************************************************
@@ -27,7 +27,11 @@ namespace Game
     bool CMainScene::Update(PuRe_IGraphics* a_pGraphics, PuRe_IWindow* a_pWindow, PuRe_IInput* a_pInput, PuRe_Timer* a_pTimer, PuRe_SoundPlayer* a_pSoundPlayer)
     {
         //Handle ESC Button
-        if (a_pInput->KeyPressed(a_pInput->ESC))
+        if (a_pInput->KeyPressed(a_pInput->ESC)
+            || a_pInput->GamepadPressed(a_pInput->Pad_Back, 0)
+            || a_pInput->GamepadPressed(a_pInput->Pad_Back, 1)
+            || a_pInput->GamepadPressed(a_pInput->Pad_Back, 2)
+            || a_pInput->GamepadPressed(a_pInput->Pad_Back, 3))
         {
             return true;
         }
