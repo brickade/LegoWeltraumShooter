@@ -23,6 +23,7 @@ namespace Game
         this->m_pSkyBoxMaterial = a_pGraphics->LoadMaterial("../data/effects/skybox/default");
         this->m_pModel = new PuRe_Model(a_pGraphics, this->m_pMaterial, "../data/models/brick1.obj");
         this->m_pRenderTarget = a_pGraphics->CreateRendertarget(this->m_pPostMaterial);
+
         std::string* a_pCubePaths = new std::string[6];
         a_pCubePaths[0] = "../data/textures/skybox/posx.png";
         a_pCubePaths[1] = "../data/textures/skybox/negx.png";
@@ -31,6 +32,7 @@ namespace Game
         a_pCubePaths[4] = "../data/textures/skybox/posz.png";
         a_pCubePaths[5] = "../data/textures/skybox/negz.png";
         this->m_pSkyBox = new PuRe_SkyBox(a_pGraphics, this->m_pSkyBoxMaterial, a_pCubePaths);
+
         this->textureID = 0;
 
     }
@@ -83,13 +85,25 @@ namespace Game
 
         this->m_pRenderTarget->Apply(clear);
 
-        
+
         this->m_pSkyBox->Draw(this->m_pCamera, PuRe_Vector3F(0.0f, 0.0f, 0.0f));
-        this->m_pModel->Draw(this->m_pCamera, PuRe_Primitive::Triangles, PuRe_Vector3F(0.0f, 0.0f, 0.0f), PuRe_Vector3F(1.0f, 1.0f, 1.0f), PuRe_Vector3F(0.0f, 0.0f, 0.0f), PuRe_Vector3F(0.0f, 0.0f, 0.0f));
+        int32 c = 5;
+        for (int x = -c; x < c; x++)
+        {
+            for (int y = -c; y < c; y++)
+            {
+                for (int z = -c; z < c; z++)
+                {
+                    this->m_pModel->Draw(this->m_pCamera, PuRe_Primitive::Triangles, PuRe_Vector3F(x*0.38f, y*0.38f, z*0.38f), PuRe_Vector3F(1.0f, 1.0f, 1.0f), PuRe_Vector3F(0.0f, 0.0f, 0.0f), PuRe_Vector3F(0.0f, 0.0f, 0.0f));
+                }
+            }
+        }
+
+        //this->m_pModel->Draw(this->m_pCamera, PuRe_Primitive::Triangles, PuRe_Vector3F(0.0f, 0.0f, 0.0f), PuRe_Vector3F(1.0f, 1.0f, 1.0f), PuRe_Vector3F(0.0f, 0.0f, 0.0f), PuRe_Vector3F(0.0f, 0.0f, 0.0f));
         a_pGraphics->Begin(clear);
         this->m_pPostMaterial->Apply();
         this->m_pPostMaterial->SetFloat((float32)textureID, "textureID");
-        this->m_pPostMaterial->SetVector3(PuRe_Vector3F(0.1f, 0.1f, 0.1f), "ambient");
+        this->m_pPostMaterial->SetVector3(PuRe_Vector3F(0.7f, 0.7f, 0.7f), "ambient");
         this->m_pRenderTarget->Draw(this->m_pPostCamera, PuRe_Vector3F(gdesc.ResolutionWidth / 2.0f, gdesc.ResolutionHeight / 2.0f, 0.0f), PuRe_Vector3F(gdesc.ResolutionWidth / 2.0f, gdesc.ResolutionHeight / 2.0f, 0.0f));
 
         a_pGraphics->End();
