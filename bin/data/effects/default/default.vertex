@@ -20,7 +20,7 @@ out vec4 Position;
 
 void main()
 {
-
+        
 	mat4 Model = Translation * Rotation * Scale;
 	mat4 MVP = Projection * View * Model;
 
@@ -34,7 +34,7 @@ void main()
 
 	Normal = mat3(Model) * vertexNormal;
 
-	Position = Model * Pos;
+	Position = vec4(vertexPosition,1);
 
 }
 

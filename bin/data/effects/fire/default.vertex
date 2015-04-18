@@ -1,0 +1,33 @@
+#version 330 core
+
+// Input vertex data, different for all executions of this shader.
+ layout(location = 0) in vec3 vertexPosition;
+ layout(location = 1) in vec2 vertexUV;
+ layout(location = 2) in vec3 vertexColor;
+ layout(location = 3) in vec3 vertexNormal;
+
+uniform mat4 Projection;
+uniform mat4 View;
+
+uniform mat4 Scale;
+uniform mat4 Rotation;
+uniform mat4 Translation;
+
+out vec2 UV;
+out vec3 Color;
+
+void main()
+{
+
+	// Output position of the vertex, in clip space : MVP * position
+	mat4 Model = Translation * Rotation * Scale;
+	mat4 MVP = Projection * View * Model;
+	gl_Position = MVP * vec4(vertexPosition,1);
+	
+	// UV of the vertex. No special space for this one.
+	UV = vertexUV;
+
+	Color = vertexColor;
+
+}
+

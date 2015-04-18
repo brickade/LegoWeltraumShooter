@@ -20,6 +20,7 @@ struct VertexShaderInput
   float2 UV       : TEXCOORD0;
   float3 Color    : COLOR0;
   float3 Normal   : NORMAL;
+  float4 Offset   : MATRIX0;
 };
 
 struct VertexShaderOutput
@@ -42,10 +43,12 @@ VertexShaderOutput VS_MAIN(VertexShaderInput input)
 {
   VertexShaderOutput Output = (VertexShaderOutput)0;
   
-  float4 pos = float4(input.Position.xyz, 1);
-
+  //float4 off = float4(input.Offset.xyz,1);
+  float4 pos = float4(input.Position.xyz,1);
 
   float4x4 Model = mul(mul(Scale,Rotation),Translation);
+  //float4x4 Model = Offset;
+
   float4x4 MVP = mul(mul(Model,View),Projection);
 
   Output.Position = mul(pos,MVP);
@@ -68,6 +71,7 @@ PixelShaderOutput PS_MAIN(VertexShaderOutput input) : SV_TARGET
   output.colorMap = blend;
   output.normalMap = float4(input.Normal,1);
   output.positionMap = float4(input.Position.xyz,1);
+
 
   return output;
 }

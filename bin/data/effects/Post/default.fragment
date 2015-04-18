@@ -8,6 +8,7 @@ in vec3 Normal;
 uniform sampler2D DiffuseMap;
 uniform sampler2D NormalMap;
 uniform sampler2D PositionMap;
+uniform sampler2D DepthMap;
 
 uniform float textureID;
 uniform vec3 ambient;
@@ -20,28 +21,23 @@ void main()
 
 	vec4 norm = texture2D( NormalMap, vec2(UV.x,UV.y) );
 	vec4 pos = texture2D( PositionMap, vec2(UV.x,UV.y) );
+	vec4 depth = texture2D( DepthMap, vec2(UV.x,UV.y) );
 
-
-    	vec3 lightDir = vec3(1,0,-10);
+    	vec3 lightDir = vec3(1,0,-1);
     	lightDir = normalize(lightDir);
-	float intensity = clamp(dot(norm.xyz ,lightDir),0.0,1.0);
-        
-        vec4 ambientIntensity = vec4(ambient,0);
-	if(norm.r == 0)
-        {
-	  intensity = 1;
-          ambientIntensity = vec4(0,0,0,0);
-        }
-        intensity = 1;
-        
+	float intensity = dot(norm.xyz,lightDir);
 	blend.r *= intensity;
 	blend.g *= intensity;
 	blend.b *= intensity;
-
+        
+          
+        
 	if(textureID == 0.0)
-	    gl_FragColor = clamp(blend+ambientIntensity,0.0,1.0);
+	    gl_FragColor = blend;
 	else if(textureID == 1.0)
 	    gl_FragColor = norm;
+	else if(textureID == 2.0)
+	    gl_FragColor = vec4(depth.r,depth.r,depth.r,1);
 	else
 	    gl_FragColor = pos;
 }

@@ -20,9 +20,17 @@ namespace Game
         this->m_pPostCamera = new PuRe_Camera(PuRe_Vector2F((float32)gdesc.ResolutionWidth, (float32)gdesc.ResolutionHeight), PuRe_Camera_Orthogonal);
         this->m_pMaterial = a_pGraphics->LoadMaterial("../data/effects/default/default");
         this->m_pPostMaterial = a_pGraphics->LoadMaterial("../data/effects/Post/default");
+        this->m_pSkyBoxMaterial = a_pGraphics->LoadMaterial("../data/effects/skybox/default");
         this->m_pModel = new PuRe_Model(a_pGraphics, this->m_pMaterial, "../data/models/brick1.obj");
         this->m_pRenderTarget = a_pGraphics->CreateRendertarget(this->m_pPostMaterial);
-        this->m_pSkyDome = new PuRe_Skydome(a_pGraphics, this->m_pMaterial, "../data/textures/space.png");
+        std::string* a_pCubePaths = new std::string[6];
+        a_pCubePaths[0] = "../data/textures/skybox/posx.png";
+        a_pCubePaths[1] = "../data/textures/skybox/negx.png";
+        a_pCubePaths[2] = "../data/textures/skybox/posy.png";
+        a_pCubePaths[3] = "../data/textures/skybox/negy.png";
+        a_pCubePaths[4] = "../data/textures/skybox/posz.png";
+        a_pCubePaths[5] = "../data/textures/skybox/negz.png";
+        this->m_pSkyBox = new PuRe_SkyBox(a_pGraphics, this->m_pSkyBoxMaterial, a_pCubePaths);
         this->textureID = 0;
 
     }
@@ -75,9 +83,9 @@ namespace Game
 
         this->m_pRenderTarget->Apply(clear);
 
+        
+        this->m_pSkyBox->Draw(this->m_pCamera, PuRe_Vector3F(0.0f, 0.0f, 0.0f));
         this->m_pModel->Draw(this->m_pCamera, PuRe_Primitive::Triangles, PuRe_Vector3F(0.0f, 0.0f, 0.0f), PuRe_Vector3F(1.0f, 1.0f, 1.0f), PuRe_Vector3F(0.0f, 0.0f, 0.0f), PuRe_Vector3F(0.0f, 0.0f, 0.0f));
-        this->m_pSkyDome->Draw(this->m_pCamera, PuRe_Vector3F(0.0f, 0.0f, 0.0f));
-
         a_pGraphics->Begin(clear);
         this->m_pPostMaterial->Apply();
         this->m_pPostMaterial->SetFloat((float32)textureID, "textureID");
@@ -91,7 +99,7 @@ namespace Game
     // **************************************************************************
     void CEditorScene::Exit()
     {
-        SAFE_DELETE(this->m_pSkyDome);
+        SAFE_DELETE(this->m_pSkyBox);
         SAFE_DELETE(this->m_pRenderTarget);
         SAFE_DELETE(this->m_pPostMaterial);
         SAFE_DELETE(this->m_pMaterial);

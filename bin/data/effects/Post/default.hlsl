@@ -13,6 +13,7 @@ tbuffer textureBuffer
 	Texture2D DiffuseMap;
 	Texture2D NormalMap;
 	Texture2D PositionMap;
+	Texture2D DepthMap;
 };
 
 SamplerState TextureSampler;
@@ -67,27 +68,21 @@ PixelShaderOutput PS_MAIN(VertexShaderOutput input)
   float4 blend = DiffuseMap.Sample(TextureSampler, input.UV);
   float4 norm = NormalMap.Sample(TextureSampler, input.UV);
   float4 pos = PositionMap.Sample(TextureSampler, input.UV);
-  blend.a = 1;
+  float4 depth = DepthMap.Sample(TextureSampler, input.UV);
 
-  float3 lightDir = float3(-1,0,-10);
-  lightDir = -normalize(lightDir);
-  float intensity = clamp(dot(norm.xyz ,lightDir),0.0,1.0);
-        
-  float4 ambientIntensity = float4(ambient,0);
-  if(norm.r == 0)
-  {
-    intensity = 1;
-    ambientIntensity = float4(0,0,0,0);
-  }
-        
+  float3 lightDir = float3(1,0,-1);
+  lightDir = normalize(lightDir);
+  float intensity = dot(norm.xyz,lightDir);
   blend.r *= intensity;
   blend.g *= intensity;
   blend.b *= intensity;
 
   if(textureID == 0.0)
-    output.color = clamp(blend+ambientIntensity,0.0,1.0);
+    output.color = blend;
   else if(textureID == 1.0)
     output.color = norm;
+  else if(textureID == 2.0)
+    output.color = float4(depth.r,depth.r,depth.r,1);
   else
     output.color = pos;
 
