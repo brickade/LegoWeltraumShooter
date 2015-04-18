@@ -36,7 +36,7 @@ namespace Game
         float32 speed = a_pTimer->GetElapsedSeconds();
 
         //----------Gamepad
-        float32 gamepadSpeed = speed * 200;
+        float32 gamepadSpeed = speed * 250;
         float32 gamepadZoomSpeed = gamepadSpeed * 0.05f;
         PuRe_Vector2F gamepadInput;
         gamepadInput = a_pInput->GetGamepadRightThumb(this->m_playerIdx);
@@ -71,8 +71,8 @@ namespace Game
             this->m_distance += keyboardZoomSpeed;
 
         //----------Mouse
-        float32 mouseSpeed = speed * 15;
-        float32 mouseZoomSpeed = mouseSpeed * 2;
+        float32 mouseSpeed = speed * 35;
+        float32 mouseZoomSpeed = mouseSpeed * 5;
         PuRe_Vector2F mouseDelta = a_pInput->GetRelativeMousePosition();
         mouseDelta.X *= -1;
         if (a_pInput->MouseIsPressed(a_pInput->RightClick))

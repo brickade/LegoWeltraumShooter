@@ -13,15 +13,15 @@ int32 PURE_MAIN
 
     PuRe_IPlatform* pplatform = PuRe_CreatePlatform();
     PuRe_ApplicationDescription description;
-    description.Graphics.ResolutionWidth = 1024;
-    description.Graphics.ResolutionHeight = 768;
+    description.Graphics.ResolutionWidth = 1920;
+    description.Graphics.ResolutionHeight = 1080;
     description.Graphics.Module = PuRe_GraphicsModuleType::OpenGL;
     description.Window.Title = "PuReEngine - Development";
-    description.Window.Width = 1024;
-    description.Window.Height = 768;
+    description.Window.Width = 1920;
+    description.Window.Height = 1080;
     description.Window.X = 100;
     description.Window.Y = 50;
-    description.Window.Fullscreen = false;
+    description.Window.DisplaySetting = PuRe_DisplaySetting::FullscreenWindowed;
     PuRe_Application* papplication = new PuRe_Application(pplatform, description);
     Game::CMainScene scene(papplication);
 
