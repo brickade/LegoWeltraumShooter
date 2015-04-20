@@ -35,6 +35,8 @@ namespace Game
 
         this->textureID = 0;
 
+        this->m_pBrickWorker = new CBrickWorker(this->m_playerIdx);
+        this->m_pBrickWorker->Initialize();
     }
 
     // **************************************************************************
@@ -65,6 +67,8 @@ namespace Game
         }
 
         this->m_pCamera->Update(a_pGraphics, a_pWindow, a_pInput, a_pTimer);
+
+        this->m_pBrickWorker->Update(a_pGraphics, a_pWindow, a_pInput, a_pTimer, a_pSoundPlayer, this->m_pCamera->GetDirection());
 
         for (int32 i = 0; i < 4; i++)
         {
@@ -98,6 +102,7 @@ namespace Game
                 }
             }
         }
+        this->m_pBrickWorker->Render(a_pGraphics);
 
         //this->m_pModel->Draw(this->m_pCamera, PuRe_Primitive::Triangles, PuRe_Vector3F(0.0f, 0.0f, 0.0f), PuRe_Vector3F(1.0f, 1.0f, 1.0f), PuRe_Vector3F(0.0f, 0.0f, 0.0f), PuRe_Vector3F(0.0f, 0.0f, 0.0f));
         a_pGraphics->Begin(clear);
@@ -120,5 +125,6 @@ namespace Game
         SAFE_DELETE(this->m_pPostCamera);
         SAFE_DELETE(this->m_pCamera);
         SAFE_DELETE(this->m_pModel);
+        SAFE_DELETE(this->m_pBrickWorker);
     }
 }

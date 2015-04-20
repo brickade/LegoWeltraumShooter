@@ -135,6 +135,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\BrickWorker.h" />
     <ClInclude Include="include\EditorCamera.h" />
     <ClInclude Include="include\GameCamera.h" />
     <ClInclude Include="include\EditorScene.h" />
@@ -142,6 +143,7 @@
     <ClInclude Include="include\MainScene.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BrickWorker.cpp" />
     <ClCompile Include="EditorCamera.cpp" />
     <ClCompile Include="GameCamera.cpp" />
     <ClCompile Include="EditorScene.cpp" />

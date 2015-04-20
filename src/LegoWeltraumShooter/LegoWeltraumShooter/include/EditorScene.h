@@ -5,6 +5,7 @@
 #include <PuReEngine/Defines.h>
 
 #include "EditorCamera.h"
+#include "BrickWorker.h"
 
 namespace Game
 {
@@ -21,6 +22,9 @@ namespace Game
         PuRe_IMaterial* m_pPostMaterial;
         PuRe_IMaterial* m_pSkyBoxMaterial;
         PuRe_Camera* m_pPostCamera;
+        
+        CBrickWorker* m_pBrickWorker;
+
         /// @brief Position for the MouseClick
         ///
         PuRe_Vector2F MouseClickPosition;

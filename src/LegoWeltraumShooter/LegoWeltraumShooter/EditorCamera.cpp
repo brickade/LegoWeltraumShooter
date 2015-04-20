@@ -29,8 +29,6 @@ namespace Game
 
     void CEditorCamera::Update(PuRe_IGraphics* a_pGraphics, PuRe_IWindow* a_pWindow, PuRe_IInput* a_pInput, PuRe_Timer* a_pTimer)
     {
-        PuRe_GraphicsDescription gdesc = a_pGraphics->GetDescription();
-
         //Handle Movement
         PuRe_Vector2F MoveInput;
         float32 speed = a_pTimer->GetElapsedSeconds();

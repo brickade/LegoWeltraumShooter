@@ -42,6 +42,9 @@
     <ClInclude Include="include\GameCamera.h">
       <Filter>Headerdateien\Camera</Filter>
     </ClInclude>
+    <ClInclude Include="include\BrickWorker.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -61,6 +64,9 @@
     </ClCompile>
     <ClCompile Include="GameCamera.cpp">
       <Filter>Quelldateien\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="BrickWorker.cpp">
+      <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
