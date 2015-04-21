@@ -6,7 +6,7 @@ cbuffer MatrixBuffer
 	matrix View;
 	matrix Projection;
 	float textureID;
-        float3 ambient;
+    float3 ambient;
 };
 tbuffer textureBuffer
 {
@@ -76,6 +76,7 @@ PixelShaderOutput PS_MAIN(VertexShaderOutput input)
   blend.r *= intensity;
   blend.g *= intensity;
   blend.b *= intensity;
+  blend.rgb += ambient;
 
   if(textureID == 0.0)
     output.color = blend;

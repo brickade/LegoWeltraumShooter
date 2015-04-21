@@ -36,7 +36,7 @@ namespace Game
         this->textureID = 0;
 
         this->m_pBrickWorker = new CBrickWorker(this->m_playerIdx);
-        this->m_pBrickWorker->Initialize();
+        this->m_pBrickWorker->Initialize(a_pGraphics);
     }
 
     // **************************************************************************
@@ -71,7 +71,7 @@ namespace Game
         //Calculate the camera direction (muss in der engine ordentlich umgesetzt werden und dann hier ersetzt werden!)
         PuRe_Vector3F cameraLook = PuRe_Vector3F(0, 0, 1);
         PuRe_Vector3F cameraRotation = this->m_pCamera->GetRotation();
-        cameraLook *= PuRe_QuaternionF(cameraRotation.Y*0.0174532925f, cameraRotation.X*0.0174532925f, cameraRotation.Z*0.0174532925f);
+        cameraLook = cameraLook * PuRe_QuaternionF(cameraRotation.X*0.0174532925f, cameraRotation.Y*0.0174532925f, cameraRotation.Z*0.0174532925f).GetMatrix();
 
         this->m_pBrickWorker->Update(a_pGraphics, a_pWindow, a_pInput, a_pTimer, a_pSoundPlayer, cameraLook);
 
@@ -96,24 +96,24 @@ namespace Game
 
 
         this->m_pSkyBox->Draw(this->m_pCamera, PuRe_Vector3F(0.0f, 0.0f, 0.0f));
-        int32 c = 5;
+        /*int32 c = 5;
         for (int x = -c; x < c; x++)
         {
             for (int y = -c; y < c; y++)
             {
                 for (int z = -c; z < c; z++)
                 {
-                    this->m_pModel->Draw(this->m_pCamera, PuRe_Primitive::Triangles, PuRe_Vector3F(x*0.38f, y*0.38f, z*0.38f), PuRe_Vector3F(1.0f, 1.0f, 1.0f), PuRe_Vector3F(0.0f, 0.0f, 0.0f), PuRe_Vector3F(0.0f, 0.0f, 0.0f));
+                    this->m_pModel->Draw(this->m_pCamera, PuRe_Primitive::Triangles, PuRe_Vector3F(x*0.39f, y*0.39f, z*0.39f), PuRe_Vector3F(1.0f, 1.0f, 1.0f), PuRe_Vector3F(0.0f, 0.0f, 0.0f), PuRe_Vector3F(0.0f, 0.0f, 0.0f));
                 }
             }
-        }
-        this->m_pBrickWorker->Render(a_pGraphics);
+        }*/
+        this->m_pBrickWorker->Render(a_pGraphics, this->m_pCamera);
 
         //this->m_pModel->Draw(this->m_pCamera, PuRe_Primitive::Triangles, PuRe_Vector3F(0.0f, 0.0f, 0.0f), PuRe_Vector3F(1.0f, 1.0f, 1.0f), PuRe_Vector3F(0.0f, 0.0f, 0.0f), PuRe_Vector3F(0.0f, 0.0f, 0.0f));
         a_pGraphics->Begin(clear);
         this->m_pPostMaterial->Apply();
         this->m_pPostMaterial->SetFloat((float32)textureID, "textureID");
-        this->m_pPostMaterial->SetVector3(PuRe_Vector3F(0.7f, 0.7f, 0.7f), "ambient");
+        this->m_pPostMaterial->SetVector3(PuRe_Vector3F(0.01f, 0.01f, 0.01f), "ambient");
         this->m_pRenderTarget->Draw(this->m_pPostCamera, PuRe_Vector3F(gdesc.ResolutionWidth / 2.0f, gdesc.ResolutionHeight / 2.0f, 0.0f), PuRe_Vector3F(gdesc.ResolutionWidth / 2.0f, gdesc.ResolutionHeight / 2.0f, 0.0f));
 
         a_pGraphics->End();

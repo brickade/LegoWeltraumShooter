@@ -19,9 +19,9 @@ int32 PURE_MAIN
     description.Window.Title = "PuReEngine - Development";
     description.Window.Width = 1920;
     description.Window.Height = 1080;
-    description.Window.X = 100;
-    description.Window.Y = 50;
-    description.Window.DisplaySetting = PuRe_DisplaySetting::FullscreenWindowed;
+    description.Window.X = 1000;
+    description.Window.Y = 100;
+    description.Window.DisplaySetting = PuRe_DisplaySetting::Windowed;
     PuRe_Application* papplication = new PuRe_Application(pplatform, description);
     Game::CMainScene scene(papplication);
 
