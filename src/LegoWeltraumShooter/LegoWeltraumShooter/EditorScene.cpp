@@ -68,7 +68,12 @@ namespace Game
 
         this->m_pCamera->Update(a_pGraphics, a_pWindow, a_pInput, a_pTimer);
 
-        this->m_pBrickWorker->Update(a_pGraphics, a_pWindow, a_pInput, a_pTimer, a_pSoundPlayer, this->m_pCamera->GetDirection());
+        //Calculate the camera direction (muss in der engine ordentlich umgesetzt werden und dann hier ersetzt werden!)
+        PuRe_Vector3F cameraLook = PuRe_Vector3F(0, 0, 1);
+        PuRe_Vector3F cameraRotation = this->m_pCamera->GetRotation();
+        cameraLook *= PuRe_QuaternionF(cameraRotation.Y*0.0174532925f, cameraRotation.X*0.0174532925f, cameraRotation.Z*0.0174532925f);
+
+        this->m_pBrickWorker->Update(a_pGraphics, a_pWindow, a_pInput, a_pTimer, a_pSoundPlayer, cameraLook);
 
         for (int32 i = 0; i < 4; i++)
         {
