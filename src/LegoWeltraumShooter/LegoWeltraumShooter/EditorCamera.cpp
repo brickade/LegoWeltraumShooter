@@ -22,7 +22,6 @@ namespace Game
     {
         this->SetFoV(45.0f);
         this->Move(PuRe_Vector3F(5.0f, 5.0f, -10.0f));
-        this->Rotate(-20.0f, 20.0f, 0.0f);
         this->m_gamepadThreshold = 0.25f;
         this->m_distance = 10;
     }

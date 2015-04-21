@@ -76,7 +76,7 @@ PixelShaderOutput PS_MAIN(VertexShaderOutput input)
   blend.r *= intensity;
   blend.g *= intensity;
   blend.b *= intensity;
-  blend.rgb += ambient;
+  blend.rgb += ambient * blend.rgb;
 
   if(textureID == 0.0)
     output.color = blend;

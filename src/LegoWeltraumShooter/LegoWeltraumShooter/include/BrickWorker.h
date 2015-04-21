@@ -25,13 +25,16 @@ namespace Game
         PuRe_Vector2F m_currentBrickPosition;
         PuRe_Vector2F m_currentPosition;
         float32 m_currentHeight;
+
         int32 m_playerIdx;
-        float32 m_gamepadThreshold;
+
         PuRe_Model* m_pCurrentBrick;
 
         PuRe_IMaterial* m_pGridMaterial;
         PuRe_Model* m_pGridBrick;
         PuRe_IMaterial* m_pTmpBrickMat;
+
+        bool lastInputIsGamepad;
     };
 }
 

@@ -17,6 +17,7 @@ namespace Game
         //Camera
         this->m_pCamera = new CEditorCamera(PuRe_Vector2F((float32)gdesc.ResolutionWidth, (float32)gdesc.ResolutionHeight), PuRe_Camera_Perspective, this->m_playerIdx);
         this->m_pCamera->Initialize();
+        this->m_pCamera->Rotate(10, 0, 0);
         this->m_pPostCamera = new PuRe_Camera(PuRe_Vector2F((float32)gdesc.ResolutionWidth, (float32)gdesc.ResolutionHeight), PuRe_Camera_Orthogonal);
         this->m_pMaterial = a_pGraphics->LoadMaterial("../data/effects/default/default");
         this->m_pPostMaterial = a_pGraphics->LoadMaterial("../data/effects/Post/default");

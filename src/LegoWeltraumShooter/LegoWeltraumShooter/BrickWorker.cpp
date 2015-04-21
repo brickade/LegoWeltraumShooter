@@ -20,7 +20,6 @@ namespace Game
     // **************************************************************************
     void CBrickWorker::Initialize(PuRe_IGraphics* a_pGraphics)
     {
-        this->m_gamepadThreshold = 0.2f;
         this->m_currentPosition = PuRe_Vector2F(0, 0);
         this->m_currentHeight = 0;
         
@@ -31,6 +30,8 @@ namespace Game
         this->m_pGridBrick = new PuRe_Model(a_pGraphics, this->m_pGridMaterial, "../data/models/brick1.obj");
         
         this->m_maxBrickDistance = 15;
+
+        this->lastInputIsGamepad = false;
     }
 
     // **************************************************************************
@@ -44,24 +45,31 @@ namespace Game
         //----------Gamepad
         float32 gamepadSpeed = speed * 10;
         PuRe_Vector2F gamepadInput;
-        gamepadInput = a_pInput->GetGamepadLeftThumb(this->m_playerIdx);
-        if (std::abs(gamepadInput.X) < this->m_gamepadThreshold)
+        if (a_pInput->GamepadIsPressed(a_pInput->DPAD_Right, this->m_playerIdx))
         {
-            gamepadInput.X = 0;
+            gamepadInput.X += 1;
         }
-        if (std::abs(gamepadInput.Y) < this->m_gamepadThreshold)
+        if (a_pInput->GamepadIsPressed(a_pInput->DPAD_Left, this->m_playerIdx))
         {
-            gamepadInput.Y = 0;
+            gamepadInput.X -= 1;
         }
-        //Force Gamepad Input in 8 Directions
-        float32 giLength = gamepadInput.Length();
-        gamepadInput.X = round(gamepadInput.X) * giLength;
-        gamepadInput.Y = round(gamepadInput.Y) * giLength;
-        //Better control
-        gamepadInput.X = pow(gamepadInput.X, 3);
-        gamepadInput.Y = pow(gamepadInput.Y, 3);
-        //Apply
+        if (a_pInput->GamepadIsPressed(a_pInput->DPAD_Up, this->m_playerIdx))
+        {
+            gamepadInput.Y += 1;
+        }
+        if (a_pInput->GamepadIsPressed(a_pInput->DPAD_Down, this->m_playerIdx))
+        {
+            gamepadInput.Y -= 1;
+        }
         MoveInput = gamepadInput * gamepadSpeed;
+        if (gamepadInput.Length() > 0)
+        {
+            this->lastInputIsGamepad = true;
+        }
+        else
+        {
+            this->lastInputIsGamepad = false;
+        }
 
         //----------Mouse
         if (!a_pInput->MouseIsPressed(a_pInput->LeftClick) && !a_pInput->MouseIsPressed(a_pInput->RightClick))
@@ -75,10 +83,29 @@ namespace Game
 
         //----------Apply
         //Force Forward in 8 Directions
-        PuRe_Vector2F forward = PuRe_Vector2F(a_cameraLook.X, a_cameraLook.Z);
-        forward.Normalize();
+        PuRe_Vector2F forwardRaw = PuRe_Vector2F(a_cameraLook.X, a_cameraLook.Z);
+        forwardRaw.Normalize();
+        PuRe_Vector2F forward = forwardRaw;
         forward.X = round(forward.X);
         forward.Y = round(forward.Y);
+        //Only 4 Directions when using gamepad else stay with 8
+        PuRe_Vector2F forwardN = forward;
+        forwardN.Normalize();
+        if (this->lastInputIsGamepad && abs(abs(forward.X) - abs(forward.Y)) < 0.1f)
+        {
+            float32 alpha = 45;
+            if (PuRe_Vector2F::Dot(forwardN.Side(), forwardRaw) > 0) //Detect right direction
+            {
+                alpha *= -1;
+            }
+            float32 cosAlpha = cos(alpha * 0.0174532925f);
+            float32 sinAlpha = sin(alpha * 0.0174532925f);
+            forward = PuRe_Vector2F(cosAlpha*forward.X - sinAlpha*forward.Y, sinAlpha*forward.X + cosAlpha*forward.Y); //Rotate
+            //Align
+            //forward.Normalize();
+            //forward.X = round(forward.X);
+            //forward.Y = round(forward.Y);
+        }
 
         //Set Input in the according forward direction
         this->m_currentPosition += forward * MoveInput.Y;
@@ -92,7 +119,7 @@ namespace Game
         this->m_currentBrickPosition.X = this->m_currentBrickPosition.X - fmod(this->m_currentBrickPosition.X, BRICK_WIDTH);
         this->m_currentBrickPosition.Y = this->m_currentBrickPosition.Y - fmod(this->m_currentBrickPosition.Y, BRICK_WIDTH);
 
-        printf("brickpos:%f,%f\n", this->m_currentBrickPosition.X, this->m_currentBrickPosition.Y);
+        //printf("brickpos:%f,%f\n", this->m_currentBrickPosition.X, this->m_currentBrickPosition.Y);
     }
 
     // **************************************************************************
