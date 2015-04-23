@@ -21,6 +21,8 @@ namespace Game
         void Render(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera);
 
     private:
+        float32 m_currentBrickRotation;
+        float32 m_currentRotation;
         int32 m_maxBrickDistance;
         PuRe_Vector2F m_currentBrickPosition;
         PuRe_Vector2F m_currentPosition;

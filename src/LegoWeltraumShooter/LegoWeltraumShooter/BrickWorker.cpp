@@ -120,6 +120,35 @@ namespace Game
         this->m_currentBrickPosition.Y = this->m_currentBrickPosition.Y - fmod(this->m_currentBrickPosition.Y, BRICK_WIDTH);
 
         //printf("brickpos:%f,%f\n", this->m_currentBrickPosition.X, this->m_currentBrickPosition.Y);
+
+        //----------------------------
+        //----------Rotation----------
+        //----------------------------
+
+        float32 rotationPerClick = 90.0f * 0.0174532925f;
+        //----------Gamepad
+        if (a_pInput->GamepadPressed(a_pInput->Right_Shoulder, this->m_playerIdx))
+        {
+            this->m_currentRotation += rotationPerClick;
+        }
+        if (a_pInput->GamepadPressed(a_pInput->Left_Shoulder, this->m_playerIdx))
+        {
+            this->m_currentRotation -= rotationPerClick;
+        }
+
+        //----------Keyboard
+        if (a_pInput->KeyPressed(a_pInput->E))
+        {
+            this->m_currentRotation += rotationPerClick;
+        }
+        if (a_pInput->KeyPressed(a_pInput->Q))
+        {
+            this->m_currentRotation -= rotationPerClick;
+        }
+
+        this->m_currentBrickRotation = this->m_currentRotation;
+        //float32 rotationSpeed = speed * 1;
+        //this->m_currentBrickRotation += round(clamp(this->m_currentBrickRotation - this->m_currentRotation, 0, 1)) * rotationSpeed;
     }
 
     // **************************************************************************
@@ -140,6 +169,6 @@ namespace Game
         //Current Brick
         this->m_pTmpBrickMat->Apply();
         this->m_pTmpBrickMat->SetVector3(PuRe_Vector3F(0.5f, 0.6f, 1.0f), "brickColor");
-        this->m_pCurrentBrick->Draw(a_pCamera, PuRe_Primitive::Triangles, PuRe_Vector3F(this->m_currentBrickPosition.X, this->m_currentHeight, this->m_currentBrickPosition.Y), PuRe_Vector3F(1.0f, 1.0f, 1.0f), PuRe_Vector3F(0.0f, 0.0f, 0.0f), PuRe_Vector3F(0.0f, 0.0f, 0.0f));
+        this->m_pCurrentBrick->Draw(a_pCamera, PuRe_Primitive::Triangles, PuRe_Vector3F(this->m_currentBrickPosition.X, this->m_currentHeight, this->m_currentBrickPosition.Y), PuRe_Vector3F(1.0f, 1.0f, 1.0f), PuRe_Vector3F(0.0f, this->m_currentBrickRotation, 0.0f), PuRe_Vector3F(0.0f, 0.0f, 0.0f));
     }
 }
