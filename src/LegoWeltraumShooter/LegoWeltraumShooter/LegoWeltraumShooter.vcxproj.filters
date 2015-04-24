@@ -25,6 +25,18 @@
     <Filter Include="Headerdateien\Camera">
       <UniqueIdentifier>{7dc95b62-6eae-46bd-a7fd-a10b170a9e9c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Quelldateien\Brick">
+      <UniqueIdentifier>{b0217b2c-c0c6-4333-b46e-88b46a0b5f3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\Brick">
+      <UniqueIdentifier>{69c625ce-928d-4c27-9345-2dba154e59af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\Editor">
+      <UniqueIdentifier>{bbbaea65-e863-439c-b31e-8bf49fdf3f2c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Editor">
+      <UniqueIdentifier>{670c7989-75d1-4193-a2ea-271af48eb75f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\EditorScene.h">
@@ -42,8 +54,14 @@
     <ClInclude Include="include\GameCamera.h">
       <Filter>Headerdateien\Camera</Filter>
     </ClInclude>
+    <ClInclude Include="include\Brick.h">
+      <Filter>Headerdateien\Brick</Filter>
+    </ClInclude>
+    <ClInclude Include="include\BrickCategory.h">
+      <Filter>Headerdateien\Brick</Filter>
+    </ClInclude>
     <ClInclude Include="include\BrickWorker.h">
-      <Filter>Headerdateien</Filter>
+      <Filter>Headerdateien\Editor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -65,8 +83,14 @@
     <ClCompile Include="GameCamera.cpp">
       <Filter>Quelldateien\Camera</Filter>
     </ClCompile>
+    <ClCompile Include="Brick.cpp">
+      <Filter>Quelldateien\Brick</Filter>
+    </ClCompile>
+    <ClCompile Include="BrickCategory.cpp">
+      <Filter>Quelldateien\Brick</Filter>
+    </ClCompile>
     <ClCompile Include="BrickWorker.cpp">
-      <Filter>Quelldateien</Filter>
+      <Filter>Quelldateien\Editor</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
