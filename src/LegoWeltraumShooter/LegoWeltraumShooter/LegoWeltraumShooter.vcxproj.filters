@@ -63,6 +63,12 @@
     <ClInclude Include="include\BrickWorker.h">
       <Filter>Headerdateien\Editor</Filter>
     </ClInclude>
+    <ClInclude Include="include\BrickInstance.h">
+      <Filter>Headerdateien\Brick</Filter>
+    </ClInclude>
+    <ClInclude Include="include\BrickManager.h">
+      <Filter>Headerdateien\Brick</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -91,6 +97,12 @@
     </ClCompile>
     <ClCompile Include="BrickWorker.cpp">
       <Filter>Quelldateien\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="BrickInstance.cpp">
+      <Filter>Quelldateien\Brick</Filter>
+    </ClCompile>
+    <ClCompile Include="BrickManager.cpp">
+      <Filter>Quelldateien\Brick</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

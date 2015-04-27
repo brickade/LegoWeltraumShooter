@@ -137,6 +137,8 @@
   <ItemGroup>
     <ClInclude Include="include\Brick.h" />
     <ClInclude Include="include\BrickCategory.h" />
+    <ClInclude Include="include\BrickInstance.h" />
+    <ClInclude Include="include\BrickManager.h" />
     <ClInclude Include="include\BrickWorker.h" />
     <ClInclude Include="include\EditorCamera.h" />
     <ClInclude Include="include\GameCamera.h" />
@@ -147,6 +149,8 @@
   <ItemGroup>
     <ClCompile Include="Brick.cpp" />
     <ClCompile Include="BrickCategory.cpp" />
+    <ClCompile Include="BrickInstance.cpp" />
+    <ClCompile Include="BrickManager.cpp" />
     <ClCompile Include="BrickWorker.cpp" />
     <ClCompile Include="EditorCamera.cpp" />
     <ClCompile Include="GameCamera.cpp" />

@@ -8,6 +8,7 @@
 #include <algorithm>
 
 #include "GameCamera.h"
+#include "BrickManager.h"
 
 // Declare namespace Game
 namespace Game
@@ -17,6 +18,7 @@ namespace Game
     class CGameScene : public PuRe_IScene
     {
     private:
+        CBrickManager* m_pBrickManager;
         int32 m_playerIdx;
         PuRe_Skydome* m_pSkyDome;
         int32 textureID;
@@ -38,7 +40,7 @@ namespace Game
     public:
         /// @brief Constructor to Initialize the MainScene
         ///
-        CGameScene(PuRe_Application* a_pApplication, int32 a_playerIdx);
+        CGameScene(PuRe_Application* a_pApplication, int32 a_playerIdx, CBrickManager* a_pBrickManager);
     public:
         /// @brief Initializes the scene.
         ///

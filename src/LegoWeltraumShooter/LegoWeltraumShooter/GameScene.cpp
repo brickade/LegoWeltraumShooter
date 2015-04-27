@@ -1,17 +1,17 @@
 #include "include/GameScene.h"
 namespace Game
 {
-    CGameScene::CGameScene(PuRe_Application* a_pApplication, int32 a_playerIdx)
+    CGameScene::CGameScene(PuRe_Application* a_pApplication, int32 a_playerIdx, CBrickManager* a_pBrickManager)
     {
         this->m_pApplication = a_pApplication;
         this->m_playerIdx = a_playerIdx;
+        this->m_pBrickManager = a_pBrickManager;
     }
 
     // **************************************************************************
     // **************************************************************************
     void CGameScene::Initialize(PuRe_IGraphics* a_pGraphics, PuRe_SoundPlayer* a_pSoundPlayer)
     {
-
         PuRe_GraphicsDescription gdesc = a_pGraphics->GetDescription();
 
         //Camera

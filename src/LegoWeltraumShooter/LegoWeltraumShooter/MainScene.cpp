@@ -4,8 +4,9 @@ namespace Game
     CMainScene::CMainScene(PuRe_Application* a_pApplication)
     {
         this->m_pApplication = a_pApplication;
-        this->m_pEditorScene = new CEditorScene(a_pApplication, 0);
-        this->m_pGameScene = new CGameScene(a_pApplication, 0);
+        this->m_pBrickManager = new CBrickManager();
+        this->m_pEditorScene = new CEditorScene(a_pApplication, 0, this->m_pBrickManager);
+        this->m_pGameScene = new CGameScene(a_pApplication, 0, this->m_pBrickManager);
     }
 
     // **************************************************************************
@@ -13,6 +14,8 @@ namespace Game
     void CMainScene::Initialize(PuRe_IGraphics* a_pGraphics, PuRe_SoundPlayer* a_pSoundPlayer)
     {
         PuRe_GraphicsDescription gdesc = a_pGraphics->GetDescription();
+
+        this->m_pBrickManager->Load("../data/bricks");
 
         //Scenes
         this->m_pEditorScene->Initialize(a_pGraphics, a_pSoundPlayer);
@@ -36,6 +39,11 @@ namespace Game
             return true;
         }
 
+        if (a_pTimer->GetElapsedMilliseconds() > 200)
+        {
+            return false;
+        }
+
         if (this->m_pActiveScene->Update(a_pGraphics, a_pWindow, a_pInput, a_pTimer, a_pSoundPlayer))
         {
             if (this->m_pActiveScene == this->m_pGameScene)
@@ -47,7 +55,6 @@ namespace Game
                 this->m_pActiveScene = this->m_pGameScene;
             }
         }
-
         return false;
     }
 

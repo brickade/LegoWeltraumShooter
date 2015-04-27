@@ -6,12 +6,15 @@
 
 #include "EditorCamera.h"
 #include "BrickWorker.h"
+#include "BrickManager.h"
 
 namespace Game
 {
     class CEditorScene : public PuRe_IScene
     {
     private:
+        CBrickManager* m_pBrickManager;
+
         int32 m_playerIdx;
 
         PuRe_SkyBox* m_pSkyBox;
@@ -37,7 +40,7 @@ namespace Game
     public:
         /// @brief Constructor to Initialize the MainScene
         ///
-        CEditorScene(PuRe_Application* a_pApplication, int32 a_playerIdx);
+        CEditorScene(PuRe_Application* a_pApplication, int32 a_playerIdx, CBrickManager* a_pBrickManager);
     public:
         /// @brief Initializes the scene.
         ///

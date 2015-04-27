@@ -6,6 +6,7 @@
 
 #include "EditorScene.h"
 #include "GameScene.h"
+#include "BrickManager.h"
 
 // Declare namespace Game
 namespace Game
@@ -15,6 +16,7 @@ namespace Game
     class CMainScene : public PuRe_IScene
     {
     private:
+        CBrickManager* m_pBrickManager;
         CEditorScene* m_pEditorScene;
         CGameScene* m_pGameScene;
         PuRe_IScene* m_pActiveScene;

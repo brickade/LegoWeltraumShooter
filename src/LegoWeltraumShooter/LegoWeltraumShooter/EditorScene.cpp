@@ -1,17 +1,17 @@
 #include "include/EditorScene.h"
 namespace Game
 {
-    CEditorScene::CEditorScene(PuRe_Application* a_pApplication, int32 a_playerIdx)
+    CEditorScene::CEditorScene(PuRe_Application* a_pApplication, int32 a_playerIdx, CBrickManager* a_pBrickManager)
     {
         this->m_pApplication = a_pApplication;
         this->m_playerIdx = a_playerIdx;
+        this->m_pBrickManager = a_pBrickManager;
     }
 
     // **************************************************************************
     // **************************************************************************
     void CEditorScene::Initialize(PuRe_IGraphics* a_pGraphics, PuRe_SoundPlayer* a_pSoundPlayer)
     {
-
         PuRe_GraphicsDescription gdesc = a_pGraphics->GetDescription();
 
         //Camera
