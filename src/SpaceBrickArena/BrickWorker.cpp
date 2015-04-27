@@ -140,6 +140,9 @@ namespace Game
             }
             float32 cosAlpha = cos(alpha * 0.0174532925f);
             float32 sinAlpha = sin(alpha * 0.0174532925f);
+            /*PuRe_Vector3F tmp = PuRe_Vector3F(forward.X, 0, forward.Y);
+            tmp *= PuRe_QuaternionF(0, alpha, 0);
+            forward = PuRe_Vector2F(tmp.X, tmp.Z);*/
             forward = PuRe_Vector2F(cosAlpha*forward.X - sinAlpha*forward.Y, sinAlpha*forward.X + cosAlpha*forward.Y); //Rotate
             //Align
             //forward.Normalize();

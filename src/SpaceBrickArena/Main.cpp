@@ -22,6 +22,7 @@ int32 PURE_MAIN
     description.Window.X = 100;
     description.Window.Y = 10;
     description.Window.DisplaySetting = PuRe_DisplaySetting::Windowed;
+    description.Window.ShowCursor = false;
     PuRe_Application* papplication = new PuRe_Application(pplatform, description);
     Game::CMainScene scene(papplication);
 

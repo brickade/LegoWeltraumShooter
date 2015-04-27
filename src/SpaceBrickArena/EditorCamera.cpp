@@ -89,7 +89,7 @@ namespace Game
         rot.X = clamp(rot.X, -89, 89);
         this->SetRotation(rot);
 
-        this->Move(this->GetDirection() * -this->m_distance);
+        this->Move(this->GetForward() * -this->m_distance);
     }
 }
 
