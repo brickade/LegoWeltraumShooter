@@ -36,6 +36,9 @@
     <ClInclude Include="include\TheBrick\BrickManager.h">
       <Filter>Headerdateien\Brick</Filter>
     </ClInclude>
+    <ClInclude Include="include\TheBrick\Nub.h">
+      <Filter>Headerdateien\Brick</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Brick.cpp">

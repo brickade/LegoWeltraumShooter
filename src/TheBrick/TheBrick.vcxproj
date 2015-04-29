@@ -131,6 +131,7 @@
     <ClInclude Include="include\TheBrick\BrickCategory.h" />
     <ClInclude Include="include\TheBrick\BrickInstance.h" />
     <ClInclude Include="include\TheBrick\BrickManager.h" />
+    <ClInclude Include="include\TheBrick\Nub.h" />
     <ClInclude Include="include\TheBrick\TheBrick.h" />
   </ItemGroup>
   <ItemGroup>

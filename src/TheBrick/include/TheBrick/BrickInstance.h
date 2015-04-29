@@ -5,6 +5,7 @@
 #include <PuReEngine/Defines.h>
 
 #include "Brick.h"
+#include "Nub.h"
 
 namespace TheBrick
 {
@@ -27,6 +28,8 @@ namespace TheBrick
         ~CBrickInstance();
 
         void Draw(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera);
+
+        PuRe_List<SNub>* GetWorldSpaceNubs();
     };
 }
 

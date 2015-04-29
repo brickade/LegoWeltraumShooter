@@ -6,11 +6,11 @@ namespace TheBrick
 
     // **************************************************************************
     // **************************************************************************
-    CBrick::CBrick(PuRe_Model* a_pModel, PuRe_Vector3I a_segments, bool a_isPlate)
+    CBrick::CBrick(PuRe_Model* a_pModel)
     {
-        m_pModel = a_pModel;
-        m_segments = a_segments;
-        m_isPlate = a_isPlate;
+        this->m_pModel = a_pModel;
+        this->m_pNubs = new PuRe_List<SNub>();
+
     }
 
     // **************************************************************************
@@ -18,6 +18,7 @@ namespace TheBrick
     CBrick::~CBrick()
     {
         SAFE_DELETE(this->m_pModel);
+        SAFE_DELETE(this->m_pNubs);
     }
 
     // **************************************************************************
@@ -26,9 +27,7 @@ namespace TheBrick
     {
         PuRe_IMaterial* material = a_pGraphics->LoadMaterial("../data/effects/editor/default");
         PuRe_Model* model = new PuRe_Model(a_pGraphics, material, a_pPath);
-        PuRe_Vector3I segments = PuRe_Vector3I(1, 1, 1);
-        bool plate = false;
-        return new CBrick(model, segments, plate);
+        return new CBrick(model);
     }
 
     // **************************************************************************
@@ -43,5 +42,12 @@ namespace TheBrick
     void CBrick::Draw(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera, PuRe_Vector3F a_position, PuRe_Vector3F a_Scale, PuRe_Vector3F a_rotation)
     {
         this->m_pModel->Draw(a_pCamera, PuRe_Primitive::Triangles, a_position, a_Scale, a_rotation, PuRe_Vector3F(0, 0, 0));
+    }
+
+    // **************************************************************************
+    // **************************************************************************
+    PuRe_List<SNub>* CBrick::GetNubs()
+    {
+        return this->m_pNubs;
     }
 }

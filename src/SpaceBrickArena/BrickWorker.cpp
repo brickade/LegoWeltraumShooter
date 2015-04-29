@@ -26,7 +26,7 @@ namespace Game
         this->m_currentHeight = 0;
         
         this->m_pTmpBrickMat = a_pGraphics->LoadMaterial("../data/effects/editor/default");
-        this->m_pCurrentBrick = new TB_Brick(new PuRe_Model(a_pGraphics, this->m_pTmpBrickMat, "../data/models/brick1.obj"), PuRe_Vector3I(1, 1, 1), false);
+        this->m_pCurrentBrick = new TB_Brick(new PuRe_Model(a_pGraphics, this->m_pTmpBrickMat, "../data/models/brick1.obj"));
         
         this->m_pGridMaterial = a_pGraphics->LoadMaterial("../data/effects/editor/grid");
         this->m_pGridBrick = new PuRe_Model(a_pGraphics, this->m_pGridMaterial, "../data/models/brick1.obj");
