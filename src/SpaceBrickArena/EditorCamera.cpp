@@ -2,13 +2,13 @@
 
 namespace Game
 {
-    CEditorCamera::CEditorCamera(PuRe_Vector3F a_Position, PuRe_Vector3F a_Direction, PuRe_Vector3F a_Up, float32 a_FOV, float32 a_AspectRatio,
-        PuRe_Vector2F a_NearFar, PuRe_Vector2F a_Resolution, PuReEngine::Core::CameraProjection a_UsedProjection, int32 a_playerIdx) : PuRe_Camera(a_Position, a_Direction, a_Up, a_FOV, a_AspectRatio, a_NearFar, a_Resolution, a_UsedProjection)
+    CEditorCamera::CEditorCamera(PuRe_Vector3F a_Position, PuRe_Vector3F a_Direction, PuRe_Vector3F a_Up, float a_FOV, float a_AspectRatio,
+        PuRe_Vector2F a_NearFar, PuRe_Vector2F a_Resolution, PuReEngine::Core::CameraProjection a_UsedProjection, int a_playerIdx) : PuRe_Camera(a_Position, a_Direction, a_Up, a_FOV, a_AspectRatio, a_NearFar, a_Resolution, a_UsedProjection)
     {
         this->m_playerIdx = a_playerIdx;
     }
 
-    CEditorCamera::CEditorCamera(PuRe_Vector2F a_Resolution, PuReEngine::Core::CameraProjection a_UsedProjection, int32 a_playerIdx) : PuRe_Camera(a_Resolution, a_UsedProjection)
+    CEditorCamera::CEditorCamera(PuRe_Vector2F a_Resolution, PuReEngine::Core::CameraProjection a_UsedProjection, int a_playerIdx) : PuRe_Camera(a_Resolution, a_UsedProjection)
     {
         this->m_playerIdx = a_playerIdx;
     }
@@ -30,11 +30,11 @@ namespace Game
     {
         //Handle Movement
         PuRe_Vector2F MoveInput;
-        float32 speed = a_pTimer->GetElapsedSeconds();
+        float speed = a_pTimer->GetElapsedSeconds();
 
         //----------Gamepad
-        float32 gamepadSpeed = speed * 250;
-        float32 gamepadZoomSpeed = gamepadSpeed * 0.05f;
+        float gamepadSpeed = speed * 250;
+        float gamepadZoomSpeed = gamepadSpeed * 0.05f;
         PuRe_Vector2F gamepadInput;
         gamepadInput = a_pInput->GetGamepadRightThumb(this->m_playerIdx);
         if (std::abs(gamepadInput.X) < this->m_gamepadThreshold)
@@ -51,8 +51,8 @@ namespace Game
         this->m_distance -= a_pInput->GetGamepadRightTrigger(this->m_playerIdx) * gamepadZoomSpeed;
 
         //----------Keyboard
-        float32 keyboardSpeed = speed * 100;
-        float32 keyboardZoomSpeed = keyboardSpeed * 0.6f;
+        float keyboardSpeed = speed * 100;
+        float keyboardZoomSpeed = keyboardSpeed * 0.6f;
         if (a_pInput->KeyIsPressed(a_pInput->D))
             MoveInput.X += keyboardSpeed;
         else if (a_pInput->KeyIsPressed(a_pInput->A))
@@ -68,8 +68,8 @@ namespace Game
             this->m_distance += keyboardZoomSpeed;
 
         //----------Mouse
-        float32 mouseSpeed = speed * 35;
-        float32 mouseZoomSpeed = mouseSpeed * 5;
+        float mouseSpeed = speed * 35;
+        float mouseZoomSpeed = mouseSpeed * 5;
         PuRe_Vector2F mouseDelta = a_pInput->GetRelativeMousePosition();
         mouseDelta.X *= -1;
         if (a_pInput->MouseIsPressed(a_pInput->RightClick))

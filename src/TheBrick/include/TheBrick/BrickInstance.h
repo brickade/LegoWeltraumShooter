@@ -17,8 +17,8 @@ namespace TheBrick
     public:
         CBrick* m_pBrick;
         PuRe_Vector3F m_position;
-        float32 m_rotation;
-        float32 m_scale;
+        float m_rotation;
+        float m_scale;
     
     private:
             

@@ -5,7 +5,7 @@ namespace Game
 {
     // **************************************************************************
     // **************************************************************************
-    CBrickWorker::CBrickWorker(int32 a_playerIdx)
+    CBrickWorker::CBrickWorker(int a_playerIdx)
     {
         this->m_playerIdx = a_playerIdx;
     }
@@ -78,12 +78,12 @@ namespace Game
 
     // **************************************************************************
     // **************************************************************************
-    void CBrickWorker::UpdateTranslation(PuRe_IInput* a_pInput, PuRe_Vector3F a_cameraLook, float32 a_speed)
+    void CBrickWorker::UpdateTranslation(PuRe_IInput* a_pInput, PuRe_Vector3F a_cameraLook, float a_speed)
     {
         PuRe_Vector2F MoveInput;
 
         //----------Gamepad
-        float32 gamepadSpeed = a_speed * 10;
+        float gamepadSpeed = a_speed * 10;
         PuRe_Vector2F gamepadInput;
         if (a_pInput->GamepadIsPressed(a_pInput->DPAD_Right, this->m_playerIdx))
         {
@@ -114,7 +114,7 @@ namespace Game
         //----------Mouse
         if (/*!a_pInput->MouseIsPressed(a_pInput->LeftClick) && */!a_pInput->MouseIsPressed(a_pInput->RightClick))
         {
-            float32 mouseSpeed = a_speed;
+            float mouseSpeed = a_speed;
             PuRe_Vector2F mouseDelta = a_pInput->GetRelativeMousePosition();
             mouseDelta.Y *= -1;
             //Apply
@@ -133,13 +133,13 @@ namespace Game
         forwardN.Normalize();
         if (this->lastInputIsGamepad && abs(abs(forward.X) - abs(forward.Y)) < 0.1f)
         {
-            float32 alpha = 45;
+            float alpha = 45;
             if (PuRe_Vector2F::Dot(forwardN.Side(), forwardRaw) > 0) //Detect right direction
             {
                 alpha *= -1;
             }
-            float32 cosAlpha = cos(alpha * 0.0174532925f);
-            float32 sinAlpha = sin(alpha * 0.0174532925f);
+            float cosAlpha = cos(alpha * 0.0174532925f);
+            float sinAlpha = sin(alpha * 0.0174532925f);
             /*PuRe_Vector3F tmp = PuRe_Vector3F(forward.X, 0, forward.Y);
             tmp *= PuRe_QuaternionF(0, alpha, 0);
             forward = PuRe_Vector2F(tmp.X, tmp.Z);*/
@@ -167,7 +167,7 @@ namespace Game
 
     // **************************************************************************
     // **************************************************************************
-    void CBrickWorker::UpdateRotation(PuRe_IInput* a_pInput, float32 a_rotationPerClick)
+    void CBrickWorker::UpdateRotation(PuRe_IInput* a_pInput, float a_rotationPerClick)
     {
         //----------Gamepad
         if (a_pInput->GamepadPressed(a_pInput->Right_Shoulder, this->m_playerIdx))
@@ -190,7 +190,7 @@ namespace Game
         }
 
         this->m_currentBrickRotation = this->m_currentRotation;
-        //float32 rotationSpeed = speed * 1;
+        //float rotationSpeed = speed * 1;
         //this->m_currentBrickRotation += round(clamp(this->m_currentBrickRotation - this->m_currentRotation, 0, 1)) * rotationSpeed;
     }
 

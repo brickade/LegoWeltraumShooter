@@ -15,10 +15,10 @@ namespace Game
     private:
         TB_BrickManager* m_pBrickManager;
 
-        int32 m_playerIdx;
+        int m_playerIdx;
 
         PuRe_SkyBox* m_pSkyBox;
-        int32 textureID;
+        int textureID;
         PuRe_Rendertarget* m_pRenderTarget;
         PuRe_Model* m_pModel;
         PuRe_IMaterial* m_pMaterial;
@@ -40,7 +40,7 @@ namespace Game
     public:
         /// @brief Constructor to Initialize the MainScene
         ///
-        CEditorScene(PuRe_Application* a_pApplication, int32 a_playerIdx, TB_BrickManager* a_pBrickManager);
+        CEditorScene(PuRe_Application* a_pApplication, int a_playerIdx, TB_BrickManager* a_pBrickManager);
     public:
         /// @brief Initializes the scene.
         ///

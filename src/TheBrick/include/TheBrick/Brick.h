@@ -15,7 +15,7 @@ namespace TheBrick
     class CBrick
     {
     public:
-        uint32 m_BrickId;
+        unsigned int m_BrickId;
         static const float SEGMENT_WIDTH;
         static const float SEGMENT_HEIGHT;
 

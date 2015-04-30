@@ -1,7 +1,7 @@
 #include "include/GameScene.h"
 namespace Game
 {
-    CGameScene::CGameScene(PuRe_Application* a_pApplication, int32 a_playerIdx, TB_BrickManager* a_pBrickManager)
+    CGameScene::CGameScene(PuRe_Application* a_pApplication, int a_playerIdx, TB_BrickManager* a_pBrickManager)
     {
         this->m_pApplication = a_pApplication;
         this->m_playerIdx = a_playerIdx;
@@ -15,9 +15,9 @@ namespace Game
         PuRe_GraphicsDescription gdesc = a_pGraphics->GetDescription();
 
         //Camera
-        this->m_pCamera = new CGameCamera(PuRe_Vector2F((float32)gdesc.ResolutionWidth, (float32)gdesc.ResolutionHeight), PuRe_Camera_Perspective);
+        this->m_pCamera = new CGameCamera(PuRe_Vector2F((float)gdesc.ResolutionWidth, (float)gdesc.ResolutionHeight), PuRe_Camera_Perspective);
         this->m_pCamera->Initialize();
-        this->m_pPostCamera = new PuRe_Camera(PuRe_Vector2F((float32)gdesc.ResolutionWidth, (float32)gdesc.ResolutionHeight), PuRe_Camera_Orthogonal);
+        this->m_pPostCamera = new PuRe_Camera(PuRe_Vector2F((float)gdesc.ResolutionWidth, (float)gdesc.ResolutionHeight), PuRe_Camera_Orthogonal);
         this->m_pMaterial = a_pGraphics->LoadMaterial("../data/effects/default/default");
         this->m_pPostMaterial = a_pGraphics->LoadMaterial("../data/effects/Post/default");
         this->m_pModel = new PuRe_Model(a_pGraphics, this->m_pMaterial, "../data/models/brick1.obj");
@@ -59,7 +59,7 @@ namespace Game
 
         this->m_pCamera->Update(a_pGraphics, a_pWindow, a_pInput, a_pTimer);
 
-        for (int32 i = 0; i < 4; i++)
+        for (int i = 0; i < 4; i++)
         {
             if (a_pInput->GamepadPressed(a_pInput->Pad_A, i))
                 printf("A pressed by %i\n", i);
@@ -76,19 +76,19 @@ namespace Game
         PuRe_Color clear = PuRe_Color(0.0f, 0.4f, 1.0f);
         PuRe_GraphicsDescription gdesc = a_pGraphics->GetDescription();
 
-        this->m_pRenderTarget->Apply(clear);
+        this->m_pRenderTarget->ApplyGeometryPass(clear);
 
-        for (int32 i = 0; i < 4; i++)
+        for (int i = 0; i < 4; i++)
         {
-            float32 x = (2.5f*(float32)(i / 2)) + 2.0f;
-            float32 y = 2.5f*(float32)(i % 2);
+            float x = (2.5f*(float)(i / 2)) + 2.0f;
+            float y = 2.5f*(float)(i % 2);
             this->m_pModel->Draw(this->m_pCamera, PuRe_Primitive::Triangles, PuRe_Vector3F(x, y, 0.0f), PuRe_Vector3F(1.0f, 1.0f, 1.0f), PuRe_Vector3F(0.0f, this->rot, 0.0f), PuRe_Vector3F(0.0f, 0.0f, 0.0f));
         }
         this->m_pSkyDome->Draw(this->m_pCamera, PuRe_Vector3F(0.0f, this->rot / 1000.0f, 0.0f));
 
         a_pGraphics->Begin(clear);
         this->m_pPostMaterial->Apply();
-        this->m_pPostMaterial->SetFloat((float32)textureID, "textureID");
+        this->m_pPostMaterial->SetFloat((float)textureID, "textureID");
         this->m_pPostMaterial->SetVector3(PuRe_Vector3F(0.1f, 0.1f, 0.1f), "ambient");
         this->m_pRenderTarget->Draw(this->m_pPostCamera, PuRe_Vector3F(gdesc.ResolutionWidth / 2.0f, gdesc.ResolutionHeight / 2.0f, 0.0f), PuRe_Vector3F(gdesc.ResolutionWidth / 2.0f, gdesc.ResolutionHeight / 2.0f, 0.0f));
 

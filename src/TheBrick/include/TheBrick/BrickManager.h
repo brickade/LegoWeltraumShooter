@@ -23,7 +23,7 @@ namespace TheBrick
 
         void Load(const char* a_pFolder);
 
-        CBrick* GetBrick(int32 a_id);
+        CBrick* GetBrick(int a_id);
     };
 }
 

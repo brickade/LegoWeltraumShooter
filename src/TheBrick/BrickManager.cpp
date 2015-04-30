@@ -24,7 +24,7 @@ namespace TheBrick
 
     // **************************************************************************
     // **************************************************************************
-    CBrick* CBrickManager::GetBrick(int32 a_id)
+    CBrick* CBrickManager::GetBrick(int a_id)
     {
         #ifdef DEBUG
             try //Bounds checking

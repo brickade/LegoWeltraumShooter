@@ -12,14 +12,14 @@ namespace Game
     public:
 
     private:
-        float32 m_currentBrickRotation;
-        float32 m_currentRotation;
-        int32 m_maxBrickDistance;
+        float m_currentBrickRotation;
+        float m_currentRotation;
+        int m_maxBrickDistance;
         PuRe_Vector2F m_currentBrickPosition;
         PuRe_Vector2F m_currentPosition;
-        float32 m_currentHeight;
+        float m_currentHeight;
 
-        int32 m_playerIdx;
+        int m_playerIdx;
 
         TB_Brick* m_pCurrentBrick;
 
@@ -32,7 +32,7 @@ namespace Game
         bool lastInputIsGamepad;
 
     public:
-        CBrickWorker(int32 a_playerIdx);
+        CBrickWorker(int a_playerIdx);
         ~CBrickWorker();
 
         void Initialize(PuRe_IGraphics* a_pGraphics);
@@ -40,8 +40,8 @@ namespace Game
         void Render(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera);
 
     private:
-        void UpdateTranslation(PuRe_IInput* a_pInput, PuRe_Vector3F a_cameraLook, float32 a_speed);
-        void UpdateRotation(PuRe_IInput* a_pInput, float32 a_rotationPerClick);
+        void UpdateTranslation(PuRe_IInput* a_pInput, PuRe_Vector3F a_cameraLook, float a_speed);
+        void UpdateRotation(PuRe_IInput* a_pInput, float a_rotationPerClick);
         void UpdatePlacement(PuRe_IInput* a_pInput);
     };
 }

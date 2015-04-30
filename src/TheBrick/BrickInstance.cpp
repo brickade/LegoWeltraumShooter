@@ -30,7 +30,7 @@ namespace TheBrick
     PuRe_List<SNub>* CBrickInstance::GetWorldSpaceNubs()
     {
         PuRe_List<SNub>* nubs = new PuRe_List<SNub>(*this->m_pBrick->GetNubs()); //Copy nubs
-        for (int i = 0; i < nubs->size(); i++)
+        for (unsigned int i = 0; i < nubs->size(); i++)
         {
             (*nubs)[i].Position += this->m_position;
             //(*nubs)[i].Orientation += this->m_rotation; Need consens of orientation vs rotation vs euler vs stuff: need transform component w position, rotation & scale

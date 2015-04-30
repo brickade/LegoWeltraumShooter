@@ -5,7 +5,7 @@
 
 
 
-int32 PURE_MAIN
+int PURE_MAIN
 {
     //Memory Leak detection
     //static unsigned int breakId = 162;

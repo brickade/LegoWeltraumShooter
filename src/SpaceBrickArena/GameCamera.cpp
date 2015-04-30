@@ -2,7 +2,7 @@
 
 namespace Game
 {
-  CGameCamera::CGameCamera(PuRe_Vector3F a_Position, PuRe_Vector3F a_Direction, PuRe_Vector3F a_Up, float32 a_FOV, float32 a_AspectRatio,
+  CGameCamera::CGameCamera(PuRe_Vector3F a_Position, PuRe_Vector3F a_Direction, PuRe_Vector3F a_Up, float a_FOV, float a_AspectRatio,
     PuRe_Vector2F a_NearFar, PuRe_Vector2F a_Resolution, PuReEngine::Core::CameraProjection a_UsedProjection) : PuRe_Camera(a_Position, a_Direction, a_Up, a_FOV, a_AspectRatio, a_NearFar, a_Resolution, a_UsedProjection)
   {
 
@@ -28,7 +28,7 @@ namespace Game
   void CGameCamera::Update(PuRe_IGraphics* a_pGraphics, PuRe_IWindow* a_pWindow, PuRe_IInput* a_pInput, PuRe_Timer* a_pTimer)
   {
     //Seconds for frame independent movement
-    float32 Seconds = a_pTimer->GetElapsedSeconds();
+    float Seconds = a_pTimer->GetElapsedSeconds();
 
     PuRe_Vector3F CameraMove;
     PuRe_GraphicsDescription gdesc = a_pGraphics->GetDescription();
@@ -50,7 +50,7 @@ namespace Game
         cameraLook.Y += speed.Y*Seconds;
       this->Rotate(cameraLook.X, cameraLook.Y, cameraLook.Z);
     }
-    float32 speed = 10.0f*Seconds;
+    float speed = 10.0f*Seconds;
     //Handle Movement
     if (a_pInput->KeyIsPressed(a_pInput->W))
       CameraMove.Z += speed;
