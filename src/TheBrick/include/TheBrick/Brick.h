@@ -4,6 +4,8 @@
 #include <PuReEngine/Core.h>
 #include <PuReEngine/Defines.h>
 
+#include <Onager/Collider.h>
+
 #include "BrickInstance.h"
 #include "Nub.h"
 
@@ -23,6 +25,8 @@ namespace TheBrick
         PuRe_Model* m_pModel;
         PuRe_List<SNub>* m_pNubs;
 
+        ong::ColliderData* m_pColliderData;
+        
     public:
         CBrick(PuRe_Model* a_pModel);
         ~CBrick();

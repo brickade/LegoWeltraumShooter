@@ -19,6 +19,12 @@
     <Filter Include="Headerdateien\Brick">
       <UniqueIdentifier>{69c625ce-928d-4c27-9345-2dba154e59af}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Headerdateien\GameObject">
+      <UniqueIdentifier>{2717c639-189f-4112-8bcc-e43cda509b99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\GameObject">
+      <UniqueIdentifier>{6bed82d1-b0bb-4634-bfae-f92f0708666d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\TheBrick\TheBrick.h">
@@ -39,6 +45,15 @@
     <ClInclude Include="include\TheBrick\Nub.h">
       <Filter>Headerdateien\Brick</Filter>
     </ClInclude>
+    <ClInclude Include="include\TheBrick\GameObject.h">
+      <Filter>Headerdateien\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TheBrick\Spaceship.h">
+      <Filter>Headerdateien\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TheBrick\Bullet.h">
+      <Filter>Headerdateien\GameObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Brick.cpp">
@@ -52,6 +67,15 @@
     </ClCompile>
     <ClCompile Include="BrickManager.cpp">
       <Filter>Quelldateien\Brick</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>Quelldateien\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Spaceship.cpp">
+      <Filter>Quelldateien\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Bullet.cpp">
+      <Filter>Quelldateien\GameObject</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

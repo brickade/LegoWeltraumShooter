@@ -4,6 +4,8 @@
 #include <PuReEngine/Core.h>
 #include <PuReEngine/Defines.h>
 
+#include <Onager/Collider.h>
+
 #include "Brick.h"
 #include "Nub.h"
 
@@ -21,7 +23,7 @@ namespace TheBrick
         float m_scale;
     
     private:
-            
+        ong::Collider* m_pCollider;
 
     public:
         CBrickInstance(CBrick* a_pBrick);
