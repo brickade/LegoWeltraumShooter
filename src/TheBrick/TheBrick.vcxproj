@@ -57,24 +57,28 @@
     <Import Project="..\propertysheets\NODEFAULTLIB.props" />
     <Import Project="..\propertysheets\TheBrick.Output.props" />
     <Import Project="..\propertysheets\PuRe.Core.Include.props" />
+    <Import Project="..\propertysheets\Onager.Include.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\propertysheets\NODEFAULTLIB.props" />
     <Import Project="..\propertysheets\TheBrick.Output.props" />
     <Import Project="..\propertysheets\PuRe.Core.Include.props" />
+    <Import Project="..\propertysheets\Onager.Include.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\propertysheets\NODEFAULTLIB.props" />
     <Import Project="..\propertysheets\TheBrick.Output.props" />
     <Import Project="..\propertysheets\PuRe.Core.Include.props" />
+    <Import Project="..\propertysheets\Onager.Include.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\propertysheets\NODEFAULTLIB.props" />
     <Import Project="..\propertysheets\TheBrick.Output.props" />
     <Import Project="..\propertysheets\PuRe.Core.Include.props" />
+    <Import Project="..\propertysheets\Onager.Include.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup />

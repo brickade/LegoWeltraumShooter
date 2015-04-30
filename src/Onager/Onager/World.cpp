@@ -1,0 +1,305 @@
+#include "World.h"
+#include "Narrowphase.h"
+#include "ContactSolver.h"
+#include "QuickHull.h"
+
+namespace ong
+{
+
+
+
+	World::World(const vec3& gravity)
+		: m_gravity(gravity),
+		m_bodyAllocator(BodyAllocator(32)),
+		m_colliderAllocator(ColliderAllocator(32)),
+		m_hullAllocator(HullAllocator(32)),
+		m_sphereAllocator(SphereAllocator(32)),
+		m_capsuleAllocator(CapsuleAllocator(32)),
+		m_materialAllocator(MaterialAllocator(5)),
+		m_pBody(nullptr),
+		m_numBodies(0),
+		m_numColliders(0)
+
+	{
+	}
+
+
+	void World::step(float dt)
+	{
+
+		assert(dt != 0.0f);
+
+
+		Body* b = m_pBody;
+		while (b != nullptr)
+		{
+			b->calculateProxy();
+			//todo presistent contacts
+			b->clearContacts();
+			b = b->getNext();
+		}
+
+
+		// broadphase
+		Pair* pairs = new Pair[m_numBodies * m_numBodies];
+		int numPairs = generatePairs(m_proxies.data(), m_proxies.size(), pairs);
+
+		assert(numPairs <= m_numBodies*m_numBodies);
+
+		//narrowphase
+
+		m_contactManager.generateContacts(pairs, numPairs, m_numColliders*m_numColliders);
+
+
+
+		//integrate
+		for (int i = 0; i < m_numBodies; ++i)
+		{
+			mat3x3 q = toRotMat(m_r[i].q);
+
+			m_m[i].invI = q * m_m[i].localInvI * transpose(q);
+
+			if (m_m[i].invM != 0.0f)
+				m_p[i].l += dt * 1.0f / m_m[i].invM * m_gravity;
+
+			m_v[i].v = m_m[i].invM * m_p[i].l;
+			m_v[i].w = m_m[i].invI* m_p[i].a;
+		}
+
+
+		//resolution
+	{
+		WorldContext context;
+		context.r = m_r.data();
+		context.v = m_v.data();
+		context.p = m_p.data();
+		context.m = m_m.data();
+
+		int numContacts = 0;
+		Contact* c = m_contactManager.getContacts(&numContacts);
+
+		ContactConstraint* contactConstraints = new ContactConstraint[numContacts];
+		preSolveContacts(&context, c, numContacts, 1.0f / dt, contactConstraints);
+
+		for (int i = 0; i < 16; ++i)
+		{
+			solveContacts(&context, c, numContacts, contactConstraints);
+		}
+
+
+		delete[] contactConstraints;
+
+	}
+
+
+		for (int i = 0; i < m_numBodies; ++i)
+		{
+			m_r[i].p += dt * m_v[i].v;
+
+			vec3 wAxis = dt * m_v[i].w;
+			float wScalar = sqrt(lengthSq(wAxis));
+
+			if (wScalar != 0.0f)
+				m_r[i].q = QuatFromAxisAngle(1.0f / wScalar * wAxis, wScalar) * m_r[i].q;
+		}
+
+
+		delete[] pairs;
+	}
+
+	Body* World::createBody(const BodyDescription& description)
+	{
+		int idx = m_numBodies++;
+		m_r.push_back(PositionState());
+		m_v.push_back(VelocityState());
+		m_p.push_back(MomentumState());
+		m_m.push_back(MassState());
+		m_b.push_back(nullptr);
+
+		Body* body = m_bodyAllocator.sNew(Body(description, this, idx));
+
+		m_b[idx] = body;
+
+		body->setNext(m_pBody);
+		body->setPrevious(nullptr);
+
+		m_proxies.push_back(Proxy());
+		body->setProxyID(m_proxies.size() - 1);
+
+
+		if (m_pBody != nullptr)
+			m_pBody->setPrevious(body);
+
+		m_pBody = body;
+
+
+		return body;
+	}
+
+
+
+	void World::destroyBody(Body* pBody)
+	{
+		int idx = pBody->getIndex();
+
+		m_numBodies--;
+
+		m_r[idx] = m_r[m_numBodies];
+		m_v[idx] = m_v[m_numBodies];
+		m_p[idx] = m_p[m_numBodies];
+		m_m[idx] = m_m[m_numBodies];
+		m_b[idx] = m_b[m_numBodies];
+
+		m_b[idx]->setIndex(idx);
+
+		Collider* c = pBody->getCollider();
+		while (c)
+		{
+			destroyCollider(c);
+			c = c->getNext();
+		}
+
+		if (pBody->getPrevious())
+			pBody->getPrevious()->setNext(pBody->getNext());
+		if (pBody->getNext())
+			pBody->getNext()->setPrevious(pBody->getPrevious());
+
+		if (m_pBody == pBody)
+			m_pBody = pBody->getNext();
+
+		m_b[idx]->setProxyID(pBody->getProxyID());
+		m_proxies.pop_back();
+
+		m_bodyAllocator.sDelete(pBody);
+	}
+
+	Collider* World::createCollider(const ColliderDescription& description)
+	{
+
+		Collider* collider = nullptr;
+
+		collider = m_colliderAllocator.sNew(Collider(description));
+		m_numColliders++;
+
+		return collider;
+	}
+
+	Collider* World::createCollider(const ColliderData& data)
+	{
+
+		Collider* collider = nullptr;
+
+		collider = m_colliderAllocator.sNew(Collider(data));
+		m_numColliders++;
+
+		return collider;
+	}
+
+	void World::destroyCollider(Collider* pCollider)
+	{
+		if (pCollider->getBody())
+			pCollider->getBody()->removeCollider(pCollider);
+
+		m_colliderAllocator.sDelete(pCollider);
+		m_numColliders--;
+	}
+
+	Material* World::createMaterial(const Material& material)
+	{
+		return m_materialAllocator(material);
+	}
+
+
+	void World::destroyMaterial(Material* pMaterial)
+	{
+		m_materialAllocator.sDelete(pMaterial);
+	}
+
+	ShapePtr World::createShape(const ShapeDescription& descr)
+	{
+		switch (descr.type)
+		{
+		case ShapeType::SPHERE:
+			return ShapePtr(m_sphereAllocator(descr.sphere));
+		case ShapeType::CAPSULE:
+			return ShapePtr(m_capsuleAllocator(descr.capsule));
+		case ShapeType::HULL:
+		{
+			Hull* h = m_hullAllocator(descr.hull);
+
+			h->pEdges = new HalfEdge[h->numEdges];
+			h->pVertices = new vec3[h->numVertices];
+			h->pFaces = new Face[h->numFaces];
+			h->pPlanes = new Plane[h->numFaces];
+
+			memcpy(h->pEdges, descr.hull.pEdges, sizeof(HalfEdge) * h->numEdges);
+			memcpy(h->pVertices, descr.hull.pVertices, sizeof(vec3) * h->numVertices);
+			memcpy(h->pFaces, descr.hull.pFaces, sizeof(Face) * h->numFaces);
+			memcpy(h->pPlanes, descr.hull.pPlanes, sizeof(Plane) * h->numFaces);
+
+			return ShapePtr(h);
+		}
+		case ShapeConstruction::HULL_FROM_POINTS:
+		{
+			Hull* h = m_hullAllocator();
+			quickHull(descr.hullFromPoints.points, descr.hullFromPoints.numPoints, h);
+			return ShapePtr(h);
+		}
+		case ShapeConstruction::HULL_FROM_BOX:
+		{
+
+			// todo without quickhull
+			Hull* h = m_hullAllocator();
+
+			vec3 c = descr.hullFromBox.c;
+			vec3 e = descr.hullFromBox.e;
+
+			vec3 box[8] =
+			{
+				vec3(-e.x, -e.y, e.z) + c,
+				vec3(-e.x, -e.y, -e.z) + c,
+				vec3(e.x, -e.y, -e.z) + c,
+				vec3(e.x, -e.y, e.z) + c,
+
+				vec3(-e.x, e.y, e.z) + c,
+				vec3(-e.x, e.y, -e.z) + c,
+				vec3(e.x, e.y, -e.z) + c,
+				vec3(e.x, e.y, e.z) + c
+			};
+
+			quickHull(box, 8, h);
+			return ShapePtr(h);
+		}
+		default:
+			return ShapePtr();
+		}
+	}
+
+	void World::destroyShape(ShapePtr shape)
+	{
+		switch (shape.getType())
+		{
+		case ShapeType::SPHERE:
+			m_sphereAllocator.sDelete(shape);
+			return;
+		case ShapeType::CAPSULE:
+			m_capsuleAllocator.sDelete(shape);
+			return;
+		case ShapeType::HULL:
+		{
+			delete[] shape.toHull()->pEdges;
+			delete[] shape.toHull()->pVertices;
+			delete[] shape.toHull()->pFaces;
+			delete[] shape.toHull()->pPlanes;
+
+			m_hullAllocator.sDelete(shape);
+			return;
+		}
+		}
+	}
+
+	void World::setProxy(int proxyID, const Proxy& proxy)
+	{
+		m_proxies[proxyID] = proxy;
+	}
+}
