@@ -17,10 +17,10 @@ int32 PURE_MAIN
     description.Graphics.ResolutionHeight = 1080;
     description.Graphics.Module = PuRe_GraphicsModuleType::OpenGL;
     description.Window.Title = "SpaceBrickArena - Development";
-    description.Window.Width = 1920;
-    description.Window.Height = 1080;
-    description.Window.X = 1000;
-    description.Window.Y = 10;
+    description.Window.Width = 1280;
+    description.Window.Height = 720;
+    description.Window.X = 1950;
+    description.Window.Y = 200;
     description.Window.DisplaySetting = PuRe_DisplaySetting::Windowed;
     description.Window.ShowCursor = false;
     PuRe_Application* papplication = new PuRe_Application(pplatform, description);
