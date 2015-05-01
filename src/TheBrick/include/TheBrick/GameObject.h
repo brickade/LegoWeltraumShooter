@@ -8,7 +8,7 @@
 #include <Onager/myMath.h>
 
 #include "BrickInstance.h"
-
+#include "Serializer.h"
 
 namespace TheBrick
 {
@@ -26,6 +26,9 @@ namespace TheBrick
         virtual ~CGameObject();
 
         virtual void Draw(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera);
+
+        static CGameObject* Deserialize(CSerializer* a_pSerializer);
+        void Serialize(CSerializer* a_pSerializer);
     };
 }
 

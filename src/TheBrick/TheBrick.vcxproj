@@ -136,7 +136,9 @@
     <ClInclude Include="include\TheBrick\BrickCategory.h" />
     <ClInclude Include="include\TheBrick\BrickInstance.h" />
     <ClInclude Include="include\TheBrick\BrickManager.h" />
+    <ClInclude Include="include\TheBrick\ByteBuffer.h" />
     <ClInclude Include="include\TheBrick\GameObject.h" />
+    <ClInclude Include="include\TheBrick\Serializer.h" />
     <ClInclude Include="include\TheBrick\Nub.h" />
     <ClInclude Include="include\TheBrick\Spaceship.h" />
     <ClInclude Include="include\TheBrick\TheBrick.h" />
@@ -147,7 +149,9 @@
     <ClCompile Include="BrickCategory.cpp" />
     <ClCompile Include="BrickInstance.cpp" />
     <ClCompile Include="BrickManager.cpp" />
+    <ClCompile Include="ByteBuffer.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="Serializer.cpp" />
     <ClCompile Include="Spaceship.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

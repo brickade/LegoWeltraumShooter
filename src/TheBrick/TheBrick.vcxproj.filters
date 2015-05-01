@@ -54,6 +54,12 @@
     <ClInclude Include="include\TheBrick\Bullet.h">
       <Filter>Headerdateien\GameObject</Filter>
     </ClInclude>
+    <ClInclude Include="include\TheBrick\Serializer.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TheBrick\ByteBuffer.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Brick.cpp">
@@ -76,6 +82,12 @@
     </ClCompile>
     <ClCompile Include="Bullet.cpp">
       <Filter>Quelldateien\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Serializer.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="ByteBuffer.cpp">
+      <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

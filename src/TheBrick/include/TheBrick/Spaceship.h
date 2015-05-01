@@ -6,7 +6,6 @@
 
 #include "GameObject.h"
 
-
 namespace TheBrick
 {
     class CSpaceship : public CGameObject
@@ -14,13 +13,15 @@ namespace TheBrick
     public:
 
     private:
-        
 
     public:
         CSpaceship();
         ~CSpaceship();
 
         void Draw(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera) override;
+
+        static CGameObject* Deserialize(CSerializer* a_pSerializer);
+        void Serialize(CSerializer* a_pSerializer);
     };
 }
 

@@ -8,6 +8,7 @@
 
 #include "BrickInstance.h"
 #include "Nub.h"
+#include "Serializer.h"
 
 namespace TheBrick
 {
@@ -21,11 +22,9 @@ namespace TheBrick
         static const float SEGMENT_WIDTH;
         static const float SEGMENT_HEIGHT;
 
-    private:
         PuRe_Model* m_pModel;
-        PuRe_List<SNub>* m_pNubs;
-
-        ong::ColliderData* m_pColliderData;
+        PuRe_List<SNub> m_pNubs;
+        PuRe_List<ong::ColliderData> m_pColliderData;
         
     public:
         CBrick(PuRe_Model* a_pModel);
@@ -37,6 +36,9 @@ namespace TheBrick
         void Draw(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera, PuRe_Vector3F a_position, PuRe_Vector3F a_Scale, PuRe_Vector3F a_rotation);
 
         PuRe_List<SNub>* GetNubs();
+
+        static CBrick* Deserialize(CSerializer* a_pSerializer, PuRe_IGraphics* a_pGraphics, PuRe_IMaterial* a_pMaterial);
+        void Serialize(CSerializer* a_pSerializer);
     };
 }
 
