@@ -9,17 +9,18 @@
 
 #include "BrickInstance.h"
 #include "Serializer.h"
+#include "BrickManager.h"
 
 namespace TheBrick
 {
     class CGameObject
     {
     public:
+        PuRe_List<CBrickInstance*> m_pBricks;
+        ong::Transform m_Transform;
+        ong::Body* m_pBody;
 
     private:
-        PuRe_List<CBrickInstance*>* m_pBricks;
-        ong::Transform* m_pTransform;
-        ong::Body* m_pBody;
 
     public:
         CGameObject();
@@ -27,7 +28,7 @@ namespace TheBrick
 
         virtual void Draw(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera);
 
-        static CGameObject* Deserialize(CSerializer* a_pSerializer);
+        static CGameObject* Deserialize(CSerializer* a_pSerializer, CBrickManager* a_pBrickManager);
         void Serialize(CSerializer* a_pSerializer);
     };
 }

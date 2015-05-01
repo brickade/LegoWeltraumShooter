@@ -21,4 +21,35 @@ namespace TheBrick
     {
 
     }
+
+    // **************************************************************************
+    // **************************************************************************
+    static CGameObject* Deserialize(CSerializer* a_pSerializer, CBrickManager* a_pBrickManager)
+    {
+        CGameObject* gameobject = new CGameObject();
+        //m_pBricks
+        for (int i = 0; i < a_pSerializer->ReadInt(); i++)
+        {
+            //m_pBrick
+            int brickId = a_pSerializer->ReadInt();
+            CBrickInstance* brick = new CBrickInstance(a_pBrickManager->GetBrick(brickId));
+            //m_Transform
+            a_pSerializer->Read(&brick->m_Transform, sizeof(brick->m_Transform));
+            //m_pCollider
+            //brick->m_pBrick->m_pColliderData
+            gameobject->m_pBricks.push_back(brick);
+        }
+        //m_Transform
+        a_pSerializer->Read(&gameobject->m_Transform, sizeof(gameobject->m_Transform));
+        //m_pBody
+
+        return gameobject;
+    }
+
+    // **************************************************************************
+    // **************************************************************************
+    void CGameObject::Serialize(CSerializer* a_pSerializer)
+    {
+
+    }
 }

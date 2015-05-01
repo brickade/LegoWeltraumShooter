@@ -6,9 +6,6 @@ namespace TheBrick
     CBrickInstance::CBrickInstance(CBrick* a_pBrick)
     {
         this->m_pBrick = a_pBrick;
-        this->m_position = PuRe_Vector3F(0, 0, 0);
-        this->m_rotation = 0;
-        this->m_scale = 1;
     }
 
     // **************************************************************************
