@@ -3,19 +3,33 @@
 
 #include <queue>
 #include <mutex>
-
+#include <Onager\Shapes.h>
 
 namespace Content
 {
 	struct SCommand
 	{
-		enum 
+		enum
 		{
 			TEST,
 			NEXT,
+			UNDO,
+			HELP,
+			NEWCOLLIDER,
+
+			NONE,
+			BOX,
+			HULL,
+			SPHERE,
+			CAPSULE
 		} type;
 		union
 		{
+			struct
+			{
+				ong::ShapeDescription shape;
+			};
+			int helpCommand;
 
 		};
 

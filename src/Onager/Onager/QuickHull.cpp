@@ -84,6 +84,33 @@ namespace ong
 
 
 
+	void DEBUG_checkEdges(qhHull* hull, qhFace* f)
+	{
+
+		assert(f->edge->face == f);
+
+		qhHalfEdge* h = f->edge;
+		do
+		{
+			assert(h->prev->next == h);
+			assert(h->next->prev == h);
+			assert(h->twin != nullptr);
+			h = h->next;
+		} while (h != f->edge);
+	}
+
+	void DEBUG_checkEdges(qhHull* hull)
+	{
+		qhFace* f = hull->faces;
+		while (f != nullptr)
+		{
+
+			DEBUG_checkEdges(hull, f);
+
+			f = f->next;
+		}
+	}
+
 
 
 	qhFace* addFace(qhHull* hull, qhVertex** v)
@@ -251,7 +278,7 @@ namespace ong
 			float max = 0.0f;
 			for (int i = 0; i < numPoints; ++i)
 			{
-				float dist = -distPointPlane(points[i], faces[0]->plane);
+				float dist = -distPointFatPlane(points[i], faces[0]->plane, hull->epsilon);
 				if (dist > max)
 				{
 					p3 = points + i;
@@ -282,7 +309,7 @@ namespace ong
 
 			for (int j = 0; j < 4; ++j)
 			{
-				float dist = distPointPlane(points[i], faces[j]->plane);
+				float dist = distPointFatPlane(points[i], faces[j]->plane, hull->epsilon);
 				if (dist >  0 && dist < minDist)
 				{
 					minDist = dist;
@@ -328,7 +355,7 @@ namespace ong
 
 			while (v != nullptr)
 			{
-				if (v->dist > maxDist)
+				if (v->dist >= maxDist)
 					cV = v, maxDist = v->dist, *face = f;
 
 				v = v->next;
@@ -369,7 +396,7 @@ namespace ong
 
 
 	// TODO non recursive
-	void buildHorizon(qhVertex* v, qhFace* f, std::vector<qhHalfEdge*>& horizon)
+	void buildHorizon(qhVertex* v, qhFace* f, std::vector<qhHalfEdge*>& horizon, float epsilon)
 	{
 
 		f->visited = true;
@@ -382,9 +409,9 @@ namespace ong
 			if (nextFace->visited)
 				continue;
 
-			if (distPointPlane(v->position, nextFace->plane) > 0)
+			if (distPointFatPlane(v->position, nextFace->plane, epsilon) > 0)
 			{
-				buildHorizon(v, nextFace, horizon);
+				buildHorizon(v, nextFace, horizon, epsilon);
 			}
 			else
 			{
@@ -427,6 +454,8 @@ namespace ong
 			}
 		}
 
+		
+
 		// add new ones
 		for (qhHalfEdge* h : horizon)
 		{
@@ -434,6 +463,10 @@ namespace ong
 			qhFace* f = addFace(hull, vs);
 			newFaces.push_back(f);
 		}
+
+#ifdef _DEBUG
+		DEBUG_checkEdges(hull);
+#endif
 
 		// update contact lists
 
@@ -449,7 +482,7 @@ namespace ong
 				qhFace* fnew = nullptr;
 				for (qhFace* f2 : newFaces)
 				{
-					float dist = distPointPlane(cv->position, f2->plane);
+					float dist = distPointFatPlane(cv->position, f2->plane, hull->epsilon);
 					if (dist > 0 && dist < minDist)
 					{
 						minDist = dist;
@@ -518,7 +551,7 @@ namespace ong
 				float f1Dist = distPointFatPlane(f2->center, f->plane, hull->epsilon);
 				float f2Dist = distPointFatPlane(f->center, f2->plane, hull->epsilon);
 
-				if (f1Dist >= 0.0f || f2Dist >= 0.0f) // not convex
+				if (f1Dist >= 0.0f || f2Dist >= 0.0f) // not convex or coplanar
 				{
 					qhHalfEdge* ht = h->twin;
 
@@ -577,6 +610,57 @@ namespace ong
 					}
 
 
+					// move contact list
+					qhVertex* cv = f2->contactList;
+
+					while (cv != nullptr)
+					{
+						qhVertex* cvNext = cv->next;
+
+						float minDist = FLT_MAX;
+						qhFace* fnew = nullptr;
+						for (qhFace* f2 : newFaces)
+						{
+							float dist = distPointFatPlane(cv->position, f2->plane, hull->epsilon);
+							if (dist > 0 && dist < minDist)
+							{
+								minDist = dist;
+								fnew = f2;
+							}
+
+						}
+
+						if (fnew)
+						{
+							cv->next = fnew->contactList;
+							cv->prev = nullptr;
+
+							if (fnew->contactList != nullptr)
+								fnew->contactList->prev = cv;
+
+							fnew->contactList = cv;
+
+							cv->dist = minDist;
+						}
+						else
+						{
+							//remove
+							if (cv->next)
+								cv->next->prev = cv->prev;
+
+							if (cv->prev)
+								cv->prev->next = cv->next;
+
+							qhVertex* _cv = cv;
+
+							hull->vAlloc->sDelete(_cv);
+
+						}
+
+						cv = cvNext;
+					}
+
+
 					hull->numFaces--;
 				}
 
@@ -591,38 +675,11 @@ namespace ong
 	}
 
 
-	void DEBUG_checkEdges(qhHull* hull, qhFace* f)
-	{
-
-		assert(f->edge->face == f);
-
-		qhHalfEdge* h = f->edge;
-		do
-		{
-			assert(h->prev->next == h);
-			assert(h->next->prev == h);
-			assert(h->twin != nullptr);
-			h = h->next;
-		} while (h != f->edge);
-	}
-
-	void DEBUG_checkEdges(qhHull* hull)
-	{
-		qhFace* f = hull->faces;
-		while (f != nullptr)
-		{
-
-			DEBUG_checkEdges(hull, f);
-
-			f = f->next;
-		}
-	}
-
 
 	void addVertexToHull(qhVertex* vertex, qhFace* face, qhHull* hull)
 	{
 		std::vector<qhHalfEdge*> horizon;
-		buildHorizon(vertex, face, horizon);
+		buildHorizon(vertex, face, horizon, hull->epsilon);
 
 		std::vector<qhFace*> newFaces;
 		buildNewFaces(newFaces, vertex, horizon, hull);
@@ -757,15 +814,20 @@ namespace ong
 		newHull.eAlloc = &edges;
 		newHull.fAlloc = &faces;
 
-		vec3 max = vec3(0.0f, 0.0f, 0.0f);
+		vec3 max = vec3(-FLT_MAX, -FLT_MAX, -FLT_MAX);
+		vec3 min = vec3(FLT_MAX, FLT_MAX, FLT_MAX);
 		for (int i = 0; i < numPoints; ++i)
 		{
-			max.x = ong_MAX(abs(points[i].x), max.x);
-			max.y = ong_MAX(abs(points[i].y), max.y);
-			max.z = ong_MAX(abs(points[i].z), max.z);
+			max.x = ong_MAX(points[i].x, max.x);
+			max.y = ong_MAX(points[i].y, max.y);
+			max.z = ong_MAX(points[i].z, max.z);
+
+			min.x = ong_MIN(points[i].x, min.x);
+			min.y = ong_MIN(points[i].y, min.y);
+			min.z = ong_MIN(points[i].z, min.z);
 		}
 
-		newHull.epsilon = (max.x + max.y + max.z) * FLT_EPSILON;
+		newHull.epsilon = (abs(max.x - min.x) + abs(max.y - min.y) + abs(max.z - min.z)) * FLT_EPSILON;
 
 		//
 		buildInitialHull(points, numPoints, &newHull);

@@ -18,24 +18,29 @@ namespace Content
 	private:
 
 		void getInput();
-		
+		bool ProcessCommand(SCommand& a_C);
+		void UndoCommand(SCommand& a_C);
+
+
 		CCommandQueue m_Queue;
+		std::stack<SCommand> m_OldCommands;
 
 		PuRe_Application* m_pApplication;
-
-		TheBrick::CBrick* m_pCurrBrick;
 		PuRe_IMaterial* m_pMaterial;
-
 		PuRe_Camera* m_pCamera;
+		PuRe_Camera* m_pPostCamera;
+		PuRe_IMaterial* m_pPostMaterial;
+		PuRe_Rendertarget* m_pRenderTarget;
+
+		TheBrick::CBrickInstance* m_pCurrBrick;
+
 
 		bool m_Polling;
 		std::thread m_InputThread;
 
 		std::queue<TheBrick::CBrick*> m_BrickQueue;
 
-
-		ong::World m_world;
-		ong::Collider* m_pCollider;
+		ong::World m_World;
 		ong::Body* m_pBody;
 
 	public:

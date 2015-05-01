@@ -26,7 +26,9 @@ namespace Content
 		while (m_Polling)
 		{
 			char buffer[1024];
-			while (scanf("%s", buffer))
+
+			//todo change to hashmap
+			while (scanf("%1024s", buffer))
 			{
 				if (strcmp(buffer, "test") == 0)
 				{
@@ -41,7 +43,99 @@ namespace Content
 					c.type = SCommand::NEXT;
 					m_Queue.push(c);
 				}
-	
+				else if (strcmp(buffer, "box") == 0)
+				{
+					SCommand c;
+					c.type = SCommand::NEWCOLLIDER;
+					c.shape.constructionType = ong::ShapeConstruction::HULL_FROM_BOX;
+
+					ong::vec3& boxC = c.shape.hullFromBox.c;
+					ong::vec3& boxE = c.shape.hullFromBox.e;
+
+					scanf("%f %f %f %f %f %f", &boxC.x, &boxC.y, &boxC.z, &boxE.x, &boxE.y, &boxE.z);
+
+					boxC.x *= TheBrick::CBrick::SEGMENT_WIDTH;
+					boxC.z *= TheBrick::CBrick::SEGMENT_WIDTH;
+					boxC.y = boxC.y * TheBrick::CBrick::SEGMENT_HEIGHT;
+
+					boxE.x *= TheBrick::CBrick::SEGMENT_WIDTH;
+					boxE.z *= TheBrick::CBrick::SEGMENT_WIDTH;
+					boxE.y *= TheBrick::CBrick::SEGMENT_HEIGHT;
+
+					m_Queue.push(c);
+				}
+				else if (strcmp(buffer, "sphere") == 0)
+				{
+					SCommand c;
+					c.type = SCommand::NEWCOLLIDER;
+					c.shape.shapeType = ong::ShapeType::SPHERE;
+
+					ong::vec3& sC = c.shape.sphere.c;
+					float& sR= c.shape.sphere.r;
+
+					scanf("%f %f %f %f", &sC.x, &sC.y, &sC.z, &sR);
+
+					sC.x *= TheBrick::CBrick::SEGMENT_WIDTH;
+					sC.z *= TheBrick::CBrick::SEGMENT_WIDTH;
+					sC.y *= TheBrick::CBrick::SEGMENT_HEIGHT;
+
+					sR *= TheBrick::CBrick::SEGMENT_WIDTH;
+					m_Queue.push(c);
+				}
+				else if (strcmp(buffer, "capsule") == 0)
+				{
+					SCommand c;
+					c.type = SCommand::NEWCOLLIDER;
+					c.shape.shapeType = ong::ShapeType::CAPSULE;
+
+					ong::vec3& cC1 = c.shape.capsule.c1;
+					ong::vec3& cC2 = c.shape.capsule.c2;
+					float& cR = c.shape.capsule.r;
+
+					scanf("%f %f %f %f %f %f %f", &cC1.x, &cC1.y, &cC1.z, &cC2.x, &cC2.y, &cC2.z, &cR);
+
+					cC1.x *= TheBrick::CBrick::SEGMENT_WIDTH;
+					cC1.z *= TheBrick::CBrick::SEGMENT_WIDTH;
+					cC1.y *= TheBrick::CBrick::SEGMENT_HEIGHT;
+					
+					cC2.x *= TheBrick::CBrick::SEGMENT_WIDTH;
+					cC2.z *= TheBrick::CBrick::SEGMENT_WIDTH;
+					cC2.y *= TheBrick::CBrick::SEGMENT_HEIGHT;
+
+					cR *= TheBrick::CBrick::SEGMENT_WIDTH;
+					m_Queue.push(c);
+				}
+				else if (strcmp(buffer, "hull") == 0)
+				{
+					SCommand c;
+					c.type = SCommand::NEWCOLLIDER;
+					c.shape.constructionType = ong::ShapeConstruction::HULL_FROM_POINTS;
+					
+					int& numPoints = c.shape.hullFromPoints.numPoints;
+					scanf("%d", &numPoints);
+
+					c.shape.hullFromPoints.points = new ong::vec3[numPoints];
+
+					for (int i = 0; i < numPoints; ++i)
+					{
+						ong::vec3& p = c.shape.hullFromPoints.points[i];
+
+						scanf("%f %f %f", &p.x, &p.y, &p.z, &p.x, &p.y, &p.z);
+
+						p.x *= TheBrick::CBrick::SEGMENT_WIDTH;
+						p.z *= TheBrick::CBrick::SEGMENT_WIDTH;
+						p.y *= TheBrick::CBrick::SEGMENT_HEIGHT;
+					}
+
+					m_Queue.push(c);
+				}
+				else if (strcmp(buffer, "undo") == 0)
+				{
+					SCommand c;
+					c.type = SCommand::UNDO;
+					m_Queue.push(c);
+				}
+
 			}
 		}
 	}
@@ -51,7 +145,11 @@ namespace Content
 	{
 		PuRe_GraphicsDescription gdesc = a_pGraphics->GetDescription();
 		
-		m_pMaterial = a_pGraphics->LoadMaterial("../data/effects/default/default");
+		m_pMaterial = a_pGraphics->LoadMaterial("../data/effects/editor/default");
+		
+		m_pPostCamera = new PuRe_Camera(PuRe_Vector2F((float)gdesc.ResolutionWidth, (float)gdesc.ResolutionHeight), PuRe_Camera_Orthogonal);
+		m_pPostMaterial = a_pGraphics->LoadMaterial("../data/effects/Post/default");
+		m_pRenderTarget = a_pGraphics->CreateRendertarget(m_pPostMaterial);
 
 		m_pCamera = new PuRe_Camera(PuRe_Vector2F(gdesc.ResolutionWidth, gdesc.ResolutionHeight), PuRe_Camera_Perspective);
 		m_pCamera->SetFoV(45.0f);
@@ -102,13 +200,14 @@ namespace Content
 				strcat_s(fileDir, fileName);
 
 				printf("%s \n", fileDir);
-				//PuRe_Model* pModel = new PuRe_Model(a_pGraphics, m_pMaterial, fileDir);
-				//
-				//if (pModel != 0)
-				//{
-				//	TheBrick::CBrick* newBrick = new TheBrick::CBrick(pModel);
-				//	m_BrickQueue.push(newBrick);
-				//}
+				PuRe_Model* pModel = new PuRe_Model(a_pGraphics, m_pMaterial, fileDir);
+				
+
+				if (pModel != 0)
+				{
+					TheBrick::CBrick* newBrick = new TheBrick::CBrick(pModel);
+					m_BrickQueue.push(newBrick);
+				}
 			}
 			
 			if (!FindNextFile(hFind, &findFileData))
@@ -120,45 +219,15 @@ namespace Content
 		FindClose(hFind);
 
 
-		//ong::ShapeDescription sDescr;
-		//sDescr.constructionType = ong::ShapeConstruction::HULL_FROM_BOX;
-		//sDescr.hullFromBox.c = ong::vec3(0, 0, 0);
-		//sDescr.hullFromBox.e = ong::vec3(1, 1, 1);
 
-		//ong::ShapeDescription sDescr;
-		//sDescr.shapeType = ong::ShapeType::SPHERE;
-		//sDescr.sphere.c = ong::vec3(0, 0, 0);
-		//sDescr.sphere.r = 2;
+		ong::BodyDescription bodyDescr;
+		bodyDescr.linearMomentum = ong::vec3(0, 0, 0);
+		bodyDescr.angularMomentum = ong::vec3(0, 0, 0);
+		bodyDescr.transform = ong::Transform(ong::vec3(0, 0, 0), ong::Quaternion(ong::vec3(0, 0, 0), 1));
+		bodyDescr.type = ong::BodyType::Static;
 
-		ong::ShapeDescription sDescr;
-		sDescr.shapeType = ong::ShapeType::CAPSULE;
-		sDescr.capsule.c1 = ong::vec3(1, 0, 0);
-		sDescr.capsule.c2 = ong::vec3(-1, 0, 0);
-		sDescr.capsule.r = 0.5;
-
-		ong::ShapePtr shape = m_world.createShape(sDescr);
+		m_pBody = m_World.createBody(bodyDescr);
 		
-		ong::Material mat;
-		mat.density = 1.0f;
-		mat.friction = 1.0f;
-		mat.restitution = 1.0f;
-
-
-		ong::ColliderDescription cDescr;
-		cDescr.material = m_world.createMaterial(mat);
-		cDescr.shape = shape;
-		cDescr.transform = ong::Transform(ong::vec3(0, 0, 0), ong::QuatFromAxisAngle(ong::vec3(1, 0, 0), 0));
-		
-		m_pCollider = m_world.createCollider(cDescr);
-
-		ong::BodyDescription bDescr;
-		bDescr.type = ong::BodyType::Static;
-		bDescr.transform = cDescr.transform = ong::Transform(ong::vec3(0, 0, 0), ong::QuatFromAxisAngle(ong::vec3(1, 0, 0), 0));
-		bDescr.linearMomentum = ong::vec3(0, 0, 0);
-		bDescr.angularMomentum = ong::vec3(0, 0, 0);
-
-		m_pBody = m_world.createBody(bDescr);
-		m_pBody->addCollider(m_pCollider);
 	}
 
 
@@ -193,44 +262,96 @@ namespace Content
 		while (!m_Queue.isEmpty())
 		{
 			SCommand c = m_Queue.pop();
-
-			switch (c.type)
-			{
-			case SCommand::TEST:
-				printf("test\n");
-				break;
-			case SCommand::NEXT:
-
-				if (m_pCurrBrick)
-					delete m_pCurrBrick;
-
-				if (!m_BrickQueue.empty())
-				{
-					m_pCurrBrick = m_BrickQueue.front();
-					m_BrickQueue.pop();
-				}
-				else
-				{
-					m_pCurrBrick = 0;
-				}
-			}
-
+			if(ProcessCommand(c))
+				m_OldCommands.push(c);
 		}
 
 
 		return false;
 	}
 		
+
+	bool CEditorScene::ProcessCommand(SCommand& a_C)
+	{
+
+		switch (a_C.type)
+		{
+		case SCommand::TEST:
+			printf("test\n");
+			return false;
+		case SCommand::NEXT:
+			if (m_pCurrBrick)
+				delete m_pCurrBrick;
+
+			if (!m_BrickQueue.empty())
+			{
+				m_pCurrBrick = m_BrickQueue.front()->CreateInstance();
+				m_BrickQueue.pop();
+			}
+			else
+			{
+				m_pCurrBrick = 0;
+			}
+			return false;
+		case SCommand::UNDO:
+			if (!m_OldCommands.empty())
+			{
+				UndoCommand(m_OldCommands.top());
+				m_OldCommands.pop();
+			}
+
+			return false;
+		case SCommand::NEWCOLLIDER:
+		{
+
+			//todo replace with real material!!!
+			static ong::Material* g_pMaterial = m_World.createMaterial({ 1.0f, 1.0f, 1.0f });
+
+			ong::ShapePtr shape = m_World.createShape(a_C.shape);
+
+			ong::ColliderDescription cDescr;
+			cDescr.shape = shape;
+			cDescr.material = g_pMaterial;
+			cDescr.transform = ong::Transform(ong::vec3(0, 0, 0), ong::Quaternion(ong::vec3(0, 0, 0), 1));
+
+			ong::Collider* pCollider = m_World.createCollider(cDescr);
+
+			m_pBody->addCollider(pCollider);
+
+			return true;
+		}
+
+		}
+	}
+
+	void CEditorScene::UndoCommand(SCommand& a_C)
+	{
+		switch (a_C.type)
+		{
+		case SCommand::NEWCOLLIDER:
+			m_World.destroyCollider(m_pBody->getCollider());
+			break;
+		}
+	}
+
+
 	void CEditorScene::Render(PuRe_IGraphics* a_pGraphics)
 	{
 		PuRe_Color clear = PuRe_Color(0.1f, 0.1f, 0.1f);
+		PuRe_GraphicsDescription gdesc = a_pGraphics->GetDescription();
+
 		
+		
+
+
 		a_pGraphics->Begin(clear);
-		//m_pMaterial->Apply();
-		if (m_pCurrBrick)
-			m_pCurrBrick->Draw(a_pGraphics, m_pCamera, PuRe_Vector3F(0,0,0), PuRe_Vector3F(1,1,1), PuRe_Vector3F(0,0,0));
 		
-		TheBrick::DrawBody(m_pBody, m_pCamera, a_pGraphics);
+		m_pMaterial->Apply();
+		m_pMaterial->SetVector3(PuRe_Vector3F(0.4, 0.4, 0.4), "brickColor");
+		if (m_pCurrBrick)
+			m_pCurrBrick->Draw(a_pGraphics, m_pCamera);
+
+		TheBrick::DrawBody(m_pBody, m_pCamera, a_pGraphics);	
 
 		a_pGraphics->End();
 	}
