@@ -136,6 +136,7 @@
     <ClInclude Include="include\TheBrick\BrickCategory.h" />
     <ClInclude Include="include\TheBrick\BrickInstance.h" />
     <ClInclude Include="include\TheBrick\BrickManager.h" />
+    <ClInclude Include="include\TheBrick\DebugDraw.h" />
     <ClInclude Include="include\TheBrick\GameObject.h" />
     <ClInclude Include="include\TheBrick\Nub.h" />
     <ClInclude Include="include\TheBrick\Spaceship.h" />
@@ -147,6 +148,7 @@
     <ClCompile Include="BrickCategory.cpp" />
     <ClCompile Include="BrickInstance.cpp" />
     <ClCompile Include="BrickManager.cpp" />
+    <ClCompile Include="DebugDraw.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Spaceship.cpp" />
   </ItemGroup>

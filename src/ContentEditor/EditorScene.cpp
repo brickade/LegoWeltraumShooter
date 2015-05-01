@@ -4,6 +4,8 @@
 #include <wchar.h>
 #include <Onager\myMath.h>
 
+#include <TheBrick\DebugDraw.h>
+
 #define _CRT_SECURE_WARNINGS_NO
 #include <stdio.h>
 
@@ -68,9 +70,9 @@ namespace Content
 		wchar_t currentPath[FILENAME_MAX];
 
 		GetCurrentDirectory(sizeof(currentPath), currentPath);
-		wcscat(currentPath, L"\\..\\data\\newContent\\*");
+		wcscat_s(currentPath, L"\\..\\data\\newContent\\*");
 
-		char* dir = "..\\data\\newContent\\";
+		char dir[] = "..\\data\\newContent\\";
 
 		printf("search Dir: %S \n", currentPath);
 
@@ -96,17 +98,17 @@ namespace Content
 				wcsrtombs(fileName, &wideFileName, FILENAME_MAX, &conversionState);
 
 				char fileDir[FILENAME_MAX];
-				strcpy(fileDir, dir);
-				strcat(fileDir, fileName);
+				strcpy_s(fileDir, dir);
+				strcat_s(fileDir, fileName);
 
 				printf("%s \n", fileDir);
-				PuRe_Model* pModel = new PuRe_Model(a_pGraphics, m_pMaterial, fileDir);
-				
-				if (pModel != 0)
-				{
-					TheBrick::CBrick* newBrick = new TheBrick::CBrick(pModel);
-					m_BrickQueue.push(newBrick);
-				}
+				//PuRe_Model* pModel = new PuRe_Model(a_pGraphics, m_pMaterial, fileDir);
+				//
+				//if (pModel != 0)
+				//{
+				//	TheBrick::CBrick* newBrick = new TheBrick::CBrick(pModel);
+				//	m_BrickQueue.push(newBrick);
+				//}
 			}
 			
 			if (!FindNextFile(hFind, &findFileData))
@@ -117,6 +119,46 @@ namespace Content
 		}
 		FindClose(hFind);
 
+
+		//ong::ShapeDescription sDescr;
+		//sDescr.constructionType = ong::ShapeConstruction::HULL_FROM_BOX;
+		//sDescr.hullFromBox.c = ong::vec3(0, 0, 0);
+		//sDescr.hullFromBox.e = ong::vec3(1, 1, 1);
+
+		//ong::ShapeDescription sDescr;
+		//sDescr.shapeType = ong::ShapeType::SPHERE;
+		//sDescr.sphere.c = ong::vec3(0, 0, 0);
+		//sDescr.sphere.r = 2;
+
+		ong::ShapeDescription sDescr;
+		sDescr.shapeType = ong::ShapeType::CAPSULE;
+		sDescr.capsule.c1 = ong::vec3(1, 0, 0);
+		sDescr.capsule.c2 = ong::vec3(-1, 0, 0);
+		sDescr.capsule.r = 0.5;
+
+		ong::ShapePtr shape = m_world.createShape(sDescr);
+		
+		ong::Material mat;
+		mat.density = 1.0f;
+		mat.friction = 1.0f;
+		mat.restitution = 1.0f;
+
+
+		ong::ColliderDescription cDescr;
+		cDescr.material = m_world.createMaterial(mat);
+		cDescr.shape = shape;
+		cDescr.transform = ong::Transform(ong::vec3(0, 0, 0), ong::QuatFromAxisAngle(ong::vec3(1, 0, 0), 0));
+		
+		m_pCollider = m_world.createCollider(cDescr);
+
+		ong::BodyDescription bDescr;
+		bDescr.type = ong::BodyType::Static;
+		bDescr.transform = cDescr.transform = ong::Transform(ong::vec3(0, 0, 0), ong::QuatFromAxisAngle(ong::vec3(1, 0, 0), 0));
+		bDescr.linearMomentum = ong::vec3(0, 0, 0);
+		bDescr.angularMomentum = ong::vec3(0, 0, 0);
+
+		m_pBody = m_world.createBody(bDescr);
+		m_pBody->addCollider(m_pCollider);
 	}
 
 
@@ -188,6 +230,8 @@ namespace Content
 		if (m_pCurrBrick)
 			m_pCurrBrick->Draw(a_pGraphics, m_pCamera, PuRe_Vector3F(0,0,0), PuRe_Vector3F(1,1,1), PuRe_Vector3F(0,0,0));
 		
+		TheBrick::DrawBody(m_pBody, m_pCamera, a_pGraphics);
+
 		a_pGraphics->End();
 	}
 

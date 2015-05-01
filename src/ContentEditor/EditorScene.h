@@ -5,8 +5,10 @@
 #include <PuReEngine/Core.h>
 #include <PuReEngine/Defines.h>
 #include <TheBrick/TheBrick.h>
+#include <Onager\World.h>
 
 #include "CommandQueue.h"
+
 
 namespace Content
 {
@@ -31,6 +33,10 @@ namespace Content
 
 		std::queue<TheBrick::CBrick*> m_BrickQueue;
 
+
+		ong::World m_world;
+		ong::Collider* m_pCollider;
+		ong::Body* m_pBody;
 
 	public:
 		CEditorScene(PuRe_Application* a_pApplication);

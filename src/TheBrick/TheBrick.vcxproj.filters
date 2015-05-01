@@ -54,6 +54,9 @@
     <ClInclude Include="include\TheBrick\Bullet.h">
       <Filter>Headerdateien\GameObject</Filter>
     </ClInclude>
+    <ClInclude Include="include\TheBrick\DebugDraw.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Brick.cpp">
@@ -76,6 +79,9 @@
     </ClCompile>
     <ClCompile Include="Bullet.cpp">
       <Filter>Quelldateien\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugDraw.cpp">
+      <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
