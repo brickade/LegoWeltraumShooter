@@ -814,20 +814,15 @@ namespace ong
 		newHull.eAlloc = &edges;
 		newHull.fAlloc = &faces;
 
-		vec3 max = vec3(-FLT_MAX, -FLT_MAX, -FLT_MAX);
-		vec3 min = vec3(FLT_MAX, FLT_MAX, FLT_MAX);
+		vec3 max = vec3(0, 0, 0);
 		for (int i = 0; i < numPoints; ++i)
 		{
-			max.x = ong_MAX(points[i].x, max.x);
-			max.y = ong_MAX(points[i].y, max.y);
-			max.z = ong_MAX(points[i].z, max.z);
-
-			min.x = ong_MIN(points[i].x, min.x);
-			min.y = ong_MIN(points[i].y, min.y);
-			min.z = ong_MIN(points[i].z, min.z);
+			max.x = ong_MAX(abs(points[i].x), max.x);
+			max.y = ong_MAX(abs(points[i].y), max.y);
+			max.z = ong_MAX(abs(points[i].z), max.z);
 		}
 
-		newHull.epsilon = (abs(max.x - min.x) + abs(max.y - min.y) + abs(max.z - min.z)) * FLT_EPSILON;
+		newHull.epsilon = (max.x + max.y + max.z) * FLT_EPSILON;
 
 		//
 		buildInitialHull(points, numPoints, &newHull);
