@@ -1,11 +1,19 @@
 #include "include/EditorScene.h"
 namespace Game
 {
-    CEditorScene::CEditorScene(PuRe_Application* a_pApplication, int a_playerIdx, TB_BrickManager* a_pBrickManager)
+    CEditorScene::CEditorScene(PuRe_Application* a_pApplication, int a_playerIdx)
     {
         this->m_pApplication = a_pApplication;
         this->m_playerIdx = a_playerIdx;
-        this->m_pBrickManager = a_pBrickManager;
+
+        /*
+        TheBrick::CSerializer serializer;
+        serializer.OpenWrite("test.sbab");
+        TheBrick::CBrick brick;
+        brick.m_BrickId = 2;
+        brick.m_Pivotoffset = PuRe_Vector3F(5, 5, 5);
+        brick.Serialize(&serializer);
+        serializer.Close();*/
     }
 
     // **************************************************************************

@@ -5,6 +5,8 @@
 #include <PuReEngine/Defines.h>
 #include <TheBrick/TheBrick.h>
 
+#include "BrickBozz.h"
+
 #include "EditorScene.h"
 #include "GameScene.h"
 
@@ -16,7 +18,6 @@ namespace Game
     class CMainScene : public PuRe_IScene
     {
     private:
-        TB_BrickManager* m_pBrickManager;
         CEditorScene* m_pEditorScene;
         CGameScene* m_pGameScene;
         PuRe_IScene* m_pActiveScene;

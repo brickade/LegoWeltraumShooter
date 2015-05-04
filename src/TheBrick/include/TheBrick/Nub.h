@@ -8,8 +8,7 @@ namespace TheBrick
 {
     struct SNub
     {
-        PuRe_Vector3F Position = PuRe_Vector3F::Zero();
-        PuRe_Vector3F Orientation = PuRe_Vector3F::UnitY();
+        ong::Transform Transform = ong::Transform(ong::vec3(0,0,0), ong::QuatFromEulerAngles(0, 0, 0));
         bool isMale = true;
     };
 }

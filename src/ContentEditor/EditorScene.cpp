@@ -249,6 +249,15 @@ namespace Content
 		m_NubPtr = m_World.createShape(nub);
 		m_NubTransform = m_MouseTransform;
 
+		ong::ShapeDescription origin;
+		origin.shapeType = ong::ShapeType::SPHERE;
+		origin.sphere.c = ong::vec3(0.0f, 0.0f, 0.0f);
+		origin.sphere.r = 0.1f;
+
+		m_OriginTransform = m_MouseTransform;
+		m_OriginPtr = m_World.createShape(origin);
+
+
 	}
 
 
@@ -281,6 +290,14 @@ namespace Content
 		}
 
 
+		if (a_pInput->KeyPressed(a_pInput->Q))
+			m_Mode = Mode::NUB_MALE;
+		else if (a_pInput->KeyPressed(a_pInput->W))
+			m_Mode = Mode::NUB_FEMALE;
+		else if (a_pInput->KeyPressed(a_pInput->E))
+			m_Mode = Mode::ORIGIN;
+
+
 		// ray cast
 		PuRe_WindowDescription wDescr = a_pWindow->GetDescription();
 		PuRe_Vector3F mousePos;
@@ -305,18 +322,41 @@ namespace Content
 		float w = TheBrick::CBrick::SEGMENT_WIDTH;
 		float h = TheBrick::CBrick::SEGMENT_HEIGHT;
 
-		m_NubTransform.p.x = (floor(m_MouseTransform.p.x / w) + 0.5) * w;
-		m_NubTransform.p.y = (floor(m_MouseTransform.p.y / h) + 0.5) * h;
-		m_NubTransform.p.z = (floor(m_MouseTransform.p.z / w) + 0.5) * w;
 
 		PuRe_Vector3F dir = m_pCamera->GetForward();
 
-		if (abs(dir.X) > abs(dir.Y) && abs(dir.X) > abs(dir.Z))
-			m_NubTransform.p.x -= (dir.X < 0 ? 1 : -1)* w;
-		else if (abs(dir.Y) > abs(dir.Z))
-			m_NubTransform.p.y -= (dir.Y < 0 ? 1 : -1)* h;
-		else 
-			m_NubTransform.p.z -= (dir.Z < 0 ? 1 : -1)* w;
+
+		switch (m_Mode)
+		{
+		case Mode::NUB_MALE:
+			m_NubTransform.p.x = (floor(m_MouseTransform.p.x / w) + 0.5) * w;
+			m_NubTransform.p.y = (floor(m_MouseTransform.p.y / h) + 0.5) * h;
+			m_NubTransform.p.z = (floor(m_MouseTransform.p.z / w) + 0.5) * w;
+			break;
+		case Mode::NUB_FEMALE:
+			m_NubTransform.p.x = (floor(m_MouseTransform.p.x / w) + 0.5) * w;
+			m_NubTransform.p.y = (floor(m_MouseTransform.p.y / h) + 0.5) * h;
+			m_NubTransform.p.z = (floor(m_MouseTransform.p.z / w) + 0.5) * w;
+
+			if (abs(dir.X) > abs(dir.Y) && abs(dir.X) > abs(dir.Z))
+				m_NubTransform.p.x -= (dir.X < 0 ? 1 : -1)* w;
+			else if (abs(dir.Y) > abs(dir.Z))
+				m_NubTransform.p.y -= (dir.Y < 0 ? 1 : -1)* h;
+			else
+				m_NubTransform.p.z -= (dir.Z < 0 ? 1 : -1)* w;
+
+			break;
+		case Mode::ORIGIN:
+			printf("origin: %f %f %f \n", m_OriginTransform.p.x, m_OriginTransform.p.y, m_OriginTransform.p.z);
+
+			m_OriginTransform.p.x = (floor(m_MouseTransform.p.x / w) + 0.5) * w;
+			m_OriginTransform.p.y = (floor(m_MouseTransform.p.y / h) + 1.0) * h;
+			m_OriginTransform.p.z = (floor(m_MouseTransform.p.z / w) + 0.5) * w;
+			break;
+		}
+
+
+
 
 		while (!m_Queue.isEmpty())
 		{
@@ -391,7 +431,6 @@ namespace Content
 
 			return true;
 		}
-
 		}
 	}
 
@@ -420,12 +459,24 @@ namespace Content
 		m_pMaterial->Apply();
 		m_pMaterial->SetVector3(PuRe_Vector3F(0.4, 0.4, 0.4), "brickColor");
 		if (m_pCurrBrick)
-			m_pCurrBrick->Draw(a_pGraphics, m_pCamera, PuRe_Vector3F(0,0,0), PuRe_Vector3F(1,1,1), PuRe_Vector3F(0,0,0));
+			m_pCurrBrick->Draw(a_pGraphics, m_pCamera, PuRe_Vector3F(0,0,0), PuRe_Vector3F(2,2,2), PuRe_Vector3F(0,0,0));
 
 		
 		TheBrick::DrawBody(m_pBody, m_pCamera, a_pGraphics);	
 		TheBrick::DrawShape(ong::ShapePtr(&m_MousePtr), m_MouseTransform,PuRe_Vector3F(1,1,1), m_pCamera, a_pGraphics);
-		TheBrick::DrawShape(m_NubPtr, m_NubTransform, PuRe_Vector3F(0,1,1), m_pCamera, a_pGraphics);
+
+		switch (m_Mode)
+		{
+		case Mode::NUB_MALE:
+			TheBrick::DrawShape(m_NubPtr, m_NubTransform, PuRe_Vector3F(0, 1, 1), m_pCamera, a_pGraphics);
+			break;
+		case Mode::NUB_FEMALE:
+			TheBrick::DrawShape(m_NubPtr, m_NubTransform, PuRe_Vector3F(1, 0, 1), m_pCamera, a_pGraphics);
+			break;
+		case Mode::ORIGIN:
+			TheBrick::DrawShape(m_OriginPtr, m_OriginTransform, PuRe_Vector3F(0, 1, 0), m_pCamera, a_pGraphics);
+			break;
+		}
 
 		a_pGraphics->End();
 	}

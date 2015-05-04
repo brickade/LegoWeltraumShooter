@@ -5,6 +5,8 @@
 #include <PuReEngine/Defines.h>
 
 #include <Onager/Collider.h>
+#include <Onager/myMath.h>
+#include <Onager/World.h>
 
 #include "Brick.h"
 #include "Nub.h"
@@ -18,15 +20,13 @@ namespace TheBrick
     {
     public:
         CBrick* m_pBrick;
-        PuRe_Vector3F m_position;
-        float m_rotation;
-        float m_scale;
-    
+        ong::Transform m_Transform;
+        PuRe_List<ong::Collider*> m_pCollider;
+
     private:
-        ong::Collider* m_pCollider;
 
     public:
-        CBrickInstance(CBrick* a_pBrick);
+        CBrickInstance(CBrick* a_pBrick, ong::World* a_pWorld);
         ~CBrickInstance();
 
         void Draw(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera);

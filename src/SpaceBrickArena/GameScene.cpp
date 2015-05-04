@@ -1,11 +1,10 @@
 #include "include/GameScene.h"
 namespace Game
 {
-    CGameScene::CGameScene(PuRe_Application* a_pApplication, int a_playerIdx, TB_BrickManager* a_pBrickManager)
+    CGameScene::CGameScene(PuRe_Application* a_pApplication, int a_playerIdx)
     {
         this->m_pApplication = a_pApplication;
         this->m_playerIdx = a_playerIdx;
-        this->m_pBrickManager = a_pBrickManager;
     }
 
     // **************************************************************************

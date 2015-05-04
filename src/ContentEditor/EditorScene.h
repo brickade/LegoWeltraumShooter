@@ -47,7 +47,15 @@ namespace Content
 		ong::Sphere m_MousePtr;
 		ong::Transform m_NubTransform;
 		ong::ShapePtr m_NubPtr;
+		ong::Transform m_OriginTransform;
+		ong::ShapePtr m_OriginPtr;
 
+		enum Mode
+		{
+			NUB_MALE,
+			NUB_FEMALE,
+			ORIGIN
+		} m_Mode;
 
 	public:
 		CEditorScene(PuRe_Application* a_pApplication);
