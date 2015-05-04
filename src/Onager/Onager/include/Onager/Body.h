@@ -73,7 +73,7 @@ namespace ong
 		//	--ACCESORS--
 
 		//return 0 if nothing got hit
-		Collider* queryRay(const vec3& origin, const vec3& dir, float tmax = FLT_MAX);
+		Collider* queryRay(const vec3& origin, const vec3& dir,float* t = 0, float tmax = FLT_MAX);
 		bool queryCollider(const Collider* collider);
 
 		const Proxy& getProxy();

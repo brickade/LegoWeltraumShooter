@@ -4,6 +4,7 @@
 #include <Onager\Body.h>
 #include <Onager\Collider.h>
 #include <Onager\Shapes.h>
+#include <Onager\myMath.h>
 
 namespace TheBrick
 {
@@ -25,10 +26,10 @@ namespace TheBrick
 	{
 		ong::Transform t = ong::transformTransform(a_pCollider->getTransform(), a_Transform);
 
-		DrawShape(a_pCollider->getShape(), t, a_pCam, a_pGraphics);
+		DrawShape(a_pCollider->getShape(), t, PuRe_Vector3F(1,0,0), a_pCam, a_pGraphics);
 	}
 
-	void DrawShape(ong::ShapePtr a_Shape, ong::Transform& a_Transform, PuReEngine::Core::CCamera* a_pCam, PuReEngine::Core::IGraphics* a_pGraphics)
+	void DrawShape(ong::ShapePtr a_Shape, ong::Transform& a_Transform, const PuRe_Vector3F& a_Color, PuReEngine::Core::CCamera* a_pCam, PuReEngine::Core::IGraphics* a_pGraphics)
 	{
 		if (!g_pMaterial)
 			g_pMaterial = a_pGraphics->LoadMaterial("..\\Data\\effects\\default\\line");
@@ -90,10 +91,10 @@ namespace TheBrick
 				ong::vec3 p2 = hull->pVertices[hull->pEdges[i + 1].tail];
 
 				pVertexData[i].Position = PuRe_Vector3F(p1.x, p1.y, p1.z);
-				pVertexData[i].Color = PuRe_Vector3F(1, 0, 0);
+				pVertexData[i].Color = a_Color;
 
 				pVertexData[i + 1].Position = PuRe_Vector3F(p2.x, p2.y, p2.z);
-				pVertexData[i + 1].Color = PuRe_Vector3F(1, 0, 0);
+				pVertexData[i + 1].Color = a_Color;
 			}
 
 			pVertexBuffer->Unlock();
@@ -111,7 +112,9 @@ namespace TheBrick
 
 			static const int POINTCOUNT = 16;
 
-			int numVerts = 2 * POINTCOUNT * sphere->r;
+			int pointCount = ong_MAX(POINTCOUNT, POINTCOUNT * sphere->r);
+
+			int numVerts = 2 * pointCount;
 
 			PuRe_IVertexBuffer* pVertexBuffer = a_pGraphics->CreateVertexBuffer(numVerts * 3 * sizeof(PuReEngine::Core::SVertex), sizeof(PuReEngine::Core::SVertex));
 			PuReEngine::Core::SVertex* pVertexData = (PuReEngine::Core::SVertex*)pVertexBuffer->Lock();
@@ -125,11 +128,11 @@ namespace TheBrick
 					ong::vec3 p1 = sphere->c;
 					ong::vec3 p2 = sphere->c;
 
-					p1[(i + 1) % 3] += sin(2 * ong_PI * j / (POINTCOUNT * sphere->r)) * sphere->r;
-					p1[(i + 2) % 3] += cos(2 * ong_PI * j / (POINTCOUNT * sphere->r)) * sphere->r;
-
-					p2[(i + 1) % 3] += sin(2 * ong_PI * k / (POINTCOUNT * sphere->r)) * sphere->r;
-					p2[(i + 2) % 3] += cos(2 * ong_PI * k / (POINTCOUNT * sphere->r)) * sphere->r;
+					p1[(i + 1) % 3] += sin(2 * ong_PI * j / (pointCount)) * sphere->r;
+					p1[(i + 2) % 3] += cos(2 * ong_PI * j / (pointCount)) * sphere->r;
+															 
+					p2[(i + 1) % 3] += sin(2 * ong_PI * k / (pointCount)) * sphere->r;
+					p2[(i + 2) % 3] += cos(2 * ong_PI * k / (pointCount)) * sphere->r;
 
 					int idx1 = i*numVerts + j * 2;
 					int idx2 = idx1 + 1;
@@ -138,10 +141,10 @@ namespace TheBrick
 					assert(idx2 < numVerts * 3);
 
 					pVertexData[idx1].Position = PuRe_Vector3F(p1.x, p1.y, p1.z);
-					pVertexData[idx1].Color = PuRe_Vector3F(1, 0, 0);
+					pVertexData[idx1].Color = a_Color;
 
 					pVertexData[idx2].Position = PuRe_Vector3F(p2.x, p2.y, p2.z);
-					pVertexData[idx2].Color = PuRe_Vector3F(1, 0, 0);
+					pVertexData[idx2].Color = a_Color;
 				}
 			}
 
@@ -158,7 +161,9 @@ namespace TheBrick
 			const ong::Capsule* c = a_Shape;
 
 			static const int POINTCOUNT = 32;
-			int numVerts = 2 * POINTCOUNT * c->r;
+			int pointCount = ong_MAX(POINTCOUNT, POINTCOUNT * c->r);
+
+			int numVerts = 2 * pointCount;
 
 			ong::vec3 v = ong::vec3(0, 1, 0);
 			float h = length(c->c2 - c->c1) / 2;
@@ -176,11 +181,11 @@ namespace TheBrick
 					ong::vec3 p1 = 0.5f* (c->c1 + c->c2);
 					ong::vec3 p2 = 0.5f* (c->c1 + c->c2);
 
-					p1[(i + 1) % 3] += sin(2 * ong_PI * j / (POINTCOUNT * c->r)) * c->r;
-					p1[(i + 2) % 3] += cos(2 * ong_PI * j / (POINTCOUNT * c->r)) * c->r;
-
-					p2[(i + 1) % 3] += sin(2 * ong_PI * k / (POINTCOUNT * c->r)) * c->r;
-					p2[(i + 2) % 3] += cos(2 * ong_PI * k / (POINTCOUNT * c->r)) * c->r;
+					p1[(i + 1) % 3] += sin(2 * ong_PI * j / (pointCount)) * c->r;
+					p1[(i + 2) % 3] += cos(2 * ong_PI * j / (pointCount)) * c->r;
+															 
+					p2[(i + 1) % 3] += sin(2 * ong_PI * k / (pointCount)) * c->r;
+					p2[(i + 2) % 3] += cos(2 * ong_PI * k / (pointCount)) * c->r;
 
 					if (p1.y > 0.0f)
 						p1.y += h;
@@ -199,10 +204,10 @@ namespace TheBrick
 					assert(idx2 < numVerts * 4);
 
 					pVertexData[idx1].Position = PuRe_Vector3F(p1.x, p1.y, p1.z);
-					pVertexData[idx1].Color = PuRe_Vector3F(1, 0, 0);
+					pVertexData[idx1].Color = a_Color;
 
 					pVertexData[idx2].Position = PuRe_Vector3F(p2.x, p2.y, p2.z);
-					pVertexData[idx2].Color = PuRe_Vector3F(1, 0, 0);
+					pVertexData[idx2].Color = a_Color;
 				}
 			}
 
@@ -215,13 +220,13 @@ namespace TheBrick
 					ong::vec3 p1 = 0.5f* (c->c1 + c->c2);
 					ong::vec3 p2 = 0.5f* (c->c1 + c->c2);
 
-					p1[2] += sin(2 * ong_PI * j / (POINTCOUNT * c->r)) * c->r;
-					p1[1] += i*h;
-					p1[0] += cos(2 * ong_PI * j / (POINTCOUNT * c->r)) * c->r;
-
-					p2[2] += sin(2 * ong_PI * k / (POINTCOUNT * c->r)) * c->r;
-					p2[1] += i*h;
-					p2[0] += cos(2 * ong_PI * k / (POINTCOUNT * c->r)) * c->r;
+					p1[2] += sin(2 * ong_PI * j / (pointCount)) * c->r;
+					p1[1] += i*h;				   
+					p1[0] += cos(2 * ong_PI * j / (pointCount)) * c->r;
+												   
+					p2[2] += sin(2 * ong_PI * k / (pointCount)) * c->r;
+					p2[1] += i*h;				   
+					p2[0] += cos(2 * ong_PI * k / (pointCount)) * c->r;
 
 					int idx1 = (i > 0 ? 2 : 3)*numVerts + j * 2;
 					int idx2 = idx1 + 1;
@@ -230,10 +235,10 @@ namespace TheBrick
 					assert(idx2 < numVerts * 4);
 
 					pVertexData[idx1].Position = PuRe_Vector3F(p1.x, p1.y, p1.z);
-					pVertexData[idx1].Color = PuRe_Vector3F(1, 0, 0);
+					pVertexData[idx1].Color = a_Color;
 
 					pVertexData[idx2].Position = PuRe_Vector3F(p2.x, p2.y, p2.z);
-					pVertexData[idx2].Color = PuRe_Vector3F(1, 0, 0);
+					pVertexData[idx2].Color = a_Color;
 				}
 
 			}

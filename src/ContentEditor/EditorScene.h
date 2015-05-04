@@ -32,7 +32,7 @@ namespace Content
 		PuRe_IMaterial* m_pPostMaterial;
 		PuRe_Rendertarget* m_pRenderTarget;
 
-		TheBrick::CBrickInstance* m_pCurrBrick;
+		TheBrick::CBrick* m_pCurrBrick;
 
 
 		bool m_Polling;
@@ -42,6 +42,12 @@ namespace Content
 
 		ong::World m_World;
 		ong::Body* m_pBody;
+
+		ong::Transform m_MouseTransform;
+		ong::Sphere m_MousePtr;
+		ong::Transform m_NubTransform;
+		ong::ShapePtr m_NubPtr;
+
 
 	public:
 		CEditorScene(PuRe_Application* a_pApplication);

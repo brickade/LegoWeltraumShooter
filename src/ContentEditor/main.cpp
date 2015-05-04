@@ -25,6 +25,7 @@ int main()
 	description.Window.Y = 200;
 	description.Window.DisplaySetting = PuRe_DisplaySetting::Windowed;
 	description.Window.ShowCursor = true;
+	description.Window.CursorInWindow = false;
 	PuRe_Application* pApplication = new PuRe_Application(pPlatform, description);
 
 

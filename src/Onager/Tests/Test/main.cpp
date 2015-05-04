@@ -8,10 +8,7 @@
 int main()
 {
 
-	Quaternion q = QuatFromEulerAngles(0.1, 0.2, 0.3);
-	vec3 euler = rotMatToEulerAngles(toRotMat(q));
-	
-	Test* test = new Test();
+	Test* test = new HierarchieTest();
 	test->init();
 
 	test->run();

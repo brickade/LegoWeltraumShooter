@@ -204,7 +204,7 @@ namespace ong
 	//
 	//}
 
-	void intersectTree(BVTree* tree, BVTree* n, const vec3& o, const vec3& d, float tmax, float tmin, Collider** c)
+	void intersectTree(BVTree* tree, BVTree* n, const vec3& o, const vec3& d, float tmax, float& tmin, Collider** c)
 	{
 
 		std::stack<BVTree*> s;
@@ -278,22 +278,23 @@ namespace ong
 
 
 
-	Collider* Body::queryRay(const vec3& origin, const vec3& dir, float tmax)
+	Collider* Body::queryRay(const vec3& origin, const vec3& dir, float* t,  float tmax)
 	{
 		vec3 o = invTransformVec3(origin, getTransform());
 		vec3 d = rotate(dir, conjugate(getOrientation()));
 
 		Collider* hit = nullptr;
 
+		float tmin = FLT_MAX; 
+
 		if (m_numCollider > 1)
 		{
-			intersectTree(m_tree, m_tree, o, d, tmax, FLT_MAX, &hit);
+			intersectTree(m_tree, m_tree, o, d, tmax, tmin, &hit);
 		}
 		else if (m_numCollider == 1)
 		{
-			float t;
 			vec3 p;
-			if (intersectRayAABB(o, d, m_pCollider->getAABB(), t, p) && t < tmax)
+			if (intersectRayAABB(o, d, m_pCollider->getAABB(), tmin, p) && tmin < tmax)
 			{
 				const Transform& _t = m_pCollider->getTransform();
 				vec3 _o = invTransformVec3(o, _t);
@@ -301,19 +302,19 @@ namespace ong
 				switch (m_pCollider->getShape().getType())
 				{
 				case ShapeType::HULL:
-					if (intersectRayHull(_o, _d, m_pCollider->getShape(), t, p) && t < tmax)
+					if (intersectRayHull(_o, _d, m_pCollider->getShape(), tmin, p) && tmin < tmax)
 					{
 						hit = m_pCollider;
 					}
 					break;
 				case ShapeType::SPHERE:
-					if (intersectRaySphere(_o, _d, m_pCollider->getShape(), t, p) && t < tmax)
+					if (intersectRaySphere(_o, _d, m_pCollider->getShape(), tmin, p) && tmin < tmax)
 					{
 						hit = m_pCollider;
 					}
 					break;
 				case ShapeType::CAPSULE:
-					if (intersectRayCapsule(_o, _d, m_pCollider->getShape(), t, p) && t < tmax)
+					if (intersectRayCapsule(_o, _d, m_pCollider->getShape(), tmin, p) && tmin < tmax)
 					{
 						hit = m_pCollider;
 					}
@@ -322,6 +323,8 @@ namespace ong
 				}
 			}
 		}
+
+		if (t) *t = tmin;
 
 		return hit;
 	}
