@@ -8,6 +8,7 @@
 #include <Onager/myMath.h>
 #include <Onager/World.h>
 
+#include "Conversion.h"
 #include "Brick.h"
 #include "Nub.h"
 
