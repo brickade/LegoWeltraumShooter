@@ -24,26 +24,24 @@ namespace TheBrick
 
     // **************************************************************************
     // **************************************************************************
-    static CGameObject* Deserialize(CSerializer* a_pSerializer, CBrickManager* a_pBrickManager)
+    void CGameObject::Deserialize(CSerializer* a_pSerializer, CBrickManager* a_pBrickManager, ong::World* a_pWorld)
     {
-        CGameObject* gameobject = new CGameObject();
         //m_pBricks
         for (unsigned int i = 0; i < a_pSerializer->ReadIntUnsigned(); i++)
         {
             //m_pBrick
             int brickId = a_pSerializer->ReadInt();
-            CBrickInstance* brick = new CBrickInstance(a_pBrickManager->GetBrick(brickId));
+            CBrickInstance* brick = new CBrickInstance(a_pBrickManager->GetBrick(brickId), a_pWorld);
             //m_Transform
             a_pSerializer->Read(&brick->m_Transform, sizeof(brick->m_Transform));
             //m_pCollider
+
             //brick->m_pBrick->m_pColliderData //Create Collider
-            gameobject->m_pBricks.push_back(brick);
+            this->m_pBricks.push_back(brick);
         }
         //m_Transform
-        a_pSerializer->Read(&gameobject->m_Transform, sizeof(gameobject->m_Transform));
+        a_pSerializer->Read(&this->m_Transform, sizeof(this->m_Transform));
         //m_pBody
-
-        return gameobject;
     }
 
     // **************************************************************************
@@ -63,6 +61,5 @@ namespace TheBrick
         //m_Transform
         a_pSerializer->Write(&this->m_Transform, sizeof(this->m_Transform));
         //m_pBody
-
     }
 }

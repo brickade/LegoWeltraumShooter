@@ -6,6 +6,8 @@
 #include <PuReEngine/Defines.h>
 #include <TheBrick/TheBrick.h>
 
+#include "BrickBozz.h"
+
 #include <math.h>
 #include <algorithm>
 
@@ -19,7 +21,6 @@ namespace Game
     class CGameScene : public PuRe_IScene
     {
     private:
-        TB_BrickManager* m_pBrickManager;
         int m_playerIdx;
         PuRe_Skydome* m_pSkyDome;
         int textureID;
@@ -41,7 +42,7 @@ namespace Game
     public:
         /// @brief Constructor to Initialize the MainScene
         ///
-        CGameScene(PuRe_Application* a_pApplication, int a_playerIdx, TB_BrickManager* a_pBrickManager);
+        CGameScene(PuRe_Application* a_pApplication, int a_playerIdx);
     public:
         /// @brief Initializes the scene.
         ///

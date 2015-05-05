@@ -4,6 +4,10 @@
 #include <PuReEngine/Core.h>
 #include <PuReEngine/Defines.h>
 #include <TheBrick/TheBrick.h>
+#include <TheBrick/Brick.h>
+#include <TheBrick/Serializer.h>
+
+#include "BrickBozz.h"
 
 #include "EditorCamera.h"
 #include "BrickWorker.h"
@@ -13,8 +17,6 @@ namespace Game
     class CEditorScene : public PuRe_IScene
     {
     private:
-        TB_BrickManager* m_pBrickManager;
-
         int m_playerIdx;
 
         PuRe_SkyBox* m_pSkyBox;
@@ -40,7 +42,7 @@ namespace Game
     public:
         /// @brief Constructor to Initialize the MainScene
         ///
-        CEditorScene(PuRe_Application* a_pApplication, int a_playerIdx, TB_BrickManager* a_pBrickManager);
+        CEditorScene(PuRe_Application* a_pApplication, int a_playerIdx);
     public:
         /// @brief Initializes the scene.
         ///

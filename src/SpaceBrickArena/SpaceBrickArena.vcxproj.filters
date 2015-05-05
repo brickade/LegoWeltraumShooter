@@ -51,6 +51,9 @@
     <ClInclude Include="include\BrickWorker.h">
       <Filter>Headerdateien\Editor</Filter>
     </ClInclude>
+    <ClInclude Include="include\BrickBozz.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -73,6 +76,9 @@
     </ClCompile>
     <ClCompile Include="BrickWorker.cpp">
       <Filter>Quelldateien\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="BrickBozz.cpp">
+      <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

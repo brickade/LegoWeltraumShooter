@@ -44,7 +44,7 @@ namespace Game
     {
         this->UpdateTranslation(a_pInput, a_cameraLook, a_pTimer->GetElapsedSeconds());
         this->UpdateRotation(a_pInput, 90.0f * 0.0174532925f);
-        this->UpdatePlacement(a_pInput);
+        this->UpdatePlacement(a_pInput, BrickBozz::Instance()->World);
     }
 
     // **************************************************************************
@@ -196,14 +196,14 @@ namespace Game
 
     // **************************************************************************
     // **************************************************************************
-    void CBrickWorker::UpdatePlacement(PuRe_IInput* a_pInput)
+    void CBrickWorker::UpdatePlacement(PuRe_IInput* a_pInput, ong::World* a_pWorld)
     {
         //Gamepad & Mouse
         if (a_pInput->GamepadPressed(a_pInput->Pad_A, this->m_playerIdx) || a_pInput->MousePressed(a_pInput->LeftClick))
         {
-            TB_BrickInstance* brickInstance = new TB_BrickInstance(this->m_pCurrentBrick);
-            brickInstance->m_position = PuRe_Vector3F(this->m_currentBrickPosition.X, this->m_currentHeight, this->m_currentBrickPosition.Y);
-            brickInstance->m_rotation = this->m_currentBrickRotation;
+            TB_BrickInstance* brickInstance = new TB_BrickInstance(this->m_pCurrentBrick, a_pWorld);
+            brickInstance->m_Transform.p = ong::vec3(this->m_currentBrickPosition.X, this->m_currentHeight, this->m_currentBrickPosition.Y);
+            brickInstance->m_Transform.q = ong::QuatFromEulerAngles(this->m_currentBrickRotation, 0, 0);
             this->m_pSpaceship->push_back(brickInstance);
         }
     }

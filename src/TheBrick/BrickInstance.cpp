@@ -1,11 +1,17 @@
 #include "include/TheBrick/BrickInstance.h"
+#include "include/TheBrick/Conversion.h"
+
 namespace TheBrick
 {
     // **************************************************************************
     // **************************************************************************
-    CBrickInstance::CBrickInstance(CBrick* a_pBrick)
+    CBrickInstance::CBrickInstance(CBrick* a_pBrick, ong::World* a_pWorld)
     {
         this->m_pBrick = a_pBrick;
+        for (size_t i = 0; i < this->m_pBrick->m_pColliderData.size(); i++)
+        {
+            this->m_pCollider.push_back(a_pWorld->createCollider(this->m_pBrick->m_pColliderData[i]));
+        }
     }
 
     // **************************************************************************
@@ -19,7 +25,7 @@ namespace TheBrick
     // **************************************************************************
     void CBrickInstance::Draw(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera)
     {
-        this->m_pBrick->Draw(a_pGraphics, a_pCamera, this->m_position, PuRe_Vector3F(this->m_scale, this->m_scale, this->m_scale), PuRe_Vector3F(0, this->m_rotation, 0));
+        this->m_pBrick->Draw(a_pGraphics, a_pCamera, TheBrick::OngToPuRe(this->m_Transform.p), PuRe_Vector3F::One(), TheBrick::OngToPuRe(this->m_Transform.q.v));
     }
 
     // **************************************************************************
@@ -29,8 +35,8 @@ namespace TheBrick
         PuRe_List<SNub>* nubs = new PuRe_List<SNub>(*this->m_pBrick->GetNubs()); //Copy nubs
         for (unsigned int i = 0; i < nubs->size(); i++)
         {
-            (*nubs)[i].Position += this->m_position;
-            //(*nubs)[i].Orientation += this->m_rotation; Need consens of orientation vs rotation vs euler vs stuff: need transform component w position, rotation & scale
+            (*nubs)[i].Transform.p += this->m_Transform.p;
+            (*nubs)[i].Transform.q = this->m_Transform.q * (*nubs)[i].Transform.q;
         }
         return nubs;
     }

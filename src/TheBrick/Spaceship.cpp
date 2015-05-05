@@ -24,15 +24,10 @@ namespace TheBrick
 
     // **************************************************************************
     // **************************************************************************
-    static CSpaceship* Deserialize(CSerializer* a_pSerializer, CBrickManager* a_pBrickManager)
+    void CSpaceship::Deserialize(CSerializer* a_pSerializer, CBrickManager* a_pBrickManager, ong::World* a_pWorld)
     {
-        CSpaceship* ship = new CSpaceship();
-        //GameObject
-        CGameObject* gameobject = CGameObject::Deserialize(a_pSerializer, a_pBrickManager);
-        memcpy(ship, gameobject, sizeof(gameobject)); //Does this work 1:1?
-        SAFE_DELETE(gameobject);
+        CGameObject::Deserialize(a_pSerializer, a_pBrickManager, a_pWorld);
 
-        return ship;
     }
 
     // **************************************************************************

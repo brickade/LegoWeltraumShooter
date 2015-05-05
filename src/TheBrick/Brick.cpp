@@ -1,8 +1,17 @@
 #include "include/TheBrick/Brick.h"
+#include "include/TheBrick/Conversion.h"
+
 namespace TheBrick
 {
-    const float CBrick::SEGMENT_WIDTH = 0.39f;
-    const float CBrick::SEGMENT_HEIGHT = 0.1f;
+    const float CBrick::SEGMENT_WIDTH = 0.78f;
+    const float CBrick::SEGMENT_HEIGHT = 0.32f;
+
+    // **************************************************************************
+    // **************************************************************************
+    CBrick::CBrick()
+    {
+
+    }
 
     // **************************************************************************
     // **************************************************************************
@@ -29,9 +38,9 @@ namespace TheBrick
 
     // **************************************************************************
     // **************************************************************************
-    CBrickInstance* CBrick::CreateInstance()
+    CBrickInstance* CBrick::CreateInstance(ong::World* a_pWorld)
     {
-        return new CBrickInstance(this);
+        return new CBrickInstance(this, a_pWorld);
     }
 
     // **************************************************************************
@@ -50,22 +59,25 @@ namespace TheBrick
 
     // **************************************************************************
     // **************************************************************************
-    static CBrick* Deserialize(CSerializer* a_pSerializer, PuRe_IGraphics* a_pGraphics, PuRe_IMaterial* a_pMaterial)
+    void CBrick::Deserialize(CSerializer* a_pSerializer, PuRe_IGraphics* a_pGraphics, PuRe_IMaterial* a_pMaterial, ong::World* a_pWorld)
     {
         //m_pModel
         char* buffer = (char*)malloc(100);
         a_pSerializer->Read(buffer, 100);
-        CBrick* brick = new CBrick(new PuRe_Model(a_pGraphics, a_pMaterial, buffer));
+        this->m_pModel = new PuRe_Model(a_pGraphics, a_pMaterial, buffer);
 
         //m_BrickId
-        brick->m_BrickId = a_pSerializer->ReadIntUnsigned();
+        this->m_BrickId = a_pSerializer->ReadIntUnsigned();
+
+        //m_PivotOffset
+        this->m_Pivotoffset = a_pSerializer->ReadVector3();
 
         //m_pNubs
         for (unsigned int i = 0; i < a_pSerializer->ReadIntUnsigned(); i++)
         {
             SNub nub;
             a_pSerializer->Read(&nub, sizeof(nub));
-            brick->m_pNubs.push_back(nub);
+            this->m_pNubs.push_back(nub);
         }
 
         //m_pColliderData
@@ -81,51 +93,45 @@ namespace TheBrick
             //aabb
             a_pSerializer->Read(&colliderData.aabb, sizeof(colliderData.aabb));
             //shape
-            ong::ShapeType::Type stype = (ong::ShapeType::Type)a_pSerializer->ReadInt(); //m_type
-            switch (stype) //m_shape
+            ong::ShapeDescription shapeDesc;
+            shapeDesc.type = a_pSerializer->ReadInt(); //m_type
+            switch (shapeDesc.shapeType) //m_shape
             {
             case ong::ShapeType::SPHERE:
-                colliderData.shape = new ong::Sphere();
-                a_pSerializer->Read(&colliderData.shape, sizeof(colliderData.shape));
+                a_pSerializer->Read(&shapeDesc.sphere, sizeof(shapeDesc.sphere));
                 break;
             case ong::ShapeType::CAPSULE:
-                colliderData.shape = new ong::Capsule();
-                a_pSerializer->Read(&colliderData.shape, sizeof(colliderData.shape));
+                a_pSerializer->Read(&shapeDesc.capsule, sizeof(shapeDesc.capsule));
                 break;
             case ong::ShapeType::HULL:
-                colliderData.shape = new ong::Hull();
-                ong::Hull* hull = colliderData.shape.toHull();
-                hull->centroid = a_pSerializer->ReadVector3();
+                ong::Hull* hull = &shapeDesc.hull;
+                hull->centroid = PuReToOng(a_pSerializer->ReadVector3());
                 //Vertices
                 hull->numVertices = a_pSerializer->ReadInt();
-                for (int t = 0; t < hull->numVertices; t++)
-                {
-                    *(hull->pVertices + t) = a_pSerializer->ReadVector3();
-                }
+                size_t sVertices = sizeof(hull->pVertices) * hull->numVertices;
+                hull->pVertices = (ong::vec3*)malloc(sVertices);
+                a_pSerializer->Read(hull->pVertices, sVertices);
                 //Edges
                 hull->numEdges = a_pSerializer->ReadInt();
-                for (int t = 0; t < hull->numEdges; t++)
-                {
-                    ong::HalfEdge* edge = (hull->pEdges + t);
-                    a_pSerializer->Read(&edge, sizeof(edge));
-                }
+                size_t sEdges = sizeof(hull->pEdges) * hull->numEdges;
+                hull->pEdges = (ong::HalfEdge*)malloc(sEdges);
+                a_pSerializer->Read(hull->pEdges, sEdges);
                 //Faces
                 hull->numFaces = a_pSerializer->ReadInt();
-                for (int t = 0; t < hull->numFaces; t++)
-                {
-                    ong::Face* face = (hull->pFaces + t);
-                    a_pSerializer->Read(&face, sizeof(face));
-                    ong::Plane* plane = (hull->pPlanes + t);
-                    a_pSerializer->Read(&plane, sizeof(plane));
-                }
+                size_t sFaces = sizeof(hull->pFaces) * hull->numFaces;
+                hull->pFaces = (ong::Face*)malloc(sFaces);
+                a_pSerializer->Read(hull->pFaces, sFaces);
+                
+                size_t sPlane = sizeof(hull->pPlanes) * hull->numFaces;
+                hull->pPlanes = (ong::Plane*)malloc(sPlane);
+                a_pSerializer->Read(hull->pPlanes, sPlane);
                 //epsilon
                 hull->epsilon = a_pSerializer->ReadFloat();
                 break;
             }
-            brick->m_pColliderData.push_back(colliderData);
+            colliderData.shape = a_pWorld->createShape(shapeDesc);
+            this->m_pColliderData.push_back(colliderData);
         }
-
-        return brick;
     }
 
     // **************************************************************************
@@ -137,6 +143,8 @@ namespace TheBrick
         a_pSerializer->Write(buffer, 100);
         //m_BrickId
         a_pSerializer->Write(this->m_BrickId);
+        //m_PivotOffset
+        a_pSerializer->Write(this->m_Pivotoffset);
         //m_pNubs
         a_pSerializer->Write(this->m_pNubs.size());
         for (unsigned int i = 0; i < this->m_pNubs.size(); i++)
@@ -170,29 +178,17 @@ namespace TheBrick
                 break;
             case ong::ShapeType::HULL:
                 ong::Hull* hull = colliderData.shape.toHull();
-                a_pSerializer->Write(hull->centroid);
+                a_pSerializer->Write(OngToPuRe(hull->centroid));
                 //Vertices
                 a_pSerializer->Write(hull->numVertices);
-                for (int t = 0; t < hull->numVertices; t++)
-                {
-                    a_pSerializer->Write(*(hull->pVertices + t));
-                }
+                a_pSerializer->Write(hull->pVertices, sizeof(hull->pVertices) * hull->numVertices);
                 //Edges
                 a_pSerializer->Write(hull->numEdges);
-                for (int t = 0; t < hull->numEdges; t++)
-                {
-                    ong::HalfEdge* edge = (hull->pEdges + t);
-                    a_pSerializer->Write(&edge, sizeof(edge));
-                }
+                a_pSerializer->Write(hull->pEdges, sizeof(hull->pEdges) * hull->numEdges);
                 //Faces
                 a_pSerializer->Write(hull->numFaces);
-                for (int t = 0; t < hull->numFaces; t++)
-                {
-                    ong::Face* face = (hull->pFaces + t);
-                    a_pSerializer->Write(&face, sizeof(face));
-                    ong::Plane* plane = (hull->pPlanes + t);
-                    a_pSerializer->Write(&plane, sizeof(plane));
-                }
+                a_pSerializer->Write(hull->pFaces, sizeof(hull->pFaces) * hull->numFaces);
+                a_pSerializer->Write(hull->pPlanes, sizeof(hull->pPlanes) * hull->numFaces);
                 //epsilon
                 a_pSerializer->Write(hull->epsilon);
                 break;

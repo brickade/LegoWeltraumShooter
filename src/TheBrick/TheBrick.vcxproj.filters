@@ -60,6 +60,9 @@
     <ClInclude Include="include\TheBrick\ByteBuffer.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="include\TheBrick\Conversion.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Brick.cpp">

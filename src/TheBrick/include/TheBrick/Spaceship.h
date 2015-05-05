@@ -20,7 +20,7 @@ namespace TheBrick
 
         void Draw(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera) override;
 
-        static CSpaceship* Deserialize(CSerializer* a_pSerializer, CBrickManager* a_pBrickManager);
+        void Deserialize(CSerializer* a_pSerializer, CBrickManager* a_pBrickManager, ong::World* a_pWorld) override;
         void Serialize(CSerializer* a_pSerializer);
     };
 }

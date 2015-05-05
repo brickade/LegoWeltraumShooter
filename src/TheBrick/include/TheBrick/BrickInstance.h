@@ -6,6 +6,7 @@
 
 #include <Onager/Collider.h>
 #include <Onager/myMath.h>
+#include <Onager/World.h>
 
 #include "Brick.h"
 #include "Nub.h"
@@ -20,12 +21,12 @@ namespace TheBrick
     public:
         CBrick* m_pBrick;
         ong::Transform m_Transform;
-        ong::Collider* m_pCollider;
+        PuRe_List<ong::Collider*> m_pCollider;
 
     private:
 
     public:
-        CBrickInstance(CBrick* a_pBrick);
+        CBrickInstance(CBrick* a_pBrick, ong::World* a_pWorld);
         ~CBrickInstance();
 
         void Draw(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera);

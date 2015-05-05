@@ -28,7 +28,7 @@ namespace TheBrick
 
         virtual void Draw(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera);
 
-        static CGameObject* Deserialize(CSerializer* a_pSerializer, CBrickManager* a_pBrickManager);
+        virtual void Deserialize(CSerializer* a_pSerializer, CBrickManager* a_pBrickManager, ong::World* a_pWorld);
         void Serialize(CSerializer* a_pSerializer);
     };
 }
