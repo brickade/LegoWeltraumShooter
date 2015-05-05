@@ -35,8 +35,10 @@ namespace TheBrick
         PuRe_List<SNub>* nubs = new PuRe_List<SNub>(*this->m_pBrick->GetNubs()); //Copy nubs
         for (unsigned int i = 0; i < nubs->size(); i++)
         {
-            (*nubs)[i].Transform.p += this->m_Transform.p;
-            (*nubs)[i].Transform.q = this->m_Transform.q * (*nubs)[i].Transform.q;
+            SNub* n = &(*nubs)[i];
+            n->Position += OngToPuRe(this->m_Transform.p);
+            n->Direction *= OngToPuRe(this->m_Transform.q);
+            //TODO Die Position der Nubs muss noch um den Pivot des Bricks rotiert werden
         }
         return nubs;
     }

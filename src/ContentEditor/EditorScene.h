@@ -33,27 +33,31 @@ namespace Content
 		PuRe_Rendertarget* m_pRenderTarget;
 
 		TheBrick::CBrick* m_pCurrBrick;
-
+		std::string m_CurrFileName;
 
 		bool m_Polling;
 		std::thread m_InputThread;
 
-		std::queue<TheBrick::CBrick*> m_BrickQueue;
+		std::queue<std::pair<std::string, TheBrick::CBrick*>> m_BrickQueue;
 
 		ong::World m_World;
 		ong::Body* m_pBody;
 
+		bool m_MouseValid;
+
+		TheBrick::SNub m_NubPtr;
+		ong::vec3 m_Pivot;
+
 		ong::Transform m_MouseTransform;
-		ong::Sphere m_MousePtr;
-		ong::Transform m_NubTransform;
-		ong::ShapePtr m_NubPtr;
-		ong::Transform m_OriginTransform;
-		ong::ShapePtr m_OriginPtr;
+		ong::ShapePtr m_MousePtr;
+		ong::ShapePtr m_NubShape;
+		ong::ShapePtr m_OriginShape;
+
+		TheBrick::CSerializer m_Serializer;
 
 		enum Mode
 		{
-			NUB_MALE,
-			NUB_FEMALE,
+			NUB,
 			ORIGIN
 		} m_Mode;
 

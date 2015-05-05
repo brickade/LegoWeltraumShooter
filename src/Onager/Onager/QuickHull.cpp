@@ -265,29 +265,53 @@ namespace ong
 		}
 
 
+		// find last Point
+		{
+			float max = 0.0f;
+			float min = 0.0f;
+
+			ong::vec3* p3max;
+			ong::vec3* p3min;
+
+			Plane p = planeFromABC(*p0, *p1, *p2);
+
+			for (int i = 0; i < numPoints; ++i)
+			{
+				float dist = -distPointFatPlane(points[i], p, hull->epsilon);
+				if (dist > max)
+				{
+					p3max = points + i;
+					max = dist;
+				}
+				else if (dist < min)
+				{
+					p3min = points + i;
+					min = dist;
+				}
+
+			}
+
+			if (abs(min) > abs(max))
+			{
+				//change plane orientation
+				std::swap(p0, p2);
+				p3 = p3min;
+			}
+			else
+			{
+				p3 = p3max;
+			}
+
+		}
+
+		// build hull
+
 		qhVertex* v0 = addVertex(*p0, hull);
 		qhVertex* v1 = addVertex(*p1, hull);
 		qhVertex* v2 = addVertex(*p2, hull);
 
 		qhVertex* vf0[3] = { v0, v1, v2 };
 		faces[0] = addFace(hull, vf0);
-
-
-		// find last Point
-		{
-			float max = 0.0f;
-			for (int i = 0; i < numPoints; ++i)
-			{
-				float dist = -distPointFatPlane(points[i], faces[0]->plane, hull->epsilon);
-				if (dist > max)
-				{
-					p3 = points + i;
-					max = dist;
-				}
-			}
-		}
-
-		// build hull
 
 		qhVertex* v3 = addVertex(*p3, hull);
 

@@ -10,6 +10,8 @@
 
 #include "Brick.h"
 #include "Nub.h"
+#include "Conversion.h"
+
 
 namespace TheBrick
 {

@@ -16,12 +16,8 @@ namespace Content
 			UNDO,
 			HELP,
 			NEWCOLLIDER,
+			BRICKID
 
-			NONE,
-			BOX,
-			HULL,
-			SPHERE,
-			CAPSULE
 		} type;
 		union
 		{
@@ -29,7 +25,7 @@ namespace Content
 			{
 				ong::ShapeDescription shape;
 			};
-			int helpCommand;
+			unsigned int brickID;
 
 		};
 

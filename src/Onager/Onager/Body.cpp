@@ -204,7 +204,7 @@ namespace ong
 	//
 	//}
 
-	void intersectTree(BVTree* tree, BVTree* n, const vec3& o, const vec3& d, float tmax, float& tmin, Collider** c)
+	void intersectTree(BVTree* tree, BVTree* n, const vec3& o, const vec3& d, float tmax, float& tmin, RayQueryResult* hit)
 	{
 
 		std::stack<BVTree*> s;
@@ -226,7 +226,7 @@ namespace ong
 			if (n->type == NodeType::LEAF)
 			{
 				Collider* _c = n->collider;
-
+				vec3 n;
 				const Transform& _t = _c->getTransform();
 				vec3 _o = invTransformVec3(o, _t);
 				vec3 _d = rotate(d, conjugate(_t.q));
@@ -235,24 +235,30 @@ namespace ong
 				{
 				case ShapeType::HULL:
 
-					if (intersectRayHull(_o, _d, _c->getShape(), t, p) && t < tmax && t < tmin)
+					if (intersectRayHull(_o, _d, _c->getShape(), t, p, n) && t < tmax && t < tmin)
 					{
 						tmin = t;
-						*c = _c;
+						hit->t = tmin;
+						hit->normal = rotate(n, _t.q);
+						hit->collider = _c;
 					}
 					break;
 				case ShapeType::SPHERE:
-					if (intersectRaySphere(_o, _d, _c->getShape(), t, p) && t < tmax && t < tmin)
+					if (intersectRaySphere(_o, _d, _c->getShape(), t, p, n) && t < tmax && t < tmin)
 					{
 						tmin = t;
-						*c = _c;
+						hit->t = tmin;
+						hit->normal = rotate(n, _t.q);
+						hit->collider = _c;
 					}
 					break;
 				case ShapeType::CAPSULE:
-					if (intersectRayCapsule(_o, _d, _c->getShape(), t, p) && t < tmax && t < tmin)
+					if (intersectRayCapsule(_o, _d, _c->getShape(), t, p, n) && t < tmax && t < tmin)
 					{
 						tmin = t;
-						*c = _c;
+						hit->t = tmin;
+						hit->normal = rotate(n, _t.q);
+						hit->collider = _c;
 					}
 					break;
 				}
@@ -278,45 +284,49 @@ namespace ong
 
 
 
-	Collider* Body::queryRay(const vec3& origin, const vec3& dir, float* t,  float tmax)
+	bool Body::queryRay(const vec3& origin, const vec3& dir, RayQueryResult* result,  float tmax)
 	{
 		vec3 o = invTransformVec3(origin, getTransform());
 		vec3 d = rotate(dir, conjugate(getOrientation()));
 
-		Collider* hit = nullptr;
 
 		float tmin = FLT_MAX; 
 
 		if (m_numCollider > 1)
 		{
-			intersectTree(m_tree, m_tree, o, d, tmax, tmin, &hit);
+			intersectTree(m_tree, m_tree, o, d, tmax, tmin, result);
 		}
 		else if (m_numCollider == 1)
 		{
 			vec3 p;
 			if (intersectRayAABB(o, d, m_pCollider->getAABB(), tmin, p) && tmin < tmax)
 			{
+				vec3 n;
+
 				const Transform& _t = m_pCollider->getTransform();
 				vec3 _o = invTransformVec3(o, _t);
 				vec3 _d = rotate(d, conjugate(_t.q));
 				switch (m_pCollider->getShape().getType())
 				{
 				case ShapeType::HULL:
-					if (intersectRayHull(_o, _d, m_pCollider->getShape(), tmin, p) && tmin < tmax)
+					if (intersectRayHull(_o, _d, m_pCollider->getShape(), tmin, p, n) && tmin < tmax)
 					{
-						hit = m_pCollider;
+						result->collider = m_pCollider;
+						result->normal = rotate(n, _t.q);
 					}
 					break;
 				case ShapeType::SPHERE:
-					if (intersectRaySphere(_o, _d, m_pCollider->getShape(), tmin, p) && tmin < tmax)
+					if (intersectRaySphere(_o, _d, m_pCollider->getShape(), tmin, p, n) && tmin < tmax)
 					{
-						hit = m_pCollider;
+						result->collider = m_pCollider;
+						result->normal = rotate(n, _t.q);
 					}
 					break;
 				case ShapeType::CAPSULE:
-					if (intersectRayCapsule(_o, _d, m_pCollider->getShape(), tmin, p) && tmin < tmax)
+					if (intersectRayCapsule(_o, _d, m_pCollider->getShape(), tmin, p, n) && tmin < tmax)
 					{
-						hit = m_pCollider;
+						result->collider = m_pCollider;
+						result->normal = rotate(n, _t.q);
 					}
 					break;
 
@@ -324,9 +334,10 @@ namespace ong
 			}
 		}
 
-		if (t) *t = tmin;
+		result->t = tmin;
+		result->point = o + tmin*dir;
 
-		return hit;
+		return (result->collider != nullptr);
 	}
 
 	bool overlap(const Collider* a, const Collider* b)

@@ -187,9 +187,9 @@ namespace ong
 
 	// rays
 	bool intersectRayAABB(const vec3& origin, const vec3& dir, const AABB& aabb, float& tmin, vec3& p);
-	bool intersectRayHull(const vec3& origin, const vec3& dir, const Hull* hull, float& tmin, vec3& p);
-	bool intersectRaySphere(const vec3& origin, const vec3& dir, const Sphere* sphere, float& tmin, vec3& p);
-	bool intersectRayCapsule(const vec3& origin, const vec3& dir, const Capsule* capsule, float& tmin, vec3& p);
+	bool intersectRayHull(const vec3& origin, const vec3& dir, const Hull* hull, float& tmin, vec3& p, vec3& n);
+	bool intersectRaySphere(const vec3& origin, const vec3& dir, const Sphere* sphere, float& tmin, vec3& p, vec3& n);
+	bool intersectRayCapsule(const vec3& origin, const vec3& dir, const Capsule* capsule, float& tmin, vec3& p, vec3& n);
 
 	//aaabb
 

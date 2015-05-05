@@ -5,6 +5,7 @@
 #include <Onager\myMath.h>
 
 #include <TheBrick\DebugDraw.h>
+#include <TheBrick\Conversion.h>
 
 #include <PuReEngine\Camera.h>
 
@@ -140,6 +141,39 @@ namespace Content
 					c.type = SCommand::UNDO;
 					m_Queue.push(c);
 				}
+				else if (strcmp(buffer, "brickID") == 0)
+				{
+					SCommand c;
+					c.type = SCommand::BRICKID;
+					scanf("%u", &c.brickID);
+					m_Queue.push(c);
+				}
+				else if (strcmp(buffer, "help") == 0)
+				{
+					printf(
+						"Control camera with alt + mouse.\n"
+						"Keyboard shortcuts:\n"
+						"\'q\' male nubs\n"
+						"\'w\' female nubs\n"
+						"\'e\' pivot\n\n"
+						"Commands:\n"
+						"\"next\" \n"
+						"get next file in the directory and save current brick\n"
+						"\"undo\" \n"
+						"delete the last constructed collider\n"
+						"\"brickID id\" \n"
+						"set the brickid of the current brick to id\n"
+						"create box collider with center c and width w, height h, and depth d\n"
+						"\"box cx cy cz w h d\" \n"
+						"create box collider with center c and width w, height h, and depth d\n"
+						"\"sphere cx cy cz r\" \n"
+						"create sphere collider with center c and and radius r\n"
+						"\"capsule c1x c1y c1z c2x c2y c2z r\" \n"
+						"create capsule collider from c1 to c2 and with radius rd\n"
+						"\"hull n p1x p1y p1z p2x p2y p2z ... \"\n"
+						"create hull collider from n points with the points p1, p2 etc\n"
+						);
+				}
 
 			}
 		}
@@ -148,6 +182,9 @@ namespace Content
 
 	void CEditorScene::Initialize(PuRe_IGraphics* a_pGraphics, PuRe_SoundPlayer* a_pSoundPlayer)
 	{
+
+		printf("type \"help\" for help\n");
+
 		PuRe_GraphicsDescription gdesc = a_pGraphics->GetDescription();
 		
 		m_pMaterial = a_pGraphics->LoadMaterial("../data/effects/editor/default");
@@ -173,9 +210,9 @@ namespace Content
 		wchar_t currentPath[FILENAME_MAX];
 
 		GetCurrentDirectory(sizeof(currentPath), currentPath);
-		wcscat_s(currentPath, L"\\..\\data\\newContent\\*");
+		wcscat_s(currentPath, L"\\newContent\\*");
 
-		char dir[] = "..\\data\\newContent\\";
+		char dir[] = "newContent\\";
 
 		printf("search Dir: %S \n", currentPath);
 
@@ -204,14 +241,17 @@ namespace Content
 				strcpy_s(fileDir, dir);
 				strcat_s(fileDir, fileName);
 
-				printf("%s \n", fileDir);
+				printf("%s \n", fileName);
 				PuRe_Model* pModel = new PuRe_Model(a_pGraphics, m_pMaterial, fileDir);
-				
+
+				//TODO !?!?!
+#include <Windows.h>
+				Sleep(10);
 
 				if (pModel != 0)
 				{
 					TheBrick::CBrick* newBrick = new TheBrick::CBrick(pModel);
-					m_BrickQueue.push(newBrick);
+					m_BrickQueue.push(std::make_pair(fileName, newBrick));
 				}
 			}
 			
@@ -238,25 +278,41 @@ namespace Content
 		m_MouseTransform.p = ong::vec3(0, 0, 0);
 		m_MouseTransform.q = ong::QuatFromAxisAngle(ong::vec3(1, 0, 0), 0);
 
-		m_MousePtr.c = ong::vec3(0, 0, 0);
-		m_MousePtr.r = 0.01f;
+		ong::ShapeDescription mouse;
+		mouse.shapeType = ong::ShapeType::SPHERE;
+		mouse.sphere.c = ong::vec3(0, 0, 0);
+		mouse.sphere.r = 0.01f;
+
+		//mouse.constructionType = ong::ShapeConstruction::HULL_FROM_BOX;
+		//mouse.hullFromBox.c = ong::vec3(0, 0.1, 0);
+		//mouse.hullFromBox.e = ong::vec3(0.01, 0.1, 0.01);
+
+		m_MousePtr = m_World.createShape(mouse);
+
+		ong::vec3 nubPoints[] = 
+		{
+			ong::vec3(TheBrick::CBrick::SEGMENT_WIDTH/2, 0, TheBrick::CBrick::SEGMENT_WIDTH/2),
+			ong::vec3(-TheBrick::CBrick::SEGMENT_WIDTH/2, 0, TheBrick::CBrick::SEGMENT_WIDTH/2),
+			ong::vec3(TheBrick::CBrick::SEGMENT_WIDTH/2, 0, -TheBrick::CBrick::SEGMENT_WIDTH/2),
+			ong::vec3(-TheBrick::CBrick::SEGMENT_WIDTH/2, 0, -TheBrick::CBrick::SEGMENT_WIDTH/2),
+			ong::vec3(0, TheBrick::CBrick::SEGMENT_HEIGHT, 0)
+		};
 
 		ong::ShapeDescription nub;
-		nub.constructionType = ong::ShapeConstruction::HULL_FROM_BOX;
-		nub.hullFromBox.c = ong::vec3(0, 0, 0);
-		nub.hullFromBox.e = 0.5f*ong::vec3(TheBrick::CBrick::SEGMENT_WIDTH, TheBrick::CBrick::SEGMENT_HEIGHT, TheBrick::CBrick::SEGMENT_WIDTH);
+		nub.constructionType = ong::ShapeConstruction::HULL_FROM_POINTS;
+		nub.hullFromPoints.points = nubPoints;
+		nub.hullFromPoints.numPoints = 5;
 		
-		m_NubPtr = m_World.createShape(nub);
-		m_NubTransform = m_MouseTransform;
+		m_NubShape = m_World.createShape(nub);
 
 		ong::ShapeDescription origin;
 		origin.shapeType = ong::ShapeType::SPHERE;
 		origin.sphere.c = ong::vec3(0.0f, 0.0f, 0.0f);
 		origin.sphere.r = 0.1f;
 
-		m_OriginTransform = m_MouseTransform;
-		m_OriginPtr = m_World.createShape(origin);
+		m_OriginShape = m_World.createShape(origin);
 
+		m_MouseValid = false;
 
 	}
 
@@ -288,15 +344,30 @@ namespace Content
 				m_pCamera->Move(PuRe_Vector3F(0, 0, a_pInput->GetMouseScroll()));
 			}
 		}
+		else
+		{
+			if (m_MouseValid && a_pInput->MousePressed(a_pInput->LeftClick))
+			{
+				switch (m_Mode)
+				{
+				case Mode::NUB:
+					m_pCurrBrick->m_pNubs.push_back(m_NubPtr);
+					break;
+				case Mode::ORIGIN:
+					m_pCurrBrick->m_Pivotoffset = TheBrick::OngToPuRe(m_Pivot);
+					break;
+
+				}
+			}
 
 
-		if (a_pInput->KeyPressed(a_pInput->Q))
-			m_Mode = Mode::NUB_MALE;
-		else if (a_pInput->KeyPressed(a_pInput->W))
-			m_Mode = Mode::NUB_FEMALE;
-		else if (a_pInput->KeyPressed(a_pInput->E))
-			m_Mode = Mode::ORIGIN;
-
+			if (a_pInput->KeyPressed(a_pInput->Q))
+				m_Mode = Mode::NUB, m_NubPtr.isMale = true;
+			else if (a_pInput->KeyPressed(a_pInput->W))
+				m_Mode = Mode::NUB, m_NubPtr.isMale = false;
+			else if (a_pInput->KeyPressed(a_pInput->E))
+				m_Mode = Mode::ORIGIN;
+		}
 
 		// ray cast
 		PuRe_WindowDescription wDescr = a_pWindow->GetDescription();
@@ -313,11 +384,18 @@ namespace Content
 
 		//printf("%f %f %f\n", rayDir.x, rayDir.y, rayDir.z);
 
-		float t;
-		if (m_pBody->queryRay(rayO, rayDir, &t))
-			m_MouseTransform.p = rayO + 0.999f*t* rayDir;
+		ong::RayQueryResult rayResult = { 0 };
+		if (m_pBody->queryRay(rayO, rayDir, &rayResult))
+		{
+			m_MouseTransform.p = rayO + 0.999f*rayResult.t* rayDir;
+			//m_MouseTransform.p = rayResult.point;
+			m_MouseValid = true;
+		}
 		else
+		{
 			m_MouseTransform.p = ong::vec3(FLT_MAX, FLT_MAX, FLT_MAX);
+			m_MouseValid = false;
+		}
 
 		float w = TheBrick::CBrick::SEGMENT_WIDTH;
 		float h = TheBrick::CBrick::SEGMENT_HEIGHT;
@@ -328,30 +406,18 @@ namespace Content
 
 		switch (m_Mode)
 		{
-		case Mode::NUB_MALE:
-			m_NubTransform.p.x = (floor(m_MouseTransform.p.x / w) + 0.5) * w;
-			m_NubTransform.p.y = (floor(m_MouseTransform.p.y / h) + 0.5) * h;
-			m_NubTransform.p.z = (floor(m_MouseTransform.p.z / w) + 0.5) * w;
-			break;
-		case Mode::NUB_FEMALE:
-			m_NubTransform.p.x = (floor(m_MouseTransform.p.x / w) + 0.5) * w;
-			m_NubTransform.p.y = (floor(m_MouseTransform.p.y / h) + 0.5) * h;
-			m_NubTransform.p.z = (floor(m_MouseTransform.p.z / w) + 0.5) * w;
+		case Mode::NUB:
+			m_NubPtr.Position.X = (floor(m_MouseTransform.p.x / w) + 0.5) * w - (rayResult.normal.x * 0.5f*w);
+			m_NubPtr.Position.Y = (floor(m_MouseTransform.p.y / h) + 0.5) * h - (rayResult.normal.y * 0.5f*h);
+			m_NubPtr.Position.Z = (floor(m_MouseTransform.p.z / w) + 0.5) * w - (rayResult.normal.z * 0.5f*w);
 
-			if (abs(dir.X) > abs(dir.Y) && abs(dir.X) > abs(dir.Z))
-				m_NubTransform.p.x -= (dir.X < 0 ? 1 : -1)* w;
-			else if (abs(dir.Y) > abs(dir.Z))
-				m_NubTransform.p.y -= (dir.Y < 0 ? 1 : -1)* h;
-			else
-				m_NubTransform.p.z -= (dir.Z < 0 ? 1 : -1)* w;
+			m_NubPtr.Direction = TheBrick::OngToPuRe(rayResult.normal);
 
 			break;
 		case Mode::ORIGIN:
-			printf("origin: %f %f %f \n", m_OriginTransform.p.x, m_OriginTransform.p.y, m_OriginTransform.p.z);
-
-			m_OriginTransform.p.x = (floor(m_MouseTransform.p.x / w) + 0.5) * w;
-			m_OriginTransform.p.y = (floor(m_MouseTransform.p.y / h) + 1.0) * h;
-			m_OriginTransform.p.z = (floor(m_MouseTransform.p.z / w) + 0.5) * w;
+			m_Pivot.x = (floor(m_MouseTransform.p.x / w) + 0.5) * w - (rayResult.normal.x * 0.5f*w);
+			m_Pivot.y = (floor(m_MouseTransform.p.y / h) + 0.5) * h - (rayResult.normal.y * 0.5f*h);
+			m_Pivot.z = (floor(m_MouseTransform.p.z / w) + 0.5) * w - (rayResult.normal.z * 0.5f*w);
 			break;
 		}
 
@@ -385,17 +451,30 @@ namespace Content
 				while (pCollider != 0)
 				{
 					ong::Collider* pNext = pCollider->getNext();
-					//m_pCurrBrick->m_pColliderData->push_Back(pCollider->getData());
+					m_pCurrBrick->m_pColliderData.push_back(pCollider->getData());
+
 					m_World.destroyCollider(pCollider);
 					pCollider = pNext;
 				}
+				if (m_Serializer.OpenWrite(m_CurrFileName.c_str()))
+				{
+					m_pCurrBrick->Serialize(&m_Serializer);
+					m_Serializer.Close();
+				}
+
 
 				delete m_pCurrBrick;
 			}
 
 			if (!m_BrickQueue.empty())
 			{
-				m_pCurrBrick = m_BrickQueue.front();
+				auto front = m_BrickQueue.front();
+				printf("currBrick: %s\n", front.first.c_str());
+				m_pCurrBrick = front.second;
+				m_CurrFileName = std::string(front.first.begin(), front.first.begin()+front.first.find_last_of('.'));
+				m_CurrFileName.append(".brick");
+
+
 				m_BrickQueue.pop();
 			}
 			else
@@ -431,6 +510,12 @@ namespace Content
 
 			return true;
 		}
+		case SCommand::BRICKID:
+		{
+			if (m_pCurrBrick)
+				m_pCurrBrick->m_BrickId = a_C.brickID;
+			return false;
+		}
 		}
 	}
 
@@ -447,6 +532,30 @@ namespace Content
 
 	void CEditorScene::Render(PuRe_IGraphics* a_pGraphics)
 	{
+		static const PuRe_Vector3F MALE_COLOR = PuRe_Vector3F(0, 0, 1);
+		static const PuRe_Vector3F FEMALE_COLOR = PuRe_Vector3F(1, 0.4, 0.7);
+
+
+		auto drawNub = [&](const TheBrick::SNub& nub){
+			ong::Transform t;
+			t.p = TheBrick::PuReToOng(nub.Position);
+			t.q = ong::QuatFromTwoVectors(TheBrick::PuReToOng(nub.Direction), ong::vec3(0, 1, 0));
+
+			PuRe_Vector3F color = nub.isMale ? MALE_COLOR : FEMALE_COLOR;
+
+
+			TheBrick::DrawShape(m_NubShape, t, color, m_pCamera, a_pGraphics);
+		};
+
+		auto drawPivot = [&](const ong::vec3& pivot)
+		{
+			ong::Transform t;
+			t.p = pivot;
+			t.q = ong::Quaternion(ong::vec3(0, 0, 0), 1.0f);
+
+			TheBrick::DrawShape(m_OriginShape, t, PuRe_Vector3F(0, 1, 0), m_pCamera, a_pGraphics);
+		};
+
 		PuRe_Color clear = PuRe_Color(0.1f, 0.1f, 0.1f);
 		PuRe_GraphicsDescription gdesc = a_pGraphics->GetDescription();
 
@@ -456,25 +565,36 @@ namespace Content
 
 		a_pGraphics->Begin(clear);
 		
+		// draw brick
 		m_pMaterial->Apply();
 		m_pMaterial->SetVector3(PuRe_Vector3F(0.4, 0.4, 0.4), "brickColor");
 		if (m_pCurrBrick)
 			m_pCurrBrick->Draw(a_pGraphics, m_pCamera, PuRe_Vector3F(0,0,0), PuRe_Vector3F(2,2,2), PuRe_Vector3F(0,0,0));
+		
+		for (auto nub : m_pCurrBrick->m_pNubs)
+		{
+			drawNub(nub);
+		}
+
+		drawPivot(TheBrick::PuReToOng(m_pCurrBrick->m_Pivotoffset));
 
 		
+
+
+		// draw gui stuff
+		TheBrick::DrawShape(m_MousePtr, m_MouseTransform,PuRe_Vector3F(1,1,1), m_pCamera, a_pGraphics);
+
 		TheBrick::DrawBody(m_pBody, m_pCamera, a_pGraphics);	
-		TheBrick::DrawShape(ong::ShapePtr(&m_MousePtr), m_MouseTransform,PuRe_Vector3F(1,1,1), m_pCamera, a_pGraphics);
 
 		switch (m_Mode)
 		{
-		case Mode::NUB_MALE:
-			TheBrick::DrawShape(m_NubPtr, m_NubTransform, PuRe_Vector3F(0, 1, 1), m_pCamera, a_pGraphics);
+		case Mode::NUB:
+		{
+			drawNub(m_NubPtr);
 			break;
-		case Mode::NUB_FEMALE:
-			TheBrick::DrawShape(m_NubPtr, m_NubTransform, PuRe_Vector3F(1, 0, 1), m_pCamera, a_pGraphics);
-			break;
+		}
 		case Mode::ORIGIN:
-			TheBrick::DrawShape(m_OriginPtr, m_OriginTransform, PuRe_Vector3F(0, 1, 0), m_pCamera, a_pGraphics);
+			drawPivot(m_Pivot);
 			break;
 		}
 

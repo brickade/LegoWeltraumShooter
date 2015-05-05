@@ -35,6 +35,14 @@ namespace ong
 	};
 
 
+	struct RayQueryResult
+	{
+		Collider* collider;
+		vec3 point;
+		vec3 normal;
+		float t;
+	};
+
 
 	struct Proxy;
 
@@ -73,7 +81,7 @@ namespace ong
 		//	--ACCESORS--
 
 		//return 0 if nothing got hit
-		Collider* queryRay(const vec3& origin, const vec3& dir,float* t = 0, float tmax = FLT_MAX);
+		bool queryRay(const vec3& origin, const vec3& dir, RayQueryResult* hit, float tmax = FLT_MAX);
 		bool queryCollider(const Collider* collider);
 
 		const Proxy& getProxy();

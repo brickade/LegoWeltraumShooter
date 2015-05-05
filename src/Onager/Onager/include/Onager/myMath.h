@@ -331,6 +331,26 @@ namespace ong
 			);
 	}
 
+	// vectors should be normalized!
+	inline Quaternion QuatFromTwoVectors(const vec3& from, const vec3& to)
+	{
+		float r = 1.0f + ong::dot(from, to);
+		ong::vec3 w;
+		if (r <= 0.0f)
+		{
+			r = 0;
+
+			w = abs(from.x) > abs(from.z) ? vec3(-from.y, from.x, 0.f)
+				: vec3(0.f, -from.z, from.y);
+		}
+		else
+		{
+			w = ong::cross(from, to);
+		}
+
+		return Quaternion(w, r);
+	}
+
 	inline mat3x3 toRotMat(const Quaternion& q)
 	{
 		float s, xs, ys, zs, wx, wy, wz, xx, xy, xz, yy, yz, zz;
