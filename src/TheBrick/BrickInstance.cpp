@@ -25,6 +25,8 @@ namespace TheBrick
     // **************************************************************************
     void CBrickInstance::Draw(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera)
     {
+        //Need to call apply on the brick material first, do this outside this function to not call this over and over again
+        this->m_pBrick->m_pMaterial->SetVector3(PuRe_Vector3F(this->m_Color.R, this->m_Color.G, this->m_Color.B), "brickColor"); //Instanced?
         this->m_pBrick->Draw(a_pGraphics, a_pCamera, TheBrick::OngToPuRe(this->m_Transform.p), PuRe_Vector3F::One(), TheBrick::OngToPuRe(this->m_Transform.q.v));
     }
 

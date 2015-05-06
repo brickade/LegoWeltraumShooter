@@ -5,6 +5,7 @@ namespace TheBrick
 {
     const float CBrick::SEGMENT_WIDTH = 0.78f;
     const float CBrick::SEGMENT_HEIGHT = 0.32f;
+    const int CBrick::MAX_MODEL_PATH_LENGTH = 200; //Win max path+filename length = 260
 
     // **************************************************************************
     // **************************************************************************
@@ -62,9 +63,9 @@ namespace TheBrick
     void CBrick::Deserialize(CSerializer* a_pSerializer, PuRe_IGraphics* a_pGraphics, PuRe_IMaterial* a_pMaterial, ong::World* a_pWorld)
     {
         //m_pModel
-        char* buffer = (char*)malloc(100);
-        a_pSerializer->Read(buffer, 100);
-        this->m_pModel = new PuRe_Model(a_pGraphics, a_pMaterial, buffer);
+        this->m_ModelPath = (char*)malloc(MAX_MODEL_PATH_LENGTH);
+        a_pSerializer->Read(this->m_ModelPath, MAX_MODEL_PATH_LENGTH);
+        this->m_pModel = new PuRe_Model(a_pGraphics, a_pMaterial, this->m_ModelPath);
 
         //m_BrickId
         this->m_BrickId = a_pSerializer->ReadIntUnsigned();
@@ -139,8 +140,7 @@ namespace TheBrick
     void CBrick::Serialize(CSerializer* a_pSerializer)
     {
         //m_pModel
-        char* buffer = (char*)malloc(100); //Get Model Path
-        a_pSerializer->Write(buffer, 100);
+        a_pSerializer->Write(this->m_ModelPath, MAX_MODEL_PATH_LENGTH);
         //m_BrickId
         a_pSerializer->Write(this->m_BrickId);
         //m_PivotOffset

@@ -23,6 +23,7 @@ namespace TheBrick
         CBrick* m_pBrick;
         ong::Transform m_Transform;
         PuRe_List<ong::Collider*> m_pCollider;
+        PuRe_Color m_Color;
 
     private:
 

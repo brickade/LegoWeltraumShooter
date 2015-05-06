@@ -1,5 +1,5 @@
-#include "include/TheBrick/BrickCategory.h"
-namespace TheBrick
+#include "include/BrickCategory.h"
+namespace Game
 {
     // **************************************************************************
     // **************************************************************************

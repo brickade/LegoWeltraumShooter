@@ -23,12 +23,15 @@ namespace TheBrick
         unsigned int m_BrickId;
         static const float SEGMENT_WIDTH;
         static const float SEGMENT_HEIGHT;
+        static const int MAX_MODEL_PATH_LENGTH;
 
+        char* m_ModelPath;
         PuRe_Model* m_pModel;
+        PuRe_IMaterial* m_pMaterial;
         PuRe_Vector3F m_Pivotoffset;
         PuRe_List<SNub> m_pNubs;
         PuRe_List<ong::ColliderData> m_pColliderData;
-        
+
     public:
         CBrick();
         CBrick(PuRe_Model* a_pModel);
