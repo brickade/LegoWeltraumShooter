@@ -73,7 +73,8 @@ namespace TheBrick
         this->m_Pivotoffset = a_pSerializer->ReadVector3();
 
         //m_pNubs
-        for (unsigned int i = 0; i < a_pSerializer->ReadIntUnsigned(); i++)
+		unsigned int numNubs = a_pSerializer->ReadIntUnsigned();
+        for (unsigned int i = 0; i < numNubs; i++)
         {
             SNub nub;
             a_pSerializer->Read(&nub, sizeof(nub));
@@ -81,7 +82,8 @@ namespace TheBrick
         }
 
         //m_pColliderData
-        for (unsigned int i = 0; i < a_pSerializer->ReadIntUnsigned(); i++)
+		unsigned int numCollider = a_pSerializer->ReadIntUnsigned(); 
+        for (unsigned int i = 0; i < numCollider; i++)
         {
             ong::ColliderData colliderData;
             //transform
@@ -108,21 +110,21 @@ namespace TheBrick
                 hull->centroid = PuReToOng(a_pSerializer->ReadVector3());
                 //Vertices
                 hull->numVertices = a_pSerializer->ReadInt();
-                size_t sVertices = sizeof(hull->pVertices) * hull->numVertices;
+                size_t sVertices = sizeof(*hull->pVertices) * hull->numVertices;
                 hull->pVertices = (ong::vec3*)malloc(sVertices);
                 a_pSerializer->Read(hull->pVertices, sVertices);
                 //Edges
                 hull->numEdges = a_pSerializer->ReadInt();
-                size_t sEdges = sizeof(hull->pEdges) * hull->numEdges;
+                size_t sEdges = sizeof(*hull->pEdges) * hull->numEdges;
                 hull->pEdges = (ong::HalfEdge*)malloc(sEdges);
                 a_pSerializer->Read(hull->pEdges, sEdges);
                 //Faces
                 hull->numFaces = a_pSerializer->ReadInt();
-                size_t sFaces = sizeof(hull->pFaces) * hull->numFaces;
+                size_t sFaces = sizeof(*hull->pFaces) * hull->numFaces;
                 hull->pFaces = (ong::Face*)malloc(sFaces);
                 a_pSerializer->Read(hull->pFaces, sFaces);
                 
-                size_t sPlane = sizeof(hull->pPlanes) * hull->numFaces;
+                size_t sPlane = sizeof(*hull->pPlanes) * hull->numFaces;
                 hull->pPlanes = (ong::Plane*)malloc(sPlane);
                 a_pSerializer->Read(hull->pPlanes, sPlane);
                 //epsilon
@@ -130,6 +132,15 @@ namespace TheBrick
                 break;
             }
             colliderData.shape = a_pWorld->createShape(shapeDesc);
+
+			if (shapeDesc.type == ong::ShapeType::HULL)
+			{
+				free(shapeDesc.hull.pVertices);
+				free(shapeDesc.hull.pEdges);
+				free(shapeDesc.hull.pFaces);
+				free(shapeDesc.hull.pPlanes);
+			}
+
             this->m_pColliderData.push_back(colliderData);
         }
     }
@@ -181,14 +192,14 @@ namespace TheBrick
                 a_pSerializer->Write(OngToPuRe(hull->centroid));
                 //Vertices
                 a_pSerializer->Write(hull->numVertices);
-                a_pSerializer->Write(hull->pVertices, sizeof(hull->pVertices) * hull->numVertices);
+                a_pSerializer->Write(hull->pVertices, sizeof(*hull->pVertices) * hull->numVertices);
                 //Edges
                 a_pSerializer->Write(hull->numEdges);
-                a_pSerializer->Write(hull->pEdges, sizeof(hull->pEdges) * hull->numEdges);
+                a_pSerializer->Write(hull->pEdges, sizeof(*hull->pEdges) * hull->numEdges);
                 //Faces
                 a_pSerializer->Write(hull->numFaces);
-                a_pSerializer->Write(hull->pFaces, sizeof(hull->pFaces) * hull->numFaces);
-                a_pSerializer->Write(hull->pPlanes, sizeof(hull->pPlanes) * hull->numFaces);
+                a_pSerializer->Write(hull->pFaces, sizeof(*hull->pFaces) * hull->numFaces);
+                a_pSerializer->Write(hull->pPlanes, sizeof(*hull->pPlanes) * hull->numFaces);
                 //epsilon
                 a_pSerializer->Write(hull->epsilon);
                 break;

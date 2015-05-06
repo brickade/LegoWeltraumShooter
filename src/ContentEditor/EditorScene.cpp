@@ -224,11 +224,8 @@ namespace Content
 
 			wchar_t* fileType = wcsrchr(findFileData.cFileName, '.');
 
-
-			//new brick from obj
-			if (fileType != 0 && wcscmp(fileType, L".obj") == 0)
+			if (fileType != 0)
 			{
-
 				mbstate_t conversionState;
 
 				char fileName[FILENAME_MAX];
@@ -242,19 +239,55 @@ namespace Content
 				strcat_s(fileDir, fileName);
 
 				printf("%s \n", fileName);
-				PuRe_Model* pModel = new PuRe_Model(a_pGraphics, m_pMaterial, fileDir);
 
-				//TODO !?!?!
-#include <Windows.h>
-				Sleep(10);
-
-				if (pModel != 0)
+				//new brick from obj
+				if (wcscmp(fileType, L".obj") == 0)
 				{
-					TheBrick::CBrick* newBrick = new TheBrick::CBrick(pModel);
-					m_BrickQueue.push(std::make_pair(fileName, newBrick));
+					PuRe_Model* pModel = new PuRe_Model(a_pGraphics, m_pMaterial, fileDir);
+
+					//TODO !?!?!
+#include <Windows.h>
+					Sleep(10);
+
+					if (pModel != 0)
+					{
+						TheBrick::CBrick* newBrick = new TheBrick::CBrick(pModel);
+						m_BrickQueue.push(std::make_pair(fileName, newBrick));
+					}
+				}
+				else if (wcscmp(fileType, L".brick") == 0)
+				{
+
+					TheBrick::CBrick* newBrick = new TheBrick::CBrick();
+
+					if (m_Serializer.OpenRead(fileDir))
+					{
+						newBrick->Deserialize(&m_Serializer, a_pGraphics, m_pMaterial, &m_World);
+						m_Serializer.Close();
+
+
+						char modelDir[FILENAME_MAX] = { 0 };
+						strcat(modelDir, "..\\data\\models\\");
+						strncat(modelDir, fileName, strrchr(fileName, '.') - fileName);
+						strcat(modelDir, ".obj");
+
+						PuRe_Model* pModel = new PuRe_Model(a_pGraphics, m_pMaterial, modelDir);
+						Sleep(10);
+						
+						newBrick->m_pModel = pModel;
+
+						m_BrickQueue.push(std::make_pair(fileName, newBrick));
+					}
+					else
+					{
+						printf("failed to load %s\n", fileDir);
+					}
+
+
+
+
 				}
 			}
-			
 			if (!FindNextFile(hFind, &findFileData))
 			{
 				int error = GetLastError();
@@ -346,19 +379,55 @@ namespace Content
 		}
 		else
 		{
-			if (m_MouseValid && a_pInput->MousePressed(a_pInput->LeftClick))
+			if (m_MouseValid)
 			{
-				switch (m_Mode)
+				if (a_pInput->MousePressed(a_pInput->LeftClick))
 				{
-				case Mode::NUB:
-					m_pCurrBrick->m_pNubs.push_back(m_NubPtr);
-					break;
-				case Mode::ORIGIN:
-					m_pCurrBrick->m_Pivotoffset = TheBrick::OngToPuRe(m_Pivot);
-					break;
+					switch (m_Mode)
+					{
+					case Mode::NUB:
+					{
+						bool duplicate = false;
+						for (auto& nub : m_pCurrBrick->m_pNubs)
+						{
+							if (nub.Position == m_NubPtr.Position)
+							{
+								duplicate = true;
+								break;
+							}
+						}
+
+						if (!duplicate)
+							m_pCurrBrick->m_pNubs.push_back(m_NubPtr);
+						break;
+					}
+					case Mode::ORIGIN:
+						m_pCurrBrick->m_Pivotoffset = TheBrick::OngToPuRe(m_Pivot);
+						break;
+					}
 
 				}
+				else if (a_pInput->MousePressed(a_pInput->RightClick))
+				{
+					switch (m_Mode)
+					{
+					case Mode::NUB:
+					{
+						for (auto nub = m_pCurrBrick->m_pNubs.begin(); nub != m_pCurrBrick->m_pNubs.end();nub++)
+						{
+							if (nub->Position == m_NubPtr.Position && nub->isMale == m_NubPtr.isMale)
+							{
+								m_pCurrBrick->m_pNubs.erase(nub);
+								break;
+							}
+						}
+						break;
+					}
+
+					}
+				}
 			}
+
 
 
 			if (a_pInput->KeyPressed(a_pInput->Q))
@@ -474,6 +543,11 @@ namespace Content
 				m_CurrFileName = std::string(front.first.begin(), front.first.begin()+front.first.find_last_of('.'));
 				m_CurrFileName.append(".brick");
 
+				for (auto& colliderData : m_pCurrBrick->m_pColliderData)
+				{
+					m_pBody->addCollider(m_World.createCollider(colliderData));
+				}
+				m_pCurrBrick->m_pColliderData.clear();
 
 				m_BrickQueue.pop();
 			}
@@ -566,19 +640,21 @@ namespace Content
 		a_pGraphics->Begin(clear);
 		
 		// draw brick
-		m_pMaterial->Apply();
-		m_pMaterial->SetVector3(PuRe_Vector3F(0.4, 0.4, 0.4), "brickColor");
 		if (m_pCurrBrick)
-			m_pCurrBrick->Draw(a_pGraphics, m_pCamera, PuRe_Vector3F(0,0,0), PuRe_Vector3F(2,2,2), PuRe_Vector3F(0,0,0));
-		
-		for (auto nub : m_pCurrBrick->m_pNubs)
 		{
-			drawNub(nub);
+
+			m_pMaterial->Apply();
+			m_pMaterial->SetVector3(PuRe_Vector3F(0.4, 0.4, 0.4), "brickColor");
+			m_pCurrBrick->Draw(a_pGraphics, m_pCamera, PuRe_Vector3F(0, 0, 0), PuRe_Vector3F(2, 2, 2), PuRe_Vector3F(0, 0, 0));
+
+			for (auto nub : m_pCurrBrick->m_pNubs)
+			{
+				drawNub(nub);
+			}
+
+			drawPivot(TheBrick::PuReToOng(m_pCurrBrick->m_Pivotoffset));
+
 		}
-
-		drawPivot(TheBrick::PuReToOng(m_pCurrBrick->m_Pivotoffset));
-
-		
 
 
 		// draw gui stuff
