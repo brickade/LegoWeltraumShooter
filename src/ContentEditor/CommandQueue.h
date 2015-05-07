@@ -5,6 +5,9 @@
 #include <mutex>
 #include <Onager\Shapes.h>
 
+
+#undef TRANSPARENT
+
 namespace Content
 {
 	struct SCommand
@@ -16,7 +19,8 @@ namespace Content
 			UNDO,
 			HELP,
 			NEWCOLLIDER,
-			BRICKID
+			BRICKID,
+			TRANSPARENT,
 
 		} type;
 		union
@@ -26,6 +30,7 @@ namespace Content
 				ong::ShapeDescription shape;
 			};
 			unsigned int brickID;
+			int transparent;
 
 		};
 

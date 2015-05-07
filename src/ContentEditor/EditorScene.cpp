@@ -8,8 +8,6 @@
 #include <TheBrick\Conversion.h>
 
 #include <PuReEngine\Camera.h>
-
-#define _CRT_SECURE_WARNINGS_NO
 #include <stdio.h>
 
 namespace Content
@@ -148,6 +146,13 @@ namespace Content
 					scanf("%u", &c.brickID);
 					m_Queue.push(c);
 				}
+				else if (strcmp(buffer, "transparent") == 0)
+				{
+					SCommand c;
+					c.type = SCommand::TRANSPARENT;
+					scanf("%d", &c.transparent);
+					m_Queue.push(c);
+				}
 				else if (strcmp(buffer, "help") == 0)
 				{
 					printf(
@@ -163,6 +168,8 @@ namespace Content
 						"delete the last constructed collider\n"
 						"\"brickID id\" \n"
 						"set the brickid of the current brick to id\n"
+						"\"transparent i\" \n"
+						"set if the brick is transparent (0 = false, != 0 = true)\n"
 						"create box collider with center c and width w, height h, and depth d\n"
 						"\"box cx cy cz w h d\" \n"
 						"create box collider with center c and width w, height h, and depth d\n"
@@ -252,7 +259,14 @@ namespace Content
 
 					if (pModel != 0)
 					{
+						char modelDir[FILENAME_MAX] = { 0 };
+						strcat(modelDir, "..\\data\\models\\");
+						strcat(modelDir, fileName);
+
+
 						TheBrick::CBrick* newBrick = new TheBrick::CBrick(pModel);
+						newBrick->SetMaterial(m_pMaterial);
+						newBrick->SetModelPath(modelDir);
 						m_BrickQueue.push(std::make_pair(fileName, newBrick));
 					}
 				}
@@ -267,15 +281,17 @@ namespace Content
 						m_Serializer.Close();
 
 
-						char modelDir[FILENAME_MAX] = { 0 };
-						strcat(modelDir, "..\\data\\models\\");
-						strncat(modelDir, fileName, strrchr(fileName, '.') - fileName);
-						strcat(modelDir, ".obj");
+						//char modelDir[FILENAME_MAX] = { 0 };
+						//strcat(modelDir, "..\\data\\models\\");
+						//strncat(modelDir, fileName, strrchr(fileName, '.') - fileName);
+						//strcat(modelDir, ".obj");
+
+						const char* modelDir = newBrick->GetModelPath();
 
 						PuRe_Model* pModel = new PuRe_Model(a_pGraphics, m_pMaterial, modelDir);
 						
-						newBrick->m_pModel = pModel;
-
+						newBrick->SetModel(pModel);
+						newBrick->SetMaterial(m_pMaterial);
 						m_BrickQueue.push(std::make_pair(fileName, newBrick));
 					}
 					else
@@ -387,7 +403,7 @@ namespace Content
 					case Mode::NUB:
 					{
 						bool duplicate = false;
-						for (auto& nub : m_pCurrBrick->m_pNubs)
+						for (auto& nub : m_pCurrBrick->GetNubs())
 						{
 							if (nub.Position == m_NubPtr.Position)
 							{
@@ -397,11 +413,11 @@ namespace Content
 						}
 
 						if (!duplicate)
-							m_pCurrBrick->m_pNubs.push_back(m_NubPtr);
+							m_pCurrBrick->GetNubs().push_back(m_NubPtr);
 						break;
 					}
 					case Mode::ORIGIN:
-						m_pCurrBrick->m_Pivotoffset = TheBrick::OngToPuRe(m_Pivot);
+						m_pCurrBrick->SetPivotOffset(TheBrick::OngToPuRe(m_Pivot));
 						break;
 					}
 
@@ -412,11 +428,11 @@ namespace Content
 					{
 					case Mode::NUB:
 					{
-						for (auto nub = m_pCurrBrick->m_pNubs.begin(); nub != m_pCurrBrick->m_pNubs.end();nub++)
+						for (auto nub = m_pCurrBrick->GetNubs().begin(); nub != m_pCurrBrick->GetNubs().end();nub++)
 						{
 							if (nub->Position == m_NubPtr.Position && nub->isMale == m_NubPtr.isMale)
 							{
-								m_pCurrBrick->m_pNubs.erase(nub);
+								m_pCurrBrick->GetNubs().erase(nub);
 								break;
 							}
 						}
@@ -519,7 +535,7 @@ namespace Content
 				while (pCollider != 0)
 				{
 					ong::Collider* pNext = pCollider->getNext();
-					m_pCurrBrick->m_pColliderData.push_back(pCollider->getData());
+					m_pCurrBrick->GetColliderData().push_back(pCollider->getData());
 
 					m_World.destroyCollider(pCollider);
 					pCollider = pNext;
@@ -542,11 +558,11 @@ namespace Content
 				m_CurrFileName = "..\\data\\bricks\\" + std::string(front.first.begin(), front.first.begin()+front.first.find_last_of('.'));
 				m_CurrFileName.append(".brick");
 
-				for (auto& colliderData : m_pCurrBrick->m_pColliderData)
+				for (auto& colliderData : m_pCurrBrick->GetColliderData())
 				{
 					m_pBody->addCollider(m_World.createCollider(colliderData));
 				}
-				m_pCurrBrick->m_pColliderData.clear();
+				m_pCurrBrick->GetColliderData().clear();
 
 				m_BrickQueue.pop();
 			}
@@ -586,9 +602,13 @@ namespace Content
 		case SCommand::BRICKID:
 		{
 			if (m_pCurrBrick)
-				m_pCurrBrick->m_BrickId = a_C.brickID;
+				m_pCurrBrick->SetBrickId(a_C.brickID);
 			return false;
 		}
+		case SCommand::TRANSPARENT:
+			if (m_pCurrBrick)
+				m_pCurrBrick->SetIsTransparent(a_C.transparent);
+			return false;
 		}
 	}
 
@@ -643,15 +663,15 @@ namespace Content
 		{
 
 			m_pMaterial->Apply();
-			m_pMaterial->SetVector3(PuRe_Vector3F(0.4, 0.4, 0.4), "brickColor");
-			m_pCurrBrick->Draw(a_pGraphics, m_pCamera, PuRe_Vector3F(0, 0, 0), PuRe_Vector3F(1, 1, 1), PuRe_Vector3F(0, 0, 0));
+			m_pCurrBrick->Draw(a_pGraphics, m_pCamera, PuRe_Vector3F(0, 0, 0), PuRe_Vector3F(0, 0, 0), PuRe_Color(0.4, 0.4, 0.4));
 
-			for (auto nub : m_pCurrBrick->m_pNubs)
+			
+			for (auto nub : m_pCurrBrick->GetNubs())
 			{
 				drawNub(nub);
 			}
 
-			drawPivot(TheBrick::PuReToOng(m_pCurrBrick->m_Pivotoffset));
+			drawPivot(TheBrick::PuReToOng(m_pCurrBrick->GetPivotOffset()));
 
 		}
 
