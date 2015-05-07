@@ -139,7 +139,6 @@
   <ItemGroup>
     <ClInclude Include="include\TheBrick\Bullet.h" />
     <ClInclude Include="include\TheBrick\Brick.h" />
-    <ClInclude Include="include\TheBrick\BrickCategory.h" />
     <ClInclude Include="include\TheBrick\BrickInstance.h" />
     <ClInclude Include="include\TheBrick\BrickManager.h" />
     <ClInclude Include="include\TheBrick\ByteBuffer.h" />
@@ -154,7 +153,6 @@
   <ItemGroup>
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Brick.cpp" />
-    <ClCompile Include="BrickCategory.cpp" />
     <ClCompile Include="BrickInstance.cpp" />
     <ClCompile Include="BrickManager.cpp" />
     <ClCompile Include="ByteBuffer.cpp" />
