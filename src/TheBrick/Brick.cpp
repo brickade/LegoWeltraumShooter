@@ -19,6 +19,8 @@ namespace TheBrick
     // **************************************************************************
     CBrick::CBrick(PuRe_Model* a_pModel)
     {
+		this->m_ModelPath = new char[MAX_MODEL_PATH_LENGTH];
+		memset(this->m_ModelPath, 0, MAX_MODEL_PATH_LENGTH);
         this->m_pModel = a_pModel;
     }
 
@@ -64,7 +66,8 @@ namespace TheBrick
         this->m_Pivotoffset = a_pSerializer->ReadVector3();
 
         //m_pNubs
-        for (unsigned int i = 0; i < a_pSerializer->ReadIntUnsigned(); i++)
+		unsigned int numNubs = a_pSerializer->ReadIntUnsigned();
+		for (unsigned int i = 0; i < numNubs; i++)
         {
             SNub nub;
             a_pSerializer->Read(&nub, sizeof(nub));

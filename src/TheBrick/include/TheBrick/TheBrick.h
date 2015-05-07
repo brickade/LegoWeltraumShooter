@@ -2,7 +2,6 @@
 #define _THEBRICK_H_
 
 #include "Brick.h"
-#include "BrickCategory.h"
 #include "BrickInstance.h"
 #include "BrickManager.h"
 #include "Nub.h"
