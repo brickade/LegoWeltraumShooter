@@ -11,6 +11,7 @@
 
 #include "EditorCamera.h"
 #include "BrickWorker.h"
+#include "BrickSupervisor.h"
 
 namespace Game
 {
@@ -28,6 +29,7 @@ namespace Game
         PuRe_IMaterial* m_pSkyBoxMaterial;
         PuRe_Camera* m_pPostCamera;
         
+        CBrickSupervisor* m_pBrickSupervisor;
         CBrickWorker* m_pBrickWorker;
 
         /// @brief Position for the MouseClick

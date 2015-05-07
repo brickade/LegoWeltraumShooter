@@ -136,6 +136,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\BrickCategory.h" />
+    <ClInclude Include="include\BrickSupervisor.h" />
     <ClInclude Include="include\BrickWorker.h" />
     <ClInclude Include="include\BrickBozz.h" />
     <ClInclude Include="include\EditorCamera.h" />
@@ -146,6 +147,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BrickCategory.cpp" />
+    <ClCompile Include="BrickSupervisor.cpp" />
     <ClCompile Include="BrickWorker.cpp" />
     <ClCompile Include="BrickBozz.cpp" />
     <ClCompile Include="EditorCamera.cpp" />

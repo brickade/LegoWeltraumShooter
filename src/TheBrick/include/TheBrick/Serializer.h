@@ -1,8 +1,6 @@
 #ifndef _SERIALIZER_H_
 #define _SERIALIZER_H_
 
-#define _CRT_SECURE_NO_WARNINGS
-
 #include <PuReEngine/Core.h>
 #include <PuReEngine/Defines.h>
 

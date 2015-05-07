@@ -2,7 +2,7 @@
 
 namespace Game
 {
-    BrickBozz* BrickBozz::m_pInstance = 0;
+    BrickBozz* BrickBozz::g_pInstance = 0;
 
     // **************************************************************************
     // **************************************************************************
@@ -23,10 +23,10 @@ namespace Game
     // **************************************************************************
     BrickBozz* BrickBozz::Instance()
     {
-        if (BrickBozz::m_pInstance == nullptr)
+        if (BrickBozz::g_pInstance == nullptr)
         {
-            BrickBozz::m_pInstance = new BrickBozz();
+            BrickBozz::g_pInstance = new BrickBozz();
         }
-        return BrickBozz::m_pInstance;
+        return BrickBozz::g_pInstance;
     }
 }

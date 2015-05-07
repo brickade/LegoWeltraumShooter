@@ -8,9 +8,9 @@ namespace TheBrick
     CBrickInstance::CBrickInstance(CBrick* a_pBrick, ong::World* a_pWorld)
     {
         this->m_pBrick = a_pBrick;
-        for (size_t i = 0; i < this->m_pBrick->m_pColliderData.size(); i++)
+        for (size_t i = 0; i < this->m_pBrick->GetColliderData().size(); i++)
         {
-            this->m_pCollider.push_back(a_pWorld->createCollider(this->m_pBrick->m_pColliderData[i]));
+            this->m_pCollider.push_back(a_pWorld->createCollider(this->m_pBrick->GetColliderData()[i]));
         }
     }
 
@@ -25,16 +25,15 @@ namespace TheBrick
     // **************************************************************************
     void CBrickInstance::Draw(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera)
     {
-        //Need to call apply on the brick material first, do this outside this function to not call this over and over again
-        this->m_pBrick->m_pMaterial->SetVector3(PuRe_Vector3F(this->m_Color.R, this->m_Color.G, this->m_Color.B), "brickColor"); //Instanced?
-        this->m_pBrick->Draw(a_pGraphics, a_pCamera, TheBrick::OngToPuRe(this->m_Transform.p), PuRe_Vector3F::One(), TheBrick::OngToPuRe(this->m_Transform.q.v));
+        //TODO quaternion übergeben oder quatToEuler
+        this->m_pBrick->Draw(a_pGraphics, a_pCamera, TheBrick::OngToPuRe(this->m_Transform.p), TheBrick::OngToPuRe(this->m_Transform.q.v), this->m_Color);
     }
 
     // **************************************************************************
     // **************************************************************************
     PuRe_List<SNub>* CBrickInstance::GetWorldSpaceNubs()
     {
-        PuRe_List<SNub>* nubs = new PuRe_List<SNub>(*this->m_pBrick->GetNubs()); //Copy nubs
+        PuRe_List<SNub>* nubs = new PuRe_List<SNub>(this->m_pBrick->GetNubs()); //Copy nubs
         for (unsigned int i = 0; i < nubs->size(); i++)
         {
             SNub* n = &(*nubs)[i];

@@ -23,7 +23,9 @@ namespace TheBrick
 
         void Load(const char* a_pFolder);
 
-        CBrick* GetBrick(int a_id);
+        CBrick* GetBrick(int a_BrickId);
+        CBrick** GetCategoryStart(int a_CategoryId);
+        int GetCategoryCount();
     };
 }
 

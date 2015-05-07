@@ -20,7 +20,7 @@ namespace Game
         ong::World* World;
 
     private:
-        static BrickBozz* m_pInstance;
+        static BrickBozz* g_pInstance;
     
     private:
         BrickBozz();

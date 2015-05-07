@@ -57,6 +57,9 @@
     <ClInclude Include="include\BrickCategory.h">
       <Filter>Headerdateien\Editor</Filter>
     </ClInclude>
+    <ClInclude Include="include\BrickSupervisor.h">
+      <Filter>Headerdateien\Editor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -84,6 +87,9 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="BrickCategory.cpp">
+      <Filter>Quelldateien\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="BrickSupervisor.cpp">
       <Filter>Quelldateien\Editor</Filter>
     </ClCompile>
   </ItemGroup>

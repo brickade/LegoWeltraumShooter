@@ -27,7 +27,8 @@ namespace TheBrick
     void CGameObject::Deserialize(CSerializer* a_pSerializer, CBrickManager* a_pBrickManager, ong::World* a_pWorld)
     {
         //m_pBricks
-        for (unsigned int i = 0; i < a_pSerializer->ReadIntUnsigned(); i++)
+        unsigned int bricksSize = a_pSerializer->ReadIntUnsigned();
+        for (unsigned int i = 0; i < bricksSize; i++)
         {
             //m_pBrick
             int brickId = a_pSerializer->ReadInt();
@@ -36,6 +37,8 @@ namespace TheBrick
             a_pSerializer->Read(&brick->m_Transform, sizeof(brick->m_Transform));
             //m_pCollider
 
+            //m_Color
+            a_pSerializer->Read(&brick->m_Color, sizeof(brick->m_Color));
             //brick->m_pBrick->m_pColliderData //Create Collider
             this->m_pBricks.push_back(brick);
         }
@@ -54,9 +57,11 @@ namespace TheBrick
         {
             //m_pBrick
             CBrickInstance* brick = this->m_pBricks[i];
-            a_pSerializer->Write(brick->m_pBrick->m_BrickId);
+            a_pSerializer->Write(brick->m_pBrick->GetBrickId());
             //m_Transform
             a_pSerializer->Write(&brick->m_Transform, sizeof(brick->m_Transform));
+            //m_Color
+            a_pSerializer->Write(&brick->m_Color, sizeof(brick->m_Color));
         }
         //m_Transform
         a_pSerializer->Write(&this->m_Transform, sizeof(this->m_Transform));

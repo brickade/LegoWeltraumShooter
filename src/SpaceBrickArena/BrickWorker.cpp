@@ -73,7 +73,7 @@ namespace Game
         //Current Brick
         this->m_pTmpBrickMat->Apply();
         this->m_pTmpBrickMat->SetVector3(PuRe_Vector3F(0.5f, 0.6f, 1.0f), "brickColor");
-        this->m_pCurrentBrick->Draw(a_pGraphics, a_pCamera, PuRe_Vector3F(this->m_currentBrickPosition.X, this->m_currentHeight, this->m_currentBrickPosition.Y), PuRe_Vector3F(1.0f, 1.0f, 1.0f), PuRe_Vector3F(0.0f, this->m_currentBrickRotation, 0.0f));
+        this->m_pCurrentBrick->Draw(a_pGraphics, a_pCamera, PuRe_Vector3F(this->m_currentBrickPosition.X, this->m_currentHeight, this->m_currentBrickPosition.Y), PuRe_Vector3F(0.0f, this->m_currentBrickRotation, 0.0f));
     }
 
     // **************************************************************************

@@ -33,9 +33,6 @@
     <ClInclude Include="include\TheBrick\Brick.h">
       <Filter>Headerdateien\Brick</Filter>
     </ClInclude>
-    <ClInclude Include="include\TheBrick\BrickCategory.h">
-      <Filter>Headerdateien\Brick</Filter>
-    </ClInclude>
     <ClInclude Include="include\TheBrick\BrickInstance.h">
       <Filter>Headerdateien\Brick</Filter>
     </ClInclude>
@@ -66,9 +63,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Brick.cpp">
-      <Filter>Quelldateien\Brick</Filter>
-    </ClCompile>
-    <ClCompile Include="BrickCategory.cpp">
       <Filter>Quelldateien\Brick</Filter>
     </ClCompile>
     <ClCompile Include="BrickInstance.cpp">

@@ -11,7 +11,8 @@ namespace TheBrick
     // **************************************************************************
     CBrick::CBrick()
     {
-
+        this->m_ModelPath = new char[MAX_MODEL_PATH_LENGTH];
+        memset(this->m_ModelPath, 0, MAX_MODEL_PATH_LENGTH);
     }
 
     // **************************************************************************
@@ -30,15 +31,6 @@ namespace TheBrick
 
     // **************************************************************************
     // **************************************************************************
-    CBrick* CBrick::FromFile(PuRe_IGraphics* a_pGraphics, const char* a_pPath)
-    {
-        PuRe_IMaterial* material = a_pGraphics->LoadMaterial("../data/effects/editor/default");
-        PuRe_Model* model = new PuRe_Model(a_pGraphics, material, a_pPath);
-        return new CBrick(model);
-    }
-
-    // **************************************************************************
-    // **************************************************************************
     CBrickInstance* CBrick::CreateInstance(ong::World* a_pWorld)
     {
         return new CBrickInstance(this, a_pWorld);
@@ -46,16 +38,11 @@ namespace TheBrick
 
     // **************************************************************************
     // **************************************************************************
-    void CBrick::Draw(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera, PuRe_Vector3F a_position, PuRe_Vector3F a_Scale, PuRe_Vector3F a_rotation)
+    void CBrick::Draw(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera, PuRe_Vector3F a_Position, PuRe_Vector3F a_Rotation, PuRe_Color a_Color, PuRe_Vector3F a_Scale)
     {
-        this->m_pModel->Draw(a_pCamera, PuRe_Primitive::Triangles, a_position, a_Scale, a_rotation, PuRe_Vector3F(0, 0, 0));
-    }
-
-    // **************************************************************************
-    // **************************************************************************
-    PuRe_List<SNub>* CBrick::GetNubs()
-    {
-        return &this->m_pNubs;
+        //Need to call apply on the brick material first, do this outside this function to not call this over and over again
+        this->m_pMaterial->SetVector3(PuRe_Vector3F(a_Color.R, a_Color.G, a_Color.B), "brickColor"); //Instanced?
+        this->m_pModel->Draw(a_pCamera, PuRe_Primitive::Triangles, a_Position, a_Scale, a_Rotation, PuRe_Vector3F(0, 0, 0));
     }
 
     // **************************************************************************
@@ -70,6 +57,9 @@ namespace TheBrick
         //m_BrickId
         this->m_BrickId = a_pSerializer->ReadIntUnsigned();
 
+        //m_IsTransparent
+        this->m_IsTransparent = a_pSerializer->ReadBool();
+
         //m_PivotOffset
         this->m_Pivotoffset = a_pSerializer->ReadVector3();
 
@@ -82,7 +72,8 @@ namespace TheBrick
         }
 
         //m_pColliderData
-        for (unsigned int i = 0; i < a_pSerializer->ReadIntUnsigned(); i++)
+        unsigned int colliderDataSize = a_pSerializer->ReadIntUnsigned();
+        for (unsigned int i = 0; i < colliderDataSize; i++)
         {
             ong::ColliderData colliderData;
             //transform
@@ -109,21 +100,21 @@ namespace TheBrick
                 hull->centroid = PuReToOng(a_pSerializer->ReadVector3());
                 //Vertices
                 hull->numVertices = a_pSerializer->ReadInt();
-                size_t sVertices = sizeof(hull->pVertices) * hull->numVertices;
+                size_t sVertices = sizeof(*hull->pVertices) * hull->numVertices;
                 hull->pVertices = (ong::vec3*)malloc(sVertices);
                 a_pSerializer->Read(hull->pVertices, sVertices);
                 //Edges
                 hull->numEdges = a_pSerializer->ReadInt();
-                size_t sEdges = sizeof(hull->pEdges) * hull->numEdges;
+                size_t sEdges = sizeof(*hull->pEdges) * hull->numEdges;
                 hull->pEdges = (ong::HalfEdge*)malloc(sEdges);
                 a_pSerializer->Read(hull->pEdges, sEdges);
                 //Faces
                 hull->numFaces = a_pSerializer->ReadInt();
-                size_t sFaces = sizeof(hull->pFaces) * hull->numFaces;
+                size_t sFaces = sizeof(*hull->pFaces) * hull->numFaces;
                 hull->pFaces = (ong::Face*)malloc(sFaces);
                 a_pSerializer->Read(hull->pFaces, sFaces);
                 
-                size_t sPlane = sizeof(hull->pPlanes) * hull->numFaces;
+                size_t sPlane = sizeof(*hull->pPlanes) * hull->numFaces;
                 hull->pPlanes = (ong::Plane*)malloc(sPlane);
                 a_pSerializer->Read(hull->pPlanes, sPlane);
                 //epsilon
@@ -143,6 +134,8 @@ namespace TheBrick
         a_pSerializer->Write(this->m_ModelPath, MAX_MODEL_PATH_LENGTH);
         //m_BrickId
         a_pSerializer->Write(this->m_BrickId);
+        //m_IsTransparent
+        a_pSerializer->Write(this->m_IsTransparent);
         //m_PivotOffset
         a_pSerializer->Write(this->m_Pivotoffset);
         //m_pNubs
@@ -181,18 +174,25 @@ namespace TheBrick
                 a_pSerializer->Write(OngToPuRe(hull->centroid));
                 //Vertices
                 a_pSerializer->Write(hull->numVertices);
-                a_pSerializer->Write(hull->pVertices, sizeof(hull->pVertices) * hull->numVertices);
+                a_pSerializer->Write(hull->pVertices, sizeof(*hull->pVertices) * hull->numVertices);
                 //Edges
                 a_pSerializer->Write(hull->numEdges);
-                a_pSerializer->Write(hull->pEdges, sizeof(hull->pEdges) * hull->numEdges);
+                a_pSerializer->Write(hull->pEdges, sizeof(*hull->pEdges) * hull->numEdges);
                 //Faces
                 a_pSerializer->Write(hull->numFaces);
-                a_pSerializer->Write(hull->pFaces, sizeof(hull->pFaces) * hull->numFaces);
-                a_pSerializer->Write(hull->pPlanes, sizeof(hull->pPlanes) * hull->numFaces);
+                a_pSerializer->Write(hull->pFaces, sizeof(*hull->pFaces) * hull->numFaces);
+                a_pSerializer->Write(hull->pPlanes, sizeof(*hull->pPlanes) * hull->numFaces);
                 //epsilon
                 a_pSerializer->Write(hull->epsilon);
                 break;
             }
         }
+    }
+
+    // **************************************************************************
+    // **************************************************************************
+    int CBrick::GetCategoryId()
+    {
+        return floor(this->m_BrickId / 100.0f);
     }
 }

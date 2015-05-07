@@ -8,6 +8,8 @@
 #include <Onager/Shapes.h>
 #include <Onager/World.h>
 
+#include <cstring>
+
 #include "BrickInstance.h"
 #include "Nub.h"
 #include "Serializer.h"
@@ -19,33 +21,124 @@ namespace TheBrick
 
     class CBrick
     {
+    // ------------------------------------------------------------------------
+    // Member
+    // ------------------------------------------------------------------------
     public:
-        unsigned int m_BrickId;
         static const float SEGMENT_WIDTH;
         static const float SEGMENT_HEIGHT;
         static const int MAX_MODEL_PATH_LENGTH;
 
+    private:
+        unsigned int m_BrickId;
         char* m_ModelPath;
         PuRe_Model* m_pModel;
         PuRe_IMaterial* m_pMaterial;
+        bool m_IsTransparent;
         PuRe_Vector3F m_Pivotoffset;
         PuRe_List<SNub> m_pNubs;
         PuRe_List<ong::ColliderData> m_pColliderData;
 
+    // ------------------------------------------------------------------------
+    // Getter & Setter
+    // ------------------------------------------------------------------------
+    public:
+        PuRe_Model* GetModel()
+        {
+            return this->m_pModel;
+        }
+
+        void SetModel(PuRe_Model* a_pModel)
+        {
+            this->m_pModel = a_pModel;
+        }
+
+        PuRe_IMaterial* GetMaterial()
+        {
+            return this->m_pMaterial;
+        }
+
+        void SetMaterial(PuRe_IMaterial* a_pMaterial)
+        {
+            this->m_pMaterial = a_pMaterial;
+        }
+
+        std::vector<SNub>& GetNubs()
+        {
+            return this->m_pNubs;
+        }
+
+        void SetNubs(const std::vector<SNub>& a_rNubs)
+        {
+            this->m_pNubs = a_rNubs;
+        }
+
+        std::vector<ong::ColliderData>& GetColliderData()
+        {
+            return this->m_pColliderData;
+        }
+
+        void SetColliderData(const std::vector<ong::ColliderData>& a_rColliderData)
+        {
+            this->m_pColliderData = a_rColliderData;
+        }
+
+        unsigned int GetBrickId() const
+        {
+            return this->m_BrickId;
+        }
+
+        void SetBrickId(unsigned int a_BrickId)
+        {
+            this->m_BrickId = a_BrickId;
+        }
+
+        const char* GetModelPath() const
+        {
+            return this->m_ModelPath;
+        }
+
+        void SetModelPath(char* a_ModelPath)
+        {
+            strcpy(this->m_ModelPath, a_ModelPath);
+        }
+
+        bool& GetIsTransparent()
+        {
+            return this->m_IsTransparent;
+        }
+
+        void SetIsTransparent(bool a_IsTransparent)
+        {
+            this->m_IsTransparent = a_IsTransparent;
+        }
+
+        PuRe_Vector3F& GetPivotOffset()
+        {
+            return this->m_Pivotoffset;
+        }
+
+        void SetPivotOffset(const PuRe_Vector3F a_PivotOffset)
+        {
+            this->m_Pivotoffset = a_PivotOffset;
+        }
+
+    // ------------------------------------------------------------------------
+    // METHODS
+    // ------------------------------------------------------------------------
     public:
         CBrick();
         CBrick(PuRe_Model* a_pModel);
         ~CBrick();
 
-        static CBrick* FromFile(PuRe_IGraphics* a_pGraphics, const char* a_pPath);
         CBrickInstance* CreateInstance(ong::World* a_pWorld);
 
-        void Draw(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera, PuRe_Vector3F a_position, PuRe_Vector3F a_Scale, PuRe_Vector3F a_rotation);
-
-        PuRe_List<SNub>* GetNubs();
+        void Draw(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera, PuRe_Vector3F a_Position, PuRe_Vector3F a_Rotation, PuRe_Color a_Color = PuRe_Color(1, 1, 1, 1), PuRe_Vector3F a_Scale = PuRe_Vector3F(1, 1, 1));
 
         void Deserialize(CSerializer* a_pSerializer, PuRe_IGraphics* a_pGraphics, PuRe_IMaterial* a_pMaterial, ong::World* a_pWorld);
         void Serialize(CSerializer* a_pSerializer);
+
+        int GetCategoryId();
     };
 }
 

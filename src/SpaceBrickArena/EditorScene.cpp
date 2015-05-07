@@ -44,6 +44,10 @@ namespace Game
 
         this->textureID = 0;
 
+        this->m_pBrickSupervisor = new CBrickSupervisor(this->m_playerIdx);
+        this->m_pBrickSupervisor->Initialize();
+        this->m_pBrickSupervisor->m_pActiveCategory = this->m_pBrickSupervisor->m_Categories[0];
+
         this->m_pBrickWorker = new CBrickWorker(this->m_playerIdx);
         this->m_pBrickWorker->Initialize(a_pGraphics);
     }
@@ -78,6 +82,7 @@ namespace Game
         this->m_pCamera->Update(a_pGraphics, a_pWindow, a_pInput, a_pTimer);
 
         this->m_pBrickWorker->Update(a_pGraphics, a_pWindow, a_pInput, a_pTimer, a_pSoundPlayer, this->m_pCamera->GetForward());
+        this->m_pBrickSupervisor->Update(a_pGraphics, a_pWindow, a_pInput, a_pTimer, a_pSoundPlayer);
 
         for (int i = 0; i < 4; i++)
         {
@@ -98,20 +103,8 @@ namespace Game
 
         this->m_pRenderTarget->ApplyGeometryPass(clear);
         this->m_pSkyBox->Draw(this->m_pCamera, PuRe_Vector3F(0.0f, 0.0f, 0.0f));
-
-
-        /*int c = 5;
-        for (int x = -c; x < c; x++)
-        {
-            for (int y = -c; y < c; y++)
-            {
-                for (int z = -c; z < c; z++)
-                {
-                    this->m_pModel->Draw(this->m_pCamera, PuRe_Primitive::Triangles, PuRe_Vector3F(x*0.39f, y*0.39f, z*0.39f), PuRe_Vector3F(1.0f, 1.0f, 1.0f), PuRe_Vector3F(0.0f, 0.0f, 0.0f), PuRe_Vector3F(0.0f, 0.0f, 0.0f));
-                }
-            }
-        }*/
         this->m_pBrickWorker->Render(a_pGraphics, this->m_pCamera);
+        this->m_pBrickSupervisor->Render(a_pGraphics, this->m_pCamera);
         this->m_pRenderTarget->ApplyLightPass(clear);
 
         //this->m_pModel->Draw(this->m_pCamera, PuRe_Primitive::Triangles, PuRe_Vector3F(0.0f, 0.0f, 0.0f), PuRe_Vector3F(1.0f, 1.0f, 1.0f), PuRe_Vector3F(0.0f, 0.0f, 0.0f), PuRe_Vector3F(0.0f, 0.0f, 0.0f));
@@ -135,6 +128,7 @@ namespace Game
         SAFE_DELETE(this->m_pPostCamera);
         SAFE_DELETE(this->m_pCamera);
         SAFE_DELETE(this->m_pModel);
+        SAFE_DELETE(this->m_pBrickSupervisor);
         SAFE_DELETE(this->m_pBrickWorker);
     }
 }
