@@ -153,8 +153,8 @@ namespace Game
         //Set Input in the according forward direction
         this->m_currentPosition += forward * MoveInput.Y;
         this->m_currentPosition += PuRe_Vector2F(forward.Y, -forward.X) * MoveInput.X;
-        this->m_currentPosition.X = clamp(this->m_currentPosition.X, -this->m_maxBrickDistance, this->m_maxBrickDistance);
-        this->m_currentPosition.Y = clamp(this->m_currentPosition.Y, -this->m_maxBrickDistance, this->m_maxBrickDistance);
+        this->m_currentPosition.X = PuRe_clamp(this->m_currentPosition.X, -this->m_maxBrickDistance, this->m_maxBrickDistance);
+        this->m_currentPosition.Y = PuRe_clamp(this->m_currentPosition.Y, -this->m_maxBrickDistance, this->m_maxBrickDistance);
 
         this->m_currentBrickPosition = this->m_currentPosition;
 

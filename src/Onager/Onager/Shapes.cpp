@@ -911,7 +911,7 @@ namespace ong
 		return true;
 	}
 
-	bool intersectRayHull(const vec3& origin, const vec3& dir, const Hull* hull, float& tmin, vec3& p)
+	bool intersectRayHull(const vec3& origin, const vec3& dir, const Hull* hull, float& tmin, vec3& p, vec3& n)
 	{
 		tmin = 0.0f;
 		float tmax = FLT_MAX;
@@ -934,7 +934,11 @@ namespace ong
 				float t = dist / denom;
 				if (denom < 0.0f)
 				{
-					if (t > tmin) tmin = t;
+					if (t > tmin)
+					{
+						n = p.n;
+						tmin = t;
+					}
 				}
 				else
 				{
@@ -950,7 +954,7 @@ namespace ong
 		return true;
 	}
 
-	bool intersectRaySphere(const vec3& origin, const vec3& dir, const Sphere* sphere, float& tmin, vec3& p)
+	bool intersectRaySphere(const vec3& origin, const vec3& dir, const Sphere* sphere, float& tmin, vec3& p, vec3& n)
 	{
 		vec3 m = origin - sphere->c;
 		float b = dot(m, dir);
@@ -965,11 +969,12 @@ namespace ong
 
 		if (tmin < 0.0f) tmin = 0.0f;
 		p = origin + tmin * dir;
+		n = p - sphere->c;
 
 		return true;
 	}
 
-	bool intersectRayCapsule(const vec3& origin, const vec3& dir, const Capsule* capsule, float& tmin, vec3& p)
+	bool intersectRayCapsule(const vec3& origin, const vec3& dir, const Capsule* capsule, float& tmin, vec3& p, vec3& n)
 	{
 
 		vec3 _c, r;
@@ -985,10 +990,12 @@ namespace ong
 		float discr = b*b - c;
 		if (discr < 0.0f) return false;
 
+
 		tmin = -b - sqrt(discr);
 
 		if (tmin < 0.0f) tmin = 0.0f;
 		p = origin + tmin * dir;
+		n = p - _c;
 
 		return true;
 	}

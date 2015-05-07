@@ -60,6 +60,9 @@
     <ClInclude Include="include\TheBrick\Conversion.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="include\TheBrick\DebugDraw.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Brick.cpp">
@@ -84,6 +87,9 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="ByteBuffer.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugDraw.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>

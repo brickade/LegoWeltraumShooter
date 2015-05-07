@@ -236,6 +236,16 @@ namespace ong
 	}
 
 
+	inline vec3 rotMatToEulerAngles(const mat3x3& m)
+	{
+		vec3 result;
+		result.x = -sin(m[2][0]);
+		result.y = atan2(m[2][1] / cos(result.x), m[2][2] / cos(result.x));
+		result.z = atan2(m[1][0] / cos(result.x), m[0][0] / cos(result.x));
+
+		return result;
+
+	}
 
 
 	// todo quick
@@ -274,6 +284,40 @@ namespace ong
 	}
 
 
+	// not yet good
+	inline vec3 QuatToEulerAngles(const Quaternion& q)
+	{
+		vec3 result;
+
+		float sqw = q.w*q.w;
+		float sqx = q.v.x*q.v.x;
+		float sqy = q.v.y*q.v.y;
+		float sqz = q.v.z*q.v.z;
+
+		float test = q.v.x*q.v.y + q.v.z*q.w;
+		if (test > 0.499f)
+		{
+			result.x = 2 * atan2(q.v.x, q.w);
+			result.y = 0.5f*ong_PI;
+			result.z = 0;
+			return result;
+		}
+		if (test < -0.499)
+		{
+			result.x = 2.0f * atan2(q.v.x, q.w);
+			result.y = -0.5f * ong_PI;
+			result.z = 0;
+			return result;
+		}
+
+
+		result.x = atan2(2.0f * q.v.y*q.w - 2.0f * q.v.x*q.v.z, sqx - sqy - sqz + sqw);
+		result.y = asin(2.0f * test);
+		result.z = atan2(2.0f * q.v.x*q.w - 2.0f * q.v.y*q.v.z, -sqx + sqy - sqz + sqw);
+
+		return result;
+	}
+
 	inline Quaternion QuatFromEulerAngles(float yaw, float pitch, float roll)
 	{
 		return Quaternion(
@@ -285,6 +329,26 @@ namespace ong
 			cos(roll*0.5f) * cos(pitch*0.5f) * cos(yaw*0.5f) + sin(roll*0.5f) * sin(pitch*0.5f) * sin(yaw*0.5f)
 
 			);
+	}
+
+	// vectors should be normalized!
+	inline Quaternion QuatFromTwoVectors(const vec3& from, const vec3& to)
+	{
+		float r = 1.0f + ong::dot(from, to);
+		ong::vec3 w;
+		if (r <= 0.0f)
+		{
+			r = 0;
+
+			w = abs(from.x) > abs(from.z) ? vec3(-from.y, from.x, 0.f)
+				: vec3(0.f, -from.z, from.y);
+		}
+		else
+		{
+			w = ong::cross(from, to);
+		}
+
+		return Quaternion(w, r);
 	}
 
 	inline mat3x3 toRotMat(const Quaternion& q)
