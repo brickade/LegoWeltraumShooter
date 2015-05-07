@@ -84,9 +84,9 @@ namespace Game
         this->SetPosition(PuRe_Vector3F(0, 0, 0));
         this->Rotate(MoveInput.Y, -MoveInput.X, 0);
 
-        this->m_distance = clamp(this->m_distance, 5, 40);
+        this->m_distance = PuRe_clamp(this->m_distance, 5, 40);
         PuRe_Vector3F rot = this->GetRotation();
-        rot.X = clamp(rot.X, -89, 89);
+        rot.X = PuRe_clamp(rot.X, -89, 89);
         this->SetRotation(rot);
 
         this->Move(PuRe_Vector3F(0, 0, -this->m_distance));

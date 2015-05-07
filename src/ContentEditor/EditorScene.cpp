@@ -174,6 +174,10 @@ namespace Content
 						"create hull collider from n points with the points p1, p2 etc\n"
 						);
 				}
+				else
+				{
+					printf("unknown command\n");
+				}
 
 			}
 		}
@@ -210,9 +214,9 @@ namespace Content
 		wchar_t currentPath[FILENAME_MAX];
 
 		GetCurrentDirectory(sizeof(currentPath), currentPath);
-		wcscat_s(currentPath, L"\\newContent\\*");
+		wcscat_s(currentPath, L"\\..\\data\\newContent\\*");
 
-		char dir[] = "newContent\\";
+		char dir[] = "..\\data\\newContent\\";
 
 		printf("search Dir: %S \n", currentPath);
 
@@ -245,9 +249,6 @@ namespace Content
 				{
 					PuRe_Model* pModel = new PuRe_Model(a_pGraphics, m_pMaterial, fileDir);
 
-					//TODO !?!?!
-#include <Windows.h>
-					Sleep(10);
 
 					if (pModel != 0)
 					{
@@ -272,7 +273,6 @@ namespace Content
 						strcat(modelDir, ".obj");
 
 						PuRe_Model* pModel = new PuRe_Model(a_pGraphics, m_pMaterial, modelDir);
-						Sleep(10);
 						
 						newBrick->m_pModel = pModel;
 
@@ -295,8 +295,7 @@ namespace Content
 			}
 		}
 		FindClose(hFind);
-		
-		
+
 		m_Queue.push({ SCommand::NEXT });
 
 		ong::BodyDescription bodyDescr;
@@ -540,7 +539,7 @@ namespace Content
 				auto front = m_BrickQueue.front();
 				printf("currBrick: %s\n", front.first.c_str());
 				m_pCurrBrick = front.second;
-				m_CurrFileName = std::string(front.first.begin(), front.first.begin()+front.first.find_last_of('.'));
+				m_CurrFileName = "..\\data\\bricks\\" + std::string(front.first.begin(), front.first.begin()+front.first.find_last_of('.'));
 				m_CurrFileName.append(".brick");
 
 				for (auto& colliderData : m_pCurrBrick->m_pColliderData)
@@ -645,7 +644,7 @@ namespace Content
 
 			m_pMaterial->Apply();
 			m_pMaterial->SetVector3(PuRe_Vector3F(0.4, 0.4, 0.4), "brickColor");
-			m_pCurrBrick->Draw(a_pGraphics, m_pCamera, PuRe_Vector3F(0, 0, 0), PuRe_Vector3F(2, 2, 2), PuRe_Vector3F(0, 0, 0));
+			m_pCurrBrick->Draw(a_pGraphics, m_pCamera, PuRe_Vector3F(0, 0, 0), PuRe_Vector3F(1, 1, 1), PuRe_Vector3F(0, 0, 0));
 
 			for (auto nub : m_pCurrBrick->m_pNubs)
 			{
