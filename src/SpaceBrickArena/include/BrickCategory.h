@@ -4,6 +4,7 @@
 #include <PuReEngine/Core.h>
 #include <PuReEngine/Defines.h>
 #include <TheBrick/Brick.h>
+#include <TheBrick/BrickTimer.h>
 
 #include "BrickBozz.h"
 
@@ -31,7 +32,7 @@ namespace Game
         EDirection m_PreviousState;
         float m_GamepadThreshold;
         float m_ScrollingThreshold;
-
+        TheBrick::CBrickTimer* m_pTimer;
 
     public:
         CBrickCategory(int a_Id);

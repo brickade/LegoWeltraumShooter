@@ -43,6 +43,7 @@ namespace TheBrick
     void CBrick::Draw(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera, PuRe_Vector3F a_Position, PuRe_Vector3F a_Rotation, PuRe_Color a_Color, PuRe_Vector3F a_Scale)
     {
         //Need to call apply on the brick material first, do this outside this function to not call this over and over again
+        this->m_pMaterial->Apply();
         this->m_pMaterial->SetVector3(PuRe_Vector3F(a_Color.R, a_Color.G, a_Color.B), "brickColor"); //Instanced?
         this->m_pModel->Draw(a_pCamera, PuRe_Primitive::Triangles, a_Position, a_Scale, a_Rotation, PuRe_Vector3F(0, 0, 0));
     }
@@ -54,6 +55,7 @@ namespace TheBrick
         //m_pModel
         this->m_ModelPath = (char*)malloc(MAX_MODEL_PATH_LENGTH);
         a_pSerializer->Read(this->m_ModelPath, MAX_MODEL_PATH_LENGTH);
+        this->m_pMaterial = a_pMaterial;
         this->m_pModel = new PuRe_Model(a_pGraphics, a_pMaterial, this->m_ModelPath);
 
         //m_BrickId

@@ -12,10 +12,12 @@ namespace Game
             this->m_LastBrickSubId++;
         }*/
         this->m_LastBrickSubId = 99;
+        this->m_BricksPerLine = 5;
         this->m_FocusedBrick = 0;
         this->m_FocusPosition = PuRe_Vector2F::Zero();
-        this->m_GamepadThreshold = 0.2f;
+        this->m_GamepadThreshold = 0.3f;
         this->m_ScrollingThreshold = 0.5f;
+        this->m_pTimer = new TheBrick::CBrickTimer();
     }
 
     // **************************************************************************
@@ -29,26 +31,27 @@ namespace Game
     // **************************************************************************
     void CBrickCategory::Update(PuRe_IGraphics* a_pGraphics, PuRe_IWindow* a_pWindow, PuRe_IInput* a_pInput, PuRe_Timer* a_pTimer, PuRe_SoundPlayer* a_pSoundPlayer, int a_PlayerIdx)
     {
-        float speed = a_pTimer->GetElapsedSeconds();
+        this->m_pTimer->Update();
+        float speed = a_pTimer->GetTotalElapsedSeconds();
         //Gamepad
         PuRe_Vector2F leftThumb = a_pInput->GetGamepadLeftThumb(a_PlayerIdx);
         EDirection currentState = ThumbStateFromThumbVector(leftThumb);
         if (currentState != this->m_PreviousState)
         {
-            switch (currentState)
+            if (currentState != EDirection::None)
             {
-            case EDirection::None:
-                this->m_FocusPosition = PuRe_Vector2F::Zero(); //Stop scrolling
-                break;
-            default:
                 this->NavigateList(currentState); //Navigate before scrolling
-                break;
             }
+            this->m_FocusPosition = PuRe_Vector2F::Zero(); //Stop/reset scrolling
+            SAFE_DELETE(this->m_pTimer);
+            this->m_pTimer = new TheBrick::CBrickTimer();
+            //this->m_pTimer->Reset();
         }
-        else //Scrolling
+        else if (this->m_pTimer->GetElapsedSeconds() > 0.5f) //Scrolling
         {
             this->Scroll(leftThumb, speed);
         }
+        this->m_PreviousState = currentState;
 
         //Keyboard
         if (a_pInput->KeyPressed(a_pInput->Right))
@@ -67,8 +70,7 @@ namespace Game
         {
             this->NavigateList(EDirection::Down);
         }
-
-        printf("BrickCategory %i: %i", this->m_Id, this->m_FocusedBrick);
+        //printf("%f\n", a_pTimer->GetTotalElapsedSeconds());
     }
 
     // **************************************************************************
@@ -87,7 +89,7 @@ namespace Game
         {
             state = EDirection::Right;
         }
-        else if (a_ThumbInput.X < this->m_GamepadThreshold)
+        else if (a_ThumbInput.X < -this->m_GamepadThreshold)
         {
             state = EDirection::Left;
         }
@@ -95,11 +97,11 @@ namespace Game
         {
             state = EDirection::Up;
         }
-        else if (a_ThumbInput.Y < this->m_GamepadThreshold)
+        else if (a_ThumbInput.Y < -this->m_GamepadThreshold)
         {
             state = EDirection::Down;
         }
-        return state;
+         return state;
     }
 
     // **************************************************************************
@@ -130,6 +132,7 @@ namespace Game
         {
             this->m_FocusedBrick = 0;
         }
+        printf("BrickCategory %i: %i\n", this->m_Id, this->m_FocusedBrick);
     }
 
     // **************************************************************************
@@ -142,7 +145,7 @@ namespace Game
             NavigateList(EDirection::Right);
             this->m_FocusPosition.X -= this->m_ScrollingThreshold;
         }
-        else if (this->m_FocusPosition.X < this->m_ScrollingThreshold)
+        else if (this->m_FocusPosition.X < -this->m_ScrollingThreshold)
         {
             NavigateList(EDirection::Left);
             this->m_FocusPosition.X += this->m_ScrollingThreshold;
@@ -152,7 +155,7 @@ namespace Game
             NavigateList(EDirection::Up);
             this->m_FocusPosition.Y -= this->m_ScrollingThreshold;
         }
-        else if (this->m_FocusPosition.Y < this->m_ScrollingThreshold)
+        else if (this->m_FocusPosition.Y < -this->m_ScrollingThreshold)
         {
             NavigateList(EDirection::Down);
             this->m_FocusPosition.Y += this->m_ScrollingThreshold;
