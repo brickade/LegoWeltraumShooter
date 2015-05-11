@@ -10,16 +10,16 @@ namespace Game
 
     // **************************************************************************
     // **************************************************************************
-    void CMainScene::Initialize(PuRe_IGraphics* a_pGraphics, PuRe_SoundPlayer* a_pSoundPlayer)
+    void CMainScene::Initialize(PuRe_IGraphics* a_pGraphics, PuRe_IWindow* a_pWindow, PuRe_SoundPlayer* a_pSoundPlayer)
     {
         PuRe_GraphicsDescription gdesc = a_pGraphics->GetDescription();
 
         BrickBozz::Instance()->Initialize(a_pGraphics, a_pSoundPlayer);
-        BrickBozz::Instance()->BrickManager->Load(a_pGraphics, BrickBozz::Instance()->World, BrickBozz::Instance()->BrickManager->GetBrickMaterial(), "../data/bricks/");
+        BrickBozz::Instance()->BrickManager->Load(a_pGraphics, a_pWindow, BrickBozz::Instance()->World, BrickBozz::Instance()->BrickManager->GetBrickMaterial(), "../data/bricks/");
 
         //Scenes
-        this->m_pEditorScene->Initialize(a_pGraphics, a_pSoundPlayer);
-        this->m_pGameScene->Initialize(a_pGraphics, a_pSoundPlayer);
+        this->m_pEditorScene->Initialize(a_pGraphics, a_pWindow, a_pSoundPlayer);
+        this->m_pGameScene->Initialize(a_pGraphics, a_pWindow, a_pSoundPlayer);
 
         this->m_pActiveScene = this->m_pGameScene;
         this->m_pActiveScene = this->m_pEditorScene; //Comment out for Init GameScene

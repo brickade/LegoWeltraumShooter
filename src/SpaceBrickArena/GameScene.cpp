@@ -9,7 +9,7 @@ namespace Game
 
     // **************************************************************************
     // **************************************************************************
-    void CGameScene::Initialize(PuRe_IGraphics* a_pGraphics, PuRe_SoundPlayer* a_pSoundPlayer)
+    void CGameScene::Initialize(PuRe_IGraphics* a_pGraphics, PuRe_IWindow* a_pWindow, PuRe_SoundPlayer* a_pSoundPlayer)
     {
         PuRe_GraphicsDescription gdesc = a_pGraphics->GetDescription();
 
