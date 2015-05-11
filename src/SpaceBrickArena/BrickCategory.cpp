@@ -5,13 +5,12 @@ namespace Game
     // **************************************************************************
     CBrickCategory::CBrickCategory(int a_Id)
     {
-        /*this->m_Bricks = BrickBozz::Instance()->BrickManager->GetCategoryStart(a_Id);
-        this->m_LastBrickSubId = 0;
+        this->m_Bricks = BrickBozz::Instance()->BrickManager->GetCategoryStart(a_Id);
+        this->m_LastBrickSubId = -1;
         while (this->m_Bricks[this->m_LastBrickSubId + 1] != nullptr)
         {
             this->m_LastBrickSubId++;
-        }*/
-        this->m_LastBrickSubId = 99;
+        }
         this->m_BricksPerLine = 5;
         this->m_FocusedBrick = 0;
         this->m_FocusPosition = PuRe_Vector2F::Zero();
@@ -77,7 +76,14 @@ namespace Game
     // **************************************************************************
     void CBrickCategory::Render(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera)
     {
-
+        for (int i = 0; i <= this->m_LastBrickSubId; i++)
+        {
+            PuRe_Vector3F pos = PuRe_Vector3F(50 + 50 * (i % this->m_BricksPerLine), 50 + 50 * floor(i / this->m_BricksPerLine), 1);
+            PuRe_Vector3F rot = PuRe_Vector3F(0, 0, 0);
+            pos = PuRe_Vector3F(0, 0, 0);
+            //pos -= PuRe_Vector3F(a_pGraphics->GetDescription().ResolutionWidth / 2, a_pGraphics->GetDescription().ResolutionHeight / 2, 0)
+            this->m_Bricks[i]->Draw(a_pGraphics, a_pCamera, pos, rot);
+        }
     }
 
     // **************************************************************************

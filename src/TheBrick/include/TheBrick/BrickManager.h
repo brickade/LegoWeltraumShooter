@@ -5,6 +5,7 @@
 #include <PuReEngine/Defines.h>
 
 #include <array>
+#include <cstring>
 
 #include "Brick.h"
 
@@ -16,12 +17,14 @@ namespace TheBrick
         
     private:
         std::array<CBrick*, 500> m_bricks;
+        PuRe_IMaterial* m_pBrickMaterial;
 
     public:
         CBrickManager();
         ~CBrickManager();
 
-        void Load(const char* a_pFolder);
+        void Initialize(PuRe_IGraphics* a_pGraphics, PuRe_SoundPlayer* a_pSoundPlayer);
+        void Load(PuRe_IGraphics* a_pGraphics, ong::World* a_pWorld, const char* a_pFolder);
 
         CBrick* GetBrick(int a_BrickId);
         CBrick** GetCategoryStart(int a_CategoryId);

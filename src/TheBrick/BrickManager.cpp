@@ -17,9 +17,34 @@ namespace TheBrick
 
     // **************************************************************************
     // **************************************************************************
-    void CBrickManager::Load(const char* a_pFolder)
+    void CBrickManager::Initialize(PuRe_IGraphics* a_pGraphics, PuRe_SoundPlayer* a_pSoundPlayer)
     {
+        this->m_pBrickMaterial = a_pGraphics->LoadMaterial("../data/effects/editor/default");
+    }
+
+    // **************************************************************************
+    // **************************************************************************
+    void CBrickManager::Load(PuRe_IGraphics* a_pGraphics, ong::World* a_pWorld, const char* a_pFolder)
+    {
+        char p[300];
+        memset(p, 0, 300);
+        strcat(p, a_pFolder);
+        strcat(p, "Brick1X3.brick");
+        CSerializer* serializer = new CSerializer();
+        serializer->OpenRead(p);
+        this->m_bricks[0] = new CBrick();
+        this->m_bricks[0]->Deserialize(serializer, a_pGraphics, this->m_pBrickMaterial, a_pWorld);
+        serializer->Close();
+
+        memset(p, 0, 300);
+        strcat(p, a_pFolder);
+        strcat(p, "Brick1X4.brick");
+        serializer->OpenRead(p);
+        this->m_bricks[1] = new CBrick();
+        this->m_bricks[1]->Deserialize(serializer, a_pGraphics, this->m_pBrickMaterial, a_pWorld);
+        serializer->Close();
         
+        delete serializer;
     }
 
     // **************************************************************************

@@ -14,7 +14,8 @@ namespace Game
     {
         PuRe_GraphicsDescription gdesc = a_pGraphics->GetDescription();
 
-        BrickBozz::Instance()->BrickManager->Load("../data/bricks");
+        BrickBozz::Instance()->Initialize(a_pGraphics, a_pSoundPlayer);
+        BrickBozz::Instance()->BrickManager->Load(a_pGraphics, BrickBozz::Instance()->World, "../data/bricks/");
 
         //Scenes
         this->m_pEditorScene->Initialize(a_pGraphics, a_pSoundPlayer);

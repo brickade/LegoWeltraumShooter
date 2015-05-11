@@ -8,7 +8,8 @@ namespace Game
     // **************************************************************************
     BrickBozz::BrickBozz()
     {
-        
+        this->BrickManager = new TheBrick::CBrickManager();
+        this->World = new ong::World();
     }
 
 
@@ -28,5 +29,12 @@ namespace Game
             BrickBozz::g_pInstance = new BrickBozz();
         }
         return BrickBozz::g_pInstance;
+    }
+
+    // **************************************************************************
+    // **************************************************************************
+    void BrickBozz::Initialize(PuRe_IGraphics* a_pGraphics, PuRe_SoundPlayer* a_pSoundPlayer)
+    {
+        this->BrickManager->Initialize(a_pGraphics, a_pSoundPlayer);
     }
 }
