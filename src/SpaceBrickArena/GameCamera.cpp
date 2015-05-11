@@ -21,8 +21,6 @@ namespace Game
   void CGameCamera::Initialize()
   {
     this->SetFoV(45.0f);
-    this->Move(PuRe_Vector3F(5.0f, 5.0f, -10.0f));
-    this->Rotate(-20.0f, 20.0f, 0.0f);
   }
 
   void CGameCamera::Update(PuRe_IGraphics* a_pGraphics, PuRe_IWindow* a_pWindow, PuRe_IInput* a_pInput, PuRe_Timer* a_pTimer)

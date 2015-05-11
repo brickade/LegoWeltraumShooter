@@ -80,12 +80,13 @@ namespace Game
         clear = PuRe_Color(0.0f, 0.0f, 0.0f,0.0f);
         this->m_pRenderTarget->ApplyGeometryPass(clear);
 
-        for (int i = 0; i < 4; i++)
-        {
-            float x = (2.5f*(float)(i / 2)) + 2.0f;
-            float y = 2.5f*(float)(i % 2);
-            this->m_pModel->Draw(this->m_pCamera, this->m_pPostMaterial, PuRe_Primitive::Triangles, PuRe_Vector3F(x, y, 0.0f), PuRe_Vector3F(1.0f, 1.0f, 1.0f), PuRe_Vector3F(0.0f, this->rot, 0.0f), PuRe_Vector3F(0.0f, 0.0f, 0.0f));
-        }
+        PuRe_Vector3F pos = this->m_pCamera->GetPosition();
+        pos += this->m_pCamera->GetForward()*20.0f;
+        this->m_pModel->Draw(this->m_pCamera, this->m_pPostMaterial, PuRe_Primitive::Triangles, pos, PuRe_Vector3F(1.0f, 1.0f, 1.0f), PuRe_Vector3F(0.0f, this->rot, 0.0f), PuRe_Vector3F(0.0f, 0.0f, 0.0f));
+        
+        
+        this->m_pModel->Draw(this->m_pCamera, this->m_pPostMaterial, PuRe_Primitive::Triangles, PuRe_Vector3F(0.0f,-10.0f,20.0f), PuRe_Vector3F(10.0f, 10.0f, 10.0f), PuRe_Vector3F(0.0f, this->rot, 0.0f), PuRe_Vector3F(0.0f, 0.0f, 0.0f));
+
 
         a_pGraphics->Begin();
         this->m_pSkyBox->Draw(this->m_pCamera, this->m_pSkyMaterial, PuRe_Vector3F(0.0f, this->rot / 1000.0f, 0.0f));
