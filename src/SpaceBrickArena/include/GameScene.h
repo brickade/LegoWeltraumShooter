@@ -49,7 +49,7 @@ namespace Game
         ///
         /// @param graphics The graphics interface.
         ///
-        void Initialize(PuRe_IGraphics* a_pGraphics, PuRe_SoundPlayer* a_pSoundPlayer);
+        void Initialize(PuRe_IGraphics* a_pGraphics, PuRe_IWindow* a_pWindow, PuRe_SoundPlayer* a_pSoundPlayer);
 
         /// @brief Updates the scene.
         ///

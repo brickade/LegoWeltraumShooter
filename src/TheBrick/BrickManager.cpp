@@ -24,26 +24,25 @@ namespace TheBrick
 
     // **************************************************************************
     // **************************************************************************
-    void CBrickManager::Load(PuRe_IGraphics* a_pGraphics, ong::World* a_pWorld, PuRe_IMaterial* a_pMaterial, const char* a_pFolder)
+    void CBrickManager::Load(PuRe_IGraphics* a_pGraphics, PuRe_IWindow* a_pWindow, ong::World* a_pWorld, PuRe_IMaterial* a_pMaterial, const char* a_pFolder)
     {
-        char p[300];
-        memset(p, 0, 300);
-        strcat(p, a_pFolder);
-        strcat(p, "Brick1X3.brick");
         CSerializer* serializer = new CSerializer();
-        serializer->OpenRead(p);
-        this->m_bricks[0] = new CBrick(a_pMaterial);
-        this->m_bricks[0]->Deserialize(serializer, a_pGraphics, a_pWorld);
-        serializer->Close();
-
-        memset(p, 0, 300);
-        strcat(p, a_pFolder);
-        strcat(p, "Brick1X4.brick");
-        serializer->OpenRead(p);
-        this->m_bricks[1] = new CBrick(a_pMaterial);
-        this->m_bricks[1]->Deserialize(serializer, a_pGraphics, a_pWorld);
-        serializer->Close();
-        
+        int i = 0;
+        std::string file = a_pWindow->GetFileAtIndex(i, a_pFolder);
+        while (file != "")
+        {
+            CBrick* brick = new CBrick(a_pMaterial);
+            file.insert(0, a_pFolder);
+            
+            serializer->OpenRead(file.c_str());
+            brick->Deserialize(serializer, a_pGraphics, a_pWorld);
+            serializer->Close();
+            
+            this->m_bricks[brick->GetBrickId()] = brick;
+            
+            i++;
+            file = a_pWindow->GetFileAtIndex(i, a_pFolder);
+        }
         delete serializer;
     }
 

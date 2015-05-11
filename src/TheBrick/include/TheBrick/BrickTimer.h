@@ -8,15 +8,7 @@ namespace TheBrick
 {
     class CBrickTimer : public PuRe_Timer
     {
-
     public:
-        int m_Id;
-
-
-    public:
-        CBrickTimer();
-        ~CBrickTimer();
-
         void Reset();
     };
 }
