@@ -201,7 +201,7 @@ namespace ong
 
 		assert(minPlane != nullptr);
 
-		manifold->normal = rotate(minPlane->n, tb->q);
+		manifold->normal = rotate(-minPlane->n, tb->q);
 		manifold->numPoints = 1;
 		manifold->points[0].position = transformVec3(closestPtPointPlane(c, *minPlane), *tb);
 		manifold->points[0].penetration = -minDist - s->r;
@@ -569,7 +569,6 @@ namespace ong
 
 	void ContactManager::generateContacts(Pair* pairs, int numPairs, int maxContacts)
 	{
-
 
 		m_oldContacts = std::move(m_contacts);
 

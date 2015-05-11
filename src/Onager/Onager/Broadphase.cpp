@@ -9,7 +9,7 @@ namespace ong
 
 	const float HGrid::CELL_TO_CELL_RATIO = 2.0f;
 	const float HGrid::MIN_CELL_SIZE = 1.0f;
-	const float HGrid::SPHERE_TO_CELL_RATIO = 0.25f;
+	const float HGrid::SPHERE_TO_CELL_RATIO = 1.0f;
 
 	static inline bool overlapSphereSphere(Proxy* sphereProxy, Proxy* aabbProxy)
 	{
@@ -60,7 +60,12 @@ namespace ong
 
 		assert(id->level < MAX_LEVELS);
 
-		id->bucket = calculateBucketID(object.sphere.c, id->level);
+		int x = (int)object.sphere.c.x / size;
+		int y = (int)object.sphere.c.y / size;
+		int z = (int)object.sphere.c.z / size;
+
+
+		id->bucket = calculateBucketID(x,y,z, id->level);
 		id->idx = m_objectBucket[id->bucket].size();
 		id->pBody = pBody;
 
@@ -106,7 +111,6 @@ namespace ong
 		
 		assert(id == pProxyID);
 
-		
 		if (level != id->level)
 		{
 			removeFromLevel(pProxyID);
@@ -116,7 +120,11 @@ namespace ong
 			m_occupiedLevelsMask |= (1 << id->level);
 		}
 
-		int bucket = calculateBucketID(object.sphere.c, level);
+		int x = (int)object.sphere.c.x / size;
+		int y = (int)object.sphere.c.y / size;
+		int z = (int)object.sphere.c.z / size;
+
+		int bucket = calculateBucketID(x,y,z, level);
 		if (bucket != pProxyID->bucket)
 		{
 			removeFromBucket(pProxyID);
@@ -125,8 +133,15 @@ namespace ong
 			id->idx = m_objectBucket[id->bucket].size();
 			m_objectBucket[id->bucket].push_back(object);
 		}
+
 	}
 
+
+	//todo get rid of dulpicates
+	// maybe smarter checking
+	// first check own level like
+	// a list, should hopefully get rid
+	// of all duplicates
 
 	// returns num Pairs
 	int HGrid::generatePairs(Pair* pairs)
@@ -192,7 +207,7 @@ namespace ong
 						{
 							for (int z = z1; z <= z2; ++z)
 							{
-								int bucket = calculateBucketID(vec3(x, y, z), level);
+								int bucket = calculateBucketID(x, y, z, level);
 
 								if (m_timeStamp[bucket] == m_tick)
 									continue;
@@ -216,6 +231,11 @@ namespace ong
 										if (a->getType() == BodyType::Static && b->getType() == BodyType::Static)
 											continue;
 
+										//todo get rid of dulpicates
+										// maybe smarter checking
+										// first check own level like
+										// a list, should hopefully get rid
+										// of all duplicates
 										Pair newPair{ a, b };
 										bool duplicate = false;
 										for (int i = 0; i < numPairs; ++i)
@@ -244,7 +264,8 @@ namespace ong
 			}
 		}
 
-		printf("numPairs: %d\n", numPairs);
+		//debug
+		//printf("numPairs: %d\n", numPairs);
 
 		return numPairs;
 	}
@@ -264,11 +285,7 @@ namespace ong
 			m_objectBucket[id->bucket].clear();
 		}
 
-		//Debug
-		for (int i = 0; i < m_objectBucket[id->bucket].size(); ++i)
-		{
-			assert(m_objectBucket[id->bucket][i].id->idx == i);
-		}
+
 
 	}
 

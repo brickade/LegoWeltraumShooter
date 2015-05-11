@@ -153,6 +153,8 @@ void Test::initSDL()
 	glewInit();
 
 	initGL();
+
+	SDL_GL_SetSwapInterval(0);
 	
 
 }
@@ -394,7 +396,7 @@ void Test::init()
 	descr.linearMomentum = vec3(0.0f, 0.0f, 0.0f);
 	descr.angularMomentum = vec3(0.0f, 0.0f, 0.0f);
 
-	//m_entities.push_back(addBox(m_world, descr, material));
+	m_entities.push_back(addBox(m_world, descr, material));
 
 	ShapeDescription shapeDescr;
 	shapeDescr.shapeType = ShapeType::CAPSULE;
@@ -402,87 +404,87 @@ void Test::init()
 	shapeDescr.capsule.c1 = vec3(0.0f, 0.5f, 0.0f);
 	shapeDescr.capsule.c2 = vec3(0.0f, -0.5f, 0.0f);
 
-	//gCapsule = m_world->createShape(shapeDescr);
+	gCapsule = m_world->createShape(shapeDescr);
 
-	//ColliderDescription colliderDescr;
-	//colliderDescr.material = material;
-	//colliderDescr.transform = Transform(vec3(0, 0, 0), QuatFromAxisAngle(vec3(1, 0, 0), 0));
-	//colliderDescr.shape = gCapsule;
+	ColliderDescription colliderDescr;
+	colliderDescr.material = material;
+	colliderDescr.transform = Transform(vec3(0, 0, 0), QuatFromAxisAngle(vec3(1, 0, 0), 0));
+	colliderDescr.shape = gCapsule;
 
-	//descr.transform.p.x += 3.0f;
+	descr.transform.p.x += 3.0f;
 
-	//Collider* c = m_world->createCollider(colliderDescr);
-	//Body* b = m_world->createBody(descr);
-	//b->addCollider(c);
-	//m_entities.push_back(new Entity(b, vec3(0, 0, 1)));
-
-
-
-	//// spherestack
-	//
-
-	//{
-
-	//	shapeDescr.shapeType = ShapeType::SPHERE;
-	//	shapeDescr.sphere.r = 1.0f;
-	//	shapeDescr.sphere.c = vec3(0, 0, 0);
-	//	gSphere = m_world->createShape(shapeDescr);
-
-	//	colliderDescr.shape = gSphere;
-
-	//	descr.transform.p.x += 3.0f;
-	//	Collider* c = m_world->createCollider(colliderDescr);
-	//	Body* b = m_world->createBody(descr);
-	//	b->addCollider(c);
-	//	m_entities.push_back(new Entity(b, vec3(0, 0, 1)));
+	Collider* c = m_world->createCollider(colliderDescr);
+	Body* b = m_world->createBody(descr);
+	b->addCollider(c);
+	m_entities.push_back(new Entity(b, vec3(0, 0, 1)));
 
 
 
+	// spherestack
+	
 
-	//	descr.transform = Transform(vec3(-10.0f, 3.0f, -10.0f), QuatFromAxisAngle(vec3(1.0f, 0.0f, 0.0f), 0.0f));
+	{
 
-	//	for (int i = 0; i < 4; ++i)
-	//	{
-	//		Collider* c = m_world->createCollider(colliderDescr);
+		shapeDescr.shapeType = ShapeType::SPHERE;
+		shapeDescr.sphere.r = 1.0f;
+		shapeDescr.sphere.c = vec3(0, 0, 0);
+		gSphere = m_world->createShape(shapeDescr);
 
-	//		Body* b = m_world->createBody(descr);
-	//		b->addCollider(c);
-	//		m_entities.push_back(new Entity(b, vec3(0, 0, 1)));
+		colliderDescr.shape = gSphere;
 
-	//		descr.transform.p.y += 3.0f;
-	//	}
-	//}
+		descr.transform.p.x += 3.0f;
+		Collider* c = m_world->createCollider(colliderDescr);
+		Body* b = m_world->createBody(descr);
+		b->addCollider(c);
+		m_entities.push_back(new Entity(b, vec3(0, 0, 1)));
 
-	//colliderDescr.shape = gCapsule;
-	//descr.transform = Transform(vec3(-10.0f, 3.0f, 10.0f), QuatFromAxisAngle(vec3(1.0f, 0.0f, 0.0f), 0.0f));
 
-	//for (int i = 0; i < 4; ++i)
-	//{
-	//	Collider* c = m_world->createCollider(colliderDescr);
 
-	//	Body* b = m_world->createBody(descr);
-	//	b->addCollider(c);
-	//	m_entities.push_back(new Entity(b, vec3(0, 0, 1)));
 
-	//	descr.transform.p.y += 3.0f;
-	//}
+		descr.transform = Transform(vec3(-10.0f, 3.0f, -10.0f), QuatFromAxisAngle(vec3(1.0f, 0.0f, 0.0f), 0.0f));
 
-	//
-	////pyramid
-	//descr.transform = Transform(vec3(10.0f, 0.0f, 0.0f), QuatFromAxisAngle(vec3(1.0f, 0.0f, 0.0f), 0.0f));
-	//m_entities.push_back(addBox(m_world, descr, material));
-	//descr.transform = Transform(vec3(10.0f, 0.0f, -2.5f), QuatFromAxisAngle(vec3(1.0f, 0.0f, 0.0f), 0.0f));
-	//m_entities.push_back(addBox(m_world, descr, material));
-	//descr.transform = Transform(vec3(10.0f, 0.0f, +2.5f), QuatFromAxisAngle(vec3(1.0f, 0.0f, 0.0f), 0.0f));
-	//m_entities.push_back(addBox(m_world, descr, material));
+		for (int i = 0; i < 4; ++i)
+		{
+			Collider* c = m_world->createCollider(colliderDescr);
 
-	//descr.transform = Transform(vec3(10.0f, 2.125f, -1.25f), QuatFromAxisAngle(vec3(1.0f, 0.0f, 0.0f), 0.0f));
-	//m_entities.push_back(addBox(m_world, descr, material));
-	//descr.transform = Transform(vec3(10.0f, 2.125f, +1.25f), QuatFromAxisAngle(vec3(1.0f, 0.0f, 0.0f), 0.0f));
-	//m_entities.push_back(addBox(m_world, descr, material));
+			Body* b = m_world->createBody(descr);
+			b->addCollider(c);
+			m_entities.push_back(new Entity(b, vec3(0, 0, 1)));
 
-	//descr.transform = Transform(vec3(10.0f, 4.25f, 0.0f), QuatFromAxisAngle(vec3(1.0f, 0.0f, 0.0f), 0.0f));
-	//m_entities.push_back(addBox(m_world, descr, material));
+			descr.transform.p.y += 3.0f;
+		}
+	}
+
+	colliderDescr.shape = gCapsule;
+	descr.transform = Transform(vec3(-10.0f, 3.0f, 10.0f), QuatFromAxisAngle(vec3(1.0f, 0.0f, 0.0f), 0.0f));
+
+	for (int i = 0; i < 4; ++i)
+	{
+		Collider* c = m_world->createCollider(colliderDescr);
+
+		Body* b = m_world->createBody(descr);
+		b->addCollider(c);
+		m_entities.push_back(new Entity(b, vec3(0, 0, 1)));
+
+		descr.transform.p.y += 3.0f;
+	}
+
+	
+	//pyramid
+	descr.transform = Transform(vec3(10.0f, 0.0f, 0.0f), QuatFromAxisAngle(vec3(1.0f, 0.0f, 0.0f), 0.0f));
+	m_entities.push_back(addBox(m_world, descr, material));
+	descr.transform = Transform(vec3(10.0f, 0.0f, -2.5f), QuatFromAxisAngle(vec3(1.0f, 0.0f, 0.0f), 0.0f));
+	m_entities.push_back(addBox(m_world, descr, material));
+	descr.transform = Transform(vec3(10.0f, 0.0f, +2.5f), QuatFromAxisAngle(vec3(1.0f, 0.0f, 0.0f), 0.0f));
+	m_entities.push_back(addBox(m_world, descr, material));
+
+	descr.transform = Transform(vec3(10.0f, 2.125f, -1.25f), QuatFromAxisAngle(vec3(1.0f, 0.0f, 0.0f), 0.0f));
+	m_entities.push_back(addBox(m_world, descr, material));
+	descr.transform = Transform(vec3(10.0f, 2.125f, +1.25f), QuatFromAxisAngle(vec3(1.0f, 0.0f, 0.0f), 0.0f));
+	m_entities.push_back(addBox(m_world, descr, material));
+
+	descr.transform = Transform(vec3(10.0f, 4.25f, 0.0f), QuatFromAxisAngle(vec3(1.0f, 0.0f, 0.0f), 0.0f));
+	m_entities.push_back(addBox(m_world, descr, material));
 
 
 
@@ -493,50 +495,50 @@ void Test::init()
 	m_entities.push_back(addBox(m_world, descr, material));
 	descr.transform.p.y += 3.0;
 	m_entities.push_back(addBox(m_world, descr, material));
-	//descr.transform.p.y += 3.0;
-	//m_entities.push_back(addBox(m_world, descr, material));
-	//descr.transform.p.y += 3.0;
-	//m_entities.push_back(addBox(m_world, descr, material));
-	//descr.transform.p.y += 3.0;
-	//m_entities.push_back(addBox(m_world, descr, material));
-	//descr.transform.p.y += 3.0;
-	//m_entities.push_back(addBox(m_world, descr, material));
-	//descr.transform.p.y += 3.0;
-	//m_entities.push_back(addBox(m_world, descr, material));
-	//descr.transform.p.y += 3.0;
-	//m_entities.push_back(addBox(m_world, descr, material));
-	//descr.transform.p.y += 3.0;
-	//m_entities.push_back(addBox(m_world, descr, material));
+	descr.transform.p.y += 3.0;
+	m_entities.push_back(addBox(m_world, descr, material));
+	descr.transform.p.y += 3.0;
+	m_entities.push_back(addBox(m_world, descr, material));
+	descr.transform.p.y += 3.0;
+	m_entities.push_back(addBox(m_world, descr, material));
+	descr.transform.p.y += 3.0;
+	m_entities.push_back(addBox(m_world, descr, material));
+	descr.transform.p.y += 3.0;
+	m_entities.push_back(addBox(m_world, descr, material));
+	descr.transform.p.y += 3.0;
+	m_entities.push_back(addBox(m_world, descr, material));
+	descr.transform.p.y += 3.0;
+	m_entities.push_back(addBox(m_world, descr, material));
 
-	//
-	//
+	
+	
 	m_entities.push_back(addFloor(m_world, material));
-	//m_entities.push_back(addSlope(m_world, Transform(vec3(0, 0, -4), QuatFromAxisAngle(vec3(1.0f, 0.0f, 0.0f), 0.0f)), material));
-	//m_entities.push_back(addSlope(m_world, Transform(vec3(0, 0, 4), QuatFromAxisAngle(vec3(0.0f, 1.0f, 0.0f), ong_PI)), material));
-	//
-	//descr.transform = Transform(vec3(-3.0f, 5.0f, 5.0f), QuatFromAxisAngle(vec3(1.0f, 0.0f, 0.0f), 0.0f));
-	//m_entities.push_back(addBox(m_world, descr, material));
-	//m.friction /= 2.0f;
-	//material = m_world->createMaterial(m);
-	//descr.transform = Transform(vec3(0.0f, 5.0f, 5.0f), QuatFromAxisAngle(vec3(1.0f, 0.0f, 0.0f), 0.0f));
-	//m.friction /= 2.0f;
-	//material = m_world->createMaterial(m);
-	//m_entities.push_back(addBox(m_world, descr, material));
-	//descr.transform = Transform(vec3(3.0f, 5.0f, 5.0f), QuatFromAxisAngle(vec3(1.0f, 0.0f, 0.0f), 0.0f));
-	//m.friction /= 2.0f;
-	//material = m_world->createMaterial(m);
-	//m_entities.push_back(addBox(m_world, descr, material));
+	m_entities.push_back(addSlope(m_world, Transform(vec3(0, 0, -4), QuatFromAxisAngle(vec3(1.0f, 0.0f, 0.0f), 0.0f)), material));
+	m_entities.push_back(addSlope(m_world, Transform(vec3(0, 0, 4), QuatFromAxisAngle(vec3(0.0f, 1.0f, 0.0f), ong_PI)), material));
+	
+	descr.transform = Transform(vec3(-3.0f, 5.0f, 5.0f), QuatFromAxisAngle(vec3(1.0f, 0.0f, 0.0f), 0.0f));
+	m_entities.push_back(addBox(m_world, descr, material));
+	m.friction /= 2.0f;
+	material = m_world->createMaterial(m);
+	descr.transform = Transform(vec3(0.0f, 5.0f, 5.0f), QuatFromAxisAngle(vec3(1.0f, 0.0f, 0.0f), 0.0f));
+	m.friction /= 2.0f;
+	material = m_world->createMaterial(m);
+	m_entities.push_back(addBox(m_world, descr, material));
+	descr.transform = Transform(vec3(3.0f, 5.0f, 5.0f), QuatFromAxisAngle(vec3(1.0f, 0.0f, 0.0f), 0.0f));
+	m.friction /= 2.0f;
+	material = m_world->createMaterial(m);
+	m_entities.push_back(addBox(m_world, descr, material));
 
-	//
-	////player
-	//Transform t = Transform(vec3(0.0f, 8.0f, -10.0f), QuatFromAxisAngle(vec3(1, 0, 0), 0));
-	//m_player = addPlayer(m_world, t);
-	//m_entities.push_back(m_player);
-	//
+	
+	//player
+	Transform t = Transform(vec3(0.0f, 8.0f, -10.0f), QuatFromAxisAngle(vec3(1, 0, 0), 0));
+	m_player = addPlayer(m_world, t);
+	m_entities.push_back(m_player);
+	
 
 
 	static int gNumSteps = 0;
-	int numSteps = 54;
+	int numSteps = 0;
 	for (int i = 0; i < numSteps; ++i)
 	{
 		printf("%d\n", gNumSteps);

@@ -49,9 +49,9 @@ namespace ong
 
 		//narrowphase
 
-		m_contactManager.generateContacts(pairs, numPairs, m_numColliders*m_numColliders);
-
-
+		//todo ...
+		//m_contactManager.generateContacts(pairs, numPairs, m_numColliders*m_numColliders);
+		m_contactManager.generateContacts(pairs, numPairs, 3*numPairs);
 
 		//integrate
 		for (int i = 0; i < m_numBodies; ++i)

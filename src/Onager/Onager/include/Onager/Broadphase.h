@@ -74,7 +74,7 @@ namespace ong
 		};
 
 
-		int calculateBucketID(vec3 pos, int level);
+		int calculateBucketID(int x, int y, int z, int level);
 		void removeFromBucket(const ProxyID* id);
 		void removeFromLevel(const ProxyID* id);
 
@@ -88,14 +88,14 @@ namespace ong
 		Allocator<ProxyID> m_proxyIDAllocator;
 	};
 
-	inline int HGrid::calculateBucketID(vec3 pos, int level)
+	inline int HGrid::calculateBucketID(int x, int y, int z, int level)
 	{
 		const int32 h1 = 1543;
 		const int32 h2 = 3079;
 		const int32 h3 = 6151;
 		const int32 h4 = 12289;
 
-		int n = pos.x*h1 + pos.y*h2 + pos.z * h3 + level * h4;
+		int n = x*h1 + y*h2 + z * h3 + level * h4;
 		n = n%NUM_BUCKETS;
 		if (n < 0) n += NUM_BUCKETS;
 
