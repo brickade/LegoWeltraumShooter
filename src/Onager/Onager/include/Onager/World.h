@@ -126,8 +126,7 @@ namespace ong
 		int m_numColliders;
 		vec3 m_gravity;
 
-		std::vector<Proxy> m_proxies;
-
+		HGrid m_hGrid;
 		ContactManager m_contactManager;
 
 		BodyAllocator m_bodyAllocator;
@@ -144,12 +143,6 @@ namespace ong
 	{
 		m_gravity = gravity;
 	}
-
-
-
-	inline const Proxy& World::getProxy(int proxyID)
-	{
-		return m_proxies[proxyID];
-	}
+	
 
 }

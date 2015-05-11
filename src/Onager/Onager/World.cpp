@@ -33,7 +33,8 @@ namespace ong
 		Body* b = m_pBody;
 		while (b != nullptr)
 		{
-			b->calculateProxy();
+			b->calculateAABB();
+			m_hGrid.updateBody(b->getProxyID());
 			//todo presistent contacts
 			b->clearContacts();
 			b = b->getNext();
@@ -42,7 +43,7 @@ namespace ong
 
 		// broadphase
 		Pair* pairs = new Pair[m_numBodies * m_numBodies];
-		int numPairs = generatePairs(m_proxies.data(), m_proxies.size(), pairs);
+		int numPairs = m_hGrid.generatePairs(pairs);
 
 		assert(numPairs <= m_numBodies*m_numBodies);
 
@@ -123,8 +124,9 @@ namespace ong
 		body->setNext(m_pBody);
 		body->setPrevious(nullptr);
 
-		m_proxies.push_back(Proxy());
-		body->setProxyID(m_proxies.size() - 1);
+		const ProxyID* proxyID = m_hGrid.addBody(body);
+		
+		body->setProxyID(proxyID);
 
 
 		if (m_pBody != nullptr)
@@ -167,8 +169,7 @@ namespace ong
 		if (m_pBody == pBody)
 			m_pBody = pBody->getNext();
 
-		m_b[idx]->setProxyID(pBody->getProxyID());
-		m_proxies.pop_back();
+		m_hGrid.removeBody(pBody->getProxyID());
 
 		m_bodyAllocator.sDelete(pBody);
 	}
@@ -298,8 +299,5 @@ namespace ong
 		}
 	}
 
-	void World::setProxy(int proxyID, const Proxy& proxy)
-	{
-		m_proxies[proxyID] = proxy;
-	}
+
 }

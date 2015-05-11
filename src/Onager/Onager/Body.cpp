@@ -19,6 +19,8 @@ namespace ong
 		m_numCollider(0)
 	{
 
+		m_aabb = {vec3(0, 0, 0), vec3(0,0,0)};
+
 		m_flags |= descr.type;
 
 		m_pWorld->m_r[m_index].p = descr.transform.p;
@@ -53,7 +55,7 @@ namespace ong
 			constructBVTree(m_pCollider, m_numCollider, m_tree);
 		}
 
-		calculateProxy();
+		calculateAABB();
 	}
 
 	void Body::removeCollider(Collider* collider)
@@ -155,18 +157,12 @@ namespace ong
 
 
 
-	void Body::calculateProxy()
+	void Body::calculateAABB()
 	{
-		Proxy proxy;
-		proxy.body = this;
-		proxy.type = ProxyType::AABB;
-
 		if (m_numCollider > 1)
-			proxy.aabb = transformAABB(&m_tree->aabb, &getTransform());
+			m_aabb = transformAABB(&m_tree->aabb, &getTransform());
 		else
-			proxy.aabb = transformAABB(&m_pCollider->getAABB(), &getTransform());
-
-		m_pWorld->setProxy(m_proxyID, proxy);
+			m_aabb = transformAABB(&m_pCollider->getAABB(), &getTransform());
 	}
 
 
@@ -428,9 +424,9 @@ namespace ong
 	}
 
 
-	const Proxy& Body::getProxy()
+	const AABB& Body::getAABB()
 	{
-		return m_pWorld->getProxy(m_proxyID);
+		return m_aabb;
 	}
 
 	Transform Body::getTransform() const
