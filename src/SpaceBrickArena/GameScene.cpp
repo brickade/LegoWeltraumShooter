@@ -19,8 +19,8 @@ namespace Game
         this->m_pPostCamera = new PuRe_Camera(PuRe_Vector2F((float)gdesc.ResolutionWidth, (float)gdesc.ResolutionHeight), PuRe_Camera_Orthogonal);
         this->m_pMaterial = a_pGraphics->LoadMaterial("../data/effects/default/default");
         this->m_pPostMaterial = a_pGraphics->LoadMaterial("../data/effects/Post/default");
-        this->m_pModel = new PuRe_Model(a_pGraphics, this->m_pMaterial, "../data/models/brick1.obj");
-        this->m_pRenderTarget = a_pGraphics->CreateRendertarget(this->m_pPostMaterial);
+        this->m_pModel = new PuRe_Model(a_pGraphics, "../data/models/brick1.obj");
+        this->m_pRenderTarget = a_pGraphics->CreateRendertarget();
         this->m_pSkyDome = new PuRe_Skydome(a_pGraphics, this->m_pMaterial, "../data/textures/space.png");
         this->rot = 0.0f;
         this->textureID = 0;
@@ -81,15 +81,15 @@ namespace Game
         {
             float x = (2.5f*(float)(i / 2)) + 2.0f;
             float y = 2.5f*(float)(i % 2);
-            this->m_pModel->Draw(this->m_pCamera, PuRe_Primitive::Triangles, PuRe_Vector3F(x, y, 0.0f), PuRe_Vector3F(1.0f, 1.0f, 1.0f), PuRe_Vector3F(0.0f, this->rot, 0.0f), PuRe_Vector3F(0.0f, 0.0f, 0.0f));
+            this->m_pModel->Draw(this->m_pCamera, this->m_pPostMaterial, PuRe_Primitive::Triangles, PuRe_Vector3F(x, y, 0.0f), PuRe_Vector3F(1.0f, 1.0f, 1.0f), PuRe_Vector3F(0.0f, this->rot, 0.0f), PuRe_Vector3F(0.0f, 0.0f, 0.0f));
         }
         this->m_pSkyDome->Draw(this->m_pCamera, PuRe_Vector3F(0.0f, this->rot / 1000.0f, 0.0f));
 
-        a_pGraphics->Begin(clear);
+        a_pGraphics->Begin();
         this->m_pPostMaterial->Apply();
         this->m_pPostMaterial->SetFloat((float)textureID, "textureID");
         this->m_pPostMaterial->SetVector3(PuRe_Vector3F(0.1f, 0.1f, 0.1f), "ambient");
-        this->m_pRenderTarget->Draw(this->m_pPostCamera, PuRe_Vector3F(gdesc.ResolutionWidth / 2.0f, gdesc.ResolutionHeight / 2.0f, 0.0f), PuRe_Vector3F(gdesc.ResolutionWidth / 2.0f, gdesc.ResolutionHeight / 2.0f, 0.0f));
+        this->m_pRenderTarget->Draw(this->m_pPostCamera, this->m_pPostMaterial, PuRe_Vector3F(gdesc.ResolutionWidth / 2.0f, gdesc.ResolutionHeight / 2.0f, 0.0f), PuRe_Vector3F(gdesc.ResolutionWidth / 2.0f, gdesc.ResolutionHeight / 2.0f, 0.0f));
 
         a_pGraphics->End();
     }

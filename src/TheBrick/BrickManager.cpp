@@ -24,7 +24,7 @@ namespace TheBrick
 
     // **************************************************************************
     // **************************************************************************
-    void CBrickManager::Load(PuRe_IGraphics* a_pGraphics, ong::World* a_pWorld, const char* a_pFolder)
+    void CBrickManager::Load(PuRe_IGraphics* a_pGraphics, ong::World* a_pWorld, PuRe_IMaterial* a_pMaterial, const char* a_pFolder)
     {
         char p[300];
         memset(p, 0, 300);
@@ -32,16 +32,16 @@ namespace TheBrick
         strcat(p, "Brick1X3.brick");
         CSerializer* serializer = new CSerializer();
         serializer->OpenRead(p);
-        this->m_bricks[0] = new CBrick();
-        this->m_bricks[0]->Deserialize(serializer, a_pGraphics, this->m_pBrickMaterial, a_pWorld);
+        this->m_bricks[0] = new CBrick(a_pMaterial);
+        this->m_bricks[0]->Deserialize(serializer, a_pGraphics, a_pWorld);
         serializer->Close();
 
         memset(p, 0, 300);
         strcat(p, a_pFolder);
         strcat(p, "Brick1X4.brick");
         serializer->OpenRead(p);
-        this->m_bricks[1] = new CBrick();
-        this->m_bricks[1]->Deserialize(serializer, a_pGraphics, this->m_pBrickMaterial, a_pWorld);
+        this->m_bricks[1] = new CBrick(a_pMaterial);
+        this->m_bricks[1]->Deserialize(serializer, a_pGraphics, a_pWorld);
         serializer->Close();
         
         delete serializer;
@@ -94,6 +94,12 @@ namespace TheBrick
     // **************************************************************************
     PuRe_IMaterial* CBrickManager::GetBrickMaterial()
     {
+        #ifdef DEBUG
+            if (this->m_pBrickMaterial == nullptr)
+            {
+                print("CBrickManager::GetBrickMaterial() was called before initializing the BrickManager!!!");       
+            }
+        #endif
         return this->m_pBrickMaterial;
     }
 }

@@ -127,15 +127,15 @@ namespace TheBrick
     // METHODS
     // ------------------------------------------------------------------------
     public:
-        CBrick();
-        CBrick(PuRe_Model* a_pModel);
+        CBrick(PuRe_IMaterial* a_pMaterial);
+        CBrick(PuRe_Model* a_pModel, PuRe_IMaterial* a_pMaterial);
         ~CBrick();
 
         CBrickInstance* CreateInstance(ong::World* a_pWorld);
 
-        void Draw(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera, PuRe_Vector3F a_Position, PuRe_Vector3F a_Rotation, PuRe_Color a_Color = PuRe_Color(1, 1, 1, 1), PuRe_Vector3F a_Scale = PuRe_Vector3F(1, 1, 1));
+        void Draw(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera, PuRe_Vector3F a_Position, PuRe_MatrixF a_Rotation, PuRe_Color a_Color = PuRe_Color(1, 1, 1, 1), PuRe_Vector3F a_Scale = PuRe_Vector3F(1, 1, 1));
 
-        void Deserialize(CSerializer* a_pSerializer, PuRe_IGraphics* a_pGraphics, PuRe_IMaterial* a_pMaterial, ong::World* a_pWorld);
+        void Deserialize(CSerializer* a_pSerializer, PuRe_IGraphics* a_pGraphics, ong::World* a_pWorld);
         void Serialize(CSerializer* a_pSerializer);
 
         int GetCategoryId();

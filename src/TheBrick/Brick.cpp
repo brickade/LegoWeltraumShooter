@@ -9,19 +9,21 @@ namespace TheBrick
 
     // **************************************************************************
     // **************************************************************************
-    CBrick::CBrick()
+    CBrick::CBrick(PuRe_IMaterial* a_pMaterial)
     {
         this->m_ModelPath = new char[MAX_MODEL_PATH_LENGTH];
         memset(this->m_ModelPath, 0, MAX_MODEL_PATH_LENGTH);
+        this->m_pMaterial = a_pMaterial;
     }
 
     // **************************************************************************
     // **************************************************************************
-    CBrick::CBrick(PuRe_Model* a_pModel)
+    CBrick::CBrick(PuRe_Model* a_pModel, PuRe_IMaterial* a_pMaterial)
     {
 		this->m_ModelPath = new char[MAX_MODEL_PATH_LENGTH];
 		memset(this->m_ModelPath, 0, MAX_MODEL_PATH_LENGTH);
         this->m_pModel = a_pModel;
+        this->m_pMaterial = a_pMaterial;
     }
 
     // **************************************************************************
@@ -40,23 +42,19 @@ namespace TheBrick
 
     // **************************************************************************
     // **************************************************************************
-    void CBrick::Draw(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera, PuRe_Vector3F a_Position, PuRe_Vector3F a_Rotation, PuRe_Color a_Color, PuRe_Vector3F a_Scale)
+    void CBrick::Draw(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera, PuRe_Vector3F a_Position, PuRe_MatrixF a_Rotation, PuRe_Color a_Color, PuRe_Vector3F a_Scale)
     {
-        //Need to call apply on the brick material first, do this outside this function to not call this over and over again
-        this->m_pMaterial->Apply();
-        this->m_pMaterial->SetVector3(PuRe_Vector3F(a_Color.R, a_Color.G, a_Color.B), "brickColor"); //Instanced?
-        this->m_pModel->Draw(a_pCamera, PuRe_Primitive::Triangles, a_Position, a_Scale, a_Rotation, PuRe_Vector3F(0, 0, 0));
+        this->m_pModel->Draw(a_pCamera, this->m_pMaterial, PuRe_Primitive::Triangles, a_Position, a_Scale, a_Rotation, PuRe_Vector3F(0, 0, 0), a_Color);
     }
 
     // **************************************************************************
     // **************************************************************************
-    void CBrick::Deserialize(CSerializer* a_pSerializer, PuRe_IGraphics* a_pGraphics, PuRe_IMaterial* a_pMaterial, ong::World* a_pWorld)
+    void CBrick::Deserialize(CSerializer* a_pSerializer, PuRe_IGraphics* a_pGraphics, ong::World* a_pWorld)
     {
         //m_pModel
         this->m_ModelPath = (char*)malloc(MAX_MODEL_PATH_LENGTH);
         a_pSerializer->Read(this->m_ModelPath, MAX_MODEL_PATH_LENGTH);
-        this->m_pMaterial = a_pMaterial;
-        this->m_pModel = new PuRe_Model(a_pGraphics, a_pMaterial, this->m_ModelPath);
+        this->m_pModel = new PuRe_Model(a_pGraphics, this->m_ModelPath);
 
         //m_BrickId
         this->m_BrickId = a_pSerializer->ReadIntUnsigned();

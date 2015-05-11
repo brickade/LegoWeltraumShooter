@@ -34,7 +34,7 @@ namespace Game
         float speed = a_pTimer->GetTotalElapsedSeconds();
         //Gamepad
         PuRe_Vector2F leftThumb = a_pInput->GetGamepadLeftThumb(a_PlayerIdx);
-        EDirection currentState = ThumbStateFromThumbVector(leftThumb);
+        EDirection::Type currentState = ThumbStateFromThumbVector(leftThumb);
         if (currentState != this->m_PreviousState)
         {
             if (currentState != EDirection::None)
@@ -79,7 +79,7 @@ namespace Game
         for (int i = 0; i <= this->m_LastBrickSubId; i++)
         {
             PuRe_Vector3F pos = PuRe_Vector3F(50 + 50 * (i % this->m_BricksPerLine), 50 + 50 * floor(i / this->m_BricksPerLine), 1);
-            PuRe_Vector3F rot = PuRe_Vector3F(0, 0, 0);
+            PuRe_MatrixF rot = PuRe_MatrixF::Identity();
             pos = PuRe_Vector3F(0, 0, 0);
             //pos -= PuRe_Vector3F(a_pGraphics->GetDescription().ResolutionWidth / 2, a_pGraphics->GetDescription().ResolutionHeight / 2, 0)
             this->m_Bricks[i]->Draw(a_pGraphics, a_pCamera, pos, rot);
@@ -88,9 +88,9 @@ namespace Game
 
     // **************************************************************************
     // **************************************************************************
-    CBrickCategory::EDirection CBrickCategory::ThumbStateFromThumbVector(PuRe_Vector2F a_ThumbInput) const
+    EDirection::Type CBrickCategory::ThumbStateFromThumbVector(PuRe_Vector2F a_ThumbInput) const
     {
-        EDirection state = EDirection::None;
+        EDirection::Type state = EDirection::None;
         if (a_ThumbInput.X > this->m_GamepadThreshold)
         {
             state = EDirection::Right;
@@ -112,7 +112,7 @@ namespace Game
 
     // **************************************************************************
     // **************************************************************************
-    void CBrickCategory::NavigateList(CBrickCategory::EDirection a_Direction)
+    void CBrickCategory::NavigateList(EDirection::Type a_Direction)
     {
         switch (a_Direction)
         {

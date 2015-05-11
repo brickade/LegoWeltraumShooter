@@ -60,6 +60,9 @@
     <ClInclude Include="include\BrickSupervisor.h">
       <Filter>Headerdateien\Editor</Filter>
     </ClInclude>
+    <ClInclude Include="include\Navigation.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -91,6 +94,9 @@
     </ClCompile>
     <ClCompile Include="BrickSupervisor.cpp">
       <Filter>Quelldateien\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Navigation.cpp">
+      <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

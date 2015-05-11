@@ -23,8 +23,6 @@ namespace Game
         PuRe_SkyBox* m_pSkyBox;
         int textureID;
         PuRe_Rendertarget* m_pRenderTarget;
-        PuRe_Model* m_pModel;
-        PuRe_IMaterial* m_pMaterial;
         PuRe_IMaterial* m_pPostMaterial;
         PuRe_IMaterial* m_pSkyBoxMaterial;
         PuRe_Camera* m_pPostCamera;

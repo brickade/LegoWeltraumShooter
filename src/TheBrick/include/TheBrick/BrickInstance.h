@@ -30,7 +30,7 @@ namespace TheBrick
     private:
 
     public:
-        CBrickInstance(CBrick* a_pBrick, ong::World* a_pWorld);
+        CBrickInstance(CBrick* a_pBrick, ong::World* a_pWorld, PuRe_Color a_pColor = PuRe_Color(0.7f, 0.7f, 0.7f, 1.0f));
         ~CBrickInstance();
 
         void Draw(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera);

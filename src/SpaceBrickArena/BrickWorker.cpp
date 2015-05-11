@@ -25,11 +25,10 @@ namespace Game
         this->m_currentPosition = PuRe_Vector2F(0, 0);
         this->m_currentHeight = 0;
         
-        this->m_pCurrentBrick = new TB_Brick(new PuRe_Model(a_pGraphics, BrickBozz::Instance()->BrickManager->GetBrickMaterial(), "../data/models/brick1.obj"));
-        this->m_pCurrentBrick->SetMaterial(BrickBozz::Instance()->BrickManager->GetBrickMaterial());
+        this->m_pCurrentBrick = new TB_Brick(new PuRe_Model(a_pGraphics, "../data/models/brick1.obj"), BrickBozz::Instance()->BrickManager->GetBrickMaterial());
         
         this->m_pGridMaterial = a_pGraphics->LoadMaterial("../data/effects/editor/grid");
-        this->m_pGridBrick = new PuRe_Model(a_pGraphics, this->m_pGridMaterial, "../data/models/brick1.obj");
+        this->m_pGridBrick = new PuRe_Model(a_pGraphics, "../data/models/brick1.obj");
         
         this->m_maxBrickDistance = 15;
 
@@ -52,28 +51,22 @@ namespace Game
     void CBrickWorker::Render(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera)
     {
         //Grid
-        this->m_pGridMaterial->Apply();
-        this->m_pGridMaterial->SetVector3(PuRe_Vector3F(0.7f, 0.2f, 0.2f), "brickColor");
         for (int x = -this->m_maxBrickDistance; x < this->m_maxBrickDistance; x++)
         {
             for (int z = -this->m_maxBrickDistance; z < this->m_maxBrickDistance; z++)
             {
-                this->m_pGridBrick->Draw(a_pCamera, PuRe_Primitive::Triangles, PuRe_Vector3F(x* TB_Brick::SEGMENT_WIDTH, -TB_Brick::SEGMENT_HEIGHT, z* TB_Brick::SEGMENT_WIDTH), PuRe_Vector3F(1.0f, 1.0f, 1.0f), PuRe_Vector3F(0.0f, 0.0f, 0.0f), PuRe_Vector3F(0.0f, 0.0f, 0.0f));
+                this->m_pGridBrick->Draw(a_pCamera, this->m_pGridMaterial, PuRe_Primitive::Triangles, PuRe_Vector3F(x* TB_Brick::SEGMENT_WIDTH, -TB_Brick::SEGMENT_HEIGHT, z* TB_Brick::SEGMENT_WIDTH), PuRe_Vector3F(1.0f, 1.0f, 1.0f), PuRe_MatrixF::Identity(), PuRe_Vector3F(0.0f, 0.0f, 0.0f), PuRe_Color(0.7f, 0.2f, 0.2f));
             }
         }
 
         //Spaceship
-        BrickBozz::Instance()->BrickManager->GetBrickMaterial()->Apply();
-        BrickBozz::Instance()->BrickManager->GetBrickMaterial()->SetVector3(PuRe_Vector3F(1.0f, 0.5f, 0.6f), "brickColor");
         for (int i = 0; i < this->m_pSpaceship->size(); ++i)
         {
             (*this->m_pSpaceship)[i]->Draw(a_pGraphics, a_pCamera);
         }
 
         //Current Brick
-        BrickBozz::Instance()->BrickManager->GetBrickMaterial()->Apply();
-        BrickBozz::Instance()->BrickManager->GetBrickMaterial()->SetVector3(PuRe_Vector3F(0.5f, 0.6f, 1.0f), "brickColor");
-        this->m_pCurrentBrick->Draw(a_pGraphics, a_pCamera, PuRe_Vector3F(this->m_currentBrickPosition.X, this->m_currentHeight, this->m_currentBrickPosition.Y), PuRe_Vector3F(0.0f, this->m_currentBrickRotation, 0.0f));
+        this->m_pCurrentBrick->Draw(a_pGraphics, a_pCamera, PuRe_Vector3F(this->m_currentBrickPosition.X, this->m_currentHeight, this->m_currentBrickPosition.Y), PuRe_QuaternionF(0.0f, this->m_currentBrickRotation, 0.0f).GetMatrix(), PuRe_Color(0.5f, 0.6f, 1.0f));
     }
 
     // **************************************************************************
@@ -201,7 +194,7 @@ namespace Game
         //Gamepad & Mouse
         if (a_pInput->GamepadPressed(a_pInput->Pad_A, this->m_playerIdx) || a_pInput->MousePressed(a_pInput->LeftClick))
         {
-            TB_BrickInstance* brickInstance = new TB_BrickInstance(this->m_pCurrentBrick, a_pWorld);
+            TB_BrickInstance* brickInstance = new TB_BrickInstance(this->m_pCurrentBrick, a_pWorld, PuRe_Color(1.0f, 0.5f, 0.6f));
             brickInstance->m_Transform.p = ong::vec3(this->m_currentBrickPosition.X, this->m_currentHeight, this->m_currentBrickPosition.Y);
             brickInstance->m_Transform.q = ong::QuatFromEulerAngles(this->m_currentBrickRotation, 0, 0);
             this->m_pSpaceship->push_back(brickInstance);

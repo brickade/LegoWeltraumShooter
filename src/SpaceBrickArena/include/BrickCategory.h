@@ -7,19 +7,12 @@
 #include <TheBrick/BrickTimer.h>
 
 #include "BrickBozz.h"
+#include "Navigation.h"
 
 namespace Game
 {
     class CBrickCategory
     {
-        enum EDirection
-        {
-            None,
-            Up,
-            Down,
-            Left,
-            Right,
-        };
 
     public:
         int m_Id;
@@ -29,7 +22,7 @@ namespace Game
         int m_FocusedBrick;
         
         PuRe_Vector2F m_FocusPosition;
-        EDirection m_PreviousState;
+        EDirection::Type m_PreviousState;
         float m_GamepadThreshold;
         float m_ScrollingThreshold;
         TheBrick::CBrickTimer* m_pTimer;
@@ -42,8 +35,8 @@ namespace Game
         void Render(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera);
 
     private:
-        EDirection ThumbStateFromThumbVector(PuRe_Vector2F a_ThumbInput) const;
-        void NavigateList(EDirection a_Direction);
+        EDirection::Type ThumbStateFromThumbVector(PuRe_Vector2F a_ThumbInput) const;
+        void NavigateList(EDirection::Type a_Direction);
         void Scroll(PuRe_Vector2F a_Input, float a_DeltaSec);
 
     };
