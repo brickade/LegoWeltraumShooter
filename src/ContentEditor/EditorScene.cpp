@@ -191,7 +191,7 @@ namespace Content
 	}
 
 
-	void CEditorScene::Initialize(PuRe_IGraphics* a_pGraphics, PuRe_SoundPlayer* a_pSoundPlayer)
+    void CEditorScene::Initialize(PuRe_IGraphics* a_pGraphics,PuRe_IWindow* a_pWindow, PuRe_SoundPlayer* a_pSoundPlayer)
 	{
 
 		printf("type \"help\" for help\n");
@@ -202,7 +202,7 @@ namespace Content
 		
 		m_pPostCamera = new PuRe_Camera(PuRe_Vector2F((float)gdesc.ResolutionWidth, (float)gdesc.ResolutionHeight), PuRe_Camera_Orthogonal);
 		m_pPostMaterial = a_pGraphics->LoadMaterial("../data/effects/Post/default");
-		m_pRenderTarget = a_pGraphics->CreateRendertarget(m_pPostMaterial);
+		m_pRenderTarget = a_pGraphics->CreateRendertarget();
 
 		m_pCamera = new PuRe_Camera(PuRe_Vector2F(gdesc.ResolutionWidth, gdesc.ResolutionHeight), PuRe_Camera_Perspective);
 		m_pCamera->SetFoV(45.0f);
@@ -254,7 +254,7 @@ namespace Content
 				//new brick from obj
 				if (wcscmp(fileType, L".obj") == 0)
 				{
-					PuRe_Model* pModel = new PuRe_Model(a_pGraphics, m_pMaterial, fileDir);
+					PuRe_Model* pModel = new PuRe_Model(a_pGraphics, fileDir);
 
 
 					if (pModel != 0)
@@ -264,7 +264,7 @@ namespace Content
 						strcat(modelDir, fileName);
 
 
-						TheBrick::CBrick* newBrick = new TheBrick::CBrick(pModel);
+                        TheBrick::CBrick* newBrick = new TheBrick::CBrick(pModel, m_pMaterial);
 						newBrick->SetMaterial(m_pMaterial);
 						newBrick->SetModelPath(modelDir);
 						m_BrickQueue.push(std::make_pair(fileName, newBrick));
@@ -273,11 +273,11 @@ namespace Content
 				else if (wcscmp(fileType, L".brick") == 0)
 				{
 
-					TheBrick::CBrick* newBrick = new TheBrick::CBrick();
+                    TheBrick::CBrick* newBrick = new TheBrick::CBrick(m_pMaterial);
 
 					if (m_Serializer.OpenRead(fileDir))
 					{
-						newBrick->Deserialize(&m_Serializer, a_pGraphics, m_pMaterial, &m_World);
+						newBrick->Deserialize(&m_Serializer, a_pGraphics, &m_World);
 						m_Serializer.Close();
 
 
@@ -288,7 +288,7 @@ namespace Content
 
 						const char* modelDir = newBrick->GetModelPath();
 
-						PuRe_Model* pModel = new PuRe_Model(a_pGraphics, m_pMaterial, modelDir);
+						PuRe_Model* pModel = new PuRe_Model(a_pGraphics, modelDir);
 						
 						newBrick->SetModel(pModel);
 						newBrick->SetMaterial(m_pMaterial);
@@ -656,14 +656,15 @@ namespace Content
 		
 
 
-		a_pGraphics->Begin(clear);
+        a_pGraphics->Clear(clear);
+		a_pGraphics->Begin();
 		
 		// draw brick
 		if (m_pCurrBrick)
 		{
 
 			m_pMaterial->Apply();
-			m_pCurrBrick->Draw(a_pGraphics, m_pCamera, PuRe_Vector3F(0, 0, 0), PuRe_Vector3F(0, 0, 0), PuRe_Color(0.4, 0.4, 0.4));
+			m_pCurrBrick->Draw(a_pGraphics, m_pCamera, PuRe_Vector3F(0, 0, 0), PuRe_MatrixF::Identity(), PuRe_Color(0.4, 0.4, 0.4));
 
 			
 			for (auto nub : m_pCurrBrick->GetNubs())
