@@ -31,7 +31,7 @@ namespace Game
         this->m_pSkyBoxMaterial = a_pGraphics->LoadMaterial("../data/effects/skybox/default");
         this->m_pRenderTarget = a_pGraphics->CreateRendertarget();
 
-        this->m_pSkyBox = new PuRe_SkyBox(a_pGraphics, this->m_pSkyBoxMaterial, "../data/textures/skybox/");
+        this->m_pSkyBox = new PuRe_SkyBox(a_pGraphics, "../data/textures/skybox/");
 
         this->textureID = 0;
 
@@ -85,7 +85,7 @@ namespace Game
         
         a_pGraphics->Clear(clearColor);
         this->m_pRenderTarget->ApplyGeometryPass(PuRe_Color(0.0f,0.0f,0.0f,0.0f));
-        this->m_pSkyBox->Draw(this->m_pCamera, PuRe_Vector3F(0.0f, 0.0f, 0.0f));
+        this->m_pSkyBox->Draw(this->m_pCamera, this-> m_pSkyBoxMaterial, PuRe_Vector3F(0.0f, 0.0f, 0.0f));
         //this->m_pSkyBox->Draw(this->m_pCamera, PuRe_MatrixF::Identity());
         this->m_pBrickWorker->Render(a_pGraphics, this->m_pCamera);
         this->m_pBrickSupervisor->Render(a_pGraphics, this->m_pCamera);
