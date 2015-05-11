@@ -12,13 +12,14 @@ namespace TheBrick
         {
             this->m_pCollider.push_back(a_pWorld->createCollider(this->m_pBrick->GetColliderData()[i]));
         }
+        this->m_Color = PuRe_Color(0.7f, 0.7f, 0.7f, 1.0f);
     }
 
     // **************************************************************************
     // **************************************************************************
     CBrickInstance::~CBrickInstance()
     {
-        
+
     }
 
     // **************************************************************************

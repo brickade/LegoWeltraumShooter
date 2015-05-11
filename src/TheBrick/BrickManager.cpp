@@ -89,4 +89,11 @@ namespace TheBrick
     {
         return ceil(this->m_bricks.max_size() / 100.0f);
     }
+
+    // **************************************************************************
+    // **************************************************************************
+    PuRe_IMaterial* CBrickManager::GetBrickMaterial()
+    {
+        return this->m_pBrickMaterial;
+    }
 }

@@ -29,6 +29,8 @@ namespace TheBrick
         CBrick* GetBrick(int a_BrickId);
         CBrick** GetCategoryStart(int a_CategoryId);
         int GetCategoryCount();
+
+        PuRe_IMaterial* GetBrickMaterial();
     };
 }
 

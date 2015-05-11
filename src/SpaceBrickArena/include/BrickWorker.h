@@ -29,7 +29,6 @@ namespace Game
 
         PuRe_IMaterial* m_pGridMaterial;
         PuRe_Model* m_pGridBrick;
-        PuRe_IMaterial* m_pTmpBrickMat;
 
         PuRe_List<TB_BrickInstance*>* m_pSpaceship;
 
