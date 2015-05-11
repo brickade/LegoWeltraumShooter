@@ -22,12 +22,13 @@ namespace Game
     {
     private:
         int m_playerIdx;
-        PuRe_Skydome* m_pSkyDome;
+        PuRe_SkyBox* m_pSkyBox;
         int textureID;
         PuRe_Rendertarget* m_pRenderTarget;
         float rot;
         PuRe_Model* m_pModel;
         PuRe_IMaterial* m_pMaterial;
+        PuRe_IMaterial* m_pSkyMaterial;
         PuRe_IMaterial* m_pPostMaterial;
         PuRe_Camera* m_pPostCamera;
         /// @brief Position for the MouseClick

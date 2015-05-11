@@ -40,7 +40,7 @@ namespace Game
     if (a_pInput->MouseIsPressed(a_pInput->LeftClick))
     {
       
-        PuRe_Vector2F speed = (a_pInput->GetAbsoluteMousePosition() - this->MouseClickPosition);
+        PuRe_Vector2F speed = a_pInput->GetRelativeMousePosition();
       //speed.Normalize();
       //speed *= 100.0f;
       PuRe_Vector3F cameraLook = PuRe_Vector3F();
@@ -48,7 +48,7 @@ namespace Game
         cameraLook.X += speed.X*Seconds;
       if (speed.Y != 0.0f)
         cameraLook.Y += speed.Y*Seconds;
-      this->Rotate(cameraLook.X, cameraLook.Y, cameraLook.Z);
+      this->Rotate(cameraLook.Y, cameraLook.X, cameraLook.Z);
     }
     float speed = 10.0f*Seconds;
     //Handle Movement
