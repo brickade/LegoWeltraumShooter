@@ -64,8 +64,9 @@ namespace ong
 
 	// TODO
 	//	
-	//	-spatial partitioning
 	//	-world queries
+	//  -collsion callback
+	//	-begin overlap/end overlap
 	//	-collision masks
 	//	-sensors??
 	//	-sleeping
