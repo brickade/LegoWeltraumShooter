@@ -4,10 +4,10 @@
 #include <PuReEngine/Core.h>
 #include <PuReEngine/Defines.h>
 #include <TheBrick/TheBrick.h>
+#include <Onager/World.h>
 
 #include "BrickBozz.h"
-
-#include <Onager/World.h>
+#include "EditorCamera.h"
 
 namespace Game
 {
@@ -16,6 +16,8 @@ namespace Game
     public:
 
     private:
+        CEditorCamera* m_pCamera;
+
         float m_currentBrickRotation;
         float m_currentRotation;
         int m_maxBrickDistance;
@@ -35,12 +37,18 @@ namespace Game
         bool lastInputIsGamepad;
 
     public:
+        CEditorCamera* GetCamera() const
+        {
+            return this->m_pCamera;
+        }
+
+    public:
         CBrickWorker(int a_playerIdx);
         ~CBrickWorker();
 
         void Initialize(PuRe_IGraphics* a_pGraphics);
-        void Update(PuRe_IGraphics* a_pGraphics, PuRe_IWindow* a_pWindow, PuRe_IInput* a_pInput, PuRe_Timer* a_pTimer, PuRe_SoundPlayer* a_pSoundPlayer, PuRe_Vector3F a_cameraLook);
-        void Render(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera);
+        void Update(PuRe_IGraphics* a_pGraphics, PuRe_IWindow* a_pWindow, PuRe_IInput* a_pInput, PuRe_Timer* a_pTimer, PuRe_SoundPlayer* a_pSoundPlayer);
+        void Render(PuRe_IGraphics* a_pGraphics);
 
     private:
         void UpdateTranslation(PuRe_IInput* a_pInput, PuRe_Vector3F a_cameraLook, float a_speed);

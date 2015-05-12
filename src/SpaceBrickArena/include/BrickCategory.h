@@ -19,6 +19,15 @@ namespace Game
         TheBrick::CBrick** m_Bricks;
         CNavigation* m_pNavigation;
 
+    private:
+        float m_ElementSize = 50;
+        PuRe_Vector2F m_ListStart = PuRe_Vector2F(100, 150);
+        PuRe_Vector2F m_ListStep = PuRe_Vector2F(150, 150);
+
+        float m_Pitch = 0.5f;
+        float m_RotationSpeed = 1;
+        float m_Rotation;
+
     public:
         CBrickCategory(int a_Id);
         ~CBrickCategory();

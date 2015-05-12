@@ -47,6 +47,8 @@ namespace Game
         }
 
         this->m_pNavigation->Update(a_pTimer, navInput);
+        this->m_Rotation += a_pTimer->GetElapsedSeconds() * this->m_RotationSpeed;
+        this->m_Rotation = fmod(this->m_Rotation, 6.28318531f);
         //printf("%f\n", a_pTimer->GetTotalElapsedSeconds());
     }
 
@@ -56,11 +58,18 @@ namespace Game
     {
         for (int i = 0; i <= this->m_pNavigation->GetLastElementId(); i++)
         {
-            PuRe_Vector3F pos = PuRe_Vector3F(50 + 50 * (i % this->m_pNavigation->GetElementsCountPerLine()), 50 + 50 * floor(i / this->m_pNavigation->GetElementsCountPerLine()), 1);
-            PuRe_MatrixF rot = PuRe_MatrixF::Identity();
-            pos = PuRe_Vector3F(0, 0, 0);
-            //pos -= PuRe_Vector3F(a_pGraphics->GetDescription().ResolutionWidth / 2, a_pGraphics->GetDescription().ResolutionHeight / 2, 0)
-            this->m_Bricks[i]->Draw(a_pGraphics, a_pCamera, pos, rot);
+            PuRe_Vector2F listPos = PuRe_Vector2F(i % this->m_pNavigation->GetElementsCountPerLine(), floor(i / this->m_pNavigation->GetElementsCountPerLine()));
+            PuRe_Vector3F pos = PuRe_Vector3F(this->m_ListStart + this->m_ListStep * listPos, 0);
+            pos.Y = a_pGraphics->GetDescription().ResolutionHeight - pos.Y; //Invert Y
+
+            PuRe_MatrixF rot = PuRe_MatrixF::Translation(-this->m_Bricks[i]->GetPivotOffset() * this->m_ElementSize) * PuRe_MatrixF::RotationAxis(PuRe_Vector3F(0, 1, 0), this->m_Rotation) * PuRe_MatrixF::Rotation(-this->m_Pitch, 0, 0);
+            
+            PuRe_Color color = PuRe_Color(0, 0.05f, 0);
+            if (this->m_pNavigation->GetFocusedElementId() == i)
+            {
+                color = PuRe_Color(0, 0.01f, 0);
+            }
+            this->m_Bricks[i]->Draw(a_pGraphics, a_pCamera, pos, rot, color, PuRe_Vector3F(this->m_ElementSize, this->m_ElementSize, this->m_ElementSize));
         }
     }
 }

@@ -12,13 +12,16 @@ namespace Game
     // **************************************************************************
     CBrickSupervisor::~CBrickSupervisor()
     {
-
+        SAFE_DELETE(this->m_pCamera);
     }
 
     // **************************************************************************
     // **************************************************************************
-    void CBrickSupervisor::Initialize()
+    void CBrickSupervisor::Initialize(PuRe_IGraphics* a_pGraphics)
     {
+        PuRe_GraphicsDescription gdesc = a_pGraphics->GetDescription();
+        this->m_pCamera = new PuRe_Camera(PuRe_Vector2F((float)gdesc.ResolutionWidth, (float)gdesc.ResolutionHeight), PuRe_Camera_Orthogonal);
+        this->m_pCamera->setNearFar(PuRe_Vector2F(0.1f, 1000));
         int catCount = BrickBozz::Instance()->BrickManager->GetCategoryCount();
         assert(this->m_Categories.max_size() >= catCount);
         for (int i = 0; i < catCount; i++)
@@ -36,8 +39,8 @@ namespace Game
 
     // **************************************************************************
     // **************************************************************************
-    void CBrickSupervisor::Render(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera)
+    void CBrickSupervisor::Render(PuRe_IGraphics* a_pGraphics)
     {
-        this->m_pActiveCategory->Render(a_pGraphics, a_pCamera);
+        this->m_pActiveCategory->Render(a_pGraphics, this->m_pCamera);
     }
 }

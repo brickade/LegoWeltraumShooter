@@ -26,10 +26,9 @@ void main()
     	vec3 lightDir = vec3(1,0,-1);
     	lightDir = normalize(lightDir);
 	float intensity = dot(norm.xyz,lightDir);
-	blend.r *= intensity;
-	blend.g *= intensity;
-	blend.b *= intensity;
-	blend.rgb += ambient * blend.rgb;
+	blend.r *= max(intensity, ambient.r);
+	blend.g *= max(intensity, ambient.g);
+	blend.b *= max(intensity, ambient.b);
           
         
 	if(textureID == 0.0)

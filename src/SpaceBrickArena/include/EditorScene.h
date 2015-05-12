@@ -9,7 +9,6 @@
 
 #include "BrickBozz.h"
 
-#include "EditorCamera.h"
 #include "BrickWorker.h"
 #include "BrickSupervisor.h"
 
@@ -33,9 +32,6 @@ namespace Game
         /// @brief Position for the MouseClick
         ///
         PuRe_Vector2F MouseClickPosition;
-        /// @brief Cameras
-        ///
-        CEditorCamera* m_pCamera;
         /// @brief Engine's Application
         ///
         PuRe_Application* m_pApplication;

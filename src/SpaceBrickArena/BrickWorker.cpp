@@ -15,6 +15,7 @@ namespace Game
     // **************************************************************************
     CBrickWorker::~CBrickWorker()
     {
+        SAFE_DELETE(this->m_pCamera);
         SAFE_DELETE(this->m_pCurrentBrick);
     }
 
@@ -22,6 +23,10 @@ namespace Game
     // **************************************************************************
     void CBrickWorker::Initialize(PuRe_IGraphics* a_pGraphics)
     {
+        PuRe_GraphicsDescription gdesc = a_pGraphics->GetDescription();
+        this->m_pCamera = new CEditorCamera(PuRe_Vector2F((float)gdesc.ResolutionWidth, (float)gdesc.ResolutionHeight), PuRe_Camera_Perspective, this->m_playerIdx);
+        this->m_pCamera->Initialize();
+        this->m_pCamera->Rotate(10, 0, 0);
         this->m_currentPosition = PuRe_Vector2F(0, 0);
         this->m_currentHeight = 0;
         
@@ -39,34 +44,35 @@ namespace Game
 
     // **************************************************************************
     // **************************************************************************
-    void CBrickWorker::Update(PuRe_IGraphics* a_pGraphics, PuRe_IWindow* a_pWindow, PuRe_IInput* a_pInput, PuRe_Timer* a_pTimer, PuRe_SoundPlayer* a_pSoundPlayer, PuRe_Vector3F a_cameraLook)
+    void CBrickWorker::Update(PuRe_IGraphics* a_pGraphics, PuRe_IWindow* a_pWindow, PuRe_IInput* a_pInput, PuRe_Timer* a_pTimer, PuRe_SoundPlayer* a_pSoundPlayer)
     {
-        this->UpdateTranslation(a_pInput, a_cameraLook, a_pTimer->GetElapsedSeconds());
+        this->m_pCamera->Update(a_pGraphics, a_pWindow, a_pInput, a_pTimer);
+        this->UpdateTranslation(a_pInput, this->m_pCamera->GetForward(), a_pTimer->GetElapsedSeconds());
         this->UpdateRotation(a_pInput, 90.0f * 0.0174532925f);
         this->UpdatePlacement(a_pInput, BrickBozz::Instance()->World);
     }
 
     // **************************************************************************
     // **************************************************************************
-    void CBrickWorker::Render(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera)
+    void CBrickWorker::Render(PuRe_IGraphics* a_pGraphics)
     {
         //Grid
         for (int x = -this->m_maxBrickDistance; x < this->m_maxBrickDistance; x++)
         {
             for (int z = -this->m_maxBrickDistance; z < this->m_maxBrickDistance; z++)
             {
-                this->m_pGridBrick->Draw(a_pCamera, this->m_pGridMaterial, PuRe_Primitive::Triangles, PuRe_Vector3F(x* TB_Brick::SEGMENT_WIDTH, -TB_Brick::SEGMENT_HEIGHT, z* TB_Brick::SEGMENT_WIDTH), PuRe_Vector3F(1.0f, 1.0f, 1.0f), PuRe_MatrixF::Identity(), PuRe_Vector3F(0.0f, 0.0f, 0.0f), PuRe_Color(0.7f, 0.2f, 0.2f));
+                this->m_pGridBrick->Draw(this->m_pCamera, this->m_pGridMaterial, PuRe_Primitive::Triangles, PuRe_Vector3F(x* TB_Brick::SEGMENT_WIDTH, -TB_Brick::SEGMENT_HEIGHT, z* TB_Brick::SEGMENT_WIDTH), PuRe_Vector3F(1.0f, 1.0f, 1.0f), PuRe_MatrixF::Identity(), PuRe_Vector3F(0.0f, 0.0f, 0.0f), PuRe_Color(0.7f, 0.2f, 0.2f));
             }
         }
 
         //Spaceship
         for (int i = 0; i < this->m_pSpaceship->size(); ++i)
         {
-            (*this->m_pSpaceship)[i]->Draw(a_pGraphics, a_pCamera);
+            (*this->m_pSpaceship)[i]->Draw(a_pGraphics, this->m_pCamera);
         }
 
         //Current Brick
-        this->m_pCurrentBrick->Draw(a_pGraphics, a_pCamera, PuRe_Vector3F(this->m_currentBrickPosition.X, this->m_currentHeight, this->m_currentBrickPosition.Y), PuRe_QuaternionF(0.0f, this->m_currentBrickRotation, 0.0f).GetMatrix(), PuRe_Color(0.5f, 0.6f, 1.0f));
+        this->m_pCurrentBrick->Draw(a_pGraphics, this->m_pCamera, PuRe_Vector3F(this->m_currentBrickPosition.X, this->m_currentHeight, this->m_currentBrickPosition.Y), PuRe_QuaternionF(0.0f, this->m_currentBrickRotation, 0.0f).GetMatrix(), PuRe_Color(0.5f, 0.6f, 1.0f));
     }
 
     // **************************************************************************
