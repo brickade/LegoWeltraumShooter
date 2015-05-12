@@ -65,7 +65,6 @@ namespace Game
             break;
         }
         this->ClampFocus(true);
-        printf("%d\n", this->m_FocusedElement);
     }
 
     // **************************************************************************
@@ -133,7 +132,14 @@ namespace Game
         {
             if (a_LinkEnds) //Jump
             {
-                this->m_FocusedElement = 0;
+                if (floor(this->m_FocusedElement / (float)this->m_ElementsPerLine) == floor(this->m_LastElement / (float)this->m_ElementsPerLine))
+                { //Bei Nav in Leerposition der letzten Reihe in letztes Element der letzten Reihe springen
+                    this->m_FocusedElement = this->m_LastElement;
+                }
+                else
+                {
+                    this->m_FocusedElement = 0;
+                }
             }
             else //Clamp
             {

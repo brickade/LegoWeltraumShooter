@@ -5,13 +5,14 @@ namespace Game
     // **************************************************************************
     CBrickCategory::CBrickCategory(int a_Id)
     {
+        this->m_Id = a_Id;
         this->m_Bricks = BrickBozz::Instance()->BrickManager->GetCategoryStart(a_Id);
         int lastBrickSubId = -1;
         while (this->m_Bricks[lastBrickSubId + 1] != nullptr)
         {
             lastBrickSubId++;
         }
-        this->m_pNavigation = new CNavigation(4, lastBrickSubId);
+        this->m_pNavigation = new CNavigation(3, lastBrickSubId);
     }
 
     // **************************************************************************
@@ -49,7 +50,6 @@ namespace Game
         this->m_pNavigation->Update(a_pTimer, navInput);
         this->m_Rotation += a_pTimer->GetElapsedSeconds() * this->m_RotationSpeed;
         this->m_Rotation = fmod(this->m_Rotation, 6.28318531f);
-        //printf("%f\n", a_pTimer->GetTotalElapsedSeconds());
     }
 
     // **************************************************************************
@@ -69,7 +69,32 @@ namespace Game
             {
                 color = PuRe_Color(0, 0.01f, 0);
             }
-            this->m_Bricks[i]->Draw(a_pGraphics, a_pCamera, pos, rot, color, PuRe_Vector3F(this->m_ElementSize, this->m_ElementSize, this->m_ElementSize));
+
+            float size = this->m_ElementSize / this->m_Bricks[i]->GetPivotOffset().Length();
+            size += this->m_ElementSize;
+            size *= 0.5f;
+            this->m_Bricks[i]->Draw(a_pGraphics, a_pCamera, pos, rot, color, PuRe_Vector3F(size, size, size));
         }
+    }
+
+    // **************************************************************************
+    // **************************************************************************
+    void CBrickCategory::RenderTab(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera, bool a_IsSelected)
+    {
+        PuRe_Vector3F pos = PuRe_Vector3F(this->m_TabStart + this->m_TabStep * this->m_Id, 0);
+        pos.Y = a_pGraphics->GetDescription().ResolutionHeight - pos.Y; //Invert Y
+
+        PuRe_MatrixF rot = PuRe_MatrixF::Translation(-this->m_Bricks[0]->GetPivotOffset() * this->m_TabSize) * PuRe_MatrixF::RotationAxis(PuRe_Vector3F(0, 1, 0), this->m_TabRotation) * PuRe_MatrixF::Rotation(-this->m_Pitch, 0, 0);
+        
+        PuRe_Color color = PuRe_Color(0.05f, 0, 0);
+        if (a_IsSelected)
+        {
+            color = PuRe_Color(0.01f, 0, 0);
+        }
+
+        float size = this->m_TabSize / this->m_Bricks[0]->GetPivotOffset().Length();
+        size += this->m_TabSize;
+        size *= 0.5f;
+        this->m_Bricks[0]->Draw(a_pGraphics, a_pCamera, pos, rot, color, PuRe_Vector3F(size, size, size));
     }
 }

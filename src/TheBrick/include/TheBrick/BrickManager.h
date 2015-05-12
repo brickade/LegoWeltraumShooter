@@ -17,7 +17,7 @@ namespace TheBrick
     public:
         
     private:
-        std::array<CBrick*, 500> m_bricks;
+        std::array<CBrick*, 200> m_bricks;
         PuRe_IMaterial* m_pBrickMaterial;
 
     public:

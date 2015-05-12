@@ -32,7 +32,6 @@ namespace Game
 
         this->m_pBrickSupervisor = new CBrickSupervisor(this->m_playerIdx);
         this->m_pBrickSupervisor->Initialize(a_pGraphics);
-        this->m_pBrickSupervisor->m_pActiveCategory = this->m_pBrickSupervisor->m_Categories[0];
 
         this->m_pBrickWorker = new CBrickWorker(this->m_playerIdx);
         this->m_pBrickWorker->Initialize(a_pGraphics);

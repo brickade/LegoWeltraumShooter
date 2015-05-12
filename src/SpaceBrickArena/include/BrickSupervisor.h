@@ -16,6 +16,7 @@ namespace Game
     public:
         int m_PlayerIdx;
         std::array<CBrickCategory*, 10> m_Categories;
+        int m_CategoriesCount;
         CBrickCategory* m_pActiveCategory;
         PuRe_Camera* m_pCamera;
 
