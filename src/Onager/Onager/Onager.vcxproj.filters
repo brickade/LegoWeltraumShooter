@@ -58,6 +58,9 @@
     <ClCompile Include="Collider.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Profiler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Onager\World.h">
@@ -110,6 +113,9 @@
     </ClInclude>
     <ClInclude Include="include\Onager\QuickHull.h">
       <Filter>Source Files\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Profiler.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

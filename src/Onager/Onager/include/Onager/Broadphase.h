@@ -1,5 +1,5 @@
 #pragma once
-
+#include "defines.h"
 #include "Shapes.h"
 #include <vector>
 #include <Allocator.h>
@@ -98,10 +98,28 @@ namespace ong
 		const int32 h4 = 100663319;
 
 		int n = x*h1 + y*h2 + z * h3 + level * h4;
-		n = n%NUM_BUCKETS;
-		if (n < 0) n += NUM_BUCKETS;
 
-		return n;
+		//elf hash
+		unsigned char* p = (unsigned char*)&n;
+		int h = 0, g;
+		for (int i = 0; i < sizeof(int); ++i)
+		{
+			h = (h << 4) + p[i];
+			g = h & 0xf0000000L;
+			if (g != 0)
+			{
+				h ^= g >> 24;
+			}
+			
+			h &= ~g;
+		}
+
+		h = h%NUM_BUCKETS;
+		if (h < 0) h += NUM_BUCKETS;
+
+
+		h = h%NUM_BUCKETS;
+		return h;
 	}
 
 	inline bool operator==(const Pair& lhs, const Pair& rhs)

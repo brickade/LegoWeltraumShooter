@@ -52,7 +52,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;ONAGER_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_PROFILE;_DEBUG;_LIB;ONAGER_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(ProjectDir)include\Onager\</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile />
@@ -69,7 +69,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;ONAGER_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_PROFILE;NDEBUG;_LIB;ONAGER_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(ProjectDir)include\Onager\</AdditionalIncludeDirectories>
     </ClCompile>
@@ -90,6 +90,7 @@
     <ClCompile Include="geomMath.cpp" />
     <ClCompile Include="MassProperties.cpp" />
     <ClCompile Include="Narrowphase.cpp" />
+    <ClCompile Include="Profiler.cpp" />
     <ClCompile Include="QuickHull.cpp" />
     <ClCompile Include="SAT.cpp" />
     <ClCompile Include="Shapes.cpp" />
@@ -114,6 +115,7 @@
     <ClInclude Include="include\Onager\Shapes.h" />
     <ClInclude Include="include\Onager\VolumeIntegration.h" />
     <ClInclude Include="include\Onager\World.h" />
+    <ClInclude Include="Profiler.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

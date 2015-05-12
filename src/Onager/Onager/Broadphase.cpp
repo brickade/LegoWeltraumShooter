@@ -9,7 +9,7 @@ namespace ong
 
 	const float HGrid::CELL_TO_CELL_RATIO = 2.0f;
 	const float HGrid::MIN_CELL_SIZE = 1.0f;
-	const float HGrid::SPHERE_TO_CELL_RATIO = 1.0f;
+	const float HGrid::SPHERE_TO_CELL_RATIO = 0.25f;
 
 	static inline bool overlapSphereSphere(Proxy* sphereProxy, Proxy* aabbProxy)
 	{
@@ -153,6 +153,7 @@ namespace ong
 	{
 		//Debug
 		int numTests = 0;
+		int numLevels = 0;
 
 		int pairTick = ++m_tick;
 
@@ -197,6 +198,9 @@ namespace ong
 					if ((occupiedLevelsMask & 1) == 0) 
 						continue;
 
+					//debug
+					numLevels++;
+
 					float ooSize = 1.0f / size;
 					
 					int x1, y1, z1, x2, y2, z2;
@@ -209,6 +213,8 @@ namespace ong
 					x2 = (int)ceilf((pos.x + delta) * ooSize);
 					y2 = (int)ceilf((pos.y + delta) * ooSize);
 					z2 = (int)ceilf((pos.z + delta) * ooSize);
+
+
 
 					for (int x = x1; x <= x2; ++x)
 					{
@@ -241,7 +247,6 @@ namespace ong
 
 									//debug
 									numTests++;
-																		
 									if (overlap(&a->getAABB(), &b->getAABB()))
 									{
 										if (a->getType() == BodyType::Static && b->getType() == BodyType::Static)
@@ -271,12 +276,13 @@ namespace ong
 
 						}
 					}
+
 				}
 			}
 		}
 
 		//debug
-		printf("numTests: %d\n", numTests);
+		printf("numTests: %d numLevels: %d\n", numTests, numLevels);
 
 		return numPairs;
 	}
@@ -295,9 +301,6 @@ namespace ong
 		{
 			m_objectBucket[id->bucket].clear();
 		}
-
-
-
 	}
 
 	void HGrid::removeFromLevel(const ProxyID* id)

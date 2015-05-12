@@ -2,6 +2,8 @@
 #include "Narrowphase.h"
 #include "ContactSolver.h"
 #include "QuickHull.h"
+#include "Profiler.h"
+
 
 namespace ong
 {
@@ -43,7 +45,13 @@ namespace ong
 
 		// broadphase
 		Pair* pairs = new Pair[m_numBodies * m_numBodies];
-		int numPairs = m_hGrid.generatePairs(pairs);
+		int numPairs = 0;
+		{
+#ifdef _PROFILE
+			Profiler Profiler("generatePairs");
+#endif
+			numPairs = m_hGrid.generatePairs(pairs);
+		}
 
 		assert(numPairs <= m_numBodies*m_numBodies);
 
@@ -51,7 +59,13 @@ namespace ong
 
 		//todo ...
 		//m_contactManager.generateContacts(pairs, numPairs, m_numColliders*m_numColliders);
-		m_contactManager.generateContacts(pairs, numPairs, 3*numPairs);
+
+		{
+#ifdef _PROFILE
+			Profiler profiler("generatContacts");
+#endif
+			m_contactManager.generateContacts(pairs, numPairs, 3 * numPairs);
+		}
 
 		//integrate
 		for (int i = 0; i < m_numBodies; ++i)
@@ -68,30 +82,32 @@ namespace ong
 		}
 
 
-		//resolution
-	{
-		WorldContext context;
-		context.r = m_r.data();
-		context.v = m_v.data();
-		context.p = m_p.data();
-		context.m = m_m.data();
-
-		int numContacts = 0;
-		Contact* c = m_contactManager.getContacts(&numContacts);
-
-		ContactConstraint* contactConstraints = new ContactConstraint[numContacts];
-		preSolveContacts(&context, c, numContacts, 1.0f / dt, contactConstraints);
-
-		for (int i = 0; i < 16; ++i)
+		//resolution	  
 		{
-			solveContacts(&context, c, numContacts, contactConstraints);
+#ifdef _PROFILE
+			Profiler profiler("resolution");
+#endif
+			WorldContext context;
+			context.r = m_r.data();
+			context.v = m_v.data();
+			context.p = m_p.data();
+			context.m = m_m.data();
+
+			int numContacts = 0;
+			Contact* c = m_contactManager.getContacts(&numContacts);
+
+			ContactConstraint* contactConstraints = new ContactConstraint[numContacts];
+			preSolveContacts(&context, c, numContacts, 1.0f / dt, contactConstraints);
+
+			for (int i = 0; i < 16; ++i)
+			{
+				solveContacts(&context, c, numContacts, contactConstraints);
+			}
+
+
+			delete[] contactConstraints;
+
 		}
-
-
-		delete[] contactConstraints;
-
-	}
-
 
 		for (int i = 0; i < m_numBodies; ++i)
 		{
