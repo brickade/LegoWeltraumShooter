@@ -18,7 +18,7 @@ namespace Game
         BrickBozz::Instance()->BrickManager->Load(a_pGraphics, BrickBozz::Instance()->World, BrickBozz::Instance()->BrickManager->GetBrickMaterial(), "../data/bricks/");
 
         //Scenes
-        this->m_pEditorScene->Initialize(a_pGraphics, a_pWindow, a_pSoundPlayer);
+        //this->m_pEditorScene->Initialize(a_pGraphics, a_pWindow, a_pSoundPlayer);
         this->m_pGameScene->Initialize(a_pGraphics, a_pWindow, a_pSoundPlayer);
 
         this->m_pActiveScene = this->m_pGameScene;

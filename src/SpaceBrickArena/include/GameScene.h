@@ -21,6 +21,7 @@ namespace Game
     class CGameScene : public PuRe_IScene
     {
     private:
+        float physicsTimer;
         int m_playerIdx;
         int textureID;
         float rot;

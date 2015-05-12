@@ -26,9 +26,11 @@ namespace Game
         this->m_pRenderer = new PuRe_Renderer(a_pGraphics);
 
         this->m_pPlayerShip = new TheBrick::CSpaceship();
+        this->m_pPlayerShip->Deserialize(nullptr, BrickBozz::Instance()->BrickManager, BrickBozz::Instance()->World);
 
         this->rot = 0.0f;
         this->textureID = 0;
+        this->physicsTimer = 0.0f;
 
     }
 
@@ -44,6 +46,15 @@ namespace Game
         {
             return true;
         }
+
+        this->physicsTimer += a_pTimer->GetElapsedSeconds();
+        float constval = 1.0f / 60.0f;
+        while (this->physicsTimer > constval)
+        {
+            BrickBozz::Instance()->World->step(constval);
+            this->physicsTimer -= constval;
+        }
+
 
         if (a_pInput->KeyPressed(a_pInput->Left))
         {
@@ -61,13 +72,14 @@ namespace Game
 
         this->rot += a_pTimer->GetElapsedSeconds()*1.0f;
 
-        this->m_pCamera->Update(a_pGraphics, a_pWindow, a_pInput, a_pTimer);
-
         for (int i = 0; i < 4; i++)
         {
             if (a_pInput->GamepadPressed(a_pInput->Pad_A, i))
                 printf("A pressed by %i\n", i);
         }
+        this->m_pPlayerShip->HandleInput(this->m_pCamera,a_pInput,a_pTimer->GetElapsedSeconds());
+
+        this->m_pCamera->Update(this->m_pPlayerShip, a_pInput, a_pTimer);
 
 
         return false;
@@ -82,14 +94,25 @@ namespace Game
 
         PuRe_Vector3F pos = this->m_pCamera->GetPosition();
 
+        a_pGraphics->Clear(clear);
+        a_pGraphics->Begin();
+        this->m_pSkyBox->Draw(this->m_pCamera,this->m_pSkyMaterial);
+        this->m_pPlayerShip->Draw(a_pGraphics, this->m_pCamera);
+        this->m_pModel->Draw(this->m_pCamera, this->m_pMaterial, PuRe_Primitive::Triangles, PuRe_Vector3F(-5.0f, -0.0f, 10.0f), PuRe_Vector3F(5.0f, 5.0f, 5.0f));
+        this->m_pModel->Draw(this->m_pCamera, this->m_pMaterial, PuRe_Primitive::Triangles, PuRe_Vector3F(-1.0f, -10.0f, 7.0f), PuRe_Vector3F(5.0f, 5.0f, 5.0f));
+        this->m_pModel->Draw(this->m_pCamera, this->m_pMaterial, PuRe_Primitive::Triangles, PuRe_Vector3F(5.0f, -5.0f, 5.0f), PuRe_Vector3F(5.0f, 5.0f, 5.0f));
+        this->m_pModel->Draw(this->m_pCamera, this->m_pMaterial, PuRe_Primitive::Triangles, PuRe_Vector3F(-5.0f, -5.0f, 25.0f), PuRe_Vector3F(5.0f, 5.0f, 5.0f));
+        this->m_pModel->Draw(this->m_pCamera, this->m_pMaterial, PuRe_Primitive::Triangles, PuRe_Vector3F(5.0f, -5.0f, 50.0f), PuRe_Vector3F(5.0f, 5.0f, 5.0f));
+        a_pGraphics->End();
 
-        this->m_pRenderer->Draw(this->m_pModel, PuRe_Primitive::Triangles, this->m_pMaterial, PuRe_Vector3F(0.0f,-1.0f,15.0f),PuRe_Vector3F(),PuRe_Vector3F(),PuRe_Vector3F(10.0f,10.0f,10.0f));
+
+     /*   this->m_pRenderer->Draw(this->m_pModel, PuRe_Primitive::Triangles, this->m_pMaterial, PuRe_Vector3F(0.0f,-1.0f,15.0f),PuRe_Vector3F(),PuRe_Vector3F(),PuRe_Vector3F(10.0f,10.0f,10.0f));
         this->m_pRenderer->Draw(this->m_pModel, PuRe_Primitive::Triangles, this->m_pMaterial, pos + this->m_pCamera->GetForward()*10.0f);
         this->m_pRenderer->Draw(this->m_pPointLight,this->m_pPointLightMaterial,pos,PuRe_Vector3F(1.0f,0.0f,0.0f),1.0f,0.01f,0.01f);
         this->m_pRenderer->Draw(this->m_pSkyBox,this->m_pSkyMaterial);
         this->m_pRenderer->Begin(clear);
         this->m_pRenderer->Render(this->m_pCamera,this->m_pPostMaterial);
-        this->m_pRenderer->End();
+        this->m_pRenderer->End();*/
 
     }
 

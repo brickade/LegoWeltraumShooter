@@ -4,6 +4,8 @@
 #include <PuReEngine/Core.h>
 #include <PuReEngine/Defines.h>
 
+#include "TheBrick/Spaceship.h"
+
 namespace Game
 {
   class CGameCamera : public PuRe_Camera
@@ -16,10 +18,10 @@ namespace Game
     ~CGameCamera();
 
     void Initialize();
-    void Update(PuRe_IGraphics* a_pGraphics, PuRe_IWindow* a_pWindow, PuRe_IInput* a_pInput, PuRe_Timer* a_pTimer);
+    void Update(TheBrick::CSpaceship* a_pPlayer,PuRe_IInput* a_pInput, PuRe_Timer* a_pTimer);
 
   private:
-    PuRe_Vector2F MouseClickPosition;
+      float m_ZOffset;
 
   };
 }
