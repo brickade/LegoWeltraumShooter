@@ -1,0 +1,30 @@
+#version 330 core
+
+uniform sampler2D DiffuseMap;
+uniform sampler2D NormalMap;
+uniform sampler2D PositionMap;
+uniform sampler2D DepthMap;
+
+uniform vec3 LightDirection;
+uniform vec3 LightColor;
+uniform vec2 Resolution;
+
+vec2 CalcTexCoord()
+{
+   return gl_FragCoord.xy / Resolution;
+}
+
+
+void main()
+{
+	vec4 norm = (texture2D( NormalMap, CalcTexCoord())*2)-1;
+    	if(norm.a < 0.1)
+     		discard;
+        
+
+        float Factor = dot(norm.xyz,-LightDirection);
+
+        vec4 lights = vec4(LightColor*Factor,1);
+
+	gl_FragColor = lights;
+}

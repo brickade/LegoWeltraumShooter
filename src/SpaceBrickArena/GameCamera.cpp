@@ -39,6 +39,7 @@ namespace Game
     {
       
         PuRe_Vector2F speed = a_pInput->GetRelativeMousePosition();
+        speed *= 10.0f;
       //speed.Normalize();
       //speed *= 100.0f;
       PuRe_Vector3F cameraLook = PuRe_Vector3F();

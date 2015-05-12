@@ -16,13 +16,17 @@ namespace Game
         //Camera
         this->m_pCamera = new CGameCamera(PuRe_Vector2F((float)gdesc.ResolutionWidth, (float)gdesc.ResolutionHeight), PuRe_Camera_Perspective);
         this->m_pCamera->Initialize();
-        this->m_pPostCamera = new PuRe_Camera(PuRe_Vector2F((float)gdesc.ResolutionWidth, (float)gdesc.ResolutionHeight), PuRe_Camera_Orthogonal);
-        this->m_pMaterial = a_pGraphics->LoadMaterial("../data/effects/default/default");
-        this->m_pPostMaterial = a_pGraphics->LoadMaterial("../data/effects/Post/default");
-        this->m_pSkyMaterial = a_pGraphics->LoadMaterial("../data/effects/skybox/default");
+        this->m_pMaterial = a_pGraphics->LoadMaterial("../data/effects/GameEffects/default/default");
+        this->m_pPostMaterial = a_pGraphics->LoadMaterial("../data/effects/GameEffects/Post/default");
+        this->m_pSkyMaterial = a_pGraphics->LoadMaterial("../data/effects/GameEffects/skybox/default");
+        this->m_pPointLightMaterial = a_pGraphics->LoadMaterial("../data/effects/GameEffects/PointLight/default");
         this->m_pModel = new PuRe_Model(a_pGraphics, "../data/models/brick1.obj");
-        this->m_pRenderTarget = a_pGraphics->CreateRendertarget();
-        this->m_pSkyBox = new PuRe_SkyBox(a_pGraphics, "../data/textures/skybox/");
+        this->m_pSkyBox = new PuRe_SkyBox(a_pGraphics, "../data/textures/cube/");
+        this->m_pPointLight = new PuRe_PointLight(a_pGraphics,this->m_pPointLightMaterial);
+        this->m_pRenderer = new PuRe_Renderer(a_pGraphics);
+
+        this->m_pPlayerShip = new TheBrick::CSpaceship();
+
         this->rot = 0.0f;
         this->textureID = 0;
 
@@ -76,39 +80,37 @@ namespace Game
         PuRe_Color clear = PuRe_Color(0.0f, 0.4f, 1.0f);
         PuRe_GraphicsDescription gdesc = a_pGraphics->GetDescription();
 
-        a_pGraphics->Clear(clear);
-        clear = PuRe_Color(0.0f, 0.0f, 0.0f,0.0f);
-        this->m_pRenderTarget->ApplyGeometryPass(clear);
-
         PuRe_Vector3F pos = this->m_pCamera->GetPosition();
-        pos += this->m_pCamera->GetForward()*20.0f;
-        this->m_pModel->Draw(this->m_pCamera, this->m_pPostMaterial, PuRe_Primitive::Triangles, pos, PuRe_Vector3F(1.0f, 1.0f, 1.0f), PuRe_Vector3F(0.0f, this->rot, 0.0f), PuRe_Vector3F(0.0f, 0.0f, 0.0f));
-        
-        
-        this->m_pModel->Draw(this->m_pCamera, this->m_pPostMaterial, PuRe_Primitive::Triangles, PuRe_Vector3F(0.0f,-10.0f,20.0f), PuRe_Vector3F(10.0f, 10.0f, 10.0f), PuRe_Vector3F(0.0f, this->rot, 0.0f), PuRe_Vector3F(0.0f, 0.0f, 0.0f));
 
 
-        a_pGraphics->Begin();
-        this->m_pSkyBox->Draw(this->m_pCamera, this->m_pSkyMaterial, PuRe_Vector3F(0.0f, this->rot / 1000.0f, 0.0f));
+        this->m_pRenderer->Draw(this->m_pModel, PuRe_Primitive::Triangles, this->m_pMaterial, PuRe_Vector3F(0.0f,-1.0f,15.0f),PuRe_Vector3F(),PuRe_Vector3F(),PuRe_Vector3F(10.0f,10.0f,10.0f));
+        this->m_pRenderer->Draw(this->m_pModel, PuRe_Primitive::Triangles, this->m_pMaterial, pos + this->m_pCamera->GetForward()*10.0f);
+        this->m_pRenderer->Draw(this->m_pPointLight,this->m_pPointLightMaterial,pos,PuRe_Vector3F(1.0f,0.0f,0.0f),1.0f,0.01f,0.01f);
+        this->m_pRenderer->Draw(this->m_pSkyBox,this->m_pSkyMaterial);
+        this->m_pRenderer->Begin(clear);
+        this->m_pRenderer->Render(this->m_pCamera,this->m_pPostMaterial);
+        this->m_pRenderer->End();
 
-        this->m_pPostMaterial->Apply();
-        this->m_pPostMaterial->SetFloat((float)textureID, "textureID");
-        this->m_pPostMaterial->SetVector3(PuRe_Vector3F(0.1f, 0.1f, 0.1f), "ambient");
-        this->m_pRenderTarget->Draw(this->m_pPostCamera, this->m_pPostMaterial, PuRe_Vector3F(gdesc.ResolutionWidth / 2.0f, gdesc.ResolutionHeight / 2.0f, 0.0f), PuRe_Vector3F(gdesc.ResolutionWidth / 2.0f, gdesc.ResolutionHeight / 2.0f, 0.0f));
-
-        a_pGraphics->End();
     }
 
     // **************************************************************************
     // **************************************************************************
     void CGameScene::Exit()
     {
-        SAFE_DELETE(this->m_pSkyBox);
-        SAFE_DELETE(this->m_pRenderTarget);
+        // DELETE MATERIALS
+        SAFE_DELETE(this->m_pPointLightMaterial);
         SAFE_DELETE(this->m_pPostMaterial);
+        SAFE_DELETE(this->m_pSkyMaterial);
         SAFE_DELETE(this->m_pMaterial);
-        SAFE_DELETE(this->m_pPostCamera);
+        // DELETE OBJECTS
+        SAFE_DELETE(this->m_pPlayerShip);
+        SAFE_DELETE(this->m_pSkyBox);
+        SAFE_DELETE(this->m_pPointLight);
+        // DELETE CAMERAS
         SAFE_DELETE(this->m_pCamera);
+        // DELETE MODELS
         SAFE_DELETE(this->m_pModel);
+        // DELETE RENDERER
+        SAFE_DELETE(this->m_pRenderer);
     }
 }

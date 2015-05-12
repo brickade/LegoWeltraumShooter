@@ -22,18 +22,18 @@ namespace Game
     {
     private:
         int m_playerIdx;
-        PuRe_SkyBox* m_pSkyBox;
         int textureID;
-        PuRe_Rendertarget* m_pRenderTarget;
         float rot;
+        PuRe_PointLight* m_pPointLight;
+        PuRe_Renderer* m_pRenderer;
+        PuRe_SkyBox* m_pSkyBox;
         PuRe_Model* m_pModel;
         PuRe_IMaterial* m_pMaterial;
         PuRe_IMaterial* m_pSkyMaterial;
         PuRe_IMaterial* m_pPostMaterial;
-        PuRe_Camera* m_pPostCamera;
-        /// @brief Position for the MouseClick
-        ///
-        PuRe_Vector2F MouseClickPosition;
+        PuRe_IMaterial* m_pPointLightMaterial;
+
+        TheBrick::CSpaceship* m_pPlayerShip;
         /// @brief Cameras
         ///
         CGameCamera* m_pCamera;

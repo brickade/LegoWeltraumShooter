@@ -26,6 +26,8 @@ namespace TheBrick
         CGameObject();
         virtual ~CGameObject();
 
+        virtual void Update(float a_DeltaTime);
+
         virtual void Draw(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera);
 
         virtual void Deserialize(CSerializer* a_pSerializer, CBrickManager* a_pBrickManager, ong::World* a_pWorld);

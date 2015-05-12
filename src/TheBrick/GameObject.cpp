@@ -5,7 +5,6 @@ namespace TheBrick
     // **************************************************************************
     CGameObject::CGameObject()
     {
-
     }
 
     // **************************************************************************
@@ -24,8 +23,22 @@ namespace TheBrick
 
     // **************************************************************************
     // **************************************************************************
+    void CGameObject::Update(float a_DeltaTime)
+    {
+
+    }
+
+    // **************************************************************************
+    // **************************************************************************
     void CGameObject::Deserialize(CSerializer* a_pSerializer, CBrickManager* a_pBrickManager, ong::World* a_pWorld)
     {
+        //m_pBody
+        ong::BodyDescription bdesc;
+        bdesc.transform = ong::Transform(ong::vec3(0.0f, 0.0f, 0.0f), ong::Quaternion(ong::vec3(0, 0, 0), 1));
+        bdesc.type = ong::BodyType::Dynamic;
+        bdesc.angularMomentum = ong::vec3(0, 0, 0); //rotation speed
+        bdesc.linearMomentum = ong::vec3(0, 0, 0);  //movement speed
+        this->m_pBody = a_pWorld->createBody(bdesc);
         //m_pBricks
         unsigned int bricksSize = a_pSerializer->ReadIntUnsigned();
         for (unsigned int i = 0; i < bricksSize; i++)
@@ -41,10 +54,12 @@ namespace TheBrick
             a_pSerializer->Read(&brick->m_Color, sizeof(brick->m_Color));
             //brick->m_pBrick->m_pColliderData //Create Collider
             this->m_pBricks.push_back(brick);
+            //Add coliders to body
+            for (int i = 0; i<brick->m_pCollider.size();i++)
+                this->m_pBody->addCollider(brick->m_pCollider[i]);
         }
         //m_Transform
         a_pSerializer->Read(&this->m_Transform, sizeof(this->m_Transform));
-        //m_pBody
     }
 
     // **************************************************************************
