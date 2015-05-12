@@ -25,65 +25,65 @@ void StressTest::init()
 
 
 
-	//walls
-	{
-		float wallSize = 10;
+	////walls
+	//{
+	//	float wallSize = 100;
 
-		Body* wall;
-		{
-			shapeDescr.hullFromBox.e = vec3(1, wallSize, wallSize);
-			shapeDescr.hullFromBox.c = vec3(-wallSize, 0, 0);
-			wall = m_world->createBody(bodyDescr);
-			colliderDescr.shape = m_world->createShape(shapeDescr);
-			wall->addCollider(m_world->createCollider(colliderDescr));
-			m_entities.push_back(new Entity(wall, vec3(1, 0, 0)));
-		}
-		{
-			shapeDescr.hullFromBox.e = vec3(1, wallSize, wallSize);
-			shapeDescr.hullFromBox.c = vec3(wallSize, 0, 0);
-			wall = m_world->createBody(bodyDescr);
-			colliderDescr.shape = m_world->createShape(shapeDescr);
-			wall->addCollider(m_world->createCollider(colliderDescr));
-			m_entities.push_back(new Entity(wall, vec3(1, 0, 0)));
-		}
-		{
-			shapeDescr.hullFromBox.e = vec3(wallSize, wallSize, 1);
-			shapeDescr.hullFromBox.c = vec3(0, 0, -wallSize);
-			wall = m_world->createBody(bodyDescr);
-			colliderDescr.shape = m_world->createShape(shapeDescr);
-			wall->addCollider(m_world->createCollider(colliderDescr));
-			m_entities.push_back(new Entity(wall, vec3(1, 0, 0)));
-		}
-		{
-			shapeDescr.hullFromBox.e = vec3(wallSize, wallSize, 1);
-			shapeDescr.hullFromBox.c = vec3(0, 0, wallSize);
-			wall = m_world->createBody(bodyDescr);
-			colliderDescr.shape = m_world->createShape(shapeDescr);
-			wall->addCollider(m_world->createCollider(colliderDescr));
-			m_entities.push_back(new Entity(wall, vec3(1, 0, 0)));
-		}
-		{
-			shapeDescr.hullFromBox.e = vec3(wallSize, 1, wallSize);
-			shapeDescr.hullFromBox.c = vec3(0, 0, 0);
-			bodyDescr.transform.p.y = -wallSize;
-			wall = m_world->createBody(bodyDescr);
-			colliderDescr.shape = m_world->createShape(shapeDescr);
+	//	Body* wall;
+	//	{
+	//		shapeDescr.hullFromBox.e = vec3(1, wallSize, wallSize);
+	//		shapeDescr.hullFromBox.c = vec3(-wallSize, 0, 0);
+	//		wall = m_world->createBody(bodyDescr);
+	//		colliderDescr.shape = m_world->createShape(shapeDescr);
+	//		wall->addCollider(m_world->createCollider(colliderDescr));
+	//		m_entities.push_back(new Entity(wall, vec3(1, 0, 0)));
+	//	}
+	//	{
+	//		shapeDescr.hullFromBox.e = vec3(1, wallSize, wallSize);
+	//		shapeDescr.hullFromBox.c = vec3(wallSize, 0, 0);
+	//		wall = m_world->createBody(bodyDescr);
+	//		colliderDescr.shape = m_world->createShape(shapeDescr);
+	//		wall->addCollider(m_world->createCollider(colliderDescr));
+	//		m_entities.push_back(new Entity(wall, vec3(1, 0, 0)));
+	//	}
+	//	{
+	//		shapeDescr.hullFromBox.e = vec3(wallSize, wallSize, 1);
+	//		shapeDescr.hullFromBox.c = vec3(0, 0, -wallSize);
+	//		wall = m_world->createBody(bodyDescr);
+	//		colliderDescr.shape = m_world->createShape(shapeDescr);
+	//		wall->addCollider(m_world->createCollider(colliderDescr));
+	//		m_entities.push_back(new Entity(wall, vec3(1, 0, 0)));
+	//	}
+	//	{
+	//		shapeDescr.hullFromBox.e = vec3(wallSize, wallSize, 1);
+	//		shapeDescr.hullFromBox.c = vec3(0, 0, wallSize);
+	//		wall = m_world->createBody(bodyDescr);
+	//		colliderDescr.shape = m_world->createShape(shapeDescr);
+	//		wall->addCollider(m_world->createCollider(colliderDescr));
+	//		m_entities.push_back(new Entity(wall, vec3(1, 0, 0)));
+	//	}
+	//	{
+	//		shapeDescr.hullFromBox.e = vec3(wallSize, 1, wallSize);
+	//		shapeDescr.hullFromBox.c = vec3(0, 0, 0);
+	//		bodyDescr.transform.p.y = -wallSize;
+	//		wall = m_world->createBody(bodyDescr);
+	//		colliderDescr.shape = m_world->createShape(shapeDescr);
 
-			wall->addCollider(m_world->createCollider(colliderDescr));
-			m_entities.push_back(new Entity(wall, vec3(1, 0, 0)));
-		}
-	}
-	//
+	//		wall->addCollider(m_world->createCollider(colliderDescr));
+	//		m_entities.push_back(new Entity(wall, vec3(1, 0, 0)));
+	//	}
+	//}
+	////
 
 	
 	bodyDescr.type = BodyType::Dynamic;
 	
-	shapeDescr.hullFromBox.c = vec3(0, 0, 0);
-	shapeDescr.hullFromBox.e = vec3(0.5, 0.5, 0.5);
+	//shapeDescr.hullFromBox.c = vec3(0, 0, 0);
+	//shapeDescr.hullFromBox.e = vec3(0.5, 0.5, 0.5);
 
-	//shapeDescr.shapeType = ShapeType::SPHERE;
-	//shapeDescr.sphere.c = vec3(0, 0, 0);
-	//shapeDescr.sphere.r = 0.5f;
+	shapeDescr.shapeType = ShapeType::SPHERE;
+	shapeDescr.sphere.c = vec3(0, 0, 0);
+	shapeDescr.sphere.r = 0.5f;
 
 	ShapePtr shape = m_world->createShape(shapeDescr);
 
@@ -91,11 +91,14 @@ void StressTest::init()
 
 	srand(123);
 
-	for (int x = -0; x < 1; x += 2)
+	int num = 10;
+	int spacing = 100;
+
+	for (int x = -num*spacing; x < num*spacing; x += spacing)
 	{
-		for (int z = -0; z < 1; z += 2)
+		for (int z = -num*spacing; z < num*spacing; z += spacing)
 		{
-			for (int y = 20; y < 1000; y += 2)
+			for (int y = 20; y < 22; y += 2)
 			{
 				bodyDescr.transform.p = vec3(x + rand() / (float)RAND_MAX, y, z + rand() / (float)RAND_MAX);
 				

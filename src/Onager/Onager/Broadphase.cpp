@@ -50,8 +50,7 @@ namespace ong
 		object.sphere.c = aabb.c;
 		object.sphere.r = 0;
 
-		for (int i = 0; i < 3; ++i)
-			object.sphere.r = ong_MAX(aabb.e[i], object.sphere.r);
+		object.sphere.r = length(aabb.e);
 
 
 		float size = MIN_CELL_SIZE, diameter = 2.0f * object.sphere.r;
@@ -64,6 +63,9 @@ namespace ong
 		int y = (int)object.sphere.c.y / size;
 		int z = (int)object.sphere.c.z / size;
 
+		object.x = x;
+		object.y = y;
+		object.z = z;
 
 		id->bucket = calculateBucketID(x,y,z, id->level);
 		id->idx = m_objectBucket[id->bucket].size();
@@ -96,8 +98,7 @@ namespace ong
 		object.sphere.c = aabb.c;
 		object.sphere.r = 0;
 
-		for (int i = 0; i < 3; ++i)
-			object.sphere.r = ong_MAX(abs(aabb.e[i]), object.sphere.r);
+		object.sphere.r = length(aabb.e);
 
 		int level = 0;
 		float size = MIN_CELL_SIZE, diameter = 2.0f * object.sphere.r;
@@ -124,6 +125,10 @@ namespace ong
 		int y = (int)object.sphere.c.y / size;
 		int z = (int)object.sphere.c.z / size;
 
+		object.x = x;
+		object.y = y;
+		object.z = z;
+
 		int bucket = calculateBucketID(x,y,z, level);
 		if (bucket != pProxyID->bucket)
 		{
@@ -149,6 +154,8 @@ namespace ong
 		//Debug
 		int numTests = 0;
 
+		int pairTick = ++m_tick;
+
 
 		typedef bool(*overlapProxyFunc)(Proxy* a, Proxy* b);
 		static const overlapProxyFunc overlapFuncMatrix[ProxyType::COUNT][ProxyType::COUNT]
@@ -159,12 +166,12 @@ namespace ong
 
 		int numPairs = 0;
 
-		for (int i = 0; i < NUM_BUCKETS; ++i)
+		for (int bucket = 0; bucket < NUM_BUCKETS; ++bucket)
 		{
 
-			for (int j = 0; j < m_objectBucket[i].size(); ++j)
+			for (int j = 0; j < m_objectBucket[bucket].size(); ++j)
 			{
-				Object &obj = m_objectBucket[i][j];
+				Object &obj = m_objectBucket[bucket][j];
 
 				float size = MIN_CELL_SIZE;
 				int startLevel = 0;
@@ -190,16 +197,18 @@ namespace ong
 					if ((occupiedLevelsMask & 1) == 0) 
 						continue;
 
-					float delta = radius + size * SPHERE_TO_CELL_RATIO + FLT_EPSILON * size;
 					float ooSize = 1.0f / size;
+					
+					int x1, y1, z1, x2, y2, z2;
 
-					int x1 = (int)floorf((pos.x - delta) * ooSize);
-					int y1 = (int)floorf((pos.y - delta) * ooSize);
-					int z1 = (int)floorf((pos.z - delta) * ooSize);
+					float delta = radius + size * SPHERE_TO_CELL_RATIO + FLT_EPSILON * size;
+					x1 = (int)floorf((pos.x - delta) * ooSize);
+					y1 = (int)floorf((pos.y - delta) * ooSize);
+					z1 = (int)floorf((pos.z - delta) * ooSize);
 
-					int x2 = (int)ceilf((pos.x + delta) * ooSize);
-					int y2 = (int)ceilf((pos.y + delta) * ooSize);
-					int z2 = (int)ceilf((pos.z + delta) * ooSize);
+					x2 = (int)ceilf((pos.x + delta) * ooSize);
+					y2 = (int)ceilf((pos.y + delta) * ooSize);
+					z2 = (int)ceilf((pos.z + delta) * ooSize);
 
 					for (int x = x1; x <= x2; ++x)
 					{
@@ -207,18 +216,25 @@ namespace ong
 						{
 							for (int z = z1; z <= z2; ++z)
 							{
-								int bucket = calculateBucketID(x, y, z, level);
+								int bucket2 = calculateBucketID(x, y, z, level);
 
-								if (m_timeStamp[bucket] == m_tick)
+								if (m_timeStamp[bucket2] == m_tick)
 									continue;
-								m_timeStamp[bucket] = m_tick;
+								m_timeStamp[bucket2] = m_tick;
 
-								for (int k = 0; k < m_objectBucket[bucket].size(); ++k)
+								int startIndex = bucket == bucket2 ? j + 1 : 0;
+
+								for (int k = startIndex; k < m_objectBucket[bucket2].size(); ++k)
 								{
-									Object& obj2 = m_objectBucket[bucket][k];
+									Object& obj2 = m_objectBucket[bucket2][k];
 
-									if (&obj == &obj2)
+									//skip if objects are the same
+									//or if an object of an higher level is checked against an object with an lower level
+									//or if an bucket with an higher index is checked against a bucket with a lower index if they are on the same level
+									//or if buckets are the same but index of object a is higher than index of object b
+									if (obj.id->level > obj2.id->level || (obj.id->level == obj2.id->level && bucket > bucket2))
 										continue;
+
 
 									Body* a = obj.id->pBody;
 									Body* b = obj2.id->pBody;
@@ -230,26 +246,21 @@ namespace ong
 									{
 										if (a->getType() == BodyType::Static && b->getType() == BodyType::Static)
 											continue;
+	   
+										//Pair newPair{ a, b };
+										//bool duplicate = false;
+										//for (int i = 0; i < numPairs; ++i)
+										//{
+										//	if (pairs[i] == newPair)
+										//	{
+										//		duplicate = true;
+										//		break;
+										//	}
+										//}
 
-										//todo get rid of dulpicates
-										// maybe smarter checking
-										// first check own level like
-										// a list, should hopefully get rid
-										// of all duplicates
-										Pair newPair{ a, b };
-										bool duplicate = false;
-										for (int i = 0; i < numPairs; ++i)
-										{
-											if (pairs[i] == newPair)
-											{
-												duplicate = true;
-												break;
-											}
-										}
-
-										if (!duplicate)
-											pairs[numPairs++] = Pair{ a, b};
-
+										//if (!duplicate)
+										//	pairs[numPairs++] = Pair{ a, b};
+										pairs[numPairs++] = Pair{ a, b };
 
 									}
 
@@ -265,7 +276,7 @@ namespace ong
 		}
 
 		//debug
-		//printf("numPairs: %d\n", numPairs);
+		printf("numTests: %d\n", numTests);
 
 		return numPairs;
 	}

@@ -154,7 +154,9 @@ void Test::initSDL()
 
 	initGL();
 
+#ifndef _DEBUG
 	SDL_GL_SetSwapInterval(0);
+#endif
 	
 
 }

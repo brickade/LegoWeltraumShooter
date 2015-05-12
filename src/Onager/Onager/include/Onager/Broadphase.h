@@ -51,7 +51,7 @@ namespace ong
 	{
 	public:
 		static const int MAX_LEVELS = 20;
-		static const int NUM_BUCKETS = 128; //todo test for good number
+		static const int NUM_BUCKETS = 1024; //todo test for good number
 		static const float MIN_CELL_SIZE;
 		static const float CELL_TO_CELL_RATIO;
 		static const float SPHERE_TO_CELL_RATIO;
@@ -71,6 +71,8 @@ namespace ong
 		{
 			Sphere sphere;
 			ProxyID* id;
+			//debug
+			int x, y, z;
 		};
 
 
@@ -90,10 +92,10 @@ namespace ong
 
 	inline int HGrid::calculateBucketID(int x, int y, int z, int level)
 	{
-		const int32 h1 = 1543;
-		const int32 h2 = 3079;
-		const int32 h3 = 6151;
-		const int32 h4 = 12289;
+		const int32 h1 = 12582917;
+		const int32 h2 = 25165843;
+		const int32 h3 = 50331653;
+		const int32 h4 = 100663319;
 
 		int n = x*h1 + y*h2 + z * h3 + level * h4;
 		n = n%NUM_BUCKETS;
