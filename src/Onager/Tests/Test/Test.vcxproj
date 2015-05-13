@@ -101,6 +101,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BrickTest.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Draw.h" />
     <ClInclude Include="HierarchieTest.h" />
