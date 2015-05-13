@@ -15,7 +15,7 @@ namespace TheBrick
     private:
 
     public:
-        CSpaceship();
+        CSpaceship(ong::World& a_rWorld);
         ~CSpaceship();
 
         void Draw(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera) override;

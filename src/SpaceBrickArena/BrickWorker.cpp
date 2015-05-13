@@ -16,7 +16,6 @@ namespace Game
     CBrickWorker::~CBrickWorker()
     {
         SAFE_DELETE(this->m_pCamera);
-        SAFE_DELETE(this->m_pCurrentBrick);
     }
 
     // **************************************************************************
@@ -30,8 +29,6 @@ namespace Game
         this->m_currentPosition = PuRe_Vector2F(0, 0);
         this->m_currentHeight = 0;
         
-        this->m_pCurrentBrick = new TB_Brick(new PuRe_Model(a_pGraphics, "../data/models/brick1.obj"), BrickBozz::Instance()->BrickManager->GetBrickMaterial());
-        
         this->m_pGridMaterial = a_pGraphics->LoadMaterial("../data/effects/editor/grid");
         this->m_pGridBrick = new PuRe_Model(a_pGraphics, "../data/models/brick1.obj");
         
@@ -44,8 +41,9 @@ namespace Game
 
     // **************************************************************************
     // **************************************************************************
-    void CBrickWorker::Update(PuRe_IGraphics* a_pGraphics, PuRe_IWindow* a_pWindow, PuRe_IInput* a_pInput, PuRe_Timer* a_pTimer, PuRe_SoundPlayer* a_pSoundPlayer)
+    void CBrickWorker::Update(PuRe_IGraphics* a_pGraphics, PuRe_IWindow* a_pWindow, PuRe_IInput* a_pInput, PuRe_Timer* a_pTimer, PuRe_SoundPlayer* a_pSoundPlayer, TheBrick::CBrick* a_pCurrentBrick)
     {
+        this->m_pCurrentBrick = a_pCurrentBrick;
         this->m_pCamera->Update(a_pGraphics, a_pWindow, a_pInput, a_pTimer);
         this->UpdateTranslation(a_pInput, this->m_pCamera->GetForward(), a_pTimer->GetElapsedSeconds());
         this->UpdateRotation(a_pInput, 90.0f * 0.0174532925f);
@@ -56,6 +54,8 @@ namespace Game
     // **************************************************************************
     void CBrickWorker::Render(PuRe_IGraphics* a_pGraphics)
     {
+        if (this->m_pCurrentBrick == nullptr)
+            return;
         //Grid
         for (int x = -this->m_maxBrickDistance; x < this->m_maxBrickDistance; x++)
         {
@@ -68,7 +68,7 @@ namespace Game
         //Spaceship
         for (int i = 0; i < this->m_pSpaceship->size(); ++i)
         {
-            (*this->m_pSpaceship)[i]->Draw(a_pGraphics, this->m_pCamera);
+            (*this->m_pSpaceship)[i]->Draw(a_pGraphics, this->m_pCamera, ong::Transform(ong::vec3(0, 0, 0), ong::Quaternion(ong::vec3(0, 0, 0), 1)));
         }
 
         //Current Brick
@@ -201,8 +201,8 @@ namespace Game
         if (a_pInput->GamepadPressed(a_pInput->Pad_A, this->m_playerIdx) || a_pInput->MousePressed(a_pInput->LeftClick))
         {
             TB_BrickInstance* brickInstance = new TB_BrickInstance(this->m_pCurrentBrick, a_pWorld, PuRe_Color(1.0f, 0.5f, 0.6f));
-            brickInstance->m_Transform.p = ong::vec3(this->m_currentBrickPosition.X, this->m_currentHeight, this->m_currentBrickPosition.Y);
-            brickInstance->m_Transform.q = ong::QuatFromEulerAngles(this->m_currentBrickRotation, 0, 0);
+            brickInstance->GetTransform().p = ong::vec3(this->m_currentBrickPosition.X, this->m_currentHeight, this->m_currentBrickPosition.Y);
+            brickInstance->GetTransform().q = ong::QuatFromEulerAngles(this->m_currentBrickRotation, 0, 0);
             this->m_pSpaceship->push_back(brickInstance);
         }
     }

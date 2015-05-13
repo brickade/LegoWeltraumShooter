@@ -40,6 +40,8 @@ namespace Game
         void Update(PuRe_IGraphics* a_pGraphics, PuRe_IWindow* a_pWindow, PuRe_IInput* a_pInput, PuRe_Timer* a_pTimer, PuRe_SoundPlayer* a_pSoundPlayer, int a_PlayerIdx);
         void Render(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera);
         void RenderTab(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera, bool a_IsSelected = false);
+
+        TheBrick::CBrick* GetFocusedBrick() const;
     };
 }
 

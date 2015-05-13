@@ -3,7 +3,7 @@ namespace TheBrick
 {
     // **************************************************************************
     // **************************************************************************
-    CBullet::CBullet()
+    CBullet::CBullet(ong::World& a_rWorld) : CGameObject(a_rWorld, nullptr)
     {
 
     }
@@ -19,6 +19,6 @@ namespace TheBrick
     // **************************************************************************
     void CBullet::Draw(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera)
     {
-
+        CGameObject::Draw(a_pGraphics, a_pCamera);
     }
 }

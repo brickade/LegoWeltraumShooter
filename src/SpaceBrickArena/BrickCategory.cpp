@@ -97,4 +97,11 @@ namespace Game
         size *= 0.5f;
         this->m_Bricks[0]->Draw(a_pGraphics, a_pCamera, pos, rot, color, PuRe_Vector3F(size, size, size));
     }
+
+    // **************************************************************************
+    // **************************************************************************
+    TheBrick::CBrick* CBrickCategory::GetFocusedBrick() const
+    {
+        return this->m_Bricks[this->m_pNavigation->GetFocusedElementId()];
+    }
 }

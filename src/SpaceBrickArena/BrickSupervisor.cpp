@@ -53,4 +53,11 @@ namespace Game
         }
         this->m_pActiveCategory->Render(a_pGraphics, this->m_pCamera);
     }
+
+    // **************************************************************************
+    // **************************************************************************
+    TheBrick::CBrick* CBrickSupervisor::GetSelectedBrick() const
+    {
+        return this->m_pActiveCategory->GetFocusedBrick();
+    }
 }

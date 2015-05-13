@@ -62,6 +62,10 @@ namespace Game
             break;
         case EDirection::Down:
             this->m_FocusedElement += this->m_ElementsPerLine;
+            if (floor(this->m_FocusedElement / (float)this->m_ElementsPerLine) == floor(this->m_LastElement / (float)this->m_ElementsPerLine))
+            { //Bei Nav in Leerposition der letzten Reihe in letztes Element der letzten Reihe springen
+                this->m_FocusedElement = this->m_LastElement;
+            }
             break;
         }
         this->ClampFocus(true);
@@ -132,14 +136,7 @@ namespace Game
         {
             if (a_LinkEnds) //Jump
             {
-                if (floor(this->m_FocusedElement / (float)this->m_ElementsPerLine) == floor(this->m_LastElement / (float)this->m_ElementsPerLine))
-                { //Bei Nav in Leerposition der letzten Reihe in letztes Element der letzten Reihe springen
-                    this->m_FocusedElement = this->m_LastElement;
-                }
-                else
-                {
-                    this->m_FocusedElement = 0;
-                }
+                this->m_FocusedElement = 0;
             }
             else //Clamp
             {
@@ -183,7 +180,7 @@ namespace Game
         this->m_LastElement += this->m_ElementsPerLine;
         if (a_Position != -1 && a_Position < this->m_FocusedElement)
         {
-            this->m_FocusedElement+= this->m_ElementsPerLine;
+            this->m_FocusedElement += this->m_ElementsPerLine;
         }
     }
 

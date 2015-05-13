@@ -23,7 +23,6 @@ namespace TheBrick
     {
     public:
         CBrick* m_pBrick;
-        ong::Transform m_Transform;
         PuRe_List<ong::Collider*> m_pCollider;
         PuRe_Color m_Color;
 
@@ -33,9 +32,21 @@ namespace TheBrick
         CBrickInstance(CBrick* a_pBrick, ong::World* a_pWorld, PuRe_Color a_pColor = PuRe_Color(0.7f, 0.7f, 0.7f, 1.0f));
         ~CBrickInstance();
 
-        void Draw(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera);
+        void Draw(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera, const ong::Transform& a_rWorldTransform);
 
         PuRe_List<SNub>* GetWorldSpaceNubs();
+
+        ong::Transform& GetTransform() const
+        {
+            assert(!this->m_pCollider.empty());
+            return this->m_pCollider[0]->getTransform();
+        }
+
+        void SetTransform(const ong::Transform& a_rTransform)
+        {
+            assert(!this->m_pCollider.empty());
+            return this->m_pCollider[0]->setTransform(a_rTransform);
+        }
     };
 }
 

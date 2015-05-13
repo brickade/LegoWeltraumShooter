@@ -50,21 +50,21 @@ namespace Game
             return true;
         }
 
-        if (a_pInput->KeyPressed(a_pInput->Left))
+        if (a_pInput->KeyPressed(a_pInput->Comma))
         {
             this->textureID--;
             if (this->textureID < 0)
                 this->textureID = 2;
         }
-        else if (a_pInput->KeyPressed(a_pInput->Right))
+        else if (a_pInput->KeyPressed(a_pInput->Period))
         {
             this->textureID++;
             if (this->textureID > 2)
                 this->textureID = 0;
         }
 
-        this->m_pBrickWorker->Update(a_pGraphics, a_pWindow, a_pInput, a_pTimer, a_pSoundPlayer);
         this->m_pBrickSupervisor->Update(a_pGraphics, a_pWindow, a_pInput, a_pTimer, a_pSoundPlayer);
+        this->m_pBrickWorker->Update(a_pGraphics, a_pWindow, a_pInput, a_pTimer, a_pSoundPlayer, this->m_pBrickSupervisor->GetSelectedBrick());
 
         return false;
     }

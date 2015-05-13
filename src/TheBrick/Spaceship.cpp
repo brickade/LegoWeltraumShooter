@@ -3,7 +3,7 @@ namespace TheBrick
 {
     // **************************************************************************
     // **************************************************************************
-    CSpaceship::CSpaceship()
+    CSpaceship::CSpaceship(ong::World& a_rWorld) : CGameObject(a_rWorld, nullptr)
     {
 
     }
@@ -19,7 +19,7 @@ namespace TheBrick
     // **************************************************************************
     void CSpaceship::Draw(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera)
     {
-
+        CGameObject::Draw(a_pGraphics, a_pCamera);
     }
 
     // **************************************************************************
