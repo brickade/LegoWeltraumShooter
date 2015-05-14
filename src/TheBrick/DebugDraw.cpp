@@ -71,6 +71,7 @@ namespace TheBrick
 			rot[2][0], rot[2][1], rot[2][2], 0,
 			0, 0, 0, 1);
 
+        rotation = PuRe_MatrixF::Transpose(rotation);
 		g_pMaterial->SetMatrix(PuRe_MatrixF::Translation(PuRe_Vector3F(a_Transform.p.x, a_Transform.p.y, a_Transform.p.z)), "Translation");
 		g_pMaterial->SetMatrix(rotation, "Rotation");
 		g_pMaterial->SetMatrix(PuRe_MatrixF::Scale(PuRe_Vector3F(1, 1, 1)), "Scale");

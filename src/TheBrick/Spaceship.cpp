@@ -35,9 +35,11 @@ namespace TheBrick
         if (a_pInput->GetGamepadRightTrigger(0) > 0.2f)
             this->m_pBody->applyRelativeForce(TheBrick::PuReToOng(forward), a_DeltaTime);
 
-        PuRe_Vector2F leftThumb = a_pInput->GetGamepadLeftThumb(0);
-        if (leftThumb.Length() > 1.0f)
-            this->m_pBody->applyAngularImpulse(ong::vec3(leftThumb.X/10.0f,0.0f,0));
+        //PuRe_Vector2F leftThumb = a_pInput->GetGamepadLeftThumb(0);
+        //if (leftThumb.Length() > 1.0f)
+        //{
+        //    this->m_pBody->applyRelativeAngularImpulse(ong::vec3(0.0f, 1, 0));
+        //}
 
         this->m_Transform = this->m_pBody->getTransform();
     }
@@ -53,6 +55,7 @@ namespace TheBrick
     void CSpaceship::Deserialize(CSerializer* a_pSerializer, CBrickManager* a_pBrickManager, ong::World* a_pWorld)
     {
         CGameObject::Deserialize(a_pSerializer, a_pBrickManager, a_pWorld);
+        this->m_pBody->applyAngularImpulse(ong::vec3(0.0f, 1, 0));
 
     }
 

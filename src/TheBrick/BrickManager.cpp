@@ -29,7 +29,7 @@ namespace TheBrick
         char p[300];
         memset(p, 0, 300);
         strcat(p, a_pFolder);
-        strcat(p, "Brick1X3.brick");
+        strcat(p, "Brick1X6.brick");
         CSerializer* serializer = new CSerializer();
         serializer->OpenRead(p);
         this->m_bricks[0] = new CBrick(a_pMaterial);
@@ -38,7 +38,7 @@ namespace TheBrick
 
         memset(p, 0, 300);
         strcat(p, a_pFolder);
-        strcat(p, "Brick1X4.brick");
+        strcat(p, "Brick1X8.brick");
         serializer->OpenRead(p);
         this->m_bricks[1] = new CBrick(a_pMaterial);
         this->m_bricks[1]->Deserialize(serializer, a_pGraphics, a_pWorld);
