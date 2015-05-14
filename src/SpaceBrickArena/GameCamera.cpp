@@ -28,33 +28,33 @@ namespace Game
     {
         //Seconds for frame independent movement
         float Seconds = a_pTimer->GetElapsedSeconds();
-        PuRe_Vector3F CameraMove;
-        if (a_pInput->MouseIsPressed(a_pInput->LeftClick))
-        {
+        //PuRe_Vector3F CameraMove;
+        //if (a_pInput->MouseIsPressed(a_pInput->LeftClick))
+        //{
 
-            PuRe_Vector2F speed = a_pInput->GetRelativeMousePosition();
-            speed *= 10.0f;
-            PuRe_Vector3F cameraLook = PuRe_Vector3F();
-            if (speed.X != 0.0f)
-                cameraLook.X += speed.X*Seconds;
-            if (speed.Y != 0.0f)
-                cameraLook.Y += speed.Y*Seconds;
-            this->Rotate(cameraLook.Y, cameraLook.X, cameraLook.Z);
-        }
-        float speed = 10.0f*Seconds;
-        //Handle Movement
-        if (a_pInput->KeyIsPressed(a_pInput->W))
-            CameraMove.Z += speed;
-        else if (a_pInput->KeyIsPressed(a_pInput->S))
-            CameraMove.Z -= speed;
-        if (a_pInput->KeyIsPressed(a_pInput->D))
-            CameraMove.X += speed;
-        else if (a_pInput->KeyIsPressed(a_pInput->A))
-            CameraMove.X -= speed;
+        //    PuRe_Vector2F speed = a_pInput->GetRelativeMousePosition();
+        //    speed *= 10.0f;
+        //    PuRe_Vector3F cameraLook = PuRe_Vector3F();
+        //    if (speed.X != 0.0f)
+        //        cameraLook.X += speed.X*Seconds;
+        //    if (speed.Y != 0.0f)
+        //        cameraLook.Y += speed.Y*Seconds;
+        //    this->Rotate(cameraLook.Y, cameraLook.X, cameraLook.Z);
+        //}
+        //float speed = 10.0f*Seconds;
+        ////Handle Movement
+        //if (a_pInput->KeyIsPressed(a_pInput->W))
+        //    CameraMove.Z += speed;
+        //else if (a_pInput->KeyIsPressed(a_pInput->S))
+        //    CameraMove.Z -= speed;
+        //if (a_pInput->KeyIsPressed(a_pInput->D))
+        //    CameraMove.X += speed;
+        //else if (a_pInput->KeyIsPressed(a_pInput->A))
+        //    CameraMove.X -= speed;
 
-        this->Move(CameraMove);
+        //this->Move(CameraMove);
 
-       /* this->m_ZOffset += a_pInput->GetMouseScroll();
+        this->m_ZOffset += a_pInput->GetMouseScroll();
         if (this->m_ZOffset < 5.0f)
             this->m_ZOffset = 5.0f;
         else if (this->m_ZOffset > 10.0f)
@@ -78,6 +78,6 @@ namespace Game
         if (GamePadThumb.Length() > 1.0f)
             this->Rotate(cameraLook.Y + GamePadThumb.Y, cameraLook.X + GamePadThumb.X, cameraLook.Z);
 
-        this->Move(PuRe_Vector3F(-0.5f, 0.5f, -this->m_ZOffset));*/
+        this->Move(PuRe_Vector3F(-0.5f, 0.5f, -this->m_ZOffset));
     }
 }

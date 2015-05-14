@@ -179,7 +179,6 @@ void Player::update(float dt)
 		{
 			m_body->applyRelativeTorque(f, dt);
 		}
-		
 	}
 
 
