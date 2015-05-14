@@ -137,7 +137,7 @@ namespace ong
 		cm = 1.0f / m* cm;
 
 		// center inertia to center of mass
-		I = I + m * (dot(cm, cm) * identity() - outerproduct(cm, cm));
+		I = I - m * (dot(cm, cm) * identity() - outerproduct(cm, cm));
 	  
 
 

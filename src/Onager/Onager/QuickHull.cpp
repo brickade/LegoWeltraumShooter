@@ -270,8 +270,8 @@ namespace ong
 			float max = 0.0f;
 			float min = 0.0f;
 
-			ong::vec3* p3max;
-			ong::vec3* p3min;
+			ong::vec3* p3max = nullptr;
+			ong::vec3* p3min = nullptr;
 
 			Plane p = planeFromABC(*p0, *p1, *p2);
 
