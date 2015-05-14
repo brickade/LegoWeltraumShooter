@@ -1,6 +1,7 @@
 #include "test.h"
 #include "restitutionTest.h"
 #include "HierarchieTest.h"
+#include "BrickTest.h"
 #include "myMath.h"
 
 #undef main
@@ -8,7 +9,7 @@
 int main()
 {
 
-	Test* test = new HierarchieTest();
+	Test* test = new BrickTest();
 	test->init();
 
 	test->run();

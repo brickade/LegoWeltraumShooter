@@ -128,8 +128,6 @@ namespace ong
 			// center inertia to bodies frame of  reference
 			_I = _I + data.m * (dot(_cm, _cm) * identity() - outerproduct(_cm, _cm));
 
-
-
 			I = I + _I;
 
 			c = c->getNext();
@@ -139,8 +137,8 @@ namespace ong
 		cm = 1.0f / m* cm;
 
 		// center inertia to center of mass
-		I = I + m * (dot(cm, cm) * identity() - outerproduct(cm, cm));
-
+		I = I - m * (dot(cm, cm) * identity() - outerproduct(cm, cm));
+	  
 
 
 
