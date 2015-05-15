@@ -56,6 +56,7 @@ namespace ong
 		}
 
 		calculateAABB();
+		m_pWorld->updateProxy(m_proxyID);
 	}
 
 	void Body::removeCollider(Collider* collider)
@@ -83,6 +84,9 @@ namespace ong
 
 			constructBVTree(m_pCollider, m_numCollider, m_tree);
 		}
+
+		m_pWorld->updateProxy(m_proxyID);
+
 	}
 
 
@@ -331,7 +335,7 @@ namespace ong
 		}
 
 		result->t = tmin;
-		result->point = o + tmin*dir;
+		result->point = origin + tmin*dir;
 
 		return (result->collider != nullptr);
 	}
@@ -530,6 +534,8 @@ namespace ong
 	{
 		m_pWorld->m_r[m_index].p = position + rotate(m_cm, getOrientation());
 		//m_pWorld->setPosition(m_index, position + m_cm);
+
+		m_pWorld->updateProxy(m_proxyID);
 	}
 
 

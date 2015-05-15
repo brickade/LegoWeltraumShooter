@@ -48,7 +48,7 @@ namespace ong
 		int numPairs = 0;
 		{
 #ifdef _PROFILE
-			Profiler Profiler("generatePairs");
+			//Profiler Profiler("generatePairs");
 #endif
 			numPairs = m_hGrid.generatePairs(pairs);
 		}
@@ -62,7 +62,7 @@ namespace ong
 
 		{
 #ifdef _PROFILE
-			Profiler profiler("generatContacts");
+			//Profiler profiler("generatContacts");
 #endif
 			m_contactManager.generateContacts(pairs, numPairs, 3 * numPairs);
 		}
@@ -85,7 +85,7 @@ namespace ong
 		//resolution	  
 		{
 #ifdef _PROFILE
-			Profiler profiler("resolution");
+			//Profiler profiler("resolution");
 #endif
 			WorldContext context;
 			context.r = m_r.data();
@@ -315,5 +315,16 @@ namespace ong
 		}
 	}
 
+	bool World::queryRay(const vec3& origin, const vec3& dir, RayQueryResult* hit, float tmax)
+	{
+		//Profiler profile("Query Ray");
+
+		return m_hGrid.queryRay(origin, dir, hit, tmax);
+	}
+
+	void World::updateProxy(const ProxyID* proxyID)
+	{
+		m_hGrid.updateBody(proxyID);
+	}
 
 }

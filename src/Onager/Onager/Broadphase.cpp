@@ -1,6 +1,8 @@
 #include "Broadphase.h"
-#include <algorithm>
 #include "Body.h"
+#include <algorithm>
+#include <stack>
+#include "Profiler.h"
 
 
 namespace ong
@@ -11,27 +13,13 @@ namespace ong
 	const float HGrid::MIN_CELL_SIZE = 1.0f;
 	const float HGrid::SPHERE_TO_CELL_RATIO = 0.25f;
 
-	static inline bool overlapSphereSphere(Proxy* sphereProxy, Proxy* aabbProxy)
-	{
-		return overlap(&sphereProxy->sphere, &aabbProxy->sphere);
-	}
-
-	static inline bool overlapAABBAABB(Proxy* aabbProxy1, Proxy* aabbProxy2)
-	{
-		return overlap(&aabbProxy1->aabb, &aabbProxy2->aabb);
-	}
-
-	static inline bool overlapSphereAABB(Proxy* sphereProxy, Proxy* aabbProxy)
-	{
-		return overlap(&sphereProxy->sphere, &aabbProxy->aabb);
-	}
-
-
 
 	HGrid::HGrid()
 		: m_proxyIDAllocator(128 / sizeof(ProxyID)),
 		m_tick(0),
-		m_occupiedLevelsMask(0)
+		m_occupiedLevelsMask(0),
+		m_minExtend(0, 0, 0),
+		m_maxExtend(0,0,0)
 	{
 		m_timeStamp;
 		memset(m_timeStamp, 0, sizeof(int) * NUM_BUCKETS);
@@ -51,6 +39,14 @@ namespace ong
 		object.sphere.r = 0;
 
 		object.sphere.r = length(aabb.e);
+
+		for (int i = 0; i < 3; ++i)
+		{
+			if ((object.sphere.c[i] + object.sphere.r) > m_maxExtend[i])
+				m_maxExtend[i] = object.sphere.c[i] + object.sphere.r;
+			else if ((object.sphere.c[i] - object.sphere.r) < m_minExtend[i])
+				m_minExtend[i] = object.sphere.c[i] + object.sphere.r;
+		}
 
 
 		float size = MIN_CELL_SIZE, diameter = 2.0f * object.sphere.r;
@@ -100,6 +96,15 @@ namespace ong
 
 		object.sphere.r = length(aabb.e);
 
+
+		for (int i = 0; i < 3; ++i)
+		{
+			if ((object.sphere.c[i] + object.sphere.r) > m_maxExtend[i])
+				m_maxExtend[i] = object.sphere.c[i] + object.sphere.r;
+			else if ((object.sphere.c[i] - object.sphere.r) < m_minExtend[i])
+				m_minExtend[i] = object.sphere.c[i] + object.sphere.r;
+		}
+
 		int level = 0;
 		float size = MIN_CELL_SIZE, diameter = 2.0f * object.sphere.r;
 		for (level = 0; size* SPHERE_TO_CELL_RATIO < diameter; ++level)
@@ -142,28 +147,10 @@ namespace ong
 	}
 
 
-	//todo get rid of dulpicates
-	// maybe smarter checking
-	// first check own level like
-	// a list, should hopefully get rid
-	// of all duplicates
 
 	// returns num Pairs
 	int HGrid::generatePairs(Pair* pairs)
 	{
-		//Debug
-		int numTests = 0;
-		int numLevels = 0;
-
-		int pairTick = ++m_tick;
-
-
-		typedef bool(*overlapProxyFunc)(Proxy* a, Proxy* b);
-		static const overlapProxyFunc overlapFuncMatrix[ProxyType::COUNT][ProxyType::COUNT]
-		{
-			{overlapSphereSphere, overlapSphereAABB	},
-			{ nullptr, overlapAABBAABB }
-		};
 
 		int numPairs = 0;
 
@@ -197,9 +184,6 @@ namespace ong
 
 					if ((occupiedLevelsMask & 1) == 0) 
 						continue;
-
-					//debug
-					numLevels++;
 
 					float ooSize = 1.0f / size;
 					
@@ -245,26 +229,11 @@ namespace ong
 									Body* a = obj.id->pBody;
 									Body* b = obj2.id->pBody;
 
-									//debug
-									numTests++;
 									if (overlap(&a->getAABB(), &b->getAABB()))
 									{
 										if (a->getType() == BodyType::Static && b->getType() == BodyType::Static)
 											continue;
-	   
-										//Pair newPair{ a, b };
-										//bool duplicate = false;
-										//for (int i = 0; i < numPairs; ++i)
-										//{
-										//	if (pairs[i] == newPair)
-										//	{
-										//		duplicate = true;
-										//		break;
-										//	}
-										//}
 
-										//if (!duplicate)
-										//	pairs[numPairs++] = Pair{ a, b};
 										pairs[numPairs++] = Pair{ a, b };
 
 									}
@@ -281,8 +250,6 @@ namespace ong
 			}
 		}
 
-		//debug
-		printf("numTests: %d numLevels: %d\n", numTests, numLevels);
 
 		return numPairs;
 	}
@@ -307,5 +274,232 @@ namespace ong
 	{
 		if (--m_objectsAtLevel[id->level] == 0)
 			m_occupiedLevelsMask &= ~(1 << id->level);
+	}
+
+
+
+
+	bool HGrid::queryRay(const vec3& origin, const vec3& dir, RayQueryResult* hit, float tmax)
+	{
+
+		m_tick++;
+
+		int i[MAX_LEVELS];
+		int j[MAX_LEVELS];
+		int k[MAX_LEVELS];
+
+		int iEnd[MAX_LEVELS];
+		int jEnd[MAX_LEVELS];
+		int kEnd[MAX_LEVELS];
+
+			
+		vec3 t[MAX_LEVELS];
+		vec3 d[MAX_LEVELS];
+
+		int di = ((dir.x > 0) ? 1 : (dir.x < 0) ? -1 : 0);
+		int dj = ((dir.y > 0) ? 1 : (dir.y < 0) ? -1 : 0);
+		int dk = ((dir.z > 0) ? 1 : (dir.z < 0) ? -1 : 0);
+
+
+		float maxSize = MIN_CELL_SIZE;
+		int occupiedLevelsMask = m_occupiedLevelsMask;
+		int maxLevel = 0;
+		for (maxLevel = 0; maxLevel < MAX_LEVELS; ++maxLevel, occupiedLevelsMask >>= 1)
+		{
+			if (occupiedLevelsMask >> 1 == 0)
+				break;
+			maxSize *= CELL_TO_CELL_RATIO;
+		}
+
+
+		vec3 end = origin + maxSize * dir;
+
+		float size= MIN_CELL_SIZE;
+		for (int level = 0; level <= maxLevel; ++level)
+		{
+
+			i[level] = (int)floorf(origin.x / size);
+			j[level] = (int)floorf(origin.y / size);
+			k[level] = (int)floorf(origin.z / size);
+
+			iEnd[level] = (int)floorf(end.x / size);
+			jEnd[level] = (int)floorf(end.y / size);
+			kEnd[level] = (int)floorf(end.z / size);
+
+			float minx = size * floorf(origin.x / size);
+			float miny = size * floorf(origin.y / size);
+			float minz = size * floorf(origin.z / size);
+
+			float maxx = minx + size;
+			float maxy = miny + size;
+			float maxz = minz + size;
+
+			t[level].x = ((dir.x < 0) ? (origin.x - minx) : (maxx - origin.x)) / abs(dir.x);
+			t[level].y = ((dir.y < 0) ? (origin.y - miny) : (maxy - origin.y)) / abs(dir.y);
+			t[level].z = ((dir.z < 0) ? (origin.z - miny) : (maxy - origin.z)) / abs(dir.z);
+
+			d[level].x = size / abs(dir.x);
+			d[level].y = size / abs(dir.y);
+			d[level].z = size / abs(dir.z);
+
+			size *= CELL_TO_CELL_RATIO;
+		}
+
+
+		iEnd[maxLevel] = (int)floorf((di >= 0 ? m_maxExtend.x : m_minExtend.x) / maxSize);
+		jEnd[maxLevel] = (int)floorf((dj >= 0 ? m_maxExtend.y : m_minExtend.y) / maxSize);
+		kEnd[maxLevel] = (int)floorf((dk >= 0 ? m_maxExtend.z : m_minExtend.z) / maxSize);
+
+		RayQueryResult minResult;
+		minResult.collider = 0;
+		minResult.t = FLT_MAX;
+
+
+
+		for (;;)
+		{
+
+			// todo smarter cell checking
+			for (int x = -1; x < 2; ++x)
+			{
+				for (int y = -1; y < 2; ++y)
+				{
+					for (int z = -1; z < 2; ++z)
+					{
+
+						int bucket = calculateBucketID(i[maxLevel] + x, j[maxLevel] + y, k[maxLevel] + z, maxLevel);
+						if (m_timeStamp[bucket] == m_tick)
+							continue;
+						m_timeStamp[bucket] = m_tick;
+
+						for (Object& obj : m_objectBucket[bucket])
+						{
+							float tmin;
+							vec3 p;
+							if (intersectRayAABB(origin, dir, obj.id->pBody->getAABB(), tmin, p) && tmin < tmax)
+							{
+								RayQueryResult result = { 0 };
+								if (obj.id->pBody->queryRay(origin, dir, &result, tmax))
+								{
+									if (result.t < minResult.t)
+										minResult = result;
+								}
+							}
+						}
+
+					}
+				}
+			}
+
+			float ooSize = 1.0f / maxSize;
+
+
+			for (int l = maxLevel - 1; l >= 0; --l)
+			{
+				ooSize *= CELL_TO_CELL_RATIO;
+
+				if (m_objectsAtLevel[l] == 0)
+					continue;
+
+
+				//while (i[l] != iEnd[l] && j[l] != jEnd[l] && k[l] != kEnd[l])
+				for (;;)
+				{
+					for (int x = -1; x < 2; ++x)
+					{
+						for (int y = -1; y < 2; ++y)
+						{
+							for (int z = -1; z < 2; ++z)
+							{
+
+								int bucket = calculateBucketID(i[l] + x, j[l] + y, k[l] + z, l);
+								if (m_timeStamp[bucket] == m_tick)
+									continue;
+								m_timeStamp[bucket] = m_tick;
+
+								for (Object& obj : m_objectBucket[bucket])
+								{
+									float tmin;
+									vec3 p;
+									if (intersectRayAABB(origin, dir, obj.id->pBody->getAABB(), tmin, p) && tmin < tmax)
+									{
+										RayQueryResult result = { 0 };
+										if (obj.id->pBody->queryRay(origin, dir, &result, tmax))
+										{
+											if (result.t < minResult.t)
+												minResult = result;
+										}
+									}
+								}
+
+							}
+						}
+					}
+
+					if (t[l].x <= t[l].y && t[l].x <= t[l].z)
+					{
+
+						t[l].x += d[l].x;
+						i[l] += di;
+
+						if ((int)floorf(i[l]/(maxSize*ooSize)) != i[maxLevel])
+							break;
+					}
+					else if (t[l].y <= t[l].z)
+					{
+
+						t[l].y += d[l].y;
+						j[l] += dj;
+
+						if ((int)floorf(j[l] / (maxSize*ooSize)) != j[maxLevel])
+							break;
+					}
+					else
+					{
+						t[l].z += d[l].z;
+						k[l] += dk;
+
+						if ((int)floorf(k[l] / (maxSize*ooSize)) != k[maxLevel])
+							break;
+					}
+				}
+
+				//iEnd[l] += (int)floorf((maxSize * dir.x) * ooSize);
+				//jEnd[l] += (int)floorf((maxSize * dir.y) * ooSize);
+				//kEnd[l] += (int)floorf((maxSize * dir.z) * ooSize);
+			}
+
+			if (minResult.collider != 0)
+			{
+				*hit = minResult;
+				return true;
+			}
+
+			if (t[maxLevel].x <= t[maxLevel].y && t[maxLevel].x <= t[maxLevel].z)
+			{
+				if (i[maxLevel] == iEnd[maxLevel])
+					return false;
+				t[maxLevel].x += d[maxLevel].x;
+				i[maxLevel] += di;
+
+			}
+			else if (t[maxLevel].y <= t[maxLevel].z)
+			{
+				if (j[maxLevel] == jEnd[maxLevel])
+					return false;
+				t[maxLevel].y += d[maxLevel].y;
+				j[maxLevel] += dj;
+
+			}
+			else
+			{
+				if (k[maxLevel] == kEnd[maxLevel]) 
+					return false;
+				t[maxLevel].z += d[maxLevel].z;
+				k[maxLevel] += dk;
+
+			}
+
+		}
 	}
 }

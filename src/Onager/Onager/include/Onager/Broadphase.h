@@ -10,28 +10,7 @@ namespace ong
 
 
 	class Body;
-
-	struct ProxyType
-	{
-		enum Type
-		{
-			Sphere,
-			AABB,
-			COUNT = AABB + 1
-		};
-	};
-
-	struct Proxy
-	{
-		union
-		{
-			Sphere sphere;
-			AABB aabb;
-		};
-		//Body* body;
-		char type;
-	};
-
+	struct RayQueryResult;
 
 	struct Pair
 	{
@@ -65,6 +44,8 @@ namespace ong
 		
 		int generatePairs(Pair* pairs);
 
+		bool queryRay(const vec3& origin, const vec3& dir, RayQueryResult* hit, float tmax = FLT_MAX);
+
 	private:
 
 		struct Object
@@ -86,6 +67,8 @@ namespace ong
 		int m_timeStamp[NUM_BUCKETS];
 		int m_tick;
 
+		vec3 m_minExtend;
+		vec3 m_maxExtend;
 
 		Allocator<ProxyID> m_proxyIDAllocator;
 	};

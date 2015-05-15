@@ -2,6 +2,7 @@
 #include "restitutionTest.h"
 #include "HierarchieTest.h"
 #include "StressTest.h"
+#include "RayMarcherTest.h"
 #include "myMath.h"
 
 #undef main
@@ -9,7 +10,7 @@
 int main()
 {
 
-	Test* test = new StressTest();
+	Test* test = new Test();
 	test->init();
 
 	test->run();

@@ -125,6 +125,8 @@ void Test::initGL()
 		printf("%s is not a valid glsl program variable!\n", "color");
 	}
 
+	glEnable(GL_TEXTURE_2D);
+
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluPerspective(60.0f, 800.0f / 600.0f, 0.1, 1000.0f);
@@ -146,6 +148,8 @@ void Test::initSDL()
 	m_window = SDL_CreateWindow("test", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 800, 600, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
 	//m_window = SDL_CreateWindow("test", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1920, 1080, SDL_WINDOW_FULLSCREEN_DESKTOP | SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
 
+	m_renderer = SDL_CreateRenderer(m_window, -1, 0);
+
 	m_context = SDL_GL_CreateContext(m_window);
 
 	glewExperimental = GL_TRUE;
@@ -155,7 +159,7 @@ void Test::initSDL()
 	initGL();
 
 #ifndef _DEBUG
-	SDL_GL_SetSwapInterval(0);
+	//SDL_GL_SetSwapInterval(0);
 #endif
 	
 
@@ -570,6 +574,10 @@ void Test::run()
 		float dt = (thisTime - lastTime) / 1000.0f;
 		lastTime = thisTime;
 
+		if (dt >= 1.0f)
+			continue;
+
+
 		fps += dt;
 		fpsCount++;
 		if (fps >= 1.0f)
@@ -677,6 +685,10 @@ void Test::run()
 		//
 		glClear(GL_COLOR_BUFFER_BIT);
 
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		gluPerspective(60.0f, 800.0f / 600.0f, 0.1, 1000.0f);
+
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 
@@ -691,16 +703,15 @@ void Test::run()
 			getViewMat(m_eye, view);
 		glMultMatrixf(view);
 
-		render();
+
 
 		for (Entity* e : m_entities)
 		{
 			
 			e->render(m_colorLocation);
-
-			
-
 		}
+
+		render();
 
 		SDL_GL_SwapWindow(m_window);
 

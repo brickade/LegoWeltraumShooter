@@ -67,5 +67,8 @@
     <ClInclude Include="StressTest.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="RayMarcherTest.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

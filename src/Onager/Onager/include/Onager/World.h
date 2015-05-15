@@ -96,14 +96,17 @@ namespace ong
 		ShapePtr createShape(const ShapeDescription& descr);
 		void destroyShape(ShapePtr shape);
 
+		bool queryRay(const vec3& origin, const vec3& dir, RayQueryResult* hit, float tmax = FLT_MAX);
+
 		inline void World::setGravity(const vec3& gravity);
 
+		
 
 	ong_internal:
 
 		//	--MANIPULATORS--
 
-		void setProxy(int proxyID, const Proxy& proxy);
+		void updateProxy(const ProxyID* proxyID);
 
 		//	--ACCESSORS--
 

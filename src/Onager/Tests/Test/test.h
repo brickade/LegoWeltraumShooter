@@ -36,6 +36,11 @@ protected:
 	Entity* addFloor(World* world, Material* material);
  	Player* Test::addPlayer(World* world, const Transform& transform);
 	SDL_Window* m_window;
+	SDL_Renderer* m_renderer;
+	
+	Player* m_player;
+	bool m_playerSpec;
+
 
 private:
 	void initGL();
@@ -43,12 +48,8 @@ private:
 
 	int m_numSteps = 0;
 
-	
-	Player* m_player;
-	bool m_playerSpec;
-
-
 	SDL_GLContext m_context;
+
 
 	GLuint m_programID;
 };
