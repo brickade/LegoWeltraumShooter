@@ -285,17 +285,20 @@ namespace ong
 
 		m_tick++;
 
-		int i[MAX_LEVELS];
-		int j[MAX_LEVELS];
-		int k[MAX_LEVELS];
+
+		struct Cell
+		{
+			int i, j, k;
+			vec3 t;
+			vec3 d;
+		};
+
+
+		Cell cells[MAX_LEVELS];
 
 		int iEnd;
 		int jEnd;
 		int kEnd;
-
-			
-		vec3 t[MAX_LEVELS];
-		vec3 d[MAX_LEVELS];
 
 		int di = ((dir.x > 0) ? 1 : (dir.x < 0) ? -1 : 0);
 		int dj = ((dir.y > 0) ? 1 : (dir.y < 0) ? -1 : 0);
@@ -319,9 +322,9 @@ namespace ong
 		for (int level = 0; level < maxLevel; ++level)
 		{
 
-			i[level] = (int)floorf(origin.x / size);
-			j[level] = (int)floorf(origin.y / size);
-			k[level] = (int)floorf(origin.z / size);
+			cells[level].i = (int)floorf(origin.x / size);
+			cells[level].j = (int)floorf(origin.y / size);
+			cells[level].k = (int)floorf(origin.z / size);
 
 			float minx = size * floorf(origin.x / size);
 			float miny = size * floorf(origin.y / size);
@@ -330,21 +333,21 @@ namespace ong
 			float maxx = minx + size;
 			float maxy = miny + size;
 			float maxz = minz + size;
+						 
+			cells[level].t.x = ((dir.x < 0) ? (origin.x - minx) : (maxx - origin.x)) / abs(dir.x);
+			cells[level].t.y = ((dir.y < 0) ? (origin.y - miny) : (maxy - origin.y)) / abs(dir.y);
+			cells[level].t.z = ((dir.z < 0) ? (origin.z - miny) : (maxy - origin.z)) / abs(dir.z);
 
-			t[level].x = ((dir.x < 0) ? (origin.x - minx) : (maxx - origin.x)) / abs(dir.x);
-			t[level].y = ((dir.y < 0) ? (origin.y - miny) : (maxy - origin.y)) / abs(dir.y);
-			t[level].z = ((dir.z < 0) ? (origin.z - miny) : (maxy - origin.z)) / abs(dir.z);
-
-			d[level].x = size / abs(dir.x);
-			d[level].y = size / abs(dir.y);
-			d[level].z = size / abs(dir.z);
+			cells[level].d.x = size / abs(dir.x);
+			cells[level].d.y = size / abs(dir.y);
+			cells[level].d.z = size / abs(dir.z);
 
 			size *= CELL_TO_CELL_RATIO;
 		}
 
-		i[maxLevel] = (int)floorf(origin.x / maxSize);
-		j[maxLevel] = (int)floorf(origin.y / maxSize);
-		k[maxLevel] = (int)floorf(origin.z / maxSize);
+		cells[maxLevel].i = (int)floorf(origin.x / maxSize);
+		cells[maxLevel].j = (int)floorf(origin.y / maxSize);
+		cells[maxLevel].k = (int)floorf(origin.z / maxSize);
 
 		iEnd = (int)floorf((di >= 0 ? m_maxExtend.x : m_minExtend.x) / maxSize);
 		jEnd = (int)floorf((dj >= 0 ? m_maxExtend.y : m_minExtend.y) / maxSize);
@@ -364,24 +367,24 @@ namespace ong
 				continue;
 
 
-			int x0 = i[level], x1 = i[level];
-			int y0 = j[level], y1 = j[level];
-			int z0 = k[level], z1 = k[level];
+			int x0 = cells[level].i, x1 = cells[level].i;
+			int y0 = cells[level].j, y1 = cells[level].j;
+			int z0 = cells[level].k, z1 = cells[level].k;
 
 
-			if ((int)floorf(origin.x / size - SPHERE_TO_CELL_RATIO * size) != i[level])
+			if ((int)floorf(origin.x / size - SPHERE_TO_CELL_RATIO * size) != cells[level].i)
 				--x0;
-			if ((int)floorf(origin.y / size + SPHERE_TO_CELL_RATIO * size) != i[level])
+			if ((int)floorf(origin.y / size + SPHERE_TO_CELL_RATIO * size) != cells[level].i)
 				++x1;
 
-			if ((int)floorf(origin.y / size - SPHERE_TO_CELL_RATIO * size) != j[level])
+			if ((int)floorf(origin.y / size - SPHERE_TO_CELL_RATIO * size) != cells[level].j)
 				--y0;
-			if ((int)floorf(origin.y / size + SPHERE_TO_CELL_RATIO * size) != j[level])
+			if ((int)floorf(origin.y / size + SPHERE_TO_CELL_RATIO * size) != cells[level].j)
 				++y1;
 
-			if ((int)floorf(origin.z / size - SPHERE_TO_CELL_RATIO * size) != k[level])
+			if ((int)floorf(origin.z / size - SPHERE_TO_CELL_RATIO * size) != cells[level].k)
 				--z0;
-			if ((int)floorf(origin.y / size + SPHERE_TO_CELL_RATIO * size) != k[level])
+			if ((int)floorf(origin.y / size + SPHERE_TO_CELL_RATIO * size) != cells[level].k)
 				++z1;
 
 			for (int x = x0; x <= x1; ++x)
@@ -420,7 +423,7 @@ namespace ong
 			size *= CELL_TO_CELL_RATIO;
 		}
 
-
+		int bucket;
 		for (;;)
 		{
 			float ooSize = 1.0f / maxSize;
@@ -436,75 +439,75 @@ namespace ong
 
 				for (;;)
 				{
-					int x0 = i[l], x1 = i[l];
-					int y0 = k[l], y1 = j[l];
-					int z0 = j[l], z1 = k[l];
+					int x0 = cells[l].i, x1 = cells[l].i;
+					int y0 = cells[l].k, y1 = cells[l].j;
+					int z0 = cells[l].j, z1 = cells[l].k;
 
 					bool quit = false;
 
-					if (t[l].x <= t[l].y && t[l].x <= t[l].z)
+					if (cells[l].t.x <= cells[l].t.y && cells[l].t.x <= cells[l].t.z)
 					{
 
-						vec3 p = origin + t[l].x * dir;
+						vec3 p = origin + cells[l].t.x * dir;
 
-						if ((int)floorf(p.y - SPHERE_TO_CELL_RATIO * 1.0f / ooSize) != j[l])
+						if ((int)floorf(p.y - SPHERE_TO_CELL_RATIO * 1.0f / ooSize) != cells[l].j)
 							--y0;
-						else if ((int)floorf(p.y + SPHERE_TO_CELL_RATIO * 1.0f / ooSize) != j[l])
+						else if ((int)floorf(p.y + SPHERE_TO_CELL_RATIO * 1.0f / ooSize) != cells[l].j)
 							++y1;
 
-						if ((int)floorf(p.z - SPHERE_TO_CELL_RATIO * 1.0f / ooSize) != k[l])
+						if ((int)floorf(p.z - SPHERE_TO_CELL_RATIO * 1.0f / ooSize) != cells[l].k)
 							--z0;
-						else if ((int)floorf(p.z + SPHERE_TO_CELL_RATIO * 1.0f / ooSize) != k[l])
+						else if ((int)floorf(p.z + SPHERE_TO_CELL_RATIO * 1.0f / ooSize) != cells[l].k)
 							++z1;
 						
-						t[l].x += d[l].x;
-						i[l] += di;
+						cells[l].t.x += cells[l].d.x;
+						cells[l].i += di;
 
-						if ((int)floorf(i[l]/(maxSize*ooSize)) != i[maxLevel])
+						if ((int)floorf(cells[l].i/(maxSize*ooSize)) != cells[maxLevel].i)
 							quit = true;
 					}
-					else if (t[l].y <= t[l].z)
+					else if (cells[l].t.y <= cells[l].t.z)
 					{
 
-						vec3 p = origin + t[l].y * dir;
+						vec3 p = origin + cells[l].t.y * dir;
 
-						if ((int)floorf(p.x - SPHERE_TO_CELL_RATIO * 1.0f / ooSize) != i[l])
+						if ((int)floorf(p.x - SPHERE_TO_CELL_RATIO * 1.0f / ooSize) != cells[l].i)
 							--x0;
-						else if ((int)floorf(p.x + SPHERE_TO_CELL_RATIO * 1.0f / ooSize) != i[l])
+						else if ((int)floorf(p.x + SPHERE_TO_CELL_RATIO * 1.0f / ooSize) != cells[l].i)
 							++x1;
 
-						if ((int)floorf(p.z - SPHERE_TO_CELL_RATIO * 1.0f / ooSize) != k[l])
+						if ((int)floorf(p.z - SPHERE_TO_CELL_RATIO * 1.0f / ooSize) != cells[l].k)
 							--z0;
-						else if ((int)floorf(p.z + SPHERE_TO_CELL_RATIO * 1.0f / ooSize) != k[l])
+						else if ((int)floorf(p.z + SPHERE_TO_CELL_RATIO * 1.0f / ooSize) != cells[l].k)
 							++z1;
 
 
-						t[l].y += d[l].y;
-						j[l] += dj;
+						cells[l].t.y += cells[l].d.y;
+						cells[l].j += dj;
 
-						if ((int)floorf(j[l] / (maxSize*ooSize)) != j[maxLevel])
+						if ((int)floorf(cells[l].j / (maxSize*ooSize)) != cells[maxLevel].j)
 							quit = true;
 					}
 					else
 					{
 
-						vec3 p = origin + t[l].z * dir;
+						vec3 p = origin + cells[l].t.z * dir;
 
-						if ((int)floorf(p.x - SPHERE_TO_CELL_RATIO * 1.0f / ooSize) != i[l])
+						if ((int)floorf(p.x - SPHERE_TO_CELL_RATIO * 1.0f / ooSize) != cells[l].i)
 							--x0;
-						else if ((int)floorf(p.x + SPHERE_TO_CELL_RATIO * 1.0f / ooSize) != i[l])
+						else if ((int)floorf(p.x + SPHERE_TO_CELL_RATIO * 1.0f / ooSize) != cells[l].i)
 							++x1;
 
-						if ((int)floorf(p.y - SPHERE_TO_CELL_RATIO * 1.0f / ooSize) != j[l])
+						if ((int)floorf(p.y - SPHERE_TO_CELL_RATIO * 1.0f / ooSize) != cells[l].j)
 							--y0;
-						else if ((int)floorf(p.y + SPHERE_TO_CELL_RATIO * 1.0f / ooSize) != j[l])
+						else if ((int)floorf(p.y + SPHERE_TO_CELL_RATIO * 1.0f / ooSize) != cells[l].j)
 							++y1;
 
 
-						t[l].z += d[l].z;
-						k[l] += dk;
+						cells[l].t.z += cells[l].d.z;
+						cells[l].k += dk;
 
-						if ((int)floorf(k[l] / (maxSize*ooSize)) != k[maxLevel])
+						if ((int)floorf(cells[l].k / (maxSize*ooSize)) != cells[maxLevel].k)
 							quit = true;
 					}
 
@@ -515,7 +518,7 @@ namespace ong
 						{
 							for (int z = z0; z <= z1; ++z)
 							{
-								int bucket = calculateBucketID(x, y, z, l);
+								bucket = calculateBucketID(x, y, z, l);
 								if (m_timeStamp[bucket] == m_tick)
 									continue;
 								m_timeStamp[bucket] = m_tick;
@@ -551,28 +554,28 @@ namespace ong
 				return true;
 			}
 
-			if (t[maxLevel].x <= t[maxLevel].y && t[maxLevel].x <= t[maxLevel].z)
+			if (cells[maxLevel].t.x <= cells[maxLevel].t.y && cells[maxLevel].t.x <= cells[maxLevel].t.z)
 			{
-				if (i[maxLevel] == iEnd)
+				if (cells[maxLevel].i == iEnd)
 					return false;
-				t[maxLevel].x += d[maxLevel].x;
-				i[maxLevel] += di;
+				cells[maxLevel].t.x += cells[maxLevel].d.x;
+				cells[maxLevel].i += di;
 
 			}
-			else if (t[maxLevel].y <= t[maxLevel].z)
+			else if (cells[maxLevel].t.y <= cells[maxLevel].t.z)
 			{
-				if (j[maxLevel] == jEnd)
+				if (cells[maxLevel].j == jEnd)
 					return false;
-				t[maxLevel].y += d[maxLevel].y;
-				j[maxLevel] += dj;
+				cells[maxLevel].t.y += cells[maxLevel].d.y;
+				cells[maxLevel].j += dj;
 
 			}
 			else
 			{
-				if (k[maxLevel] == kEnd) 
+				if (cells[maxLevel].k == kEnd) 
 					return false;
-				t[maxLevel].z += d[maxLevel].z;
-				k[maxLevel] += dk;
+				cells[maxLevel].t.z += cells[maxLevel].d.z;
+				cells[maxLevel].k += dk;
 
 			}
 
