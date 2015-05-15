@@ -306,7 +306,7 @@ namespace ong
 		int maxLevel = 0;
 		for (maxLevel = 0; maxLevel < MAX_LEVELS; ++maxLevel, occupiedLevelsMask >>= 1)
 		{
-			if (occupiedLevelsMask >> 1 == 0)
+			if (occupiedLevelsMask == 0)
 				break;
 			maxSize *= CELL_TO_CELL_RATIO;
 		}
@@ -315,9 +315,9 @@ namespace ong
 		vec3 end = origin + maxSize * dir;
 
 		float size= MIN_CELL_SIZE;
-		for (int level = 0; level <= maxLevel; ++level)
+		for (int level = 0; level < maxLevel; ++level)
 		{
-
+		
 			i[level] = (int)floorf(origin.x / size);
 			j[level] = (int)floorf(origin.y / size);
 			k[level] = (int)floorf(origin.z / size);
@@ -359,41 +359,9 @@ namespace ong
 		for (;;)
 		{
 
-			// todo smarter cell checking
-			for (int x = -1; x < 2; ++x)
-			{
-				for (int y = -1; y < 2; ++y)
-				{
-					for (int z = -1; z < 2; ++z)
-					{
-
-						int bucket = calculateBucketID(i[maxLevel] + x, j[maxLevel] + y, k[maxLevel] + z, maxLevel);
-						if (m_timeStamp[bucket] == m_tick)
-							continue;
-						m_timeStamp[bucket] = m_tick;
-
-						for (Object& obj : m_objectBucket[bucket])
-						{
-							float tmin;
-							vec3 p;
-							if (intersectRayAABB(origin, dir, obj.id->pBody->getAABB(), tmin, p) && tmin < tmax)
-							{
-								RayQueryResult result = { 0 };
-								if (obj.id->pBody->queryRay(origin, dir, &result, tmax))
-								{
-									if (result.t < minResult.t)
-										minResult = result;
-								}
-							}
-						}
-
-					}
-				}
-			}
 
 			float ooSize = 1.0f / maxSize;
-
-
+		   
 			for (int l = maxLevel - 1; l >= 0; --l)
 			{
 				ooSize *= CELL_TO_CELL_RATIO;
@@ -402,17 +370,31 @@ namespace ong
 					continue;
 
 
-				//while (i[l] != iEnd[l] && j[l] != jEnd[l] && k[l] != kEnd[l])
+
 				for (;;)
 				{
-					for (int x = -1; x < 2; ++x)
+
+
+					vec3 boundary; 
+					boundary.x = origin.x[l]
+
+					int x0 = (int)floorf(boundary.x - size*SPHERE_TO_CELL_RATIO) * ooSize;
+					int y0 = (int)floorf(boundary.y - size*SPHERE_TO_CELL_RATIO) * ooSize;
+					int z0 = (int)floorf(boundary.z - size*SPHERE_TO_CELL_RATIO) * ooSize;
+																				 
+					int x1 = (int)floorf(boundary.x + size*SPHERE_TO_CELL_RATIO) * ooSize;
+					int y1 = (int)floorf(boundary.y + size*SPHERE_TO_CELL_RATIO) * ooSize;
+					int z1 = (int)floorf(boundary.z + size*SPHERE_TO_CELL_RATIO) * ooSize;
+
+					for (int x = x0; x <= x1; ++x)
 					{
-						for (int y = -1; y < 2; ++y)
+						for (int y = y0; y <= y1; ++y)
 						{
-							for (int z = -1; z < 2; ++z)
+							for (int z = z0; z <= z1; ++z)
 							{
 
-								int bucket = calculateBucketID(i[l] + x, j[l] + y, k[l] + z, l);
+								//int bucket = calculateBucketID(i[l] + x, j[l] + y, k[l] + z, l);
+								int bucket = calculateBucketID(x, y, z, l);
 								if (m_timeStamp[bucket] == m_tick)
 									continue;
 								m_timeStamp[bucket] = m_tick;

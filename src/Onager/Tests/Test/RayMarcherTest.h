@@ -54,8 +54,8 @@ public:
 		{
 			m_counter = 0;
 			m_view = view;
-			m_width = 40;
-			m_height = 30;
+			m_width = 80;
+			m_height = 60;
 
 		}
 
