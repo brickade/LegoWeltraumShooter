@@ -141,6 +141,14 @@ namespace ong
 	  
 
 
+		// kill small floating point errors
+		// todo maybe nicer
+		for (int i = 0; i < 3; ++i)
+			for (int j = 0; j < 3; ++j)
+				if (abs(I[i][j]) < 10 * FLT_EPSILON)
+					I[i][j] = 0.0f;
+
+
 
 		vec3 oldPos = getPosition();
 		m_pWorld->m_r[m_index].p = oldPos + cm;
