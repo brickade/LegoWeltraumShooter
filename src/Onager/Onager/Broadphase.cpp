@@ -279,6 +279,7 @@ namespace ong
 
 
 
+
 	bool HGrid::queryRay(const vec3& origin, const vec3& dir, RayQueryResult* hit, float tmax)
 	{
 
@@ -288,9 +289,9 @@ namespace ong
 		int j[MAX_LEVELS];
 		int k[MAX_LEVELS];
 
-		int iEnd[MAX_LEVELS];
-		int jEnd[MAX_LEVELS];
-		int kEnd[MAX_LEVELS];
+		int iEnd;
+		int jEnd;
+		int kEnd;
 
 			
 		vec3 t[MAX_LEVELS];
@@ -313,18 +314,14 @@ namespace ong
 
 
 		vec3 end = origin + maxSize * dir;
-
-		float size= MIN_CELL_SIZE;
+		
+		float size = MIN_CELL_SIZE;
 		for (int level = 0; level < maxLevel; ++level)
 		{
-		
+
 			i[level] = (int)floorf(origin.x / size);
 			j[level] = (int)floorf(origin.y / size);
 			k[level] = (int)floorf(origin.z / size);
-
-			iEnd[level] = (int)floorf(end.x / size);
-			jEnd[level] = (int)floorf(end.y / size);
-			kEnd[level] = (int)floorf(end.z / size);
 
 			float minx = size * floorf(origin.x / size);
 			float miny = size * floorf(origin.y / size);
@@ -345,23 +342,89 @@ namespace ong
 			size *= CELL_TO_CELL_RATIO;
 		}
 
+		i[maxLevel] = (int)floorf(origin.x / maxSize);
+		j[maxLevel] = (int)floorf(origin.y / maxSize);
+		k[maxLevel] = (int)floorf(origin.z / maxSize);
 
-		iEnd[maxLevel] = (int)floorf((di >= 0 ? m_maxExtend.x : m_minExtend.x) / maxSize);
-		jEnd[maxLevel] = (int)floorf((dj >= 0 ? m_maxExtend.y : m_minExtend.y) / maxSize);
-		kEnd[maxLevel] = (int)floorf((dk >= 0 ? m_maxExtend.z : m_minExtend.z) / maxSize);
+		iEnd = (int)floorf((di >= 0 ? m_maxExtend.x : m_minExtend.x) / maxSize);
+		jEnd = (int)floorf((dj >= 0 ? m_maxExtend.y : m_minExtend.y) / maxSize);
+		kEnd = (int)floorf((dk >= 0 ? m_maxExtend.z : m_minExtend.z) / maxSize);
+
 
 		RayQueryResult minResult;
 		minResult.collider = 0;
 		minResult.t = FLT_MAX;
 
 
+		//check origin for neighbouring cells
+		size = MIN_CELL_SIZE;
+		for (int level = 0; level < maxLevel; ++level)
+		{
+			if (m_objectsAtLevel[level] == 0)
+				continue;
+
+
+			int x0 = i[level], x1 = i[level];
+			int y0 = j[level], y1 = j[level];
+			int z0 = k[level], z1 = k[level];
+
+
+			if ((int)floorf(origin.x / size - SPHERE_TO_CELL_RATIO * size) != i[level])
+				--x0;
+			if ((int)floorf(origin.y / size + SPHERE_TO_CELL_RATIO * size) != i[level])
+				++x1;
+
+			if ((int)floorf(origin.y / size - SPHERE_TO_CELL_RATIO * size) != j[level])
+				--y0;
+			if ((int)floorf(origin.y / size + SPHERE_TO_CELL_RATIO * size) != j[level])
+				++y1;
+
+			if ((int)floorf(origin.z / size - SPHERE_TO_CELL_RATIO * size) != k[level])
+				--z0;
+			if ((int)floorf(origin.y / size + SPHERE_TO_CELL_RATIO * size) != k[level])
+				++z1;
+
+			for (int x = x0; x <= x1; ++x)
+			{
+				for (int y = y0; y <= y1; ++y)
+				{
+					for (int z = z0; z <= z1; ++z)
+					{
+						int bucket = calculateBucketID(x, y, z, level);
+						if (m_timeStamp[bucket] == m_tick)
+							continue;
+						m_timeStamp[bucket] = m_tick;
+
+						for (Object& obj : m_objectBucket[bucket])
+						{
+							float tmin;
+							vec3 p;
+							if (intersectRayAABB(origin, dir, obj.id->pBody->getAABB(), tmin, p) && tmin < tmax)
+							{
+								RayQueryResult result = { 0 };
+								if (obj.id->pBody->queryRay(origin, dir, &result, tmax))
+								{
+									if (result.t < minResult.t)
+										minResult = result;
+								}
+							}
+						}
+
+
+					}
+				}
+			}
+								
+
+
+			size *= CELL_TO_CELL_RATIO;
+		}
+
 
 		for (;;)
 		{
-
-
 			float ooSize = 1.0f / maxSize;
-		   
+
 			for (int l = maxLevel - 1; l >= 0; --l)
 			{
 				ooSize *= CELL_TO_CELL_RATIO;
@@ -373,18 +436,78 @@ namespace ong
 
 				for (;;)
 				{
+					int x0 = i[l], x1 = i[l];
+					int y0 = k[l], y1 = j[l];
+					int z0 = j[l], z1 = k[l];
+
+					bool quit = false;
+
+					if (t[l].x <= t[l].y && t[l].x <= t[l].z)
+					{
+
+						vec3 p = origin + t[l].x * dir;
+
+						if ((int)floorf(p.y - SPHERE_TO_CELL_RATIO * 1.0f / ooSize) != j[l])
+							--y0;
+						else if ((int)floorf(p.y + SPHERE_TO_CELL_RATIO * 1.0f / ooSize) != j[l])
+							++y1;
+
+						if ((int)floorf(p.z - SPHERE_TO_CELL_RATIO * 1.0f / ooSize) != k[l])
+							--z0;
+						else if ((int)floorf(p.z + SPHERE_TO_CELL_RATIO * 1.0f / ooSize) != k[l])
+							++z1;
+						
+						t[l].x += d[l].x;
+						i[l] += di;
+
+						if ((int)floorf(i[l]/(maxSize*ooSize)) != i[maxLevel])
+							quit = true;
+					}
+					else if (t[l].y <= t[l].z)
+					{
+
+						vec3 p = origin + t[l].y * dir;
+
+						if ((int)floorf(p.x - SPHERE_TO_CELL_RATIO * 1.0f / ooSize) != i[l])
+							--x0;
+						else if ((int)floorf(p.x + SPHERE_TO_CELL_RATIO * 1.0f / ooSize) != i[l])
+							++x1;
+
+						if ((int)floorf(p.z - SPHERE_TO_CELL_RATIO * 1.0f / ooSize) != k[l])
+							--z0;
+						else if ((int)floorf(p.z + SPHERE_TO_CELL_RATIO * 1.0f / ooSize) != k[l])
+							++z1;
 
 
-					vec3 boundary; 
-					boundary.x = origin.x[l]
+						t[l].y += d[l].y;
+						j[l] += dj;
 
-					int x0 = (int)floorf(boundary.x - size*SPHERE_TO_CELL_RATIO) * ooSize;
-					int y0 = (int)floorf(boundary.y - size*SPHERE_TO_CELL_RATIO) * ooSize;
-					int z0 = (int)floorf(boundary.z - size*SPHERE_TO_CELL_RATIO) * ooSize;
-																				 
-					int x1 = (int)floorf(boundary.x + size*SPHERE_TO_CELL_RATIO) * ooSize;
-					int y1 = (int)floorf(boundary.y + size*SPHERE_TO_CELL_RATIO) * ooSize;
-					int z1 = (int)floorf(boundary.z + size*SPHERE_TO_CELL_RATIO) * ooSize;
+						if ((int)floorf(j[l] / (maxSize*ooSize)) != j[maxLevel])
+							quit = true;
+					}
+					else
+					{
+
+						vec3 p = origin + t[l].z * dir;
+
+						if ((int)floorf(p.x - SPHERE_TO_CELL_RATIO * 1.0f / ooSize) != i[l])
+							--x0;
+						else if ((int)floorf(p.x + SPHERE_TO_CELL_RATIO * 1.0f / ooSize) != i[l])
+							++x1;
+
+						if ((int)floorf(p.y - SPHERE_TO_CELL_RATIO * 1.0f / ooSize) != j[l])
+							--y0;
+						else if ((int)floorf(p.y + SPHERE_TO_CELL_RATIO * 1.0f / ooSize) != j[l])
+							++y1;
+
+
+						t[l].z += d[l].z;
+						k[l] += dk;
+
+						if ((int)floorf(k[l] / (maxSize*ooSize)) != k[maxLevel])
+							quit = true;
+					}
+
 
 					for (int x = x0; x <= x1; ++x)
 					{
@@ -392,8 +515,6 @@ namespace ong
 						{
 							for (int z = z0; z <= z1; ++z)
 							{
-
-								//int bucket = calculateBucketID(i[l] + x, j[l] + y, k[l] + z, l);
 								int bucket = calculateBucketID(x, y, z, l);
 								if (m_timeStamp[bucket] == m_tick)
 									continue;
@@ -414,41 +535,14 @@ namespace ong
 									}
 								}
 
+
 							}
 						}
 					}
-
-					if (t[l].x <= t[l].y && t[l].x <= t[l].z)
-					{
-
-						t[l].x += d[l].x;
-						i[l] += di;
-
-						if ((int)floorf(i[l]/(maxSize*ooSize)) != i[maxLevel])
-							break;
-					}
-					else if (t[l].y <= t[l].z)
-					{
-
-						t[l].y += d[l].y;
-						j[l] += dj;
-
-						if ((int)floorf(j[l] / (maxSize*ooSize)) != j[maxLevel])
-							break;
-					}
-					else
-					{
-						t[l].z += d[l].z;
-						k[l] += dk;
-
-						if ((int)floorf(k[l] / (maxSize*ooSize)) != k[maxLevel])
-							break;
-					}
+						
+					if (quit)
+						break;
 				}
-
-				//iEnd[l] += (int)floorf((maxSize * dir.x) * ooSize);
-				//jEnd[l] += (int)floorf((maxSize * dir.y) * ooSize);
-				//kEnd[l] += (int)floorf((maxSize * dir.z) * ooSize);
 			}
 
 			if (minResult.collider != 0)
@@ -459,7 +553,7 @@ namespace ong
 
 			if (t[maxLevel].x <= t[maxLevel].y && t[maxLevel].x <= t[maxLevel].z)
 			{
-				if (i[maxLevel] == iEnd[maxLevel])
+				if (i[maxLevel] == iEnd)
 					return false;
 				t[maxLevel].x += d[maxLevel].x;
 				i[maxLevel] += di;
@@ -467,7 +561,7 @@ namespace ong
 			}
 			else if (t[maxLevel].y <= t[maxLevel].z)
 			{
-				if (j[maxLevel] == jEnd[maxLevel])
+				if (j[maxLevel] == jEnd)
 					return false;
 				t[maxLevel].y += d[maxLevel].y;
 				j[maxLevel] += dj;
@@ -475,7 +569,7 @@ namespace ong
 			}
 			else
 			{
-				if (k[maxLevel] == kEnd[maxLevel]) 
+				if (k[maxLevel] == kEnd) 
 					return false;
 				t[maxLevel].z += d[maxLevel].z;
 				k[maxLevel] += dk;

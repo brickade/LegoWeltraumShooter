@@ -54,8 +54,8 @@ public:
 		{
 			m_counter = 0;
 			m_view = view;
-			m_width = 80;
-			m_height = 60;
+			m_width = 160;
+			m_height = 120;
 
 		}
 
@@ -103,6 +103,11 @@ public:
 						pixel[1] = 0x00;
 						pixel[2] = 0x00;
 						pixel[3] = 0xff;
+
+						//pixel[0] = result.normal.x * 0xff;
+						//pixel[1] = result.normal.y * 0xff;
+						//pixel[2] = result.normal.z * 0xff;
+
 					}
 					else
 					{
@@ -176,8 +181,8 @@ public:
 	}
 
 private:
-	static const int WIDTH = 320;
-	static const int HEIGHT = 240;
+	static const int WIDTH = 640;
+	static const int HEIGHT = 480;
 
 	int m_width;
 	int m_height;

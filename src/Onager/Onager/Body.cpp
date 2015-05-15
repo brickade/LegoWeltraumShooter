@@ -286,8 +286,10 @@ namespace ong
 
 	bool Body::queryRay(const vec3& origin, const vec3& dir, RayQueryResult* result,  float tmax)
 	{
-		vec3 o = invTransformVec3(origin, getTransform());
-		vec3 d = rotate(dir, conjugate(getOrientation()));
+		Transform t = getTransform();
+
+		vec3 o = invTransformVec3(origin, t);
+		vec3 d = rotate(dir, conjugate(t.q));
 
 
 		float tmin = FLT_MAX; 
@@ -336,6 +338,7 @@ namespace ong
 
 		result->t = tmin;
 		result->point = origin + tmin*dir;
+		result->normal = rotate(result->normal, t.q);
 
 		return (result->collider != nullptr);
 	}
