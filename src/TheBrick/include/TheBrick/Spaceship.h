@@ -7,6 +7,7 @@
 #include "GameObject.h"
 
 #include "DebugDraw.h"
+#include "CSVParser.h"
 
 namespace TheBrick
 {
@@ -15,6 +16,7 @@ namespace TheBrick
     public:
 
     private:
+        CCSVParser* m_pCSVFile;
 
     public:
         CSpaceship();

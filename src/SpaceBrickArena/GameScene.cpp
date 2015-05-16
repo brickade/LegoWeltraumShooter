@@ -95,7 +95,11 @@ namespace Game
         PuRe_Vector3F pos = this->m_pCamera->GetPosition();
 
         a_pGraphics->Clear(clear);
-        a_pGraphics->Begin();
+
+        PuRe_BoundingBox Screen;
+        Screen.m_Position = PuRe_Vector2F(0.0f, 0.0f);
+        Screen.m_Size = PuRe_Vector2F(gdesc.ResolutionWidth, gdesc.ResolutionHeight);
+        a_pGraphics->Begin(Screen);
         this->m_pSkyBox->Draw(this->m_pCamera,this->m_pSkyMaterial);
         this->m_pPlayerShip->Draw(a_pGraphics, this->m_pCamera);
         this->m_pModel->Draw(this->m_pCamera, this->m_pMaterial, PuRe_Primitive::Triangles, PuRe_Vector3F(-5.0f, -0.0f, 10.0f), PuRe_Vector3F(5.0f, 5.0f, 5.0f));

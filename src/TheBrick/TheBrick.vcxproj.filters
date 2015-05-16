@@ -66,6 +66,9 @@
     <ClInclude Include="include\TheBrick\BrickTimer.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="include\TheBrick\CSVParser.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Brick.cpp">
@@ -96,6 +99,9 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="BrickTimer.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="CSVParser.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>

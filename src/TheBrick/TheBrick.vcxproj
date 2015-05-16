@@ -143,6 +143,7 @@
     <ClInclude Include="include\TheBrick\BrickManager.h" />
     <ClInclude Include="include\TheBrick\ByteBuffer.h" />
     <ClInclude Include="include\TheBrick\Conversion.h" />
+    <ClInclude Include="include\TheBrick\CSVParser.h" />
     <ClInclude Include="include\TheBrick\DebugDraw.h" />
     <ClInclude Include="include\TheBrick\GameObject.h" />
     <ClInclude Include="include\TheBrick\Serializer.h" />
@@ -157,6 +158,7 @@
     <ClCompile Include="BrickInstance.cpp" />
     <ClCompile Include="BrickManager.cpp" />
     <ClCompile Include="ByteBuffer.cpp" />
+    <ClCompile Include="CSVParser.cpp" />
     <ClCompile Include="DebugDraw.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Serializer.cpp" />

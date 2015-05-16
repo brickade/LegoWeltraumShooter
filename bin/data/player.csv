@@ -1,0 +1,13 @@
+Thrust;RT
+Move;LeftThumb
+Camera;RightThumb
+SpinLeft;LB
+SpinRight;RB
+SpeedAcceleration;10
+PitchAcceleration;5
+YawAcceleration;5
+RollAcceleration;5
+MaxSpeed;3
+MaxYawSpeed;3
+MaxPitchSpeed;3
+MaxRollSpeed;3
