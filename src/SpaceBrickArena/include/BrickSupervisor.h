@@ -18,7 +18,11 @@ namespace Game
         std::array<CBrickCategory*, 10> m_Categories;
         int m_CategoriesCount;
         CBrickCategory* m_pActiveCategory;
+        CNavigation* m_pNavigation;
         PuRe_Camera* m_pCamera;
+        bool m_NavigateTabs = false;
+        float m_RotationSpeed = 1;
+        float m_TabRotation = 0.4f;
 
     public:
         CBrickSupervisor(int a_PlayerIdx);
