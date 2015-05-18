@@ -24,29 +24,12 @@ namespace TheBrick
     // **************************************************************************
     void CGameObject::Update(float a_DeltaTime)
     {
-
     }
 
     // **************************************************************************
     // **************************************************************************
     void CGameObject::Deserialize(CSerializer* a_pSerializer, CBrickManager* a_pBrickManager, ong::World* a_pWorld)
     {
-        //m_pBody
-        ong::BodyDescription bdesc;
-        bdesc.transform = ong::Transform(ong::vec3(0.0f, 0.0f, 0.0f), ong::Quaternion(ong::vec3(0, 0, 0), 1));
-        bdesc.type = ong::BodyType::Dynamic;
-        bdesc.angularMomentum = ong::vec3(0, 0, 0); //rotation speed
-        bdesc.linearMomentum = ong::vec3(0, 0, 0);  //movement speed
-        this->m_pBody = a_pWorld->createBody(bdesc);
-
-        ////////   TESTING ONLY   ////////
-
-        CBrickInstance* brick = new CBrickInstance(a_pBrickManager->GetBrick(0), a_pWorld);
-        brick->m_Transform = ong::Transform(ong::vec3(0.0f, 0.0f, 0.0f), ong::Quaternion(ong::vec3(0, 0, 0), 1));
-        brick->m_Color = PuRe_Color(1,1,1,1);
-            for (int i = 0; i<brick->m_pCollider.size();i++)
-                this->m_pBody->addCollider(brick->m_pCollider[i]);
-        this->m_pBricks.push_back(brick);
 
         ////////////////////////////////
         //unsigned int bricksSize = a_pSerializer->ReadIntUnsigned();

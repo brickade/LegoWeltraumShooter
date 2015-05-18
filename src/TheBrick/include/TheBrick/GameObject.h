@@ -11,6 +11,8 @@
 #include "Serializer.h"
 #include "BrickManager.h"
 
+#include "DebugDraw.h"
+
 namespace TheBrick
 {
     class CGameObject

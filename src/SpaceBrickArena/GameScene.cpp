@@ -9,7 +9,7 @@ namespace Game
 
     // **************************************************************************
     // **************************************************************************
-    void CGameScene::Initialize(PuRe_IGraphics* a_pGraphics,PuRe_IWindow* a_pWindow, PuRe_SoundPlayer* a_pSoundPlayer)
+    void CGameScene::Initialize(PuRe_IGraphics* a_pGraphics, PuRe_IWindow* a_pWindow, PuRe_SoundPlayer* a_pSoundPlayer)
     {
         PuRe_GraphicsDescription gdesc = a_pGraphics->GetDescription();
 
@@ -22,11 +22,13 @@ namespace Game
         this->m_pPointLightMaterial = a_pGraphics->LoadMaterial("../data/effects/GameEffects/PointLight/default");
         this->m_pModel = new PuRe_Model(a_pGraphics, "../data/models/brick1.obj");
         this->m_pSkyBox = new PuRe_SkyBox(a_pGraphics, "../data/textures/cube/");
-        this->m_pPointLight = new PuRe_PointLight(a_pGraphics,this->m_pPointLightMaterial);
+        this->m_pPointLight = new PuRe_PointLight(a_pGraphics, this->m_pPointLightMaterial);
         this->m_pRenderer = new PuRe_Renderer(a_pGraphics);
 
         this->m_pPlayerShip = new TheBrick::CSpaceship();
         this->m_pPlayerShip->Deserialize(nullptr, BrickBozz::Instance()->BrickManager, BrickBozz::Instance()->World);
+        this->m_pAsteroid = new TheBrick::CAsteroid();
+        this->m_pAsteroid->Deserialize(nullptr, BrickBozz::Instance()->BrickManager, BrickBozz::Instance()->World);
 
         this->rot = 0.0f;
         this->textureID = 0;
@@ -72,14 +74,22 @@ namespace Game
 
         this->rot += a_pTimer->GetElapsedSeconds()*1.0f;
 
-        for (int i = 0; i < 4; i++)
-        {
-            if (a_pInput->GamepadPressed(a_pInput->Pad_A, i))
-                printf("A pressed by %i\n", i);
-        }
-        this->m_pPlayerShip->HandleInput(this->m_pCamera,a_pInput,a_pTimer->GetElapsedSeconds());
+        this->m_pPlayerShip->HandleInput(this->m_pCamera, a_pInput, a_pTimer->GetElapsedSeconds());
 
         this->m_pCamera->Update(this->m_pPlayerShip, a_pInput, a_pTimer);
+
+        if (a_pInput->GamepadPressed(a_pInput->Pad_A, 0))
+        {
+            ong::Body* b = this->m_pPlayerShip->m_pBody;
+            PuRe_Vector3F forward = TheBrick::OngToPuRe(ong::rotate(ong::vec3(0,0,1), b->getOrientation()));
+            this->m_Bullets.push_back(new TheBrick::CBullet(BrickBozz::Instance()->BrickManager, TheBrick::OngToPuRe(this->m_pPlayerShip->m_Transform.p) + PuRe_Vector3F(-0.5f,-0.5f,0.0f) + forward*10.0f, forward*50.0f, BrickBozz::Instance()->World));
+        }
+        for (unsigned int i = 0; i < this->m_Bullets.size(); i++)
+        {
+            this->m_Bullets[i]->Update(a_pTimer->GetElapsedSeconds());
+            if (this->m_Bullets[i]->m_lifeTime > 10.0f)
+                this->m_Bullets.erase(this->m_Bullets.begin()+i);
+        }
 
 
         return false;
@@ -100,23 +110,23 @@ namespace Game
         Screen.m_Position = PuRe_Vector2F(0.0f, 0.0f);
         Screen.m_Size = PuRe_Vector2F(gdesc.ResolutionWidth, gdesc.ResolutionHeight);
         a_pGraphics->Begin(Screen);
-        this->m_pSkyBox->Draw(this->m_pCamera,this->m_pSkyMaterial);
+        this->m_pSkyBox->Draw(this->m_pCamera, this->m_pSkyMaterial);
         this->m_pPlayerShip->Draw(a_pGraphics, this->m_pCamera);
-        this->m_pModel->Draw(this->m_pCamera, this->m_pMaterial, PuRe_Primitive::Triangles, PuRe_Vector3F(-5.0f, -0.0f, 10.0f), PuRe_Vector3F(5.0f, 5.0f, 5.0f));
-        this->m_pModel->Draw(this->m_pCamera, this->m_pMaterial, PuRe_Primitive::Triangles, PuRe_Vector3F(-1.0f, -10.0f, 7.0f), PuRe_Vector3F(5.0f, 5.0f, 5.0f));
-        this->m_pModel->Draw(this->m_pCamera, this->m_pMaterial, PuRe_Primitive::Triangles, PuRe_Vector3F(5.0f, -5.0f, 5.0f), PuRe_Vector3F(5.0f, 5.0f, 5.0f));
-        this->m_pModel->Draw(this->m_pCamera, this->m_pMaterial, PuRe_Primitive::Triangles, PuRe_Vector3F(-5.0f, -5.0f, 25.0f), PuRe_Vector3F(5.0f, 5.0f, 5.0f));
-        this->m_pModel->Draw(this->m_pCamera, this->m_pMaterial, PuRe_Primitive::Triangles, PuRe_Vector3F(5.0f, -5.0f, 50.0f), PuRe_Vector3F(5.0f, 5.0f, 5.0f));
+        this->m_pAsteroid->Draw(a_pGraphics, this->m_pCamera);
+        for (unsigned int i = 0; i < this->m_Bullets.size(); i++)
+        {
+            this->m_Bullets[i]->Draw(a_pGraphics, this->m_pCamera);
+        }
         a_pGraphics->End();
 
 
-     /*   this->m_pRenderer->Draw(this->m_pModel, PuRe_Primitive::Triangles, this->m_pMaterial, PuRe_Vector3F(0.0f,-1.0f,15.0f),PuRe_Vector3F(),PuRe_Vector3F(),PuRe_Vector3F(10.0f,10.0f,10.0f));
-        this->m_pRenderer->Draw(this->m_pModel, PuRe_Primitive::Triangles, this->m_pMaterial, pos + this->m_pCamera->GetForward()*10.0f);
-        this->m_pRenderer->Draw(this->m_pPointLight,this->m_pPointLightMaterial,pos,PuRe_Vector3F(1.0f,0.0f,0.0f),1.0f,0.01f,0.01f);
-        this->m_pRenderer->Draw(this->m_pSkyBox,this->m_pSkyMaterial);
-        this->m_pRenderer->Begin(clear);
-        this->m_pRenderer->Render(this->m_pCamera,this->m_pPostMaterial);
-        this->m_pRenderer->End();*/
+        /*   this->m_pRenderer->Draw(this->m_pModel, PuRe_Primitive::Triangles, this->m_pMaterial, PuRe_Vector3F(0.0f,-1.0f,15.0f),PuRe_Vector3F(),PuRe_Vector3F(),PuRe_Vector3F(10.0f,10.0f,10.0f));
+           this->m_pRenderer->Draw(this->m_pModel, PuRe_Primitive::Triangles, this->m_pMaterial, pos + this->m_pCamera->GetForward()*10.0f);
+           this->m_pRenderer->Draw(this->m_pPointLight,this->m_pPointLightMaterial,pos,PuRe_Vector3F(1.0f,0.0f,0.0f),1.0f,0.01f,0.01f);
+           this->m_pRenderer->Draw(this->m_pSkyBox,this->m_pSkyMaterial);
+           this->m_pRenderer->Begin(clear);
+           this->m_pRenderer->Render(this->m_pCamera,this->m_pPostMaterial);
+           this->m_pRenderer->End();*/
 
     }
 
@@ -130,6 +140,7 @@ namespace Game
         SAFE_DELETE(this->m_pSkyMaterial);
         SAFE_DELETE(this->m_pMaterial);
         // DELETE OBJECTS
+        SAFE_DELETE(this->m_pAsteroid);
         SAFE_DELETE(this->m_pPlayerShip);
         SAFE_DELETE(this->m_pSkyBox);
         SAFE_DELETE(this->m_pPointLight);

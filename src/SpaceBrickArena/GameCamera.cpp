@@ -60,7 +60,8 @@ namespace Game
         else if (this->m_ZOffset > 10.0f)
             this->m_ZOffset = 10.0f;
 
-        this->SetPosition(TheBrick::OngToPuRe(a_pPlayer->m_Transform.p));
+        
+        this->SetPosition(TheBrick::OngToPuRe(a_pPlayer->m_pBody->getWorldCenter()));
 
         PuRe_Vector3F cameraLook = PuRe_Vector3F();
 
@@ -78,6 +79,6 @@ namespace Game
         if (GamePadThumb.Length() > 1.0f)
             this->Rotate(cameraLook.Y + GamePadThumb.Y, cameraLook.X + GamePadThumb.X, cameraLook.Z);
 
-        this->Move(PuRe_Vector3F(-0.5f, 0.5f, -this->m_ZOffset));
+        this->Move(PuRe_Vector3F(0.0f, 0.0f, -this->m_ZOffset));
     }
 }

@@ -34,7 +34,10 @@ namespace Game
         PuRe_IMaterial* m_pPostMaterial;
         PuRe_IMaterial* m_pPointLightMaterial;
 
+        std::vector<TheBrick::CBullet*> m_Bullets;
+
         TheBrick::CSpaceship* m_pPlayerShip;
+        TheBrick::CAsteroid* m_pAsteroid;
         /// @brief Cameras
         ///
         CGameCamera* m_pCamera;

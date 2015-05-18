@@ -12,12 +12,12 @@ namespace TheBrick
     class CBullet : public CGameObject
     {
     public:
-
+        float m_lifeTime;
     private:
 
 
     public:
-        CBullet();
+        CBullet(CBrickManager* a_pBrickManager,PuRe_Vector3F a_Position, PuRe_Vector3F a_Speed, ong::World* a_pWorld);
         ~CBullet();
 
         void Draw(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera) override;

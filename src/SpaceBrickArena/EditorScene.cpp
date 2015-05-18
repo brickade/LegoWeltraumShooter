@@ -91,11 +91,14 @@ namespace Game
         this->m_pBrickSupervisor->Render(a_pGraphics, this->m_pCamera);
         this->m_pRenderTarget->ApplyLightPass(PuRe_Color(0.0f, 0.0f, 0.0f, 0.0f));
         
-        a_pGraphics->Begin();
+        PuRe_BoundingBox Screen;
+        PuRe_GraphicsDescription gdesc = a_pGraphics->GetDescription();
+        Screen.m_Position = PuRe_Vector2F(0.0f,0.0f);
+        Screen.m_Size = PuRe_Vector2F(gdesc.ResolutionWidth, gdesc.ResolutionHeight);
+        a_pGraphics->Begin(Screen);
         this->m_pPostMaterial->Apply();
         this->m_pPostMaterial->SetFloat((float)textureID, "textureID");
         this->m_pPostMaterial->SetVector3(PuRe_Vector3F(0.01f, 0.01f, 0.01f), "ambient");
-        PuRe_GraphicsDescription gdesc = a_pGraphics->GetDescription();
         this->m_pRenderTarget->Draw(this->m_pPostCamera, this->m_pPostMaterial, PuRe_Vector3F(gdesc.ResolutionWidth / 2.0f, gdesc.ResolutionHeight / 2.0f, 0.0f), PuRe_Vector3F(gdesc.ResolutionWidth / 2.0f, gdesc.ResolutionHeight / 2.0f, 0.0f));
 
         a_pGraphics->End();
