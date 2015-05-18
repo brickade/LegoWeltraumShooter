@@ -21,7 +21,6 @@ namespace Game
     void CEditorScene::Initialize(PuRe_IGraphics* a_pGraphics,PuRe_IWindow* a_pWindow, PuRe_SoundPlayer* a_pSoundPlayer)
     {
         PuRe_GraphicsDescription gdesc = a_pGraphics->GetDescription();
-        this->m_pPostCamera = new PuRe_Camera(PuRe_Vector2F((float)gdesc.ResolutionWidth, (float)gdesc.ResolutionHeight), PuRe_Camera_Orthogonal);
         this->m_pPostMaterial = a_pGraphics->LoadMaterial("../data/effects/Post/default");
         this->m_pSkyBoxMaterial = a_pGraphics->LoadMaterial("../data/effects/skybox/default");
         this->m_pRenderTarget = a_pGraphics->CreateRendertarget();
@@ -57,12 +56,12 @@ namespace Game
         {
             this->textureID--;
             if (this->textureID < 0)
-                this->textureID = 2;
+                this->textureID = 3;
         }
         else if (a_pInput->KeyPressed(a_pInput->Period))
         {
             this->textureID++;
-            if (this->textureID > 2)
+            if (this->textureID > 3)
                 this->textureID = 0;
         }
 
@@ -95,7 +94,7 @@ namespace Game
         renderer->Set((float)this->textureID, "textureID");
         renderer->Set(PuRe_Vector3F(0.02f, 0.02f, 0.02f), "ambient");
         PuRe_Vector3F size = PuRe_Vector3F(a_pGraphics->GetDescription().ResolutionWidth, a_pGraphics->GetDescription().ResolutionHeight, 0.0f);
-        renderer->Render(this->m_pPostCamera, this->m_pPostMaterial, PuRe_Vector3F::Zero(), size);
+        renderer->Render(this->m_pBrickWorker->GetCamera(), this->m_pPostMaterial, PuRe_Vector3F::Zero(), size);
         renderer->End();
     }
 
@@ -108,6 +107,5 @@ namespace Game
         SAFE_DELETE(this->m_pSkyBox);
         SAFE_DELETE(this->m_pRenderTarget);
         SAFE_DELETE(this->m_pPostMaterial);
-        SAFE_DELETE(this->m_pPostCamera);
     }
 }

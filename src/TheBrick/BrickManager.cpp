@@ -20,6 +20,7 @@ namespace TheBrick
     void CBrickManager::Initialize(PuRe_IGraphics& a_pGraphics, PuRe_SoundPlayer& a_pSoundPlayer)
     {
         this->m_pBrickMaterial = a_pGraphics.LoadMaterial("../data/effects/default/default");
+        this->m_pBrickUIMaterial = a_pGraphics.LoadMaterial("../data/effects/editor/default");
     }
 
     // **************************************************************************
@@ -113,5 +114,18 @@ namespace TheBrick
             }
         #endif
         return this->m_pBrickMaterial;
+    }
+
+    // **************************************************************************
+    // **************************************************************************
+    PuRe_IMaterial* CBrickManager::GetBrickUIMaterial()
+    {
+        #ifdef DEBUG
+        if (this->m_pBrickUIMaterial == nullptr)
+            {
+                print("CBrickManager::GetBrickUIMaterial() was called before initializing the BrickManager!!!");
+            }
+        #endif
+        return this->m_pBrickUIMaterial;
     }
 }

@@ -24,7 +24,6 @@ namespace Game
         PuRe_Rendertarget* m_pRenderTarget;
         PuRe_IMaterial* m_pPostMaterial;
         PuRe_IMaterial* m_pSkyBoxMaterial;
-        PuRe_Camera* m_pPostCamera;
         PuRe_PointLight* m_pPointLight;
         PuRe_IMaterial* m_pPointLightMaterial;
         

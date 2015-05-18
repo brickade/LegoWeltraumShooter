@@ -19,6 +19,7 @@ namespace TheBrick
     private:
         std::array<CBrick*, 200> m_bricks;
         PuRe_IMaterial* m_pBrickMaterial;
+        PuRe_IMaterial* m_pBrickUIMaterial;
 
     public:
         CBrickManager();
@@ -33,6 +34,7 @@ namespace TheBrick
         int GetCategoryCount();
 
         PuRe_IMaterial* GetBrickMaterial();
+        PuRe_IMaterial* GetBrickUIMaterial();
     };
 }
 

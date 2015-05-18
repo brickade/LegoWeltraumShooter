@@ -69,7 +69,7 @@ namespace Game
         {
             for (int z = -this->m_maxBrickDistance; z < this->m_maxBrickDistance; z++)
             {
-                this->m_pGridBrick->Draw(this->m_pCamera, this->m_pGridMaterial, PuRe_Primitive::Triangles, PuRe_Vector3F(x* TB_Brick::SEGMENT_WIDTH, -TB_Brick::SEGMENT_HEIGHT, z* TB_Brick::SEGMENT_WIDTH), PuRe_Vector3F(1.0f, 1.0f, 1.0f), PuRe_MatrixF::Identity(), PuRe_Vector3F(0.0f, 0.0f, 0.0f), PuRe_Color(0.7f, 0.2f, 0.2f));
+                renderer->Draw(this->m_pGridBrick, PuRe_Primitive::Triangles, this->m_pGridMaterial, PuRe_Vector3F(x* TB_Brick::SEGMENT_WIDTH, -TB_Brick::SEGMENT_HEIGHT, z* TB_Brick::SEGMENT_WIDTH), PuRe_MatrixF::Identity(), PuRe_Vector3F(0.0f, 0.0f, 0.0f), PuRe_Vector3F(1.0f, 1.0f, 1.0f), PuRe_Color(0.7f, 0.2f, 0.2f));
             }
         }
 
