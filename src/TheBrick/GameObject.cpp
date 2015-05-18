@@ -73,7 +73,7 @@ namespace TheBrick
     void CGameObject::AddBrickInstance(const CBrickInstance& a_BrickInstance)
     {
         CBrickInstance* brickInstance = new CBrickInstance(a_BrickInstance);
-        for (int i = 0; i < brickInstance->m_pCollider.size(); i++)
+        for (size_t i = 0; i < brickInstance->m_pCollider.size(); i++)
         {
             this->m_pBody->addCollider(brickInstance->m_pCollider[i]);
         }

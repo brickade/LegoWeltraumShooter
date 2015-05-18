@@ -27,9 +27,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\TheBrick\TheBrick.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="include\TheBrick\Brick.h">
       <Filter>Headerdateien\Brick</Filter>
     </ClInclude>

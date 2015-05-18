@@ -36,7 +36,7 @@ namespace Game
 
         this->lastInputIsGamepad = false;
 
-        this->m_pSpaceship = new PuRe_List<TB_BrickInstance*>();
+        this->m_pSpaceship = new TheBrick::CSpaceship(*BrickBozz::Instance()->World);
     }
 
     // **************************************************************************
@@ -69,7 +69,7 @@ namespace Game
         {
             for (int z = -this->m_maxBrickDistance; z < this->m_maxBrickDistance; z++)
             {
-                renderer->Draw(this->m_pGridBrick, PuRe_Primitive::Triangles, this->m_pGridMaterial, PuRe_Vector3F(x* TB_Brick::SEGMENT_WIDTH, -TB_Brick::SEGMENT_HEIGHT, z* TB_Brick::SEGMENT_WIDTH), PuRe_MatrixF::Identity(), PuRe_Vector3F(0.0f, 0.0f, 0.0f), PuRe_Vector3F(1.0f, 1.0f, 1.0f), PuRe_Color(0.7f, 0.2f, 0.2f));
+                renderer->Draw(this->m_pGridBrick, PuRe_Primitive::Triangles, this->m_pGridMaterial, PuRe_Vector3F(x* TheBrick::CBrick::SEGMENT_WIDTH, -TheBrick::CBrick::SEGMENT_HEIGHT, z* TheBrick::CBrick::SEGMENT_WIDTH), PuRe_MatrixF::Identity(), PuRe_Vector3F(0.0f, 0.0f, 0.0f), PuRe_Vector3F(1.0f, 1.0f, 1.0f), PuRe_Color(0.7f, 0.2f, 0.2f));
             }
         }
 
@@ -166,8 +166,8 @@ namespace Game
         this->m_currentBrickPosition = this->m_currentPosition;
 
         //Snap to grid
-        this->m_currentBrickPosition.X = this->m_currentBrickPosition.X - fmod(this->m_currentBrickPosition.X, TB_Brick::SEGMENT_WIDTH);
-        this->m_currentBrickPosition.Y = this->m_currentBrickPosition.Y - fmod(this->m_currentBrickPosition.Y, TB_Brick::SEGMENT_WIDTH);
+        this->m_currentBrickPosition.X = this->m_currentBrickPosition.X - fmod(this->m_currentBrickPosition.X, TheBrick::CBrick::SEGMENT_WIDTH);
+        this->m_currentBrickPosition.Y = this->m_currentBrickPosition.Y - fmod(this->m_currentBrickPosition.Y, TheBrick::CBrick::SEGMENT_WIDTH);
 
         //printf("brickpos:%f,%f\n", this->m_currentBrickPosition.X, this->m_currentBrickPosition.Y);
     }
@@ -208,9 +208,9 @@ namespace Game
         //Gamepad & Mouse
         if (a_pInput.GamepadPressed(a_pInput.Pad_A, this->m_playerIdx) || a_pInput.MousePressed(a_pInput.LeftClick))
         {
-            TB_BrickInstance* brickInstance = new TB_BrickInstance(*this->m_pCurrentBrick);
+            TheBrick::CBrickInstance* brickInstance = new TheBrick::CBrickInstance(*this->m_pCurrentBrick);
 //            brickInstance->RotateAroundPivotOffset(TheBrick::OngToPuRe(ong::QuatFromEulerAngles(this->m_currentBrickRotation, 0, 0)));
-            this->m_pSpaceship->push_back(brickInstance);
+            this->m_pSpaceship->AddBrickInstance(*brickInstance);
         }
     }
 }

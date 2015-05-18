@@ -3,11 +3,11 @@
 
 #include <PuReEngine/Core.h>
 #include <PuReEngine/Defines.h>
-#include <TheBrick/TheBrick.h>
 #include <Onager/World.h>
 
 #include "BrickBozz.h"
 #include "EditorCamera.h"
+#include <TheBrick/Spaceship.h>
 
 namespace Game
 {
@@ -27,12 +27,12 @@ namespace Game
 
         int m_playerIdx;
 
-        TB_BrickInstance* m_pCurrentBrick;
+        TheBrick::CBrickInstance* m_pCurrentBrick;
+
+        TheBrick::CSpaceship* m_pSpaceship;
 
         PuRe_IMaterial* m_pGridMaterial;
         PuRe_Model* m_pGridBrick;
-
-        PuRe_List<TB_BrickInstance*>* m_pSpaceship;
 
         bool lastInputIsGamepad;
 

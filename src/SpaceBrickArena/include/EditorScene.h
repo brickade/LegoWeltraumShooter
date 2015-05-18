@@ -3,7 +3,6 @@
 
 #include <PuReEngine/Core.h>
 #include <PuReEngine/Defines.h>
-#include <TheBrick/TheBrick.h>
 #include <TheBrick/Brick.h>
 #include <TheBrick/Serializer.h>
 

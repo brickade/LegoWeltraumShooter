@@ -4,7 +4,6 @@
 // Framework specific includes
 #include <PuReEngine/Core.h>
 #include <PuReEngine/Defines.h>
-#include <TheBrick/TheBrick.h>
 
 #include "BrickBozz.h"
 
