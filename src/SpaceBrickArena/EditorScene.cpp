@@ -26,8 +26,8 @@ namespace Game
         this->m_pSkyBoxMaterial = a_pGraphics->LoadMaterial("../data/effects/skybox/default");
         this->m_pRenderTarget = a_pGraphics->CreateRendertarget();
 
-        this->m_pPointLight = new PuRe_PointLight(a_pGraphics, this->m_pPointLightMaterial);
         this->m_pPointLightMaterial = a_pGraphics->LoadMaterial("../data/effects/PointLight/default");
+        this->m_pPointLight = new PuRe_PointLight(a_pGraphics, this->m_pPointLightMaterial);
 
         this->m_pSkyBox = new PuRe_SkyBox(a_pGraphics, "../data/textures/skybox/");
 
