@@ -137,6 +137,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\TheBrick\Asteroid.h" />
     <ClInclude Include="include\TheBrick\Bullet.h" />
     <ClInclude Include="include\TheBrick\Brick.h" />
     <ClInclude Include="include\TheBrick\BrickInstance.h" />
@@ -153,6 +154,7 @@
     <ClInclude Include="include\TheBrick\BrickTimer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Asteroid.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Brick.cpp" />
     <ClCompile Include="BrickInstance.cpp" />

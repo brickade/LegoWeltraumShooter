@@ -69,6 +69,9 @@
     <ClInclude Include="include\TheBrick\CSVParser.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="include\TheBrick\Asteroid.h">
+      <Filter>Headerdateien\GameObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Brick.cpp">
@@ -103,6 +106,9 @@
     </ClCompile>
     <ClCompile Include="CSVParser.cpp">
       <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Asteroid.cpp">
+      <Filter>Quelldateien\GameObject</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
