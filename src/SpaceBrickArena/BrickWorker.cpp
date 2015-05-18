@@ -20,17 +20,17 @@ namespace Game
 
     // **************************************************************************
     // **************************************************************************
-    void CBrickWorker::Initialize(PuRe_IGraphics* a_pGraphics)
+    void CBrickWorker::Initialize(PuRe_IGraphics& a_pGraphics)
     {
-        PuRe_GraphicsDescription gdesc = a_pGraphics->GetDescription();
+        PuRe_GraphicsDescription gdesc = a_pGraphics.GetDescription();
         this->m_pCamera = new CEditorCamera(PuRe_Vector2F((float)gdesc.ResolutionWidth, (float)gdesc.ResolutionHeight), PuRe_Camera_Perspective, this->m_playerIdx);
         this->m_pCamera->Initialize();
         this->m_pCamera->Rotate(10, 0, 0);
         this->m_currentPosition = PuRe_Vector2F(0, 0);
         this->m_currentHeight = 0;
         
-        this->m_pGridMaterial = a_pGraphics->LoadMaterial("../data/effects/editor/grid");
-        this->m_pGridBrick = new PuRe_Model(a_pGraphics, "../data/models/brick1.obj");
+        this->m_pGridMaterial = a_pGraphics.LoadMaterial("../data/effects/editor/grid");
+        this->m_pGridBrick = new PuRe_Model(&a_pGraphics, "../data/models/brick1.obj");
         
         this->m_maxBrickDistance = 15;
 
@@ -41,19 +41,27 @@ namespace Game
 
     // **************************************************************************
     // **************************************************************************
-    void CBrickWorker::Update(PuRe_IGraphics* a_pGraphics, PuRe_IWindow* a_pWindow, PuRe_IInput* a_pInput, PuRe_Timer* a_pTimer, PuRe_SoundPlayer* a_pSoundPlayer, TheBrick::CBrick* a_pCurrentBrick)
+    void CBrickWorker::Update(PuRe_IGraphics& a_pGraphics, PuRe_IWindow& a_pWindow, PuRe_IInput& a_pInput, PuRe_Timer& a_pTimer, PuRe_SoundPlayer& a_pSoundPlayer, TheBrick::CBrick* a_pCurrentBrick)
     {
-        this->m_pCurrentBrick = a_pCurrentBrick;
-        this->m_pCamera->Update(a_pGraphics, a_pWindow, a_pInput, a_pTimer);
-        this->UpdateTranslation(a_pInput, this->m_pCamera->GetForward(), a_pTimer->GetElapsedSeconds());
+        if (this->m_pCurrentBrick == nullptr || this->m_pCurrentBrick->m_pBrick != a_pCurrentBrick)
+        {
+            SAFE_DELETE(this->m_pCurrentBrick);
+            this->m_pCurrentBrick = a_pCurrentBrick->CreateInstance(*BrickBozz::Instance()->World);
+            this->m_pCurrentBrick->GetTransform().p = ong::vec3(this->m_currentBrickPosition.X, this->m_currentHeight, this->m_currentBrickPosition.Y);
+            this->m_pCurrentBrick->RotateAroundPivotOffset(PuRe_QuaternionF(0.0f, this->m_currentBrickRotation, 0.0f));
+            this->m_pCurrentBrick->m_Color = PuRe_Color(0.5f, 0.6f, 1.0f);
+        }
+        this->m_pCamera->Update(&a_pGraphics, &a_pWindow, &a_pInput, &a_pTimer);
+        this->UpdateTranslation(a_pInput, this->m_pCamera->GetForward(), a_pTimer.GetElapsedSeconds());
         this->UpdateRotation(a_pInput, 90.0f * 0.0174532925f);
-        this->UpdatePlacement(a_pInput, BrickBozz::Instance()->World);
+        this->UpdatePlacement(a_pInput);
     }
 
     // **************************************************************************
     // **************************************************************************
-    void CBrickWorker::Render(PuRe_IGraphics* a_pGraphics)
+    void CBrickWorker::Render()
     {
+        PuRe_Renderer* renderer = BrickBozz::Instance()->Renderer;
         if (this->m_pCurrentBrick == nullptr)
             return;
         //Grid
@@ -66,37 +74,37 @@ namespace Game
         }
 
         //Spaceship
-        for (int i = 0; i < this->m_pSpaceship->size(); ++i)
+        /*for (int i = 0; i < this->m_pSpaceship->size(); ++i)
         {
             (*this->m_pSpaceship)[i]->Draw(a_pGraphics, this->m_pCamera, ong::Transform(ong::vec3(0, 0, 0), ong::Quaternion(ong::vec3(0, 0, 0), 1)));
-        }
+        }*/
 
         //Current Brick
-        this->m_pCurrentBrick->Draw(a_pGraphics, this->m_pCamera, PuRe_Vector3F(this->m_currentBrickPosition.X, this->m_currentHeight, this->m_currentBrickPosition.Y), PuRe_QuaternionF(0.0f, this->m_currentBrickRotation, 0.0f).GetMatrix(), PuRe_Color(0.5f, 0.6f, 1.0f));
+        //this->m_pCurrentBrick->Draw(a_pGraphics, this->m_pCamera, PuRe_Vector3F(this->m_currentBrickPosition.X, this->m_currentHeight, this->m_currentBrickPosition.Y), PuRe_QuaternionF(0.0f, this->m_currentBrickRotation, 0.0f).GetMatrix(), PuRe_Color(0.5f, 0.6f, 1.0f));
     }
 
     // **************************************************************************
     // **************************************************************************
-    void CBrickWorker::UpdateTranslation(PuRe_IInput* a_pInput, PuRe_Vector3F a_cameraLook, float a_speed)
+    void CBrickWorker::UpdateTranslation(PuRe_IInput& a_pInput, PuRe_Vector3F a_cameraLook, float a_speed)
     {
         PuRe_Vector2F MoveInput;
 
         //----------Gamepad
         float gamepadSpeed = a_speed * 10;
         PuRe_Vector2F gamepadInput;
-        if (a_pInput->GamepadIsPressed(a_pInput->DPAD_Right, this->m_playerIdx))
+        if (a_pInput.GamepadIsPressed(a_pInput.DPAD_Right, this->m_playerIdx))
         {
             gamepadInput.X += 1;
         }
-        if (a_pInput->GamepadIsPressed(a_pInput->DPAD_Left, this->m_playerIdx))
+        if (a_pInput.GamepadIsPressed(a_pInput.DPAD_Left, this->m_playerIdx))
         {
             gamepadInput.X -= 1;
         }
-        if (a_pInput->GamepadIsPressed(a_pInput->DPAD_Up, this->m_playerIdx))
+        if (a_pInput.GamepadIsPressed(a_pInput.DPAD_Up, this->m_playerIdx))
         {
             gamepadInput.Y += 1;
         }
-        if (a_pInput->GamepadIsPressed(a_pInput->DPAD_Down, this->m_playerIdx))
+        if (a_pInput.GamepadIsPressed(a_pInput.DPAD_Down, this->m_playerIdx))
         {
             gamepadInput.Y -= 1;
         }
@@ -111,10 +119,10 @@ namespace Game
         }
 
         //----------Mouse
-        if (/*!a_pInput->MouseIsPressed(a_pInput->LeftClick) && */!a_pInput->MouseIsPressed(a_pInput->RightClick))
+        if (/*!a_pInput->MouseIsPressed(a_pInput->LeftClick) && */!a_pInput.MouseIsPressed(a_pInput.RightClick))
         {
             float mouseSpeed = a_speed * 1.5f;
-            PuRe_Vector2F mouseDelta = a_pInput->GetRelativeMousePosition();
+            PuRe_Vector2F mouseDelta = a_pInput.GetRelativeMousePosition();
             mouseDelta.Y *= -1;
             //Apply
             MoveInput += mouseDelta * mouseSpeed;
@@ -166,24 +174,24 @@ namespace Game
 
     // **************************************************************************
     // **************************************************************************
-    void CBrickWorker::UpdateRotation(PuRe_IInput* a_pInput, float a_rotationPerClick)
+    void CBrickWorker::UpdateRotation(PuRe_IInput& a_pInput, float a_rotationPerClick)
     {
         //----------Gamepad
-        if (a_pInput->GamepadPressed(a_pInput->Right_Shoulder, this->m_playerIdx))
+        if (a_pInput.GamepadPressed(a_pInput.Right_Shoulder, this->m_playerIdx))
         {
             this->m_currentRotation += a_rotationPerClick;
         }
-        if (a_pInput->GamepadPressed(a_pInput->Left_Shoulder, this->m_playerIdx))
+        if (a_pInput.GamepadPressed(a_pInput.Left_Shoulder, this->m_playerIdx))
         {
             this->m_currentRotation -= a_rotationPerClick;
         }
 
         //----------Keyboard
-        if (a_pInput->KeyPressed(a_pInput->E))
+        if (a_pInput.KeyPressed(a_pInput.E))
         {
             this->m_currentRotation += a_rotationPerClick;
         }
-        if (a_pInput->KeyPressed(a_pInput->Q))
+        if (a_pInput.KeyPressed(a_pInput.Q))
         {
             this->m_currentRotation -= a_rotationPerClick;
         }
@@ -195,14 +203,13 @@ namespace Game
 
     // **************************************************************************
     // **************************************************************************
-    void CBrickWorker::UpdatePlacement(PuRe_IInput* a_pInput, ong::World* a_pWorld)
+    void CBrickWorker::UpdatePlacement(PuRe_IInput& a_pInput)
     {
         //Gamepad & Mouse
-        if (a_pInput->GamepadPressed(a_pInput->Pad_A, this->m_playerIdx) || a_pInput->MousePressed(a_pInput->LeftClick))
+        if (a_pInput.GamepadPressed(a_pInput.Pad_A, this->m_playerIdx) || a_pInput.MousePressed(a_pInput.LeftClick))
         {
-            TB_BrickInstance* brickInstance = new TB_BrickInstance(this->m_pCurrentBrick, a_pWorld, PuRe_Color(1.0f, 0.5f, 0.6f));
-            brickInstance->GetTransform().p = ong::vec3(this->m_currentBrickPosition.X, this->m_currentHeight, this->m_currentBrickPosition.Y);
-            brickInstance->GetTransform().q = ong::QuatFromEulerAngles(this->m_currentBrickRotation, 0, 0);
+            TB_BrickInstance* brickInstance = new TB_BrickInstance(*this->m_pCurrentBrick);
+//            brickInstance->RotateAroundPivotOffset(TheBrick::OngToPuRe(ong::QuatFromEulerAngles(this->m_currentBrickRotation, 0, 0)));
             this->m_pSpaceship->push_back(brickInstance);
         }
     }

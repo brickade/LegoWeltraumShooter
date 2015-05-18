@@ -38,11 +38,24 @@ namespace TheBrick
         PuRe_Vector3F m_Pivotoffset;
         PuRe_List<SNub> m_pNubs;
         PuRe_List<ong::ColliderData> m_pColliderData;
+        PuRe_List<CBrickInstance*> m_pBrickInstances;
+        PuRe_RenderInstance* m_pRenderInstances;
+        int m_RenderInstancesCount;
 
     // ------------------------------------------------------------------------
     // Getter & Setter
     // ------------------------------------------------------------------------
     public:
+        PuRe_List<CBrickInstance*> GetBrickInstances()
+        {
+            return this->m_pBrickInstances;
+        }
+
+        PuRe_RenderInstance* GetRenderInstances()
+        {
+            return this->m_pRenderInstances;
+        }
+
         PuRe_Model* GetModel()
         {
             return this->m_pModel;
@@ -127,16 +140,19 @@ namespace TheBrick
     // METHODS
     // ------------------------------------------------------------------------
     public:
-        CBrick(PuRe_IMaterial* a_pMaterial);
-        CBrick(PuRe_Model* a_pModel, PuRe_IMaterial* a_pMaterial);
+        CBrick(PuRe_IMaterial& a_pMaterial);
+        CBrick(PuRe_Model& a_pModel, PuRe_IMaterial& a_pMaterial);
         ~CBrick();
 
-        CBrickInstance* CreateInstance(ong::World* a_pWorld);
+        CBrickInstance* CreateInstance(ong::World& a_pWorld);
+        void AddInstance(CBrickInstance& a_rBrickInstance);
+        void DeleteInstance(CBrickInstance& a_rBrickInstance);
+        void RebuildRenderinstances();
 
-        void Draw(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera, PuRe_Vector3F a_Position, PuRe_MatrixF a_Rotation, PuRe_Color a_Color = PuRe_Color(1, 1, 1, 1), PuRe_Vector3F a_Scale = PuRe_Vector3F(1, 1, 1));
+        void Draw(PuRe_Renderer& a_rRenderer);
 
-        void Deserialize(CSerializer* a_pSerializer, PuRe_IGraphics* a_pGraphics, ong::World* a_pWorld);
-        void Serialize(CSerializer* a_pSerializer);
+        void Deserialize(CSerializer& a_pSerializer, PuRe_IGraphics& a_pGraphics, ong::World& a_pWorld);
+        void Serialize(CSerializer& a_pSerializer);
 
         int GetCategoryId();
     };

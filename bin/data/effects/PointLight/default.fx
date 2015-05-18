@@ -3,15 +3,20 @@ float4x4 Rotation;
 float4x4 Translation;
 float4x4 View;
 float4x4 Projection;
-float textureID;
+
+float4x4 InvertViewProjection;
+
+float3 LightPos;
+float3 LightColor;
 float2 Resolution;
-float3 ambient;
+float AttenuationConst;
+float AttenuationLin;
+float AttenuationExp;
 
 Texture2D DiffuseMap;
 Texture2D NormalMap;
 Texture2D PositionMap;
 Texture2D DepthMap;
-Texture2D LightMap;
 
 SamplerState TextureSampler
 {
@@ -45,6 +50,23 @@ float2 CalcTexCoord(float4 Position)
     return Position.xy / Resolution;
 }
 
+float4 CalcPointLight(float3 WorldPosition,float3 LightPosition, float3 Normal)
+{
+    float3 LightDirection = WorldPosition - LightPosition;
+    float Distance = length(LightDirection);
+    LightDirection = normalize(LightDirection);
+
+    float DiffuseFactor = dot(Normal, -LightDirection);
+
+    float4 Color = float4(LightColor,1) * DiffuseFactor;
+    float Attenuation = AttenuationConst +
+                        AttenuationLin * Distance +
+                        AttenuationExp * Distance * Distance;
+
+    return Color / Attenuation;
+}
+
+
 VertexShaderOutput VS_MAIN(VertexShaderInput input)
 {
   VertexShaderOutput Output = (VertexShaderOutput)0;
@@ -69,29 +91,34 @@ PixelShaderOutput PS_MAIN(VertexShaderOutput input)
 {
   PixelShaderOutput output;
 
+
   float2 TexCoord = CalcTexCoord(input.Position);
 
   float4 blend = DiffuseMap.Sample(TextureSampler, TexCoord);
   float4 norm = (NormalMap.Sample(TextureSampler, TexCoord)*2)-1;
   float4 pos = PositionMap.Sample(TextureSampler, TexCoord);
   float4 depth = DepthMap.Sample(TextureSampler, TexCoord);
-  float4 light = LightMap.Sample(TextureSampler, TexCoord);
 
 
-  blend = float4((blend.xyz*light.xyz)+ambient,blend.a);
+  float4 worldpos;
+
+  worldpos.x = TexCoord.x * 2.0f -1.0f;
+
+  worldpos.y = (1.0f-TexCoord.y) * 2.0f -1.0f;
+
+  worldpos.z = depth.r;
+
+  worldpos.w = 1.0f;
 
 
-  float textureID = 0.0;
-  if(textureID == 0.0)
-    output.color = blend;
-  else if(textureID == 1.0)
-    output.color = norm;
-  else if(textureID == 2.0)
-    output.color = float4(1-depth.r,1-depth.r,1-depth.r,1);
-  else if(textureID == 3.0)
-    output.color = float4(light.xyz+ambient,light.a);
-  else
-    output.color = pos;
+  worldpos = mul(worldpos,InvertViewProjection);
+
+  worldpos /= worldpos.w;
+
+  float4 lights = CalcPointLight(worldpos.xyz,LightPos,norm.xyz);
+
+  output.color = lights;
+
   return output;
 }
 

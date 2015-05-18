@@ -14,11 +14,4 @@ namespace TheBrick
     {
 
     }
-
-    // **************************************************************************
-    // **************************************************************************
-    void CBullet::Draw(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera)
-    {
-        CGameObject::Draw(a_pGraphics, a_pCamera);
-    }
 }

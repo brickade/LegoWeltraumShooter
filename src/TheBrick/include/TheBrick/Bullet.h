@@ -19,8 +19,6 @@ namespace TheBrick
     public:
         CBullet(ong::World& a_rWorld);
         ~CBullet();
-
-        void Draw(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera) override;
     };
 }
 

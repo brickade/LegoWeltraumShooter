@@ -4,7 +4,14 @@ float4x4 Translation;
 float4x4 View;
 float4x4 Projection;
 
-Texture2D Diffuse;
+float3 LightDirection;
+float3 LightColor;
+float2 Resolution;
+
+Texture2D DiffuseMap;
+Texture2D NormalMap;
+Texture2D PositionMap;
+Texture2D DepthMap;
 
 SamplerState TextureSampler
 {
@@ -28,6 +35,15 @@ struct VertexShaderOutput
   float3 Normal   : NORMAL;
 };
 
+struct PixelShaderOutput
+{
+  float4 color: SV_TARGET0;
+};
+
+float2 CalcTexCoord(float4 Position)
+{
+    return Position.xy / Resolution;
+}
 
 VertexShaderOutput VS_MAIN(VertexShaderInput input)
 {
@@ -49,13 +65,21 @@ VertexShaderOutput VS_MAIN(VertexShaderInput input)
   return Output;
 }
 
-float4 PS_MAIN(VertexShaderOutput input) : SV_TARGET
+PixelShaderOutput PS_MAIN(VertexShaderOutput input)
 {
-  // Sample texture
-  float4 blend = Diffuse.Sample(TextureSampler, input.UV);
-  if(blend.a < 0.1)
-    discard;
-  return Diffuse.Sample(TextureSampler, input.UV);
+  PixelShaderOutput output;
+
+  float2 UV = CalcTexCoord(input.Position);
+  float4 norm = (NormalMap.Sample(TextureSampler, UV) *2 )-1;
+    if(norm.a < 0.1)
+     discard;
+
+  float Factor = max(dot(norm.xyz,-LightDirection),0.0);
+
+  float4 lights = float4(LightColor*Factor,1);
+
+  output.color = lights;
+  return output;
 }
 
 RasterizerState Culling

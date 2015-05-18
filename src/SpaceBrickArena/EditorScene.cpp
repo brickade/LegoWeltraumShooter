@@ -26,15 +26,18 @@ namespace Game
         this->m_pSkyBoxMaterial = a_pGraphics->LoadMaterial("../data/effects/skybox/default");
         this->m_pRenderTarget = a_pGraphics->CreateRendertarget();
 
+        this->m_pPointLight = new PuRe_PointLight(a_pGraphics, this->m_pPointLightMaterial);
+        this->m_pPointLightMaterial = a_pGraphics->LoadMaterial("../data/effects/PointLight/default");
+
         this->m_pSkyBox = new PuRe_SkyBox(a_pGraphics, "../data/textures/skybox/");
 
         this->textureID = 0;
 
         this->m_pBrickSupervisor = new CBrickSupervisor(this->m_playerIdx);
-        this->m_pBrickSupervisor->Initialize(a_pGraphics);
+        this->m_pBrickSupervisor->Initialize(*a_pGraphics);
 
         this->m_pBrickWorker = new CBrickWorker(this->m_playerIdx);
-        this->m_pBrickWorker->Initialize(a_pGraphics);
+        this->m_pBrickWorker->Initialize(*a_pGraphics);
     }
 
     // **************************************************************************
@@ -63,8 +66,8 @@ namespace Game
                 this->textureID = 0;
         }
 
-        this->m_pBrickSupervisor->Update(a_pGraphics, a_pWindow, a_pInput, a_pTimer, a_pSoundPlayer);
-        this->m_pBrickWorker->Update(a_pGraphics, a_pWindow, a_pInput, a_pTimer, a_pSoundPlayer, this->m_pBrickSupervisor->GetSelectedBrick());
+        this->m_pBrickSupervisor->Update(*a_pGraphics, *a_pWindow, *a_pInput, *a_pTimer, *a_pSoundPlayer);
+        this->m_pBrickWorker->Update(*a_pGraphics, *a_pWindow, *a_pInput, *a_pTimer, *a_pSoundPlayer, this->m_pBrickSupervisor->GetSelectedBrick());
 
         return false;
     }
@@ -73,24 +76,27 @@ namespace Game
     // **************************************************************************
     void CEditorScene::Render(PuRe_IGraphics* a_pGraphics)
     {
-        PuRe_Color clearColor = PuRe_Color(0.1f, 0.5f, 0.1f);
+        PuRe_Renderer* renderer = BrickBozz::Instance()->Renderer;
+        renderer->Begin(PuRe_Color(0.1f, 0.5f, 0.1f));
+        //Lights
+        renderer->Draw(this->m_pPointLight, this->m_pPointLightMaterial, PuRe_Vector3F(5.0f, 0.0f, 0.0f), PuRe_Vector3F(1.0f, 0.0f, 0.0f), 1.0f, 0.01f, 0.01f);
+        renderer->Draw(this->m_pPointLight, this->m_pPointLightMaterial, PuRe_Vector3F(0.0f, 5.0f, 0.0f), PuRe_Vector3F(1.0f, 1.0f, 0.0f));
+        renderer->Draw(this->m_pPointLight, this->m_pPointLightMaterial, PuRe_Vector3F(0.0f, 0.0f, 5.0f), PuRe_Vector3F(1.0f, 0.0f, 1.0f));
+        renderer->Draw(this->m_pPointLight, this->m_pPointLightMaterial, PuRe_Vector3F(5.0f, 5.0f, 0.0f), PuRe_Vector3F(1.0f, 1.0f, 1.0f));
+        renderer->Draw(this->m_pPointLight, this->m_pPointLightMaterial, PuRe_Vector3F(0.0f, 5.0f, 5.0f), PuRe_Vector3F(1.0f, 0.0f, 1.0f));
+        renderer->Draw(this->m_pPointLight, this->m_pPointLightMaterial, PuRe_Vector3F(0.0f, 0.0f, 0.0f), PuRe_Vector3F(1.0f, 0.2f, 0.7f));
         
-        a_pGraphics->Clear(clearColor);
-        this->m_pRenderTarget->ApplyGeometryPass(PuRe_Color(0.0f,0.0f,0.0f,0.0f));
-        this->m_pSkyBox->Draw(this->m_pBrickWorker->GetCamera(), this-> m_pSkyBoxMaterial, PuRe_Vector3F(0.0f, 0.0f, 0.0f));
-        //this->m_pSkyBox->Draw(this->m_pCamera, PuRe_MatrixF::Identity());
-        this->m_pBrickWorker->Render(a_pGraphics);
-        this->m_pBrickSupervisor->Render(a_pGraphics);
-        this->m_pRenderTarget->ApplyLightPass(PuRe_Color(0.0f, 0.0f, 0.0f, 0.0f));
-        
-        a_pGraphics->Begin();
-        this->m_pPostMaterial->Apply();
-        this->m_pPostMaterial->SetFloat((float)textureID, "textureID");
-        this->m_pPostMaterial->SetVector3(PuRe_Vector3F(0.02f, 0.02f, 0.02f), "ambient");
-        PuRe_GraphicsDescription gdesc = a_pGraphics->GetDescription();
-        this->m_pRenderTarget->Draw(this->m_pPostCamera, this->m_pPostMaterial, PuRe_Vector3F(gdesc.ResolutionWidth / 2.0f, gdesc.ResolutionHeight / 2.0f, 0.0f), PuRe_Vector3F(gdesc.ResolutionWidth / 2.0f, gdesc.ResolutionHeight / 2.0f, 0.0f));
-
-        a_pGraphics->End();
+        //Skybox
+        renderer->Draw(this->m_pSkyBox, this->m_pSkyBoxMaterial);
+        //Bricks
+        this->m_pBrickWorker->Render();
+        this->m_pBrickSupervisor->Render(*a_pGraphics);
+        //Post
+        renderer->Set((float)this->textureID, "textureID");
+        renderer->Set(PuRe_Vector3F(0.02f, 0.02f, 0.02f), "ambient");
+        PuRe_Vector3F size = PuRe_Vector3F(a_pGraphics->GetDescription().ResolutionWidth, a_pGraphics->GetDescription().ResolutionHeight, 0.0f);
+        renderer->Render(this->m_pPostCamera, this->m_pPostMaterial, PuRe_Vector3F::Zero(), size);
+        renderer->End();
     }
 
     // **************************************************************************

@@ -26,7 +26,7 @@ namespace Game
 
     // **************************************************************************
     // **************************************************************************
-    void CNavigation::Update(PuRe_Timer* a_pTimer, PuRe_Vector2F a_InputVector)
+    void CNavigation::Update(PuRe_Timer& a_pTimer, PuRe_Vector2F a_InputVector)
     {
         EDirection::Type a_NewDirection = this->DirectionFromInputVector(a_InputVector);
         if (a_NewDirection != this->m_PreviousState)
@@ -40,7 +40,7 @@ namespace Game
         }
         else if (a_NewDirection != EDirection::None && this->m_pTimer->GetTotalElapsedSeconds() > this->m_ScrollingThreshold) //Scrolling
         {
-            this->Scroll(a_InputVector, a_pTimer->GetTotalElapsedSeconds());
+            this->Scroll(a_InputVector, a_pTimer.GetTotalElapsedSeconds());
         }
         this->m_PreviousState = a_NewDirection;
     }

@@ -5,43 +5,37 @@ namespace TheBrick
 {
     // **************************************************************************
     // **************************************************************************
-    CBrickInstance::CBrickInstance(CBrick* a_pBrick, ong::World* a_pWorld, PuRe_Color a_pColor)
+    CBrickInstance::CBrickInstance(CBrick& a_pBrick, ong::World& a_pWorld, PuRe_Color a_pColor)
     {
-        this->m_pBrick = a_pBrick;
+        this->m_pBrick = &a_pBrick;
         for (size_t i = 0; i < this->m_pBrick->GetColliderData().size(); i++)
         {
-            this->m_pCollider.push_back(a_pWorld->createCollider(this->m_pBrick->GetColliderData()[i]));
+            this->m_pCollider.push_back(a_pWorld.createCollider(this->m_pBrick->GetColliderData()[i]));
         }
         this->m_Color = a_pColor;
+        a_pBrick.AddInstance(*this);
     }
 
     // **************************************************************************
     // **************************************************************************
     CBrickInstance::~CBrickInstance()
     {
-
+        this->m_pBrick->DeleteInstance(*this);
     }
 
     // **************************************************************************
     // **************************************************************************
-    void CBrickInstance::Draw(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera, const ong::Transform& a_rWorldTransform)
+    PuRe_Vector3F CBrickInstance::TransformToBrickSpace(PuRe_Vector3F a_WorldSpacePos)
     {
-        ong::Transform& localTransform = this->GetTransform();
-        this->m_pBrick->Draw(a_pGraphics, a_pCamera, TheBrick::OngToPuRe(a_rWorldTransform.p + localTransform.p), TheBrick::OngToPuRe(a_rWorldTransform.q * localTransform.q).GetMatrix(), this->m_Color);
+        return OngToPuRe(ong::rotate(PuReToOng(a_WorldSpacePos) - this->GetTransform().p, ong::conjugate(this->GetTransform().q)));
     }
 
     // **************************************************************************
     // **************************************************************************
-    PuRe_List<SNub>* CBrickInstance::GetWorldSpaceNubs()
+    void CBrickInstance::RotateAroundPivotOffset(PuRe_QuaternionF a_Quaternion)
     {
-        PuRe_List<SNub>* nubs = new PuRe_List<SNub>(this->m_pBrick->GetNubs()); //Copy nubs
-        for (unsigned int i = 0; i < nubs->size(); i++)
-        {
-            SNub* n = &(*nubs)[i];
-            n->Position += OngToPuRe(this->GetTransform().p);
-            n->Direction *= OngToPuRe(this->GetTransform().q);
-            //TODO Die Position der Nubs muss noch um den Pivot des Bricks rotiert werden
-        }
-        return nubs;
+        PuRe_MatrixF rot = PuRe_MatrixF::Translation(-this->m_pBrick->GetPivotOffset()) * a_Quaternion.GetMatrix() * PuRe_MatrixF::Translation(this->m_pBrick->GetPivotOffset());
+        this->GetTransform().p = this->GetTransform().p * PuReToOng(rot);
+        this->GetTransform().q = PuReToOng(a_Quaternion) * this->GetTransform().q;;
     }
 }

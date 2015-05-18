@@ -18,12 +18,13 @@ namespace Game
 
         TheBrick::CBrickManager* BrickManager;
         ong::World* World;
+        PuRe_Renderer* Renderer;
 
     private:
         static BrickBozz* g_pInstance;
     
     public:
-        void Initialize(PuRe_IGraphics* a_pGraphics, PuRe_SoundPlayer* a_pSoundPlayer);
+        void Initialize(PuRe_IGraphics& a_pGraphics, PuRe_SoundPlayer& a_pSoundPlayer);
 
     private:
         BrickBozz();

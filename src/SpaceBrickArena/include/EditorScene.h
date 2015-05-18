@@ -25,6 +25,8 @@ namespace Game
         PuRe_IMaterial* m_pPostMaterial;
         PuRe_IMaterial* m_pSkyBoxMaterial;
         PuRe_Camera* m_pPostCamera;
+        PuRe_PointLight* m_pPointLight;
+        PuRe_IMaterial* m_pPointLightMaterial;
         
         CBrickSupervisor* m_pBrickSupervisor;
         CBrickWorker* m_pBrickWorker;

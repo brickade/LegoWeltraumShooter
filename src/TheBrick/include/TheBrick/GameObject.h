@@ -25,10 +25,8 @@ namespace TheBrick
         CGameObject(ong::World& a_rWorld, ong::BodyDescription* a_pBodyDesc);
         virtual ~CGameObject();
 
-        virtual void Draw(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera);
-
-        virtual void Deserialize(CSerializer* a_pSerializer, CBrickManager* a_pBrickManager, ong::World* a_pWorld);
-        void Serialize(CSerializer* a_pSerializer);
+        virtual void Deserialize(CSerializer& a_pSerializer, CBrickManager& a_pBrickManager, ong::World& a_pWorld);
+        void Serialize(CSerializer& a_pSerializer);
 
         void AddBrickInstance(const CBrickInstance& a_BrickInstance);
     };

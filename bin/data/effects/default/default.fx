@@ -63,8 +63,8 @@ PixelShaderOutput PS_MAIN(VertexShaderOutput input)
   PixelShaderOutput output;
 
   float4 blend = Diffuse.Sample(TextureSampler, input.UV);
-  output.colorMap = blend;
-  output.normalMap = float4(input.Normal,1);
+  output.colorMap = float4(input.Color,1);
+  output.normalMap = (float4(input.Normal,1) +1)/2;
   output.positionMap = float4(input.Position.xyz,1);
 
   return output;

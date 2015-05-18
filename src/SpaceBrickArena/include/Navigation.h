@@ -73,7 +73,7 @@ namespace Game
         CNavigation(int a_ElementsPerLine = 1, int a_LastElement = 0, float a_ScrollingSpeed = 0.3f, float a_ScrollingThreshold = 0.5f, float a_InputThreshold = 0.3f);
         ~CNavigation();
 
-        void Update(PuRe_Timer* a_pTimer, PuRe_Vector2F a_InputVector);
+        void Update(PuRe_Timer& a_pTimer, PuRe_Vector2F a_InputVector);
         void Navigate(EDirection::Type a_Direction);
         void Scroll(PuRe_Vector2F a_Input, float a_DeltaSec);
         EDirection::Type CNavigation::DirectionFromInputVector(PuRe_Vector2F a_ThumbInput) const;
