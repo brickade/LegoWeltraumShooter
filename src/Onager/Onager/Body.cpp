@@ -451,6 +451,12 @@ namespace ong
 		//return m_pWorld->getPosition(m_index) - m_cm;
 	}
 
+	const vec3& Body::getWorldCenter() const
+	{
+		return m_pWorld->m_r[m_index].p;
+	}
+
+
 	const Quaternion& Body::getOrientation() const
 	{
 		return m_pWorld->m_r[m_index].q;
