@@ -43,11 +43,9 @@ void Entity::render(GLuint colorLocation)
 {
 	if (!m_body)
 		return;
-	const Proxy* proxy = &m_body->getProxy();
-
-
+	
 	//contacts
-#if 1
+#if 0
 	glUniform3f(colorLocation, 1, 0, 1);
 	glBegin(GL_LINES);
 	if (m_body->getType() == BodyType::Dynamic)

@@ -1,7 +1,8 @@
 #include "test.h"
 #include "restitutionTest.h"
 #include "HierarchieTest.h"
-#include "BrickTest.h"
+#include "StressTest.h"
+#include "RayMarcherTest.h"
 #include "myMath.h"
 
 #undef main
@@ -9,7 +10,7 @@
 int main()
 {
 
-	Test* test = new BrickTest();
+	Test* test = new RayMarchTest();
 	test->init();
 
 	test->run();

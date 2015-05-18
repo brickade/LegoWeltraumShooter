@@ -2,6 +2,8 @@
 #include "Narrowphase.h"
 #include "ContactSolver.h"
 #include "QuickHull.h"
+#include "Profiler.h"
+
 
 namespace ong
 {
@@ -33,7 +35,8 @@ namespace ong
 		Body* b = m_pBody;
 		while (b != nullptr)
 		{
-			b->calculateProxy();
+			b->calculateAABB();
+			m_hGrid.updateBody(b->getProxyID());
 			//todo presistent contacts
 			b->clearContacts();
 			b = b->getNext();
@@ -42,15 +45,27 @@ namespace ong
 
 		// broadphase
 		Pair* pairs = new Pair[m_numBodies * m_numBodies];
-		int numPairs = generatePairs(m_proxies.data(), m_proxies.size(), pairs);
+		int numPairs = 0;
+		{
+#ifdef _PROFILE
+			//Profiler Profiler("generatePairs");
+#endif
+			numPairs = m_hGrid.generatePairs(pairs);
+		}
 
 		assert(numPairs <= m_numBodies*m_numBodies);
 
 		//narrowphase
 
-		m_contactManager.generateContacts(pairs, numPairs, m_numColliders*m_numColliders);
+		//todo ...
+		//m_contactManager.generateContacts(pairs, numPairs, m_numColliders*m_numColliders);
 
-
+		{
+#ifdef _PROFILE
+			//Profiler profiler("generatContacts");
+#endif
+			m_contactManager.generateContacts(pairs, numPairs, 3 * numPairs);
+		}
 
 		//integrate
 		for (int i = 0; i < m_numBodies; ++i)
@@ -67,30 +82,32 @@ namespace ong
 		}
 
 
-		//resolution
-	{
-		WorldContext context;
-		context.r = m_r.data();
-		context.v = m_v.data();
-		context.p = m_p.data();
-		context.m = m_m.data();
-
-		int numContacts = 0;
-		Contact* c = m_contactManager.getContacts(&numContacts);
-
-		ContactConstraint* contactConstraints = new ContactConstraint[numContacts];
-		preSolveContacts(&context, c, numContacts, 1.0f / dt, contactConstraints);
-
-		for (int i = 0; i < 16; ++i)
+		//resolution	  
 		{
-			solveContacts(&context, c, numContacts, contactConstraints);
+#ifdef _PROFILE
+			//Profiler profiler("resolution");
+#endif
+			WorldContext context;
+			context.r = m_r.data();
+			context.v = m_v.data();
+			context.p = m_p.data();
+			context.m = m_m.data();
+
+			int numContacts = 0;
+			Contact* c = m_contactManager.getContacts(&numContacts);
+
+			ContactConstraint* contactConstraints = new ContactConstraint[numContacts];
+			preSolveContacts(&context, c, numContacts, 1.0f / dt, contactConstraints);
+
+			for (int i = 0; i < 16; ++i)
+			{
+				solveContacts(&context, c, numContacts, contactConstraints);
+			}
+
+
+			delete[] contactConstraints;
+
 		}
-
-
-		delete[] contactConstraints;
-
-	}
-
 
 		for (int i = 0; i < m_numBodies; ++i)
 		{
@@ -123,8 +140,9 @@ namespace ong
 		body->setNext(m_pBody);
 		body->setPrevious(nullptr);
 
-		m_proxies.push_back(Proxy());
-		body->setProxyID(m_proxies.size() - 1);
+		const ProxyID* proxyID = m_hGrid.addBody(body);
+		
+		body->setProxyID(proxyID);
 
 
 		if (m_pBody != nullptr)
@@ -167,8 +185,7 @@ namespace ong
 		if (m_pBody == pBody)
 			m_pBody = pBody->getNext();
 
-		m_b[idx]->setProxyID(pBody->getProxyID());
-		m_proxies.pop_back();
+		m_hGrid.removeBody(pBody->getProxyID());
 
 		m_bodyAllocator.sDelete(pBody);
 	}
@@ -298,8 +315,16 @@ namespace ong
 		}
 	}
 
-	void World::setProxy(int proxyID, const Proxy& proxy)
+	bool World::queryRay(const vec3& origin, const vec3& dir, RayQueryResult* hit, float tmax)
 	{
-		m_proxies[proxyID] = proxy;
+		//Profiler profile("Query Ray");
+
+		return m_hGrid.queryRay(origin, dir, hit, tmax);
 	}
+
+	void World::updateProxy(const ProxyID* proxyID)
+	{
+		m_hGrid.updateBody(proxyID);
+	}
+
 }

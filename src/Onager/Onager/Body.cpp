@@ -19,6 +19,8 @@ namespace ong
 		m_numCollider(0)
 	{
 
+		m_aabb = {vec3(0, 0, 0), vec3(0,0,0)};
+
 		m_flags |= descr.type;
 
 		m_pWorld->m_r[m_index].p = descr.transform.p;
@@ -53,7 +55,8 @@ namespace ong
 			constructBVTree(m_pCollider, m_numCollider, m_tree);
 		}
 
-		calculateProxy();
+		calculateAABB();
+		m_pWorld->updateProxy(m_proxyID);
 	}
 
 	void Body::removeCollider(Collider* collider)
@@ -81,6 +84,9 @@ namespace ong
 
 			constructBVTree(m_pCollider, m_numCollider, m_tree);
 		}
+
+		m_pWorld->updateProxy(m_proxyID);
+
 	}
 
 
@@ -153,18 +159,12 @@ namespace ong
 
 
 
-	void Body::calculateProxy()
+	void Body::calculateAABB()
 	{
-		Proxy proxy;
-		proxy.body = this;
-		proxy.type = ProxyType::AABB;
-
 		if (m_numCollider > 1)
-			proxy.aabb = transformAABB(&m_tree->aabb, &getTransform());
+			m_aabb = transformAABB(&m_tree->aabb, &getTransform());
 		else
-			proxy.aabb = transformAABB(&m_pCollider->getAABB(), &getTransform());
-
-		m_pWorld->setProxy(m_proxyID, proxy);
+			m_aabb = transformAABB(&m_pCollider->getAABB(), &getTransform());
 	}
 
 
@@ -284,8 +284,10 @@ namespace ong
 
 	bool Body::queryRay(const vec3& origin, const vec3& dir, RayQueryResult* result,  float tmax)
 	{
-		vec3 o = invTransformVec3(origin, getTransform());
-		vec3 d = rotate(dir, conjugate(getOrientation()));
+		Transform t = getTransform();
+
+		vec3 o = invTransformVec3(origin, t);
+		vec3 d = rotate(dir, conjugate(t.q));
 
 
 		float tmin = FLT_MAX; 
@@ -333,7 +335,8 @@ namespace ong
 		}
 
 		result->t = tmin;
-		result->point = o + tmin*dir;
+		result->point = origin + tmin*dir;
+		result->normal = rotate(result->normal, t.q);
 
 		return (result->collider != nullptr);
 	}
@@ -426,9 +429,9 @@ namespace ong
 	}
 
 
-	const Proxy& Body::getProxy()
+	const AABB& Body::getAABB()
 	{
-		return m_pWorld->getProxy(m_proxyID);
+		return m_aabb;
 	}
 
 	Transform Body::getTransform() const
@@ -532,6 +535,8 @@ namespace ong
 	{
 		m_pWorld->m_r[m_index].p = position + rotate(m_cm, getOrientation());
 		//m_pWorld->setPosition(m_index, position + m_cm);
+
+		m_pWorld->updateProxy(m_proxyID);
 	}
 
 

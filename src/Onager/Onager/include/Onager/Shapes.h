@@ -172,7 +172,7 @@ namespace ong
 	// broad
 	bool overlap(Sphere* sphere, AABB* aabb);
 	bool overlap(Sphere* sphereA, Sphere* sphereB);
-	bool overlap(AABB* aabbA, AABB* aabbB);
+	bool overlap(const AABB* aabbA, const AABB* aabbB);
 	// is not 100% accurate! can false hit!
 	bool overlap(const AABB& a, const AABB& b, const vec3& t, const mat3x3& rot);
 

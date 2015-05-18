@@ -2,6 +2,7 @@
 
 #include "myMath.h"
 #include "defines.h"
+#include "Shapes.h"
 #include "MassProperties.h"
 
 #include <float.h>
@@ -15,6 +16,7 @@ namespace ong
 
 	struct ContactIter;
 	struct BVTree;
+	struct ProxyID;
 
 
 	struct BodyType
@@ -54,7 +56,7 @@ namespace ong
 
 		void calculateMassData();
 
-		void calculateProxy();
+		void calculateAABB();
 
 		void addCollider(Collider* collider);
 		void removeCollider(Collider* collider);
@@ -84,7 +86,7 @@ namespace ong
 		bool queryRay(const vec3& origin, const vec3& dir, RayQueryResult* hit, float tmax = FLT_MAX);
 		bool queryCollider(const Collider* collider);
 
-		const Proxy& getProxy();
+		const AABB& getAABB();
 
 		Collider* getCollider();
 		int getNumCollider();
@@ -139,8 +141,8 @@ namespace ong
 		void clearContacts();
 		void addContact(ContactIter* iter);
 
-		void setProxyID(int proxyID);
-		int getProxyID();
+		void setProxyID(const ProxyID* proxyID);
+		const ProxyID* getProxyID();
 
 		//	--ACCESSORS--
 
@@ -169,7 +171,8 @@ namespace ong
 		int m_numContacts;
 		ContactIter* m_pContacts;
 
-		int m_proxyID;
+		const ProxyID* m_proxyID;
+		AABB m_aabb;
 
 		void* m_pUserData;
 
@@ -184,7 +187,7 @@ namespace ong
 		m_index = idx;
 	}
 
-	inline void Body::setProxyID(int idx)
+	inline void Body::setProxyID(const ProxyID* idx)
 	{
 		m_proxyID = idx;
 	}
@@ -248,7 +251,7 @@ namespace ong
 		return m_pUserData;
 	}
 
-	inline int Body::getProxyID()
+	inline const ProxyID* Body::getProxyID()
 	{
 		return m_proxyID;
 	}

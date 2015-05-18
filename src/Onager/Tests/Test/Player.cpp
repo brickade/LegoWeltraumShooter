@@ -67,6 +67,27 @@ void Player::shoot()
 	m_coolDown = 0.2f;
 }
 
+
+void Player::grab()
+{
+	Transform bodyTransform = m_body->getTransform();
+
+	vec3 rayO = transformVec3(vec3(0, 0, 2.0f), bodyTransform);
+	vec3 rayDir = rotate(vec3(0, 0, 1), bodyTransform.q);
+
+	RayQueryResult result;
+	if (m_body->getWorld()->queryRay(rayO, rayDir, &result))
+	{
+		if (result.collider->getBody()->getType() == BodyType::Dynamic)
+		{
+			m_grab.body = result.collider->getBody();
+			m_grab.point = invTransformVec3(result.point, m_grab.body->getTransform());
+			m_grab.anchor = result.t;
+		}
+	}
+
+}
+
 void Player::setFocus(bool focus)
 {
 	m_inFocus = focus;
@@ -82,6 +103,33 @@ void Player::update(float dt)
 		shoot();
 	}
 
+	//update grab
+	if (SDL_GetKeyboardState(0)[SDL_SCANCODE_E])
+	{
+		if (!m_grab.body)
+		{
+			grab();
+		}
+
+		if (m_grab.body)
+		{
+			vec3 anchor = transformVec3(vec3(0, 0, 10.0f), m_body->getTransform());
+			vec3 forceDir = invTransformVec3(anchor, m_grab.body->getTransform()) - m_grab.point;
+			float forceStrength = 3000.0f;
+			
+			vec3 v = m_grab.body->getRelativeLinearVelocity();
+
+			vec3 damp = 500.0f * v;
+
+
+			m_grab.body->applyRelativeForce(forceStrength * forceDir - damp, m_grab.point, dt);
+		}
+	}
+	else
+	{
+		m_grab.body = 0;
+	}
+	
 
 	float forAcc = 5000.0f;
 	float yawAcc = 2000.0f;
@@ -236,6 +284,21 @@ void Player::render(GLuint colorLocation)
 		glVertex3f(p1.x, p1.y, p1.z);
 	}
 	glEnd();
+
+	if (m_grab.body)
+	{
+		glBegin(GL_LINES);
+		{
+			vec3 anchor = transformVec3(vec3(0, 0, 2.0f), m_body->getTransform());
+			vec3 point = transformVec3(m_grab.point, m_grab.body->getTransform());
+
+			glVertex3f(anchor.x, anchor.y, anchor.z);
+			glVertex3f(point.x, point.y, point.z);
+		}
+		glEnd();
+	}
+
+
 
 	Entity::render(colorLocation);
 }

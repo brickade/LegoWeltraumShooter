@@ -30,6 +30,9 @@
     <ClCompile Include="HierarchieTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="StressTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Debug\shader.ps">
@@ -61,7 +64,10 @@
     <ClInclude Include="Draw.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="BrickTest.h">
+    <ClInclude Include="StressTest.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RayMarcherTest.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

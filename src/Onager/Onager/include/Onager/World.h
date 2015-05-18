@@ -64,8 +64,9 @@ namespace ong
 
 	// TODO
 	//	
-	//	-spatial partitioning
 	//	-world queries
+	//  -collsion callback
+	//	-begin overlap/end overlap
 	//	-collision masks
 	//	-sensors??
 	//	-sleeping
@@ -95,14 +96,17 @@ namespace ong
 		ShapePtr createShape(const ShapeDescription& descr);
 		void destroyShape(ShapePtr shape);
 
+		bool queryRay(const vec3& origin, const vec3& dir, RayQueryResult* hit, float tmax = FLT_MAX);
+
 		inline void World::setGravity(const vec3& gravity);
 
+		
 
 	ong_internal:
 
 		//	--MANIPULATORS--
 
-		void setProxy(int proxyID, const Proxy& proxy);
+		void updateProxy(const ProxyID* proxyID);
 
 		//	--ACCESSORS--
 
@@ -126,8 +130,7 @@ namespace ong
 		int m_numColliders;
 		vec3 m_gravity;
 
-		std::vector<Proxy> m_proxies;
-
+		HGrid m_hGrid;
 		ContactManager m_contactManager;
 
 		BodyAllocator m_bodyAllocator;
@@ -144,12 +147,6 @@ namespace ong
 	{
 		m_gravity = gravity;
 	}
-
-
-
-	inline const Proxy& World::getProxy(int proxyID)
-	{
-		return m_proxies[proxyID];
-	}
+	
 
 }

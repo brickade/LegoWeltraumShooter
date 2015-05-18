@@ -591,7 +591,7 @@ namespace ong
 		return lengthSq(sphereB->c - sphereA->c) < r*r;
 	}
 
-	bool overlap(AABB* aabbA, AABB* aabbB)
+	bool overlap(const AABB* aabbA, const AABB* aabbB)
 	{
 		if (abs(aabbA->c[0] - aabbB->c[0]) > (aabbA->e[0] + aabbB->e[0])) return false;
 		if (abs(aabbA->c[1] - aabbB->c[1]) > (aabbA->e[1] + aabbB->e[1])) return false;

@@ -1,5 +1,5 @@
 ::  ----------------------------------------------------------
-set ENGINE_PATH=C:\Users\Jan\Google Drive\Brickade\PRO\Engine
+set ENGINE_PATH=C:\Users\jan.oldsen\Google Drive\Brickade\PRO\Engine
 ::  ----------------------------------------------------------
 
 @echo off
