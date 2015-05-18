@@ -483,6 +483,8 @@ namespace ong
 		m_contacts.push_back(Contact());
 		Contact& contact = m_contacts.back();
 
+		m_contactEnded.push_back(true);
+
 		collisionFuncMatrix[ca->getShape().getType()][cb->getShape().getType()](ca, &ta, cb, &tb, &contact.manifold, &contact.feature);
 
 		contact.colliderA = ca;
@@ -514,8 +516,10 @@ namespace ong
 		// warm starting
 		// todo optimize me!
 
-		for (Contact& oldContact : m_oldContacts)
+		bool newContact = true;
+		for (int i = 0; i < m_oldContacts.size(); ++i)
 		{
+			Contact& oldContact = m_oldContacts[i];
 			if (oldContact.colliderA == contact.colliderA &&
 				oldContact.colliderB == contact.colliderB &&
 				oldContact.feature == contact.feature)
@@ -528,9 +532,21 @@ namespace ong
 					contact.accImpulseT[i] = oldContact.accImpulseT[i];
 					contact.accImpulseBT[i] = oldContact.accImpulseBT[i];
 				}
-
+				newContact = false;
+				m_oldContactEnded[i] = false;
+				break;
 			}
 		}
+
+		if (newContact)
+		{
+			ca->callbackBeginContact(&contact);
+			cb->callbackBeginContact(&contact);
+		}
+
+		ca->callbackPreSolve(&contact);
+		cb->callbackPreSolve(&contact);
+
 		cb = cb->getNext();
 
 
@@ -571,12 +587,15 @@ namespace ong
 	{
 
 		m_oldContacts = std::move(m_contacts);
+		m_oldContactEnded = std::move(m_contactEnded);
 
 		m_contacts.clear();
 		m_contactIters.clear();
+		m_contactEnded.clear();
 
 		m_contacts.reserve(maxContacts);
 		m_contactIters.reserve(2 * maxContacts);
+		m_contactEnded.reserve(maxContacts);
 
 
 		for (int i = 0; i < numPairs; ++i)
@@ -586,6 +605,16 @@ namespace ong
 
 			collide(a, b);
 		}
+
+		for (int i = 0; i < m_oldContactEnded.size(); ++i)
+		{
+			//if (m_oldContactEnded[i])
+			//{
+			//	m_oldContacts[i].colliderA->callbackEndContact(&m_oldContacts[i]);
+			//	m_oldContacts[i].colliderB->callbackEndContact(&m_oldContacts[i]);
+			//}
+		}
+
 	}
 
 }

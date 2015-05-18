@@ -34,6 +34,9 @@ namespace ong
 		std::vector<Contact> m_contacts;
 		std::vector<ContactIter> m_contactIters;
 		std::vector<Contact> m_oldContacts;
+		// used for detecting ending of contacts
+		std::vector<bool> m_contactEnded;
+		std::vector<bool> m_oldContactEnded;
 	};
 
 

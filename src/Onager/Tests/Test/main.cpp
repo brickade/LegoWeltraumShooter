@@ -10,7 +10,7 @@
 int main()
 {
 
-	Test* test = new RayMarchTest();
+	Test* test = new Test();
 	test->init();
 
 	test->run();

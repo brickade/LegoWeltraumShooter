@@ -1,4 +1,3 @@
-
 #pragma once
 
 
@@ -12,6 +11,10 @@ namespace ong
 	struct WorldMemory;
 	class World;
 	class Body;
+	class Collider;
+	struct Contact;
+
+
 
 	template<typename T>
 	class Allocator;
@@ -26,6 +29,16 @@ namespace ong
 		float friction;
 	};
 
+
+	typedef void(*CollisionCallback)(Collider* thisCollider, Contact* contact);
+	struct ColliderCallbacks
+	{
+		CollisionCallback beginContact = 0;
+		CollisionCallback endContact = 0;
+		CollisionCallback preSolve = 0;
+		CollisionCallback postSolve = 0;
+	};
+	
 
 	struct ColliderDescription
 	{
@@ -44,6 +57,9 @@ namespace ong
 	};
 
 
+
+
+
 	// todo set shape
 	class Collider
 	{
@@ -57,6 +73,8 @@ namespace ong
 		//	--MANIPULATORS--
 
 		void setUserData(void* pUserData);
+
+		void setCallbacks(const ColliderCallbacks& callbacks);
 
 		void calculateMassProperties();
 
@@ -98,6 +116,12 @@ namespace ong
 		void setBody(Body* pBody);
 		void setNext(Collider* pNext);
 		void setPrev(Collider* pPrev);
+		
+		void callbackBeginContact(Contact* contact);
+		void callbackEndContact(Contact* contact);
+		void callbackPreSolve(Contact* contact);
+		void callbackPostSolve(Contact* contact);
+
 
 	private:
 		Body* m_pBody;
@@ -112,6 +136,7 @@ namespace ong
 		ShapePtr m_shape;
 
 		void* m_pUserData;
+		ColliderCallbacks m_callbacks;
 
 		Collider* m_prev;
 		Collider* m_next;
@@ -123,6 +148,37 @@ namespace ong
 	inline void Collider::setUserData(void* pUserData)
 	{
 		m_pUserData = pUserData;
+	}
+
+	inline void Collider::setCallbacks(const ColliderCallbacks& callbacks)
+	{
+		m_callbacks = callbacks;
+	}
+
+
+
+	inline void Collider::callbackBeginContact(Contact* contact)
+	{
+		if (m_callbacks.beginContact)
+			m_callbacks.beginContact(this, contact);
+	}
+
+	inline void Collider::callbackEndContact(Contact* contact)
+	{
+		if (m_callbacks.endContact)
+			m_callbacks.endContact(this, contact);
+	}
+
+	inline void Collider::callbackPreSolve(Contact* contact)
+	{
+		if (m_callbacks.preSolve)
+			m_callbacks.preSolve(this, contact);
+	}
+		
+	inline void Collider::callbackPostSolve(Contact* contact)
+	{
+		if (m_callbacks.postSolve)
+			m_callbacks.postSolve(this, contact);
 	}
 
 

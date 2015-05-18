@@ -11,13 +11,37 @@ Player::Player(Body* body, vec3 color, SDL_Window* window, std::vector<Entity*>*
 
 	Material material;
 
-	material.density = 1000.0f;
+	material.density = 100.0f;
 	material.restitution = 0.6f;
 	material.friction = 0.1f;
 
 	m_bulletMaterial = m_body->getWorld()->createMaterial(material);
 }
 
+
+void bulletImpact(Collider* collider, Contact* contact)
+{
+	float impulse = 0;
+
+	for (int i = 0; i < contact->manifold.numPoints; ++i)
+	{
+		impulse = ong_MAX(contact->accImpulseN[i], impulse);
+	}
+	if (impulse == 0)
+		return;
+
+	impulse *= 100.0f;
+
+
+	Body* b = (collider == contact->colliderA ? contact->colliderB : contact->colliderB)->getBody();
+
+	Entity* entity = (Entity*)b->getUserData();
+	entity->damage(impulse * b->getInverseMass());
+	
+	
+	Entity* bullet = (Entity*)collider->getBody()->getUserData();
+	bullet->damage(100);
+}
 
 void Player::shoot()
 {
@@ -51,11 +75,15 @@ void Player::shoot()
 
 		Collider* collider = m_body->getWorld()->createCollider(colliderDescr);
 
+		ColliderCallbacks callbacks;
+		callbacks.postSolve = bulletImpact;
+		collider->setCallbacks(callbacks);
+
 		BodyDescription bodyDescr;
 		bodyDescr.type = BodyType::Dynamic;
 		bodyDescr.transform.p = transformVec3(cannon, m_body->getTransform());
 		bodyDescr.transform.q = m_body->getOrientation();;
-		bodyDescr.linearMomentum = rotate(vec3(0.0f, 0.0f, 500.0f), m_body->getOrientation());
+		bodyDescr.linearMomentum = rotate(vec3(0.0f, 0.0f, 50.0f), m_body->getOrientation());
 		bodyDescr.angularMomentum = vec3(0.0f, 0.0f, 0.0f);
 
 		Body* body = m_body->getWorld()->createBody(bodyDescr);
@@ -95,6 +123,8 @@ void Player::setFocus(bool focus)
 
 void Player::update(float dt)
 {
+	//printf("hp: %d\n", m_hp);
+
 	m_coolDown -= dt;
 
 

@@ -15,14 +15,28 @@ public:
 
 	virtual void update(float dt) {};
 
+	bool isDead() { return m_hp <= 0; };
+	
+	void damage(int damage)
+	{
+		
+		m_hp -= damage; 
+	};
+
 	virtual void render(GLuint colorLocation);
 
+	void destroy(std::vector<Entity*>& entities);
+
 protected:
+
+	int m_hp;
 
 	Body* m_body;
 	vec3 m_color;
 	int m_numVerts;
 	GLuint m_vb;
+
+
 
 
 };

@@ -2,39 +2,43 @@
 #include "BVH.h"
 #include "Draw.h"
 
+
+
+
+void impulseDamage(Collider* collider, Contact* contact)
+{
+	float maxImpulse = 0;
+
+	for (int i = 0; i < contact->manifold.numPoints; ++i)
+	{
+		maxImpulse = ong_MAX(contact->accImpulseN[i], maxImpulse);
+	}
+
+	Entity* entity = (Entity*)collider->getBody()->getUserData();
+
+	entity->damage(collider->getBody()->getInverseMass() * maxImpulse);
+}						
+
 Entity::Entity(Body* body, vec3 color)
 	:m_body(body),
-	m_color(color)
+	m_color(color),
+	m_hp(100)
 {
+	m_body->setUserData(this);
 
-	//Collider* collider = body->getCollider();
-	//Hull* hull = collider->getHull();
-	//vec3* v = new vec3[hull->numEdges];
+	//ColliderCallbacks callbacks;
+	//callbacks.postSolve = impulseDamage;
 
-	//for (int i = 0; i < hull->numEdges; i += 2)
+	//for (Collider* c = m_body->getCollider(); c != 0; c = c->getNext())
 	//{
-	//	HalfEdge* e = hull->pEdges + i;
-	//	HalfEdge* et = hull->pEdges + e->twin;
-
-	//	v[i] = hull->pVertices[e->tail];
-	//	v[i + 1] = hull->pVertices[et->tail];
+	//	c->setCallbacks(callbacks);
 	//}
-
-	//
-
-	//glGenBuffers(1, &m_vb);
-	//glBindBuffer(GL_ARRAY_BUFFER, m_vb);
-	//glBufferData(GL_ARRAY_BUFFER, hull->numEdges * sizeof(vec3), v, GL_STATIC_DRAW);
-
-	//m_numVerts = hull->numEdges;
-
-	//delete[] v;
-
 }
 
 
 Entity::~Entity()
 {
+	
 }
 
 
@@ -233,3 +237,63 @@ void Entity::render(GLuint colorLocation)
 	
 }
 
+
+
+void Entity::destroy(std::vector<Entity*>& entities)
+{
+	World* world = m_body->getWorld();
+
+	Collider* c = m_body->getCollider();
+
+	ShapeDescription sDescr;
+	sDescr.constructionType = ShapeConstruction::HULL_FROM_BOX;
+
+	ColliderDescription cDescr;
+	cDescr.transform.q = Quaternion(vec3(0, 0, 0), 1);
+	cDescr.transform.p = vec3(0, 0, 0);
+
+	BodyDescription bDescr;
+	bDescr.type = BodyType::Dynamic;
+	bDescr.transform.q = Quaternion(vec3(0, 0, 0), 1);
+
+	for (; c != 0; c = c->getNext())
+	{
+		float chunkSize = 0;
+		for (int i = 0; i < 3; ++i)
+			chunkSize += c->getAABB().e[i];
+
+		chunkSize /= 6.0f;
+
+
+		sDescr.hullFromBox.c = vec3(0, 0, 0);
+		sDescr.hullFromBox.e = vec3(chunkSize, chunkSize, chunkSize);
+		
+		cDescr.material = c->getMaterial();
+		cDescr.shape = world->createShape(sDescr);
+
+		for (int i = 0; i < 4; ++i)
+		{
+			for (int i = 0; i < 3; ++i)
+			{
+				bDescr.transform.p[i] = fmod(rand(), (2.0f * c->getAABB().e.x)) - c->getAABB().e[i];
+			}
+
+			bDescr.transform.p += c->getAABB().c;
+			
+			bDescr.linearMomentum = m_body->getLinearMomentum() - bDescr.transform.p;
+			bDescr.angularMomentum = m_body->getAngularMomentum();
+
+			bDescr.transform = transformTransform(bDescr.transform, m_body->getTransform());
+
+			Body* body = world->createBody(bDescr);
+
+			body->addCollider(world->createCollider(cDescr));
+
+			entities.push_back(new Entity(body, m_color));
+		}
+
+	}
+
+
+	world->destroyBody(m_body);
+}

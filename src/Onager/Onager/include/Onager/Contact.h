@@ -93,9 +93,6 @@ namespace ong
 
 		float friction;
 		float e;
-
-
-
 		ContactManifold manifold;
 	};
 

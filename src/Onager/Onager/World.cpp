@@ -104,6 +104,11 @@ namespace ong
 				solveContacts(&context, c, numContacts, contactConstraints);
 			}
 
+			for (int i = 0; i < numContacts; ++i)
+			{
+				c[i].colliderA->callbackPostSolve(&c[i]);
+				c[i].colliderB->callbackPostSolve(&c[i]);
+			}
 
 			delete[] contactConstraints;
 
@@ -186,6 +191,7 @@ namespace ong
 			m_pBody = pBody->getNext();
 
 		m_hGrid.removeBody(pBody->getProxyID());
+		//todo remove from contactManager
 
 		m_bodyAllocator.sDelete(pBody);
 	}

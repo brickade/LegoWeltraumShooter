@@ -427,8 +427,6 @@ void Test::init()
 
 
 	// spherestack
-	
-
 	{
 
 		shapeDescr.shapeType = ShapeType::SPHERE;
@@ -665,10 +663,23 @@ void Test::run()
 
 		}
 		
+		std::vector<Entity*> deadEntities;
 
-		for (Entity* entity : m_entities)
+		for (int i = 0; i < m_entities.size(); ++i)
 		{
-			entity->update(dt);
+			m_entities[i]->update(dt);
+			if (m_entities[i]->isDead())
+			{
+				if (m_entities[i] == m_player)
+					m_player = 0;
+
+				m_entities[i]->destroy(m_toAdd);
+
+				delete m_entities[i];
+				m_entities[i] = m_entities.back();
+				m_entities.pop_back();
+				--i;
+			}
 		}
 
 		for (Entity* entity : m_toAdd)
