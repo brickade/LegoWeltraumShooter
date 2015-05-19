@@ -62,6 +62,19 @@ namespace TheBrick
 
     // **************************************************************************
     // **************************************************************************
+    void CBrickManager::RebuildRenderInstances()
+    {
+        for (std::array<CBrick*, 200>::iterator it = this->m_bricks.begin(); it != this->m_bricks.end(); ++it)
+        {
+            if (*it != nullptr)
+            {
+                (*it)->RebuildRenderInstances();
+            }
+        }
+    }
+
+    // **************************************************************************
+    // **************************************************************************
     CBrick& CBrickManager::GetBrick(int a_BrickId)
     {
         #ifdef DEBUG

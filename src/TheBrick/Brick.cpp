@@ -28,7 +28,7 @@ namespace TheBrick
     // **************************************************************************
     CBrick::~CBrick()
     {
-        SAFE_DELETE(this->m_pRenderInstances);
+        SAFE_DELETE_ARRAY(this->m_pRenderInstances);
         SAFE_DELETE(this->m_pModel);
     }
 
@@ -62,7 +62,7 @@ namespace TheBrick
 
     // **************************************************************************
     // **************************************************************************
-    void CBrick::RebuildRenderinstances()
+    void CBrick::RebuildRenderInstances()
     {
         int i = 0;
         for (std::vector<CBrickInstance*>::iterator it = this->m_pBrickInstances.begin(); it != this->m_pBrickInstances.end(); ++it)

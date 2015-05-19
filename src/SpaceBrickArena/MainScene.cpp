@@ -39,11 +39,24 @@ namespace Game
             return true;
         }
 
+        //Drop update after lag to avoid strange camera movement jumps etc
         if (a_pTimer->GetElapsedMilliseconds() > 200)
         {
             return false;
         }
 
+        //Update Physics
+        if (a_pTimer->GetTotalElapsedMilliseconds() - this->m_LastPhysicsUpdate >= 1/this->m_PhysicsFramerate)
+        {
+            do
+            {
+                this->m_LastPhysicsUpdate + 1 / this->m_PhysicsFramerate;
+                //BrickBozz::Instance()->World->step(1 / this->m_PhysicsFramerate);
+            } while (a_pTimer->GetTotalElapsedMilliseconds() - this->m_LastPhysicsUpdate >= 1 / this->m_PhysicsFramerate);
+            BrickBozz::Instance()->BrickManager->RebuildRenderInstances(); //Update RenderInstances
+        }
+
+        //Update Active Scene
         if (this->m_pActiveScene->Update(a_pGraphics, a_pWindow, a_pInput, a_pTimer, a_pSoundPlayer))
         {
             if (this->m_pActiveScene == this->m_pGameScene)

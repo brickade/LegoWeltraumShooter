@@ -28,6 +28,7 @@ namespace TheBrick
         void Initialize(PuRe_IGraphics& a_pGraphics, PuRe_SoundPlayer& a_pSoundPlayer);
         void Load(PuRe_IGraphics& a_pGraphics, PuRe_IWindow& a_pWindow, ong::World& a_pWorld, PuRe_IMaterial& a_pMaterial, const char* a_pFolder);
         void Render(PuRe_Renderer& a_rRenderer);
+        void RebuildRenderInstances();
 
         CBrick& GetBrick(int a_BrickId);
         CBrick** GetCategoryStart(int a_CategoryId);

@@ -87,7 +87,7 @@ namespace Game
             this->m_pModel->Draw(this->m_pCamera, this->m_pPostMaterial, PuRe_Primitive::Triangles, PuRe_Vector3F(x, y, 0.0f), PuRe_Vector3F(1.0f, 1.0f, 1.0f), PuRe_Vector3F(0.0f, this->rot, 0.0f), PuRe_Vector3F(0.0f, 0.0f, 0.0f));
         }
 
-        a_pGraphics->Begin();
+        a_pGraphics->Begin(PuReEngine::Core::CBoundingBox(PuRe_Vector3F::Zero(), PuRe_Vector3F::One()));
         this->m_pSkyBox->Draw(this->m_pCamera, this->m_pSkyMaterial, PuRe_Vector3F(0.0f, this->rot / 1000.0f, 0.0f));
 
         this->m_pPostMaterial->Apply();

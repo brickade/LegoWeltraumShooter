@@ -147,7 +147,7 @@ namespace TheBrick
         CBrickInstance* CreateInstance(ong::World& a_pWorld);
         void AddInstance(CBrickInstance& a_rBrickInstance);
         void DeleteInstance(CBrickInstance& a_rBrickInstance);
-        void RebuildRenderinstances();
+        void RebuildRenderInstances();
 
         void Draw(PuRe_Renderer& a_rRenderer);
 
