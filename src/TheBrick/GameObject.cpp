@@ -79,4 +79,24 @@ namespace TheBrick
         }
         this->m_pBricks.push_back(brickInstance);
     }
+
+
+    // **************************************************************************
+    // **************************************************************************
+    void CGameObject::RemoveBrickInstance(const CBrickInstance& a_BrickInstance)
+    {
+        CBrickInstance* brickInstance = new CBrickInstance(a_BrickInstance);
+        for (size_t i = 0; i < a_BrickInstance.m_pCollider.size(); i++)
+        {
+            this->m_pBody->removeCollider(a_BrickInstance.m_pCollider[i]);
+        }
+        for (std::vector<CBrickInstance*>::iterator it = this->m_pBricks.begin(); it != this->m_pBricks.end(); ++it)
+        {
+            if (*it == &a_BrickInstance)
+            {
+                this->m_pBricks.erase(it);
+                break;
+            }
+        }
+    }
 }

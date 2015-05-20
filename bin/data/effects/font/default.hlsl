@@ -59,10 +59,12 @@ VertexShaderOutput VS_MAIN(VertexShaderInput input)
 
 float4 PS_MAIN(VertexShaderOutput input) : SV_TARGET
 {
+  // Sample texture
   float4 blend = Diffuse.Sample(TextureSampler, input.UV);
   if(blend.a < 0.1)
     discard;
   return Diffuse.Sample(TextureSampler, input.UV);
+  //return float4(1,0,0,1);
 }
 RasterizerState Culling
 {

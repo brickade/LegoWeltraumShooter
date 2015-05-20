@@ -74,7 +74,7 @@ namespace Game
             float size = this->m_ElementSize / this->m_Bricks[i]->GetPivotOffset().Length();
             size += this->m_ElementSize;
             size *= 0.5f;
-            renderer->DrawUI(this->m_Bricks[0]->GetModel(), PuRe_Primitive::Triangles, BrickBozz::Instance()->BrickManager->GetBrickUIMaterial(), pos, rot, PuRe_Vector3F::Zero(), PuRe_Vector3F(size, size, size), color);
+            renderer->DrawUI(this->m_Bricks[i]->GetModel(), PuRe_Primitive::Triangles, BrickBozz::Instance()->BrickManager->GetBrickUIMaterial(), pos, rot, PuRe_Vector3F::Zero(), PuRe_Vector3F(size, size, size), color);
         }
     }
 

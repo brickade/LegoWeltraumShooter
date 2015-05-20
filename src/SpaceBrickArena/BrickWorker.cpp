@@ -37,23 +37,28 @@ namespace Game
         this->lastInputIsGamepad = false;
 
         this->m_pSpaceship = new TheBrick::CSpaceship(*BrickBozz::Instance()->World);
+        this->m_pCurrentBrickObject = new TheBrick::CGameObject(*BrickBozz::Instance()->World, nullptr);
     }
 
     // **************************************************************************
     // **************************************************************************
-    void CBrickWorker::Update(PuRe_IGraphics& a_pGraphics, PuRe_IWindow& a_pWindow, PuRe_IInput& a_pInput, PuRe_Timer& a_pTimer, PuRe_SoundPlayer& a_pSoundPlayer, TheBrick::CBrick* a_pCurrentBrick)
+    void CBrickWorker::Update(PuRe_IGraphics& a_pGraphics, PuRe_IWindow& a_pWindow, PuRe_IInput& a_pInput, PuRe_Timer& a_pTimer, PuRe_SoundPlayer& a_pSoundPlayer, TheBrick::CBrick* a_pCurrentBrick, PuRe_Color& a_rCurrentColor)
     {
+        this->m_currentBrickColor = a_rCurrentColor;
         if (this->m_pCurrentBrick == nullptr || this->m_pCurrentBrick->m_pBrick != a_pCurrentBrick)
         {
-            SAFE_DELETE(this->m_pCurrentBrick);
-            this->m_pCurrentBrick = a_pCurrentBrick->CreateInstance(*BrickBozz::Instance()->World);
-            this->m_pCurrentBrick->GetTransform().p = ong::vec3(this->m_currentBrickPosition.X, this->m_currentHeight, this->m_currentBrickPosition.Y);
-            this->m_pCurrentBrick->RotateAroundPivotOffset(PuRe_QuaternionF(0.0f, this->m_currentBrickRotation, 0.0f));
-            this->m_pCurrentBrick->m_Color = PuRe_Color(0.5f, 0.6f, 1.0f);
+            if (this->m_pCurrentBrick != nullptr)
+            {
+                this->m_pCurrentBrickObject->RemoveBrickInstance(*this->m_pCurrentBrick);
+                SAFE_DELETE(this->m_pCurrentBrick);
+            }
+            this->m_pCurrentBrick = a_pCurrentBrick->CreateInstance(*BrickBozz::Instance()->World); //Create Instance
+            this->m_pCurrentBrickObject->AddBrickInstance(*this->m_pCurrentBrick); //Add to Body
         }
         this->m_pCamera->Update(&a_pGraphics, &a_pWindow, &a_pInput, &a_pTimer);
         this->UpdateTranslation(a_pInput, this->m_pCamera->GetForward(), a_pTimer.GetElapsedSeconds());
         this->UpdateRotation(a_pInput, 90.0f * 0.0174532925f);
+        this->ApplyToCurrentBrick();
         this->UpdatePlacement(a_pInput);
     }
 
@@ -62,8 +67,6 @@ namespace Game
     void CBrickWorker::Render()
     {
         PuRe_Renderer* renderer = BrickBozz::Instance()->Renderer;
-        if (this->m_pCurrentBrick == nullptr)
-            return;
         //Grid
         for (int x = -this->m_maxBrickDistance; x < this->m_maxBrickDistance; x++)
         {
@@ -72,15 +75,6 @@ namespace Game
                 renderer->Draw(this->m_pGridBrick, PuRe_Primitive::Triangles, this->m_pGridMaterial, PuRe_Vector3F(x* TheBrick::CBrick::SEGMENT_WIDTH, -TheBrick::CBrick::SEGMENT_HEIGHT, z* TheBrick::CBrick::SEGMENT_WIDTH), PuRe_MatrixF::Identity(), PuRe_Vector3F(0.0f, 0.0f, 0.0f), PuRe_Vector3F(1.0f, 1.0f, 1.0f), PuRe_Color(0.7f, 0.2f, 0.2f));
             }
         }
-
-        //Spaceship
-        /*for (int i = 0; i < this->m_pSpaceship->size(); ++i)
-        {
-            (*this->m_pSpaceship)[i]->Draw(a_pGraphics, this->m_pCamera, ong::Transform(ong::vec3(0, 0, 0), ong::Quaternion(ong::vec3(0, 0, 0), 1)));
-        }*/
-
-        //Current Brick
-        //this->m_pCurrentBrick->Draw(a_pGraphics, this->m_pCamera, PuRe_Vector3F(this->m_currentBrickPosition.X, this->m_currentHeight, this->m_currentBrickPosition.Y), PuRe_QuaternionF(0.0f, this->m_currentBrickRotation, 0.0f).GetMatrix(), PuRe_Color(0.5f, 0.6f, 1.0f));
     }
 
     // **************************************************************************
@@ -209,8 +203,22 @@ namespace Game
         if (a_pInput.GamepadPressed(a_pInput.Pad_A, this->m_playerIdx) || a_pInput.MousePressed(a_pInput.LeftClick))
         {
             TheBrick::CBrickInstance* brickInstance = new TheBrick::CBrickInstance(*this->m_pCurrentBrick);
-//            brickInstance->RotateAroundPivotOffset(TheBrick::OngToPuRe(ong::QuatFromEulerAngles(this->m_currentBrickRotation, 0, 0)));
+            brickInstance->m_Color = this->m_currentBrickColor;
             this->m_pSpaceship->AddBrickInstance(*brickInstance);
         }
+    }
+
+    // **************************************************************************
+    // **************************************************************************
+    void CBrickWorker::ApplyToCurrentBrick()
+    {
+        if (this->m_pCurrentBrick == nullptr)
+        {
+            return;
+        }
+        this->m_pCurrentBrick->GetTransform().p = ong::vec3(this->m_currentBrickPosition.X, this->m_currentHeight, this->m_currentBrickPosition.Y);
+        this->m_pCurrentBrick->GetTransform().q = ong::Quaternion();
+        this->m_pCurrentBrick->RotateAroundPivotOffset(PuRe_QuaternionF(0.0f, this->m_currentBrickRotation, 0.0f));
+        this->m_pCurrentBrick->m_Color = PuRe_Color(this->m_currentBrickColor.R * 1.2f, this->m_currentBrickColor.G * 1.2f, this->m_currentBrickColor.B * 1.2f, this->m_currentBrickColor.A * 0.6f);
     }
 }

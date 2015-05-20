@@ -66,7 +66,7 @@ namespace Game
         }
 
         this->m_pBrickSupervisor->Update(*a_pGraphics, *a_pWindow, *a_pInput, *a_pTimer, *a_pSoundPlayer);
-        this->m_pBrickWorker->Update(*a_pGraphics, *a_pWindow, *a_pInput, *a_pTimer, *a_pSoundPlayer, this->m_pBrickSupervisor->GetSelectedBrick());
+        this->m_pBrickWorker->Update(*a_pGraphics, *a_pWindow, *a_pInput, *a_pTimer, *a_pSoundPlayer, this->m_pBrickSupervisor->GetSelectedBrick(), PuRe_Color(0.5f, 0.6f, 1.0f));
 
         return false;
     }
@@ -88,7 +88,8 @@ namespace Game
         //Skybox
         renderer->Draw(this->m_pSkyBox, this->m_pSkyBoxMaterial);
         //Bricks
-        this->m_pBrickWorker->Render();
+        //this->m_pBrickWorker->Render();
+        BrickBozz::Instance()->BrickManager->Render(*BrickBozz::Instance()->Renderer);
         this->m_pBrickSupervisor->Render(*a_pGraphics);
         //Post
         renderer->Set((float)this->textureID, "textureID");

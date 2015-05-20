@@ -50,7 +50,7 @@ namespace Game
         {
             do
             {
-                this->m_LastPhysicsUpdate + 1 / this->m_PhysicsFramerate;
+                this->m_LastPhysicsUpdate += 1 / this->m_PhysicsFramerate;
                 //BrickBozz::Instance()->World->step(1 / this->m_PhysicsFramerate);
             } while (a_pTimer->GetTotalElapsedMilliseconds() - this->m_LastPhysicsUpdate >= 1 / this->m_PhysicsFramerate);
             BrickBozz::Instance()->BrickManager->RebuildRenderInstances(); //Update RenderInstances

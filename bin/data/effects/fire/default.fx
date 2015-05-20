@@ -4,9 +4,6 @@ float4x4 Translation;
 float4x4 View;
 float4x4 Projection;
 
-float2 UVPosition;
-float2 UVSize;
-
 Texture2D Diffuse;
 
 SamplerState TextureSampler
@@ -43,9 +40,7 @@ VertexShaderOutput VS_MAIN(VertexShaderInput input)
 
   Output.Position = mul(pos,MVP);
 
-  float2 NUV = float2((input.UV.x*UVSize.x)+UVPosition.x,(input.UV.y*UVSize.y)+UVPosition.y);
-
-  Output.UV = NUV;
+  Output.UV = input.UV;
 
   Output.Color = input.Color;
 

@@ -64,15 +64,17 @@ namespace TheBrick
     // **************************************************************************
     void CBrick::RebuildRenderInstances()
     {
+        this->m_RenderInstancesCount = 0;
         int i = 0;
         for (std::vector<CBrickInstance*>::iterator it = this->m_pBrickInstances.begin(); it != this->m_pBrickInstances.end(); ++it)
         {
             CBrickInstance* instance = *it;
             assert(instance != nullptr);
             ong::Transform& transform = instance->GetTransform();
-            this->m_pRenderInstances[i].Position = OngToPuRe(transform.p);
-            this->m_pRenderInstances[i].Rotation = OngToPuRe(transform.q).GetMatrix();
-            this->m_pRenderInstances[i].Color = instance->m_Color;
+            this->m_pRenderInstances[this->m_RenderInstancesCount].Position = OngToPuRe(transform.p);
+            this->m_pRenderInstances[this->m_RenderInstancesCount].Rotation = OngToPuRe(transform.q).GetMatrix();
+            this->m_pRenderInstances[this->m_RenderInstancesCount].Color = instance->m_Color;
+            this->m_RenderInstancesCount++;
         }
     }
 

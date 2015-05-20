@@ -1,17 +1,17 @@
 #version 330 core
 
+// Input vertex data, different for all executions of this shader.
  layout(location = 0) in vec3 vertexPosition;
  layout(location = 1) in vec2 vertexUV;
  layout(location = 2) in vec3 vertexColor;
  layout(location = 3) in vec3 vertexNormal;
  layout(location = 4) in mat4 offset;
- layout(location = 8) in vec4 instanceColor;
 
 uniform mat4 Projection;
 uniform mat4 View;
 
 out vec2 UV;
-out vec4 Color;
+out vec3 Color;
 out vec3 Normal;
 out vec3 Position;
 
@@ -28,11 +28,11 @@ void main()
 	
 	UV = vertexUV;
 
-	Color = instanceColor;
+	Color = vertexColor;
 
-	Normal = (Model * vec4(vertexNormal,0)).xyz;
+	Normal = mat3(Model) * vertexNormal;
 
-	Position = (Model * vec4(vertexPosition,1)).xyz;
+	Position = Pos.xyz;
 
 }
 

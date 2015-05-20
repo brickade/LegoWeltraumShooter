@@ -6,7 +6,6 @@ cbuffer MatrixBuffer
 	matrix View;
 	matrix Projection;
 	float textureID;
-	float2 Resolution;
         float3 ambient;
 };
 tbuffer textureBuffer
@@ -15,7 +14,6 @@ tbuffer textureBuffer
 	Texture2D NormalMap;
 	Texture2D PositionMap;
 	Texture2D DepthMap;
-	Texture2D LightMap;
 };
 
 SamplerState TextureSampler;
@@ -42,11 +40,6 @@ struct PixelShaderOutput
   float4 color: SV_TARGET0;
 };
 
-float2 CalcTexCoord(float4 Position)
-{
-    return Position.xy / Resolution;
-}
-
 VertexShaderOutput VS_MAIN(VertexShaderInput input)
 {
   VertexShaderOutput Output = (VertexShaderOutput)0;
@@ -72,27 +65,27 @@ PixelShaderOutput PS_MAIN(VertexShaderOutput input)
 {
   PixelShaderOutput output;
 
-  float2 TexCoord = CalcTexCoord(input.Position);
+  float4 blend = DiffuseMap.Sample(TextureSampler, input.UV);
+  float4 norm = NormalMap.Sample(TextureSampler, input.UV);
+  float4 pos = PositionMap.Sample(TextureSampler, input.UV);
+  float4 depth = DepthMap.Sample(TextureSampler, input.UV);
 
-  float4 blend = DiffuseMap.Sample(TextureSampler, TexCoord);
-  float4 norm = (NormalMap.Sample(TextureSampler, TexCoord)*2)-1;
-  float4 pos = PositionMap.Sample(TextureSampler, TexCoord);
-  float4 depth = DepthMap.Sample(TextureSampler, TexCoord);
-  float4 light = LightMap.Sample(TextureSampler, TexCoord);
-
-  blend = float4((blend.xyz*light.xyz),blend.a);
-
+  float3 lightDir = float3(1,0,-1);
+  lightDir = normalize(lightDir);
+  float intensity = dot(norm.xyz,lightDir);
+  blend.r *= intensity;
+  blend.g *= intensity;
+  blend.b *= intensity;
 
   if(textureID == 0.0)
     output.color = blend;
   else if(textureID == 1.0)
     output.color = norm;
   else if(textureID == 2.0)
-    output.color = float4(1-depth.r,1-depth.r,1-depth.r,1);
-  else if(textureID == 3.0)
-    output.color = float4(light.xyz+ambient,light.a);
+    output.color = float4(depth.r,depth.r,depth.r,1);
   else
     output.color = pos;
+
   return output;
 }
 

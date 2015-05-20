@@ -13,30 +13,28 @@ uniform mat4 Scale;
 uniform mat4 Rotation;
 uniform mat4 Translation;
 
-
 out vec2 UV;
-out vec4 Color;
+out vec3 Color;
 out vec3 Normal;
-out vec3 Position;
+out vec4 Position;
 
 void main()
 {
         
 	mat4 Model = Translation * Rotation * Scale;
 	mat4 MVP = Projection * View * Model;
-        
-        vec3 endpos = vertexPosition;
-	vec4 Pos = MVP * vec4(endpos,1);
+
+	vec4 Pos = MVP * vec4(vertexPosition,1);
 
 	gl_Position = Pos;
 	
 	UV = vertexUV;
 
-	Color = vec4(vertexColor,1);
+	Color = vertexColor;
 
-	Normal = (Model * vec4(vertexNormal,0)).xyz;
+	Normal = mat3(Model) * vertexNormal;
 
-	Position = (Model * vec4(vertexPosition,1)).xyz;
+	Position = vec4(vertexPosition,1);
 
 }
 

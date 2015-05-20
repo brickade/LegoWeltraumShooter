@@ -19,7 +19,7 @@ namespace TheBrick
     // **************************************************************************
     void CBrickManager::Initialize(PuRe_IGraphics& a_pGraphics, PuRe_SoundPlayer& a_pSoundPlayer)
     {
-        this->m_pBrickMaterial = a_pGraphics.LoadMaterial("../data/effects/default/default");
+        this->m_pBrickMaterial = a_pGraphics.LoadMaterial("../data/effects/brick/default");
         this->m_pBrickUIMaterial = a_pGraphics.LoadMaterial("../data/effects/editor/default");
     }
 

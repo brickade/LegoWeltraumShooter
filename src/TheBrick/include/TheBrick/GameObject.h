@@ -29,6 +29,7 @@ namespace TheBrick
         void Serialize(CSerializer& a_pSerializer);
 
         void AddBrickInstance(const CBrickInstance& a_BrickInstance);
+        void RemoveBrickInstance(const CBrickInstance& a_BrickInstance);
     };
 }
 

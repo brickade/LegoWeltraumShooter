@@ -15,23 +15,19 @@ uniform mat4 Translation;
 
 out vec2 UV;
 out vec3 Color;
-out vec3 Normal;
 
 void main()
 {
 
+	// Output position of the vertex, in clip space : MVP * position
 	mat4 Model = Translation * Rotation * Scale;
 	mat4 MVP = Projection * View * Model;
-
-	vec4 Pos = MVP * vec4(vertexPosition,1);
-
-	gl_Position = Pos;
+	gl_Position = MVP * vec4(vertexPosition,1);
 	
-	UV = vec2(vertexUV.x,-vertexUV.y);
+	// UV of the vertex. No special space for this one.
+	UV = vertexUV;
 
 	Color = vertexColor;
-
-	Normal = vertexNormal;
 
 }
 
