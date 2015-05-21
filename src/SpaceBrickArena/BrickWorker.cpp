@@ -53,7 +53,7 @@ namespace Game
                 SAFE_DELETE(this->m_pCurrentBrick);
             }
             this->m_pCurrentBrick = a_pCurrentBrick->CreateInstance(*BrickBozz::Instance()->World); //Create Instance
-            this->m_pCurrentBrickObject->AddBrickInstance(*this->m_pCurrentBrick); //Add to Body
+            this->m_pCurrentBrickObject->AddBrickInstance(this->m_pCurrentBrick, *BrickBozz::Instance()->World); //Add to Body
         }
         this->m_pCamera->Update(&a_pGraphics, &a_pWindow, &a_pInput, &a_pTimer);
         this->UpdateTranslation(a_pInput, this->m_pCamera->GetForward(), a_pTimer.GetElapsedSeconds());
@@ -202,9 +202,10 @@ namespace Game
         //Gamepad & Mouse
         if (a_pInput.GamepadPressed(a_pInput.Pad_A, this->m_playerIdx) || a_pInput.MousePressed(a_pInput.LeftClick))
         {
-            TheBrick::CBrickInstance* brickInstance = new TheBrick::CBrickInstance(*this->m_pCurrentBrick);
+            TheBrick::CBrickInstance* brickInstance = this->m_pCurrentBrick->m_pBrick->CreateInstance(*BrickBozz::Instance()->World);
+            brickInstance->SetTransform(this->m_pCurrentBrick->GetTransform());
             brickInstance->m_Color = this->m_currentBrickColor;
-            this->m_pSpaceship->AddBrickInstance(*brickInstance);
+            this->m_pSpaceship->AddBrickInstance(brickInstance, *BrickBozz::Instance()->World);
         }
     }
 

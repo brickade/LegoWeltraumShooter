@@ -28,7 +28,7 @@ namespace TheBrick
         virtual void Deserialize(CSerializer& a_pSerializer, CBrickManager& a_pBrickManager, ong::World& a_pWorld);
         void Serialize(CSerializer& a_pSerializer);
 
-        void AddBrickInstance(const CBrickInstance& a_BrickInstance);
+        void AddBrickInstance(CBrickInstance* a_pBrickInstance, ong::World& a_rWorld);
         void RemoveBrickInstance(const CBrickInstance& a_BrickInstance);
     };
 }

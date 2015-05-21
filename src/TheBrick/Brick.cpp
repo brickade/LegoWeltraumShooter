@@ -74,6 +74,8 @@ namespace TheBrick
             this->m_pRenderInstances[this->m_RenderInstancesCount].Position = OngToPuRe(transform.p);
             this->m_pRenderInstances[this->m_RenderInstancesCount].Rotation = OngToPuRe(transform.q).GetMatrix();
             this->m_pRenderInstances[this->m_RenderInstancesCount].Color = instance->m_Color;
+            this->m_pRenderInstances[this->m_RenderInstancesCount].Size = PuRe_Vector3F::One();
+            this->m_pRenderInstances[this->m_RenderInstancesCount].Center = PuRe_Vector3F::Zero();
             this->m_RenderInstancesCount++;
         }
     }

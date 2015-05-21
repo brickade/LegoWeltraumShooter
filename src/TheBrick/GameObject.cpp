@@ -70,14 +70,13 @@ namespace TheBrick
 
     // **************************************************************************
     // **************************************************************************
-    void CGameObject::AddBrickInstance(const CBrickInstance& a_BrickInstance)
+    void CGameObject::AddBrickInstance(CBrickInstance* a_pBrickInstance, ong::World& a_rWorld)
     {
-        CBrickInstance* brickInstance = new CBrickInstance(a_BrickInstance);
-        for (size_t i = 0; i < brickInstance->m_pCollider.size(); i++)
+        for (size_t i = 0; i < a_pBrickInstance->m_pCollider.size(); i++)
         {
-            this->m_pBody->addCollider(brickInstance->m_pCollider[i]);
+            this->m_pBody->addCollider(a_pBrickInstance->m_pCollider[i]);
         }
-        this->m_pBricks.push_back(brickInstance);
+        this->m_pBricks.push_back(a_pBrickInstance);
     }
 
 
@@ -85,7 +84,6 @@ namespace TheBrick
     // **************************************************************************
     void CGameObject::RemoveBrickInstance(const CBrickInstance& a_BrickInstance)
     {
-        CBrickInstance* brickInstance = new CBrickInstance(a_BrickInstance);
         for (size_t i = 0; i < a_BrickInstance.m_pCollider.size(); i++)
         {
             this->m_pBody->removeCollider(a_BrickInstance.m_pCollider[i]);
