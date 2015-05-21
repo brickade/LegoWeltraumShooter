@@ -55,7 +55,7 @@ namespace TheBrick
 
     // **************************************************************************
     // **************************************************************************
-    void CSerializer::Write(void* a_pData, size_t a_Size)
+    void CSerializer::Write(const void* a_pData, size_t a_Size)
     {
         fwrite(a_pData, 1, a_Size, this->m_pFile);
     }

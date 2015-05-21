@@ -36,7 +36,9 @@ namespace TheBrick
             int brickId = a_pSerializer.ReadInt();
             CBrickInstance* brick = new CBrickInstance(a_pBrickManager.GetBrick(brickId), a_pWorld);
             //m_Transform
-            a_pSerializer.Read(&brick->GetTransform(), sizeof(*&brick->GetTransform()));
+            ong::Transform transform;
+            a_pSerializer.Read(&transform, sizeof(transform));
+            brick->SetTransform(transform);
             //m_pCollider: Add Collider to Body
             for (int i = 0; i < brick->m_pCollider.size(); i++)
             {

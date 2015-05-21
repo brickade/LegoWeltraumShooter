@@ -29,7 +29,7 @@ namespace TheBrick
     private:
 
     public:
-        ong::Transform& GetTransform() const
+        const ong::Transform& GetTransform() const
         {
             assert(!this->m_pCollider.empty());
             return this->m_pCollider[0]->getTransform();
@@ -38,7 +38,10 @@ namespace TheBrick
         void SetTransform(const ong::Transform& a_rTransform)
         {
             assert(!this->m_pCollider.empty());
-            return this->m_pCollider[0]->setTransform(a_rTransform);
+            for (size_t i = 0; i < this->m_pCollider.size(); i++)
+            {
+                this->m_pCollider[i]->setTransform(a_rTransform);
+            }
         }
 
     public:
