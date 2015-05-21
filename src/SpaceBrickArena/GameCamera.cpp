@@ -60,7 +60,6 @@ namespace Game
         else if (this->m_ZOffset > 10.0f)
             this->m_ZOffset = 10.0f;
 
-        
         this->SetPosition(TheBrick::OngToPuRe(a_pPlayer->m_pBody->getWorldCenter()));
 
         PuRe_Vector3F cameraLook = PuRe_Vector3F();
@@ -75,9 +74,47 @@ namespace Game
             if (speed.Y != 0.0f)
                 cameraLook.Y += speed.Y*Seconds;
         }
-        PuRe_Vector2F GamePadThumb = a_pInput->GetGamepadRightThumb(0);
-        if (GamePadThumb.Length() > 1.0f)
-            this->Rotate(cameraLook.Y + GamePadThumb.Y, cameraLook.X + GamePadThumb.X, cameraLook.Z);
+
+
+        PuRe_Vector2F Cam;
+        std::string Key = a_pPlayer->m_pCSVFile->GetValue("Camera.X");
+        bool invert = false;
+        if (Key.substr(0, 1) == "-")
+        {
+            Key = Key.substr(1, Key.length());
+            invert = true;
+        }
+        if (Key == "LeftThumb.X")
+            Cam.X = a_pInput->GetGamepadLeftThumb(0).X;
+        else if (Key == "RightThumb.X")
+            Cam.X = a_pInput->GetGamepadRightThumb(0).X;
+        else if (Key == "LeftThumb.Y")
+            Cam.X = a_pInput->GetGamepadLeftThumb(0).Y;
+        else if (Key == "RightThumb.Y")
+            Cam.X = a_pInput->GetGamepadRightThumb(0).Y;
+        if (invert)
+            Cam.X = -Cam.X;
+
+        Key = a_pPlayer->m_pCSVFile->GetValue("Camera.Y");
+        invert = false;
+        if (Key.substr(0, 1) == "-")
+        {
+            Key = Key.substr(1, Key.length());
+            invert = true;
+        }
+        if (Key == "LeftThumb.X")
+            Cam.Y = a_pInput->GetGamepadLeftThumb(0).X;
+        else if (Key == "RightThumb.X")
+            Cam.Y = a_pInput->GetGamepadRightThumb(0).X;
+        else if (Key == "LeftThumb.Y")
+            Cam.Y = a_pInput->GetGamepadLeftThumb(0).Y;
+        else if (Key == "RightThumb.Y")
+            Cam.Y = a_pInput->GetGamepadRightThumb(0).Y;
+        if (invert)
+            Cam.Y = -Cam.Y;
+
+        if (Cam.Length() > 1.0f)
+            this->Rotate(cameraLook.Y + Cam.Y, cameraLook.X + Cam.X, cameraLook.Z);
 
         this->Move(PuRe_Vector3F(0.0f, 0.0f, -this->m_ZOffset));
     }

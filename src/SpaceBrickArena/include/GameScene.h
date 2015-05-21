@@ -12,6 +12,7 @@
 #include <algorithm>
 
 #include "GameCamera.h"
+#include "Minimap.h"
 
 // Declare namespace Game
 namespace Game
@@ -30,14 +31,18 @@ namespace Game
         PuRe_SkyBox* m_pSkyBox;
         PuRe_Model* m_pModel;
         PuRe_IMaterial* m_pMaterial;
+        PuRe_IMaterial* m_pUIMaterial;
         PuRe_IMaterial* m_pSkyMaterial;
         PuRe_IMaterial* m_pPostMaterial;
         PuRe_IMaterial* m_pPointLightMaterial;
+        CMinimap* m_pMinimap;
+        PuRe_Camera* m_pUICamera;
+        PuRe_BoundingBox m_MapBoundaries;
 
         std::vector<TheBrick::CBullet*> m_Bullets;
 
         TheBrick::CSpaceship* m_pPlayerShip;
-        TheBrick::CAsteroid* m_pAsteroid;
+        std::vector<TheBrick::CAsteroid*> m_Asteroids;
         /// @brief Cameras
         ///
         CGameCamera* m_pCamera;

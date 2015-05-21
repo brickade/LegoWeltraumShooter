@@ -1,8 +1,11 @@
 Thrust;RT
-Move;LeftThumb
-Camera;RightThumb
+Move.X;LeftThumb.X
+Move.Y;LeftThumb.Y
+Camera.X;RightThumb.X
+Camera.Y;-RightThumb.Y
 SpinLeft;LB
-SpinRight;RB
+SpinRight;-RB
+Shoot;A
 SpeedAcceleration;10
 PitchAcceleration;5
 YawAcceleration;5

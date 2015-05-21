@@ -29,9 +29,16 @@ namespace TheBrick
 
     // **************************************************************************
     // **************************************************************************
-    void CSpaceship::HandleInput(PuRe_Camera* a_pCamera, PuRe_IInput* a_pInput, float a_DeltaTime)
+    void CSpaceship::HandleInput(PuRe_Camera* a_pCamera, PuRe_IInput* a_pInput, float a_DeltaTime, std::vector<CBullet*>& a_rBullets, CBrickManager* a_pManager)
     {
         PuRe_Vector3F forward = a_pCamera->GetForward();
+
+        if (a_pInput->KeyPressed(a_pInput->R))
+        {
+            SAFE_DELETE(this->m_pCSVFile);
+            this->m_pCSVFile = new CCSVParser("../data/player.csv");
+        }
+
 
         ong::vec3 currVel = ong::rotate(this->m_pBody->getLinearVelocity(), ong::conjugate(this->m_pBody->getOrientation()));
         ong::vec3 currAng = ong::rotate(this->m_pBody->getAngularVelocity(), ong::conjugate(this->m_pBody->getOrientation()));
@@ -55,8 +62,44 @@ namespace TheBrick
         ong::vec3 targetVel = ong::vec3(0, 0, 0.0f);
         ong::vec3 targetAng = ong::vec3(0.0f, 0.0f, 0.0f);
 
+
+        std::string Key = this->m_pCSVFile->GetValue("Shoot");
+        bool shoot = false;
+        if (Key == "A")
+            shoot = a_pInput->GamepadPressed(a_pInput->Pad_A, 0);
+        else if (Key == "X")
+            shoot = a_pInput->GamepadPressed(a_pInput->Pad_X, 0);
+        else if (Key == "Y")
+            shoot = a_pInput->GamepadPressed(a_pInput->Pad_Y, 0);
+        else if (Key == "B")
+            shoot = a_pInput->GamepadPressed(a_pInput->Pad_B, 0);
+        else if (Key == "LB")
+            shoot = a_pInput->GamepadPressed(a_pInput->Left_Shoulder, 0);
+        else if (Key == "RB")
+            shoot = a_pInput->GamepadPressed(a_pInput->Right_Shoulder, 0);
+        else if (Key == "RT")
+            shoot = a_pInput->GetGamepadRightTrigger(0) > 0.2f;
+        else if (Key == "LT")
+            shoot = a_pInput->GetGamepadLeftTrigger(0) > 0.2f;
+
+        if (shoot)
+        {
+            ong::Body* b = this->m_pBody;
+            ong::World* w = b->getWorld();
+            PuRe_Vector3F forward = TheBrick::OngToPuRe(ong::rotate(ong::vec3(0, 0, 1), b->getOrientation()));
+            a_rBullets.push_back(new TheBrick::CBullet(a_pManager, TheBrick::OngToPuRe(this->m_Transform.p) + PuRe_Vector3F(-0.5f, -0.5f, 0.0f) + forward*10.0f, forward*50.0f, w));
+        }
+
         //handle thrust from file
-        std::string Key = this->m_pCSVFile->GetValue("Thrust");
+        Key = this->m_pCSVFile->GetValue("Thrust");
+
+        bool invert = false;
+        if (Key.substr(0, 1) == "-")
+        {
+            Key = Key.substr(1, Key.length());
+            invert = true;
+        }
+
         float thrust = 0.0f;
         if (Key == "RT")
             thrust = a_pInput->GetGamepadRightTrigger(0);
@@ -66,60 +109,125 @@ namespace TheBrick
             thrust = 1.0f;
         else if (Key == "RB"&&a_pInput->GamepadIsPressed(a_pInput->Right_Shoulder, 0))
             thrust = 1.0f;
-        else if (Key == "LeftThumb")
+        else if (Key == "LeftThumb.X")
+            thrust = a_pInput->GetGamepadLeftThumb(0).X;
+        else if (Key == "RightThumb.X")
+            thrust = a_pInput->GetGamepadRightThumb(0).X;
+        else if (Key == "LeftThumb.Y")
             thrust = a_pInput->GetGamepadLeftThumb(0).Y;
-        else if (Key == "RightThumb")
+        else if (Key == "RightThumb.Y")
             thrust = a_pInput->GetGamepadRightThumb(0).Y;
+        if (invert)
+            thrust = -thrust;
         //apply thrust now
-        if (thrust > 0.2f)
+        if (thrust > 0.2f||thrust < -0.2f)
             targetVel.z += thrust * maxSpeed;
 
         //handle X/YRotation from file
-        Key = this->m_pCSVFile->GetValue("Move");
         PuRe_Vector2F Move;
-        if (Key == "LeftThumb")
-            Move = a_pInput->GetGamepadLeftThumb(0);
-        else if (Key == "RightThumb")
-            Move = a_pInput->GetGamepadRightThumb(0);
+        Key = this->m_pCSVFile->GetValue("Move.X");
+        invert = false;
+        if (Key.substr(0, 1) == "-")
+        {
+            Key = Key.substr(1, Key.length());
+            invert = true;
+        }
+        if (Key == "LeftThumb.X")
+            Move.X = a_pInput->GetGamepadLeftThumb(0).X;
+        else if (Key == "RightThumb.X")
+            Move.X = a_pInput->GetGamepadRightThumb(0).X;
+        else if (Key == "LeftThumb.Y")
+            Move.X = a_pInput->GetGamepadLeftThumb(0).Y;
+        else if (Key == "RightThumb.Y")
+            Move.X = a_pInput->GetGamepadRightThumb(0).Y;
+        if (invert)
+            Move.X = -Move.X;
+
+        Key = this->m_pCSVFile->GetValue("Move.Y");
+
+        invert = false;
+        if (Key.substr(0, 1) == "-")
+        {
+            Key = Key.substr(1, Key.length());
+            invert = true;
+        }
+
+        if (Key == "LeftThumb.X")
+            Move.Y = a_pInput->GetGamepadLeftThumb(0).X;
+        else if (Key == "RightThumb.X")
+            Move.Y = a_pInput->GetGamepadRightThumb(0).X;
+        else if (Key == "LeftThumb.Y")
+            Move.Y = a_pInput->GetGamepadLeftThumb(0).Y;
+        else if (Key == "RightThumb.Y")
+            Move.Y = a_pInput->GetGamepadRightThumb(0).Y;
+        if (invert)
+            Move.Y = -Move.Y;
         //apply X/Y Rotation via Input
         if (Move.Length() > 0.5f)
         {
-            targetPitchSpeed = -Move.Y * maxPitchSpeed;
+            targetPitchSpeed = Move.Y * maxPitchSpeed;
             targetYawSpeed = Move.X * maxYawSpeed;
         }
 
 
         //handle LeftSpin from file
         Key = this->m_pCSVFile->GetValue("SpinLeft");
-        float Spin = 0.0f;
+        invert = false;
+        if (Key.substr(0, 1) == "-")
+        {
+            Key = Key.substr(1, Key.length());
+            invert = true;
+        }
+        float SpinL = 0.0f;
+        float SpinR = 0.0f;
         if (Key == "RT")
-            Spin += a_pInput->GetGamepadRightTrigger(0);
+            SpinL += a_pInput->GetGamepadRightTrigger(0);
         else if (Key == "LT")
-            Spin += a_pInput->GetGamepadLeftTrigger(0);
+            SpinL += a_pInput->GetGamepadLeftTrigger(0);
         else if (Key == "LB"&&a_pInput->GamepadIsPressed(a_pInput->Left_Shoulder, 0))
-            Spin += 1.0f;
+            SpinL += 1.0f;
         else if (Key == "RB"&&a_pInput->GamepadIsPressed(a_pInput->Right_Shoulder, 0))
-            Spin += 1.0f;
-        else if (Key == "LeftThumb")
-            Spin += a_pInput->GetGamepadLeftThumb(0).X;
-        else if (Key == "RightThumb")
-            Spin += a_pInput->GetGamepadRightThumb(0).X;
+            SpinL += 1.0f;
+        else if (Key == "LeftThumb.X")
+            SpinL += a_pInput->GetGamepadLeftThumb(0).X;
+        else if (Key == "RightThumb.X")
+            SpinL += a_pInput->GetGamepadRightThumb(0).X;
+        else if (Key == "LeftThumb.Y")
+            SpinL += a_pInput->GetGamepadLeftThumb(0).Y;
+        else if (Key == "RightThumb.Y")
+            SpinL += a_pInput->GetGamepadRightThumb(0).Y;
+        if (invert)
+            SpinL = -SpinL;
         //handle RightSpin from file
         Key = this->m_pCSVFile->GetValue("SpinRight");
+        invert = false;
+        if (Key.substr(0, 1) == "-")
+        {
+            Key = Key.substr(1, Key.length());
+            invert = true;
+        }
         if (Key == "RT")
-            Spin -= a_pInput->GetGamepadRightTrigger(0);
+            SpinR += a_pInput->GetGamepadRightTrigger(0);
         else if (Key == "LT")
-            Spin -= a_pInput->GetGamepadLeftTrigger(0);
+            SpinR += a_pInput->GetGamepadLeftTrigger(0);
         else if (Key == "LB"&&a_pInput->GamepadIsPressed(a_pInput->Left_Shoulder, 0))
-            Spin -= 1.0f;
+            SpinR += 1.0f;
         else if (Key == "RB"&&a_pInput->GamepadIsPressed(a_pInput->Right_Shoulder, 0))
-            Spin -= 1.0f;
-        else if (Key == "LeftThumb")
-            Spin -= a_pInput->GetGamepadLeftThumb(0).X;
-        else if (Key == "RightThumb")
-            Spin -= a_pInput->GetGamepadRightThumb(0).X;
+            SpinR += 1.0f;
+        else if (Key == "LeftThumb.X")
+            SpinR += a_pInput->GetGamepadLeftThumb(0).X;
+        else if (Key == "RightThumb.X")
+            SpinR += a_pInput->GetGamepadRightThumb(0).X;
+        else if (Key == "LeftThumb.Y")
+            SpinR += a_pInput->GetGamepadLeftThumb(0).Y;
+        else if (Key == "RightThumb.Y")
+            SpinR += a_pInput->GetGamepadRightThumb(0).Y;
+        if (invert)
+            SpinR = -SpinR;
+        float Spin = SpinR+SpinL;
 
-        targetRollSpeed = Spin;
+        if (Spin > 0.2F||Spin < -0.2f)
+            targetRollSpeed = SpinL+SpinR;
 
         //Set Rotation
         targetAng.x = targetPitchSpeed;
@@ -167,7 +275,7 @@ namespace TheBrick
     {
         //m_pBody
         ong::BodyDescription bdesc;
-        bdesc.transform = ong::Transform(ong::vec3(0.0f, 0.0f, 0.0f), ong::Quaternion(ong::vec3(0, 0, 0), 1));
+        bdesc.transform = ong::Transform(ong::vec3(10.0f, 10.0f, 10.0f), ong::Quaternion(ong::vec3(0, 0, 0), 1));
         bdesc.type = ong::BodyType::Dynamic;
         bdesc.angularMomentum = ong::vec3(0, 0, 0); //rotation speed
         bdesc.linearMomentum = ong::vec3(0, 0, 0);  //movement speed

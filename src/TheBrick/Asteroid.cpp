@@ -3,8 +3,15 @@ namespace TheBrick
 {
     // **************************************************************************
     // **************************************************************************
-    CAsteroid::CAsteroid()
+    CAsteroid::CAsteroid(ong::World* a_pWorld, ong::vec3 a_Position)
     {
+        //m_pBody
+        ong::BodyDescription bdesc;
+        bdesc.transform = ong::Transform(a_Position, ong::Quaternion(ong::vec3(0, 0, 0), 1));
+        bdesc.type = ong::BodyType::Dynamic;
+        bdesc.angularMomentum = ong::vec3(0, 0, 0); //rotation speed
+        bdesc.linearMomentum = ong::vec3(0, 0, 0);  //movement speed
+        this->m_pBody = a_pWorld->createBody(bdesc);
     }
 
     // **************************************************************************
@@ -36,16 +43,9 @@ namespace TheBrick
     // **************************************************************************
     void CAsteroid::Deserialize(CSerializer* a_pSerializer, CBrickManager* a_pBrickManager, ong::World* a_pWorld)
     {
-        //m_pBody
-        ong::BodyDescription bdesc;
-        bdesc.transform = ong::Transform(ong::vec3(0.0f, 0.0f, 10.0f), ong::Quaternion(ong::vec3(0, 0, 0), 1));
-        bdesc.type = ong::BodyType::Dynamic;
-        bdesc.angularMomentum = ong::vec3(0, 0, 0); //rotation speed
-        bdesc.linearMomentum = ong::vec3(0, 0, 1);  //movement speed
-        this->m_pBody = a_pWorld->createBody(bdesc);
 
         ////////   TESTING ONLY   ////////
-        for (int a=0;a<1;a++)
+        for (int a=0;a<4;a++)
         {
             CBrickInstance* brick = new CBrickInstance(a_pBrickManager->GetBrick(0), a_pWorld);
             brick->m_Transform = ong::Transform(ong::vec3((a % 2)*1.55f, 0.0f, (a / 2)*1.55f), ong::Quaternion(ong::vec3(0, 0, 0), 1));
