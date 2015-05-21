@@ -217,11 +217,11 @@ namespace Game
         {
             return;
         }
-        ong::Transform transform;
-        transform.p = ong::vec3(this->m_currentBrickPosition.X, this->m_currentHeight, this->m_currentBrickPosition.Y);
-        transform.q = ong::Quaternion();
-        this->m_pCurrentBrick->SetTransform(transform);
+        this->m_pCurrentBrick->SetTransform(ong::Transform(ong::vec3(0, 0, 0), ong::Quaternion(ong::vec3(0, 0, 0), 0)));
         this->m_pCurrentBrick->RotateAroundPivotOffset(PuRe_QuaternionF(0.0f, this->m_currentBrickRotation, 0.0f));
+        ong::Transform transform = this->m_pCurrentBrick->GetTransform();
+        transform.p += ong::vec3(this->m_currentBrickPosition.X, this->m_currentHeight, this->m_currentBrickPosition.Y);
+        this->m_pCurrentBrick->SetTransform(transform);
         this->m_pCurrentBrick->m_Color = PuRe_Color(this->m_currentBrickColor.R * 1.2f, this->m_currentBrickColor.G * 1.2f, this->m_currentBrickColor.B * 1.2f, this->m_currentBrickColor.A * 0.6f);
     }
 }

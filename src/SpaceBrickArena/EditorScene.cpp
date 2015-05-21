@@ -76,7 +76,7 @@ namespace Game
     void CEditorScene::Render(PuRe_IGraphics* a_pGraphics)
     {
         PuRe_Renderer* renderer = BrickBozz::Instance()->Renderer;
-        
+        renderer->Begin(PuRe_Color(0.1f, 0.5f, 0.1f));
         //Lights
         renderer->Draw(this->m_pPointLight, this->m_pPointLightMaterial, PuRe_Vector3F(5.0f, 0.0f, 0.0f), PuRe_Vector3F(1.0f, 1.0f, 1.0f));
         renderer->Draw(this->m_pPointLight, this->m_pPointLightMaterial, PuRe_Vector3F(0.0f, 5.0f, 0.0f), PuRe_Vector3F(1.0f, 1.0f, 1.0f));
@@ -84,9 +84,8 @@ namespace Game
         renderer->Draw(this->m_pPointLight, this->m_pPointLightMaterial, PuRe_Vector3F(5.0f, 5.0f, 0.0f), PuRe_Vector3F(1.0f, 1.0f, 1.0f));
         renderer->Draw(this->m_pPointLight, this->m_pPointLightMaterial, PuRe_Vector3F(0.0f, 5.0f, 5.0f), PuRe_Vector3F(1.0f, 1.0f, 1.0f));
         renderer->Draw(this->m_pPointLight, this->m_pPointLightMaterial, PuRe_Vector3F(0.0f, 0.0f, 0.0f), PuRe_Vector3F(1.0f, 1.0f, 1.0));
-        renderer->Begin(PuRe_Color(0.1f, 0.5f, 0.1f));
         //Skybox
-        renderer->Draw(this->m_pSkyBox, this->m_pSkyBoxMaterial);
+        //renderer->Draw(this->m_pSkyBox, this->m_pSkyBoxMaterial);
         //Bricks
         //this->m_pBrickWorker->Render();
         BrickBozz::Instance()->BrickManager->Render(*BrickBozz::Instance()->Renderer);
