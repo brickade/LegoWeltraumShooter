@@ -14,7 +14,8 @@ namespace ong
 
 	ContactManager::ContactManager()
 		: m_contactAllocator(64),
-		m_contactIterAllocator(128)
+		m_contactIterAllocator(128),
+		m_tick(0)
 	{
 
 	}
@@ -480,6 +481,10 @@ namespace ong
 			{ nullptr, nullptr, collideHullHull }
 		};
 
+		//filter
+		if ((ca->getCollisionGroup() & cb->getCollisionFilter()) != 0 || (cb->getCollisionGroup() & ca->getCollisionFilter()))
+			return;
+		
 		if (cb->getShape().getType() < ca->getShape().getType())
 			std::swap(ca, cb);
 

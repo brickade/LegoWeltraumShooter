@@ -3,6 +3,7 @@
 #include "HierarchieTest.h"
 #include "StressTest.h"
 #include "RayMarcherTest.h"
+#include "FilterTest.h"
 #include "myMath.h"
 
 #undef main
@@ -10,7 +11,7 @@
 int main()
 {
 
-	Test* test = new Test();
+	Test* test = new FilterTest();
 	test->init();
 
 	test->run();

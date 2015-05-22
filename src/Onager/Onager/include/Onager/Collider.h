@@ -74,6 +74,9 @@ namespace ong
 
 		void setUserData(void* pUserData);
 
+		void setCollisionGroup(uint32 collisionGroup);
+		void setCollisionFilter(uint32 collisionFilter);
+
 		void setCallbacks(const ColliderCallbacks& callbacks);
 
 		void calculateMassProperties();
@@ -97,6 +100,9 @@ namespace ong
 		const Body* getBody() const;
 
 		void* getUserData() const;
+
+		uint32 getCollisionGroup() const;
+		uint32 getCollisionFilter() const;
 
 		Transform& getTransform();
 		const Transform& getTransform() const;
@@ -138,6 +144,9 @@ namespace ong
 		void* m_pUserData;
 		ColliderCallbacks m_callbacks;
 
+		uint32 m_collisionGroup;
+		uint32 m_collisionFilter;
+
 		Collider* m_prev;
 		Collider* m_next;
 	};
@@ -148,6 +157,16 @@ namespace ong
 	inline void Collider::setUserData(void* pUserData)
 	{
 		m_pUserData = pUserData;
+	}
+
+	inline void Collider::setCollisionGroup(uint32 collisionGroup)
+	{
+		m_collisionGroup = collisionGroup;
+	}
+
+	inline void Collider::setCollisionFilter(uint32 collisionFilter)
+	{
+		m_collisionFilter = collisionFilter;
 	}
 
 	inline void Collider::setCallbacks(const ColliderCallbacks& callbacks)
@@ -223,5 +242,15 @@ namespace ong
 	inline void* Collider::getUserData() const
 	{
 		return m_pUserData;
+	}
+	
+	inline uint32 Collider::getCollisionGroup() const
+	{
+		return m_collisionGroup;
+	}
+
+	inline uint32 Collider::getCollisionFilter() const
+	{
+		return m_collisionFilter;
 	}
 }

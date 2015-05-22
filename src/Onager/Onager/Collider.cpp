@@ -13,9 +13,9 @@ namespace ong
 		m_pMaterial(descr.material),
 		m_shape(descr.shape),
 		m_pUserData(nullptr),
-		m_next(nullptr)
-
-
+		m_next(nullptr),
+		m_collisionGroup(0),
+		m_collisionFilter(0)
 	{
 		calculateMassProperties();
 		calculateAABB();
