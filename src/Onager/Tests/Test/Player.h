@@ -13,6 +13,7 @@ public:
 	void update(float dt);
 	
 	void shoot();
+	void bomb();
 	void grab();
 
 	void setFocus(bool focus);
@@ -27,22 +28,22 @@ private:
 	SDL_Window* m_pWindow;
 	std::vector<Entity*>* m_entities;
 
-
-
 	struct Grab
 	{
-		Body* body;
+		Entity* body;
 		vec3 point;
 		float anchor;
 	} m_grab;
 	
 	Material* m_bulletMaterial;
+	Material* m_bombMaterial;
 	
 	bool m_inFocus = false;
 
 	ShapePtr bulletShape;
-
+	ShapePtr m_bombShape;
 	float m_coolDown;
+	float m_bombCoolDown;
 };
 
 

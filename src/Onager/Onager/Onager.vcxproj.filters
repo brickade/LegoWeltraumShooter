@@ -117,5 +117,8 @@
     <ClInclude Include="Profiler.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\Onager\Callbacks.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

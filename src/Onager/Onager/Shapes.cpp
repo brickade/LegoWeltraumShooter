@@ -27,6 +27,73 @@ namespace ong
 	}
 
 
+	AABB calculateAABB(ShapePtr shape, const Transform& transform)
+	{
+		switch (shape.getType())
+		{
+		case ShapeType::HULL:
+			return calculateAABB(shape.toHull(), transform);
+		case ShapeType::SPHERE:
+			return calculateAABB(shape.toSphere(), transform);
+		case ShapeType::CAPSULE:
+			return calculateAABB(shape.toCapsule(), transform);
+		default:
+			return { vec3(0, 0, 0), vec3(0, 0, 0) };
+
+		}
+	}
+		
+	AABB calculateAABB(const Hull* hull, const Transform& transform)
+	{
+		AABB aabb;
+
+		mat3x3 rot = toRotMat(transform.q);
+
+		vec3 min = vec3(FLT_MAX, FLT_MAX, FLT_MAX);
+		vec3 max = vec3(-FLT_MAX, -FLT_MAX, -FLT_MAX);
+
+		for (int i = 0; i < hull->numVertices; ++i)
+		{
+			vec3 v = rot * hull->pVertices[i];
+
+			for (int i = 0; i < 3; ++i)
+			{
+				if (v[i] < min[i]) min[i] = v[i];
+				if (v[i] > max[i]) max[i] = v[i];
+			}
+		}
+
+		aabb.e = 0.5f * (max - min);
+		aabb.c = transform.p + min + aabb.e;
+		return aabb;
+	}
+
+	AABB calculateAABB(const Sphere* sphere, const Transform& transform)
+	{
+		AABB aabb;
+		aabb.c = transformVec3(sphere->c, transform);
+		aabb.e = sphere->r * vec3(1, 1, 1);
+
+		return aabb;
+	}
+
+	AABB calculateAABB(const Capsule* capsule, const Transform& transform)
+	{
+		AABB aabb;
+		aabb.c = 0.5f * (capsule->c1 + capsule->c2) + transform.p;
+
+		for (int i = 0; i < 3; ++i)
+		{
+			vec3 c1 = transformVec3(capsule->c1, transform);
+			vec3 c2 = transformVec3(capsule->c2, transform);
+
+			aabb.e[i] = ong_MAX(ong_MAX(ong_MAX(abs(c1[i] + capsule->r), abs(c1[i] - capsule->r)),
+				abs(c2[i] + capsule->r)),
+				abs(c2[i] - capsule->r)) - aabb.c[i];
+		}
+		return aabb;
+	}
+
 
 	vec3 getHullSupport(const vec3& dir, const Hull* hull, int* idx)
 	{

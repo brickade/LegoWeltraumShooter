@@ -1,5 +1,6 @@
 #pragma once
 #include "defines.h"
+#include "Callbacks.h"
 #include "Shapes.h"
 #include <vector>
 #include <Allocator.h>
@@ -10,7 +11,9 @@ namespace ong
 
 
 	class Body;
+	class Collider;
 	struct RayQueryResult;
+
 
 	struct Pair
 	{
@@ -45,6 +48,10 @@ namespace ong
 		int generatePairs(Pair* pairs);
 
 		bool queryRay(const vec3& origin, const vec3& dir, RayQueryResult* hit, float tmax = FLT_MAX);
+		bool queryCollider(const Collider* collider);
+		bool queryCollider(Collider* collider, ColliderQueryCallBack callback);
+		bool queryShape(ShapePtr shape, const Transform& transform);
+		bool queryShape(ShapePtr shape, const Transform& transform, ShapeQueryCallBack callback, void* userData);
 
 	private:
 

@@ -2,6 +2,7 @@
 
 #include "myMath.h"
 #include "defines.h"
+#include "Callbacks.h"
 #include "Shapes.h"
 #include "MassProperties.h"
 
@@ -85,6 +86,9 @@ namespace ong
 		//return 0 if nothing got hit
 		bool queryRay(const vec3& origin, const vec3& dir, RayQueryResult* hit, float tmax = FLT_MAX);
 		bool queryCollider(const Collider* collider);
+		bool queryCollider(Collider* collider, ColliderQueryCallBack callback);
+		bool queryShape(ShapePtr shape, const Transform& transform);
+		bool queryShape(ShapePtr shape, const Transform& transform, ShapeQueryCallBack callback, void* userData);
 
 		const AABB& getAABB();
 

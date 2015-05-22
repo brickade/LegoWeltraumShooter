@@ -347,7 +347,7 @@ namespace ong
 		}
 
 
-		if (minPlaneDist > minEdgeDist)
+		if (minPlaneDist < minEdgeDist)
 		{
 			// clip segment against sideplane
 			HalfEdge* e = h->pEdges + h->pFaces[minPlaneIdx].edge;
@@ -546,9 +546,6 @@ namespace ong
 
 		ca->callbackPreSolve(&contact);
 		cb->callbackPreSolve(&contact);
-
-		cb = cb->getNext();
-
 
 	}
 

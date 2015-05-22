@@ -38,7 +38,8 @@ Entity::Entity(Body* body, vec3 color)
 
 Entity::~Entity()
 {
-	
+	if (m_body)
+		m_body->getWorld()->destroyBody(m_body);
 }
 
 
@@ -49,7 +50,7 @@ void Entity::render(GLuint colorLocation)
 		return;
 	
 	//contacts
-#if 0
+#if 1
 	glUniform3f(colorLocation, 1, 0, 1);
 	glBegin(GL_LINES);
 	if (m_body->getType() == BodyType::Dynamic)
@@ -237,11 +238,17 @@ void Entity::render(GLuint colorLocation)
 	
 }
 
-
+struct ARGS
+{
+	Body* body;
+	bool valid = true;
+};
 
 void Entity::destroy(std::vector<Entity*>& entities)
 {
 	World* world = m_body->getWorld();
+
+
 
 	Collider* c = m_body->getCollider();
 
@@ -255,6 +262,11 @@ void Entity::destroy(std::vector<Entity*>& entities)
 	BodyDescription bDescr;
 	bDescr.type = BodyType::Dynamic;
 	bDescr.transform.q = Quaternion(vec3(0, 0, 0), 1);
+
+	bDescr.linearMomentum = 0.5f*m_body->getLinearMomentum();
+	bDescr.angularMomentum = 0.5f*m_body->getAngularMomentum();
+	
+	
 
 	for (; c != 0; c = c->getNext())
 	{
@@ -273,27 +285,49 @@ void Entity::destroy(std::vector<Entity*>& entities)
 
 		for (int i = 0; i < 4; ++i)
 		{
-			for (int i = 0; i < 3; ++i)
+			for (int j = 0; j < 4; ++j)
 			{
-				bDescr.transform.p[i] = fmod(rand(), (2.0f * c->getAABB().e.x)) - c->getAABB().e[i];
+
+				for (int i = 0; i < 3; ++i)
+				{
+					bDescr.transform.p[i] = (fmod(rand(), (2.0f * c->getAABB().e.x)) - c->getAABB().e[i]) * 2.0f;
+				}
+
+				bDescr.transform.p += c->getAABB().c;
+
+
+				bDescr.transform = transformTransform(bDescr.transform, m_body->getTransform());
+
+				ARGS args;
+
+				args.body = m_body;
+
+				auto callback = [](Collider* collider, void* userData)->bool
+				{
+					if (collider->getBody() != ((ARGS*)userData)->body)
+						((ARGS*)userData)->valid = false;
+					return 1;
+				};
+				
+
+				world->queryShape(cDescr.shape, bDescr.transform, callback, &args);
+
+				if (args.valid)
+				{
+					Body* body = world->createBody(bDescr);
+
+					body->addCollider(world->createCollider(cDescr));
+
+					entities.push_back(new Entity(body, m_color));
+					break;
+				}
+
 			}
 
-			bDescr.transform.p += c->getAABB().c;
-			
-			bDescr.linearMomentum = m_body->getLinearMomentum() - bDescr.transform.p;
-			bDescr.angularMomentum = m_body->getAngularMomentum();
-
-			bDescr.transform = transformTransform(bDescr.transform, m_body->getTransform());
-
-			Body* body = world->createBody(bDescr);
-
-			body->addCollider(world->createCollider(cDescr));
-
-			entities.push_back(new Entity(body, m_color));
 		}
 
 	}
 
 
-	world->destroyBody(m_body);
+	
 }

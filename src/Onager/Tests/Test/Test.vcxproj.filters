@@ -70,5 +70,11 @@
     <ClInclude Include="RayMarcherTest.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="BrickTest.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Bomb.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

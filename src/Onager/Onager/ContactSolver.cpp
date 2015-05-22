@@ -66,7 +66,7 @@ namespace ong
 
 				float vn = dot(dv, man->normal);
 
-				float penetrationBias = -0.2f * invDt * ong_MIN(0.0f, (man->points[j].penetration + 0.02f));
+				float penetrationBias = -0.02f * invDt * ong_MIN(0.0f, (man->points[j].penetration + 0.02f));
 
 				float restititutionBias = 0.0f;
 				// only apply restitution to velocities beyond a threshold

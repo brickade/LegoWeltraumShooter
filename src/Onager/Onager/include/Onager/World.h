@@ -69,6 +69,7 @@ namespace ong
 	//	-begin overlap/end overlap
 	//	-collision masks
 	//	-sensors??
+	//	-continuos collision detection
 	//	-sleeping
 	//
 	//	-hull memory leaking
@@ -97,6 +98,10 @@ namespace ong
 		void destroyShape(ShapePtr shape);
 
 		bool queryRay(const vec3& origin, const vec3& dir, RayQueryResult* hit, float tmax = FLT_MAX);
+		bool queryCollider(const Collider* collider);
+		bool queryCollider(Collider* collider, ColliderQueryCallBack callback);
+		bool queryShape(ShapePtr shape, const Transform& transform);
+		bool queryShape(ShapePtr shape, const Transform& transform, ShapeQueryCallBack callback, void* userData);
 
 		inline void World::setGravity(const vec3& gravity);
 

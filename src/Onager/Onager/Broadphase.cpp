@@ -1,5 +1,6 @@
 #include "Broadphase.h"
 #include "Body.h"
+#include "Collider.h"
 #include <algorithm>
 #include <stack>
 #include "Profiler.h"
@@ -436,7 +437,6 @@ namespace ong
 					continue;
 
 
-
 				for (;;)
 				{
 					int x0 = cells[l].i, x1 = cells[l].i;
@@ -581,4 +581,269 @@ namespace ong
 
 		}
 	}
-}
+
+	bool HGrid::queryCollider(const Collider* collider)
+	{
+
+		m_tick++;
+
+		int occupiedLevelsMask = m_occupiedLevelsMask;
+		
+		vec3 pos = collider->getAABB().c;
+		float radius = length(collider->getAABB().e);
+		
+		if (collider->getBody())
+			transformVec3(pos, collider->getBody()->getTransform());
+
+		float size = MIN_CELL_SIZE;
+		for (int level = 0; level < MAX_LEVELS;
+			size *= CELL_TO_CELL_RATIO, occupiedLevelsMask >>= 1, ++level)
+		{
+			if (occupiedLevelsMask == 0)
+				break;
+
+			if ((occupiedLevelsMask & 1) == 0)
+				continue;
+
+			float ooSize = 1.0f / size;
+
+			int x1, y1, z1, x2, y2, z2;
+
+			float delta = radius + size*SPHERE_TO_CELL_RATIO + FLT_EPSILON*size;
+
+			x1 = (int)floorf((pos.x - delta) * ooSize);
+			y1 = (int)floorf((pos.y - delta) * ooSize);
+			z1 = (int)floorf((pos.z - delta) * ooSize);
+
+			x2 = (int)ceilf((pos.x + delta) * ooSize);
+			y2 = (int)ceilf((pos.y + delta) * ooSize);
+			z2 = (int)ceilf((pos.z + delta) * ooSize);
+
+			for (int x = x1; x <= x2; ++x)
+			{
+				for (int y = y1; y <= y2; ++y)
+				{
+					for (int z = z1; z <= z2; ++z)
+					{
+						int bucket = calculateBucketID(x, y, z, level);
+						if (m_timeStamp[bucket] == m_tick)
+							continue;
+						m_timeStamp[bucket] = m_tick;
+
+						for (int i = 0; i < m_objectBucket[bucket].size(); ++i)
+						{
+							Body* body = m_objectBucket[bucket][i].id->pBody;
+
+							if (collider->getBody() == body)
+								continue;
+							if (body->queryCollider(collider))
+								return true;
+						}
+
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+
+	bool HGrid::queryCollider(Collider* collider, ColliderQueryCallBack callback)
+	{
+
+		m_tick++;
+
+		int occupiedLevelsMask = m_occupiedLevelsMask;
+
+		vec3 pos = collider->getAABB().c;
+		float radius = length(collider->getAABB().e);
+
+		if (collider->getBody())
+			transformVec3(pos, collider->getBody()->getTransform());
+
+		bool hit = false;
+
+		float size = MIN_CELL_SIZE;
+		for (int level = 0; level < MAX_LEVELS;
+			size *= CELL_TO_CELL_RATIO, occupiedLevelsMask >>= 1, ++level)
+		{
+			if (occupiedLevelsMask == 0)
+				break;
+
+			if ((occupiedLevelsMask & 1) == 0)
+				continue;
+
+			float ooSize = 1.0f / size;
+
+			int x1, y1, z1, x2, y2, z2;
+
+			float delta = radius + size*SPHERE_TO_CELL_RATIO + FLT_EPSILON*size;
+
+			x1 = (int)floorf((pos.x - delta) * ooSize);
+			y1 = (int)floorf((pos.y - delta) * ooSize);
+			z1 = (int)floorf((pos.z - delta) * ooSize);
+
+			x2 = (int)ceilf((pos.x + delta) * ooSize);
+			y2 = (int)ceilf((pos.y + delta) * ooSize);
+			z2 = (int)ceilf((pos.z + delta) * ooSize);
+
+			for (int x = x1; x <= x2; ++x)
+			{
+				for (int y = y1; y <= y2; ++y)
+				{
+					for (int z = z1; z <= z2; ++z)
+					{
+						int bucket = calculateBucketID(x, y, z, level);
+						if (m_timeStamp[bucket] == m_tick)
+							continue;
+						m_timeStamp[bucket] = m_tick;
+
+						for (int i = 0; i < m_objectBucket[bucket].size(); ++i)
+						{
+							Body* body = m_objectBucket[bucket][i].id->pBody;
+
+							if (collider->getBody() == body)
+								continue;
+							if (!body->queryCollider(collider, callback))
+								return true;
+							else hit = true;
+						}
+
+					}
+				}
+			}
+		}
+		return hit;
+	}
+
+	bool HGrid::queryShape(ShapePtr shape, const Transform& transform)
+	{
+
+		m_tick++;
+
+		int occupiedLevelsMask = m_occupiedLevelsMask;
+
+		AABB aabb = calculateAABB(shape, transform);
+
+		vec3 pos = aabb.c;
+		float radius = length(aabb.e);
+
+
+		float size = MIN_CELL_SIZE;
+		for (int level = 0; level < MAX_LEVELS;
+			size *= CELL_TO_CELL_RATIO, occupiedLevelsMask >>= 1, ++level)
+		{
+			if (occupiedLevelsMask == 0)
+				break;
+
+			if ((occupiedLevelsMask & 1) == 0)
+				continue;
+
+			float ooSize = 1.0f / size;
+
+			int x1, y1, z1, x2, y2, z2;
+
+			float delta = radius + size*SPHERE_TO_CELL_RATIO + FLT_EPSILON*size;
+
+			x1 = (int)floorf((pos.x - delta) * ooSize);
+			y1 = (int)floorf((pos.y - delta) * ooSize);
+			z1 = (int)floorf((pos.z - delta) * ooSize);
+
+			x2 = (int)ceilf((pos.x + delta) * ooSize);
+			y2 = (int)ceilf((pos.y + delta) * ooSize);
+			z2 = (int)ceilf((pos.z + delta) * ooSize);
+
+			for (int x = x1; x <= x2; ++x)
+			{
+				for (int y = y1; y <= y2; ++y)
+				{
+					for (int z = z1; z <= z2; ++z)
+					{
+						int bucket = calculateBucketID(x, y, z, level);
+						if (m_timeStamp[bucket] == m_tick)
+							continue;
+						m_timeStamp[bucket] = m_tick;
+
+						for (int i = 0; i < m_objectBucket[bucket].size(); ++i)
+						{
+							Body* body = m_objectBucket[bucket][i].id->pBody;
+
+							if (body->queryShape(shape, transform))
+								return true;
+						}
+
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+
+	bool HGrid::queryShape(ShapePtr shape, const Transform& transform, ShapeQueryCallBack callback, void* userData)
+	{
+
+		m_tick++;
+
+		int occupiedLevelsMask = m_occupiedLevelsMask;
+
+		AABB aabb = calculateAABB(shape, transform);
+
+		vec3 pos = aabb.c;
+		float radius = length(aabb.e);
+
+		bool hit = false;
+
+		float size = MIN_CELL_SIZE;
+		for (int level = 0; level < MAX_LEVELS;
+			size *= CELL_TO_CELL_RATIO, occupiedLevelsMask >>= 1, ++level)
+		{
+			if (occupiedLevelsMask == 0)
+				break;
+
+			if ((occupiedLevelsMask & 1) == 0)
+				continue;
+
+			float ooSize = 1.0f / size;
+
+			int x1, y1, z1, x2, y2, z2;
+
+			float delta = radius + size*SPHERE_TO_CELL_RATIO + FLT_EPSILON*size;
+
+			x1 = (int)floorf((pos.x - delta) * ooSize);
+			y1 = (int)floorf((pos.y - delta) * ooSize);
+			z1 = (int)floorf((pos.z - delta) * ooSize);
+
+			x2 = (int)ceilf((pos.x + delta) * ooSize);
+			y2 = (int)ceilf((pos.y + delta) * ooSize);
+			z2 = (int)ceilf((pos.z + delta) * ooSize);
+
+			for (int x = x1; x <= x2; ++x)
+			{
+				for (int y = y1; y <= y2; ++y)
+				{
+					for (int z = z1; z <= z2; ++z)
+					{
+						int bucket = calculateBucketID(x, y, z, level);
+						if (m_timeStamp[bucket] == m_tick)
+							continue;
+						m_timeStamp[bucket] = m_tick;
+
+						for (int i = 0; i < m_objectBucket[bucket].size(); ++i)
+						{
+							Body* body = m_objectBucket[bucket][i].id->pBody;
+
+							if (!body->queryShape(shape,transform, callback, userData))
+								return true;
+							else hit = true;
+						}
+
+					}
+				}
+			}
+		}
+		return hit;
+	}
+
+
+}		

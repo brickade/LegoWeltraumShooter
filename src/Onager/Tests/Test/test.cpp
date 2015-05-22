@@ -245,7 +245,7 @@ Entity* Test::addSlope(World* world, Transform t, Material* material)
 
 }
 
-Entity* Test::addFloor(World* world, Material* material)
+Entity* Test::addFloor(World* world, Material* material, vec3 pos)
 {
 
 	if (!gFloor)
@@ -267,7 +267,7 @@ Entity* Test::addFloor(World* world, Material* material)
 
 	BodyDescription bodyDescr;
 	bodyDescr.type = BodyType::Static;
-	bodyDescr.transform.p= vec3(0.0f, -2.0f, 0.0f);
+	bodyDescr.transform.p= vec3(0.0f, -2.0f, 0.0f) + pos;
 	bodyDescr.transform.q = QuatFromAxisAngle(vec3(1.0f, 0.0f, 0.0f), 0.0f);
 	bodyDescr.linearMomentum = vec3(0.0f, 0.0f, 0.0f);
 	bodyDescr.angularMomentum = vec3(0.0f, 0.0f, 0.0f);
@@ -515,8 +515,14 @@ void Test::init()
 	m_entities.push_back(addBox(m_world, descr, material));
 
 	
-	
-	m_entities.push_back(addFloor(m_world, material));
+	for (int i = -1; i <= 1; ++i)
+	{
+		for (int j = -1; j <= 1; ++j)
+		{
+			m_entities.push_back(addFloor(m_world, material, vec3(i *60, 0, j*60)));
+
+		}
+	}
 	m_entities.push_back(addSlope(m_world, Transform(vec3(0, 0, -4), QuatFromAxisAngle(vec3(1.0f, 0.0f, 0.0f), 0.0f)), material));
 	m_entities.push_back(addSlope(m_world, Transform(vec3(0, 0, 4), QuatFromAxisAngle(vec3(0.0f, 1.0f, 0.0f), ong_PI)), material));
 	
@@ -673,9 +679,9 @@ void Test::run()
 				if (m_entities[i] == m_player)
 					m_player = 0;
 
-				m_entities[i]->destroy(m_toAdd);
+				//m_entities[i]->destroy(m_toAdd);
 
-				delete m_entities[i];
+				//delete m_entities[i];
 				m_entities[i] = m_entities.back();
 				m_entities.pop_back();
 				--i;

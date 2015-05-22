@@ -19,9 +19,18 @@ public:
 	
 	void damage(int damage)
 	{
-		
 		m_hp -= damage; 
 	};
+
+	Body* getBody()
+	{
+		return m_body;
+	}
+
+	int getHP()
+	{
+		return m_hp;
+	}
 
 	virtual void render(GLuint colorLocation);
 

@@ -175,6 +175,8 @@ namespace ong
 
 		m_b[idx]->setIndex(idx);
 
+
+
 		Collider* c = pBody->getCollider();
 		while (c)
 		{
@@ -326,6 +328,26 @@ namespace ong
 		//Profiler profile("Query Ray");
 
 		return m_hGrid.queryRay(origin, dir, hit, tmax);
+	}
+
+	bool World::queryCollider(const Collider* collider)
+	{
+		return m_hGrid.queryCollider(collider);
+	}
+
+	bool World::queryCollider(Collider* collider, ColliderQueryCallBack callback)
+	{
+		return m_hGrid.queryCollider(collider, callback);
+	}
+
+	bool World::queryShape(ShapePtr shape, const Transform& transform)
+	{
+		return m_hGrid.queryShape(shape, transform);
+	}
+
+	bool World::queryShape(ShapePtr shape, const Transform& transform, ShapeQueryCallBack callback, void* userData)
+	{
+		return m_hGrid.queryShape(shape, transform, callback, userData);
 	}
 
 	void World::updateProxy(const ProxyID* proxyID)

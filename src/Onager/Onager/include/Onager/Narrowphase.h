@@ -23,6 +23,8 @@ namespace ong
 
 		Contact* getContacts(int* numContacts);
 
+
+
 	private:
 		void collide(Body* a, Body* b);
 

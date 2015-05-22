@@ -24,7 +24,7 @@ public:
 		m.restitution = 1.00f;
 		Material* m4 = m_world->createMaterial(m);
 
-		m_entities.push_back(addFloor(m_world, m0));
+		m_entities.push_back(addFloor(m_world, m0, vec3(0,0,0)));
 
 		BodyDescription descr;
 		descr.angularMomentum = vec3(0.0f, 0.0f, 0.0f);
@@ -34,15 +34,48 @@ public:
 		descr.transform.q = QuatFromAxisAngle(vec3(1.0, 0.0f, 0.0f), 0.0f);
 		descr.transform.p = vec3(0.0f, 5.0f, -5.0f);
 
-		m_entities.push_back(addBox(m_world, descr, m0));
+		ShapeDescription sDescr;
+		sDescr.shapeType = ShapeType::SPHERE;
+		sDescr.sphere.c = vec3(0, 0, 0);
+		sDescr.sphere.r = 0.2f;
+
+		ColliderDescription cDescr;
+		cDescr.transform.p = vec3(0, 0, 0);
+		cDescr.transform.q = Quaternion(vec3(0, 0, 0),1);
+		cDescr.shape = m_world->createShape(sDescr);
+		cDescr.material = m0;
+	
+		Body* body = m_world->createBody(descr);
+		body->addCollider(m_world->createCollider(cDescr));
+
+		m_entities.push_back(new Entity(body, vec3(1,0,0)));
 		descr.transform.p.z += 3.0f;
-		m_entities.push_back(addBox(m_world, descr, m1));
+		cDescr.material = m1;
+		body = m_world->createBody(descr);
+		body->addCollider(m_world->createCollider(cDescr));
+
+		m_entities.push_back(new Entity(body, vec3(1, 0, 0)));
+
 		descr.transform.p.z += 3.0f;
-		m_entities.push_back(addBox(m_world, descr, m2));
+		cDescr.material = m2;
+		body = m_world->createBody(descr);
+		body->addCollider(m_world->createCollider(cDescr));
+
+		m_entities.push_back(new Entity(body, vec3(1, 0, 0)));
+
 		descr.transform.p.z += 3.0f;
-		m_entities.push_back(addBox(m_world, descr, m3));
+		cDescr.material = m3;
+		body = m_world->createBody(descr);
+		body->addCollider(m_world->createCollider(cDescr));
+
+		m_entities.push_back(new Entity(body, vec3(1, 0, 0)));
+
 		descr.transform.p.z += 3.0f;
-		m_entities.push_back(addBox(m_world, descr, m4));
-		descr.transform.p.z += 3.0f;
+		cDescr.material = m4;
+		body = m_world->createBody(descr);
+		body->addCollider(m_world->createCollider(cDescr));
+
+		m_entities.push_back(new Entity(body, vec3(1, 0, 0)));
+
 	}
 };

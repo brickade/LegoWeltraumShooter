@@ -157,7 +157,10 @@ namespace ong
 
 	// aabb
 	float sqDistPointAABB(const vec3& p, const AABB& aabb);
-
+	AABB calculateAABB(ShapePtr shape, const Transform& transform);
+	AABB calculateAABB(const Hull* hull, const Transform& transform);
+	AABB calculateAABB(const Sphere* sphere, const Transform& transform);
+	AABB calculateAABB(const Capsule* capsule, const Transform& transform);
 
 	// hull
 	vec3 getHullSupport(const vec3& dir, const Hull* hull, int* idx = 0);
@@ -167,7 +170,7 @@ namespace ong
 	// return the squared distance between points
 	float closestPtSegmentHull(const vec3& a, const vec3& b, const Hull* hull, vec3& cSegment, vec3& cHull);
 
-
+	
 
 	// broad
 	bool overlap(Sphere* sphere, AABB* aabb);

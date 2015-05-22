@@ -1,6 +1,7 @@
 #include "Player.h"
 #include "SDL.h"
 #include "Bullet.h"
+#include "Bomb.h"
 
 
 Player::Player(Body* body, vec3 color, SDL_Window* window, std::vector<Entity*>* entities)
@@ -11,11 +12,12 @@ Player::Player(Body* body, vec3 color, SDL_Window* window, std::vector<Entity*>*
 
 	Material material;
 
-	material.density = 100.0f;
+	material.density = 500.0f;
 	material.restitution = 0.6f;
 	material.friction = 0.1f;
 
 	m_bulletMaterial = m_body->getWorld()->createMaterial(material);
+	m_bombMaterial = m_body->getWorld()->createMaterial({ 1000.0f, 0.1f, 1.0f });
 }
 
 
@@ -30,15 +32,14 @@ void bulletImpact(Collider* collider, Contact* contact)
 	if (impulse == 0)
 		return;
 
-	impulse *= 100.0f;
+	impulse *= 10.0f;
 
 
-	Body* b = (collider == contact->colliderA ? contact->colliderB : contact->colliderB)->getBody();
+	Body* b = (collider == contact->colliderA ? contact->colliderB : contact->colliderA)->getBody();
 
-	Entity* entity = (Entity*)b->getUserData();
-	entity->damage(impulse * b->getInverseMass());
-	
-	
+	//Entity* entity = (Entity*)b->getUserData();
+	//entity->damage(impulse * b->getInverseMass());
+
 	Entity* bullet = (Entity*)collider->getBody()->getUserData();
 	bullet->damage(100);
 }
@@ -83,7 +84,7 @@ void Player::shoot()
 		bodyDescr.type = BodyType::Dynamic;
 		bodyDescr.transform.p = transformVec3(cannon, m_body->getTransform());
 		bodyDescr.transform.q = m_body->getOrientation();;
-		bodyDescr.linearMomentum = rotate(vec3(0.0f, 0.0f, 50.0f), m_body->getOrientation());
+		bodyDescr.linearMomentum = rotate(vec3(0.0f, 0.0f, 300.0f), m_body->getOrientation());
 		bodyDescr.angularMomentum = vec3(0.0f, 0.0f, 0.0f);
 
 		Body* body = m_body->getWorld()->createBody(bodyDescr);
@@ -93,6 +94,55 @@ void Player::shoot()
 	}
 
 	m_coolDown = 0.2f;
+}
+
+void Player::bomb()
+{
+	if (m_bombCoolDown > 0.0f)
+		return;
+
+	vec3 cannons[] =
+	{
+		vec3(0.0, 0.0f, 2.5f),
+	};
+
+	for (vec3& cannon : cannons)
+	{
+
+		if (!m_bombShape)
+		{
+			ShapeDescription descr;
+			descr.shapeType = ShapeType::SPHERE;
+			descr.sphere.c = vec3(0, 0, 0);
+			descr.sphere.r = 0.2f;
+
+			m_bombShape = m_body->getWorld()->createShape(descr);
+		}
+
+		ColliderDescription colliderDescr;
+		colliderDescr.material = m_bombMaterial;
+		colliderDescr.transform.p = vec3(0.0f, 0.0f, 0.0f);
+		colliderDescr.transform.q = QuatFromAxisAngle(vec3(1.0f, 0.0f, 0.0f), 0.0f);
+		colliderDescr.shape = m_bombShape;
+
+
+		Collider* collider = m_body->getWorld()->createCollider(colliderDescr);
+
+
+		BodyDescription bodyDescr;
+		bodyDescr.type = BodyType::Dynamic;
+		bodyDescr.transform.p = transformVec3(cannon, m_body->getTransform());
+		bodyDescr.transform.q = m_body->getOrientation();;
+		bodyDescr.linearMomentum = rotate(vec3(0.0f, 0.0f, 1000.0f), m_body->getOrientation());
+		bodyDescr.angularMomentum = vec3(0.0f, 0.0f, 0.0f);
+
+		Body* body = m_body->getWorld()->createBody(bodyDescr);
+		body->addCollider(collider);
+
+		m_entities->push_back(new Bomb(body, vec3(0, 1, 1)));
+	}
+
+	m_bombCoolDown = 1.0f;
 }
 
 
@@ -108,8 +158,8 @@ void Player::grab()
 	{
 		if (result.collider->getBody()->getType() == BodyType::Dynamic)
 		{
-			m_grab.body = result.collider->getBody();
-			m_grab.point = invTransformVec3(result.point, m_grab.body->getTransform());
+			m_grab.body = (Entity*)result.collider->getBody()->getUserData();
+			m_grab.point = invTransformVec3(result.point, m_grab.body->getBody()->getTransform());
 			m_grab.anchor = result.t;
 		}
 	}
@@ -126,33 +176,41 @@ void Player::update(float dt)
 	//printf("hp: %d\n", m_hp);
 
 	m_coolDown -= dt;
-
+	m_bombCoolDown -= dt;
 
 	if (SDL_GetMouseState(0, 0) & SDL_BUTTON(SDL_BUTTON_LEFT))
 	{
 		shoot();
 	}
 
+	if (SDL_GetMouseState(0, 0) & SDL_BUTTON(SDL_BUTTON_RIGHT))
+	{
+		bomb();
+	}
+
 	//update grab
 	if (SDL_GetKeyboardState(0)[SDL_SCANCODE_E])
 	{
-		if (!m_grab.body)
+		if (!m_grab.body || m_grab.body->isDead())
 		{
 			grab();
 		}
 
-		if (m_grab.body)
+		if (m_grab.body && !m_grab.body->isDead())
 		{
+			printf("hp %d\n", m_grab.body->getHP());
+
+
 			vec3 anchor = transformVec3(vec3(0, 0, 10.0f), m_body->getTransform());
-			vec3 forceDir = invTransformVec3(anchor, m_grab.body->getTransform()) - m_grab.point;
+			vec3 forceDir = invTransformVec3(anchor, m_grab.body->getBody()->getTransform()) - m_grab.point;
 			float forceStrength = 3000.0f;
 			
-			vec3 v = m_grab.body->getRelativeLinearVelocity();
+			vec3 v = m_grab.body->getBody()->getRelativeLinearVelocity();
 
 			vec3 damp = 500.0f * v;
 
 
-			m_grab.body->applyRelativeForce(forceStrength * forceDir - damp, m_grab.point, dt);
+			m_grab.body->getBody()->applyRelativeForce(forceStrength * forceDir - damp, m_grab.point, dt);
 		}
 	}
 	else
@@ -168,9 +226,9 @@ void Player::update(float dt)
 
 	float maxForSpeed = 7.0f;
 	//float maxForSpeed = 0.0f;
-	float maxYawSpeed = 5.0f;
-	float maxPitchSpeed = 5.0f;
-	float maxRollSpeed = 2.0f;
+	float maxYawSpeed = 7.0f;
+	float maxPitchSpeed = 7.0f;
+	float maxRollSpeed = 3.0f;
 		
 	
 
@@ -284,10 +342,16 @@ Transform Player::getView()
 
 	vec3 eye = vec3(0.0f, 2.0f, -v) +  2.0f * (vec3(0,0,focal) - l);
 
+
+	if (SDL_GetKeyboardState(0)[SDL_SCANCODE_F])
+		eye.z = -eye.z;
+
 	view.p = transformVec3(eye, m_body->getTransform());
+	view.q = m_body->getOrientation();
 
-	view.q =  m_body->getOrientation();
 
+	if (SDL_GetKeyboardState(0)[SDL_SCANCODE_F])
+		view.q = QuatFromAxisAngle(rotate(vec3(0,1,0), view.q), ong_PI) * view.q;
 
 	return view;
 }
@@ -315,12 +379,12 @@ void Player::render(GLuint colorLocation)
 	}
 	glEnd();
 
-	if (m_grab.body)
+	if (m_grab.body && !m_grab.body->isDead())
 	{
 		glBegin(GL_LINES);
 		{
 			vec3 anchor = transformVec3(vec3(0, 0, 2.0f), m_body->getTransform());
-			vec3 point = transformVec3(m_grab.point, m_grab.body->getTransform());
+			vec3 point = transformVec3(m_grab.point, m_grab.body->getBody()->getTransform());
 
 			glVertex3f(anchor.x, anchor.y, anchor.z);
 			glVertex3f(point.x, point.y, point.z);

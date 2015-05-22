@@ -33,7 +33,7 @@ protected:
 
 	Entity* addBox(World* world, BodyDescription descr, Material* material);
 	Entity* addSlope(World* world, Transform t, Material* material);
-	Entity* addFloor(World* world, Material* material);
+	Entity* addFloor(World* world, Material* material, vec3 pos);
  	Player* Test::addPlayer(World* world, const Transform& transform);
 	SDL_Window* m_window;
 	SDL_Renderer* m_renderer;

@@ -54,65 +54,7 @@ namespace ong
 
 	void Collider::calculateAABB()
 	{
-		switch (m_shape.getType())
-		{
-		case ShapeType::HULL:
-		{
-			mat3x3 rot = toRotMat(m_transform.q);
-			Hull* hull = (Hull*)m_shape;
-
-			vec3 min = vec3(FLT_MAX, FLT_MAX, FLT_MAX);
-			vec3 max = vec3(-FLT_MAX, -FLT_MAX, -FLT_MAX);
-
-			for (int i = 0; i < hull->numVertices; ++i)
-			{
-				vec3 v = rot * hull->pVertices[i];
-
-				for (int i = 0; i < 3; ++i)
-				{
-					if (v[i] < min[i]) min[i] = v[i];
-					if (v[i] > max[i]) max[i] = v[i];
-				}
-			}
-
-			m_aabb.e = 0.5f * (max - min);
-			m_aabb.c = m_transform.p + min + m_aabb.e;
-			break;
-		}
-		case ShapeType::SPHERE:
-		{
-			Sphere* sphere = (Sphere*)m_shape;
-			m_aabb.c = transformVec3(sphere->c, m_transform);
-			m_aabb.e = sphere->r * vec3(1, 1, 1);
-
-			break;
-		}
-		case ShapeType::CAPSULE:
-		{
-			Capsule* c = (Capsule*)m_shape;
-			m_aabb.c = 0.5f * (c->c1 + c->c2) + m_transform.p;
-
-			for (int i = 0; i < 3; ++i)
-			{
-				vec3 c1 = transformVec3(c->c1, m_transform);
-				vec3 c2 = transformVec3(c->c2, m_transform);
-
-				m_aabb.e[i] = ong_MAX(ong_MAX(ong_MAX(abs(c1[i] + c->r), abs(c1[i] - c->r)),
-					abs(c2[i] + c->r)),
-					abs(c2[i] - c->r)) - m_aabb.c[i];
-			}
-
-
-
-			break;
-		}
-		default:
-			m_aabb = { vec3(0, 0, 0), vec3(0, 0, 0) };
-
-		}
-
-
-
+		m_aabb = ong::calculateAABB(m_shape, m_transform);
 	}
 
 	void Collider::setPosition(const vec3& p)

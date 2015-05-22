@@ -356,8 +356,6 @@ namespace ong
 		else
 			t2 = b->getTransform();
 
-
-
 		return overlap(a->getShape(), b->getShape(), t1, t2);
 	}
 
@@ -377,11 +375,8 @@ namespace ong
 
 			if (n->type == NodeType::LEAF)
 			{
-				//todo other shapes
-
 				if (overlap(n->collider, collider))
 					return true;
-
 			}
 			else
 			{
@@ -395,10 +390,119 @@ namespace ong
 			n = s.top();
 			s.pop();
 		}
-
 	}
 
+	bool overlapTree(BVTree* tree, BVTree* n, Collider* collider, const vec3& t, const mat3x3& rot, ColliderQueryCallBack callback)
+	{
+		std::stack<BVTree*> s;
+		while (true)
+		{
+			if (!overlap(n->aabb, collider->getAABB(), t, rot))
+			{
+				if (s.empty())
+					return true;
+				n = s.top();
+				s.pop();
+			}
 
+			if (n->type == NodeType::LEAF)
+			{
+				if (overlap(n->collider, collider))
+				{
+					bool stop = !callback(collider, n->collider);
+					if (stop)
+						return false;
+				}
+			}
+			else
+			{
+				s.push(tree + n->right);
+				n = tree + n->left;
+				continue;
+			}
+
+			if (s.empty())
+				return true;
+			n = s.top();
+			s.pop();
+		}
+	}
+
+	bool overlapTree(BVTree* tree, BVTree* n, ShapePtr shape, const Transform& transform, const vec3& t, const mat3x3& rot)
+	{
+		std::stack<BVTree*> s;
+
+		AABB shapeAABB = calculateAABB(shape, { vec3(0, 0, 0), Quaternion(vec3(0, 0, 0), 1) });
+
+		while (true)
+		{
+			if (!overlap(n->aabb, shapeAABB, t, rot))
+			{
+				if (s.empty())
+					return false;
+				n = s.top();
+				s.pop();
+			}
+
+			if (n->type == NodeType::LEAF)
+			{
+				if (overlap(n->collider->getShape(), shape, transformTransform(n->collider->getTransform(), n->collider->getBody()->getTransform()), transform))
+				{
+					return true;
+				}
+			}
+			else
+			{
+				s.push(tree + n->right);
+				n = tree + n->left;
+				continue;
+			}
+
+			if (s.empty())
+				return false;
+			n = s.top();
+			s.pop();
+		}
+	}
+
+	bool overlapTree(BVTree* tree, BVTree* n, ShapePtr shape,const Transform& transform, const vec3& t, const mat3x3& rot, ShapeQueryCallBack callback, void* userData)
+	{
+		std::stack<BVTree*> s;
+		
+		AABB shapeAABB = calculateAABB(shape, { vec3(0, 0, 0), Quaternion(vec3(0, 0, 0), 1) });
+
+		while (true)
+		{
+			if (!overlap(n->aabb, shapeAABB, t, rot))
+			{
+				if (s.empty())
+					return true;
+				n = s.top();
+				s.pop();
+			}
+
+			if (n->type == NodeType::LEAF)
+			{
+				if (overlap(n->collider->getShape(), shape,transformTransform(n->collider->getTransform(), n->collider->getBody()->getTransform()), transform))
+				{
+					bool stop = !callback(n->collider, userData);
+					if (stop)
+						return false;
+				}
+			}
+			else
+			{
+				s.push(tree + n->right);
+				n = tree + n->left;
+				continue;
+			}
+
+			if (s.empty())
+				return true;
+			n = s.top();
+			s.pop();
+		}
+	}
 
 	bool Body::queryCollider(const Collider* collider)
 	{
@@ -420,12 +524,85 @@ namespace ong
 		{
 			if (overlap(m_pCollider->getAABB(), collider->getAABB(), t.p, rot))
 			{
-				// todo other shapes
 				return overlap(m_pCollider, collider);
 			}
 		}
 
 		return false;
+	}
+
+	bool Body::queryCollider(Collider* collider, ColliderQueryCallBack callback)
+	{
+		Transform tCollider = collider->getTransform();
+
+		if (collider->getBody())
+		{
+			tCollider = transformTransform(tCollider, collider->getBody()->getTransform());
+		}
+
+		Transform t = invTransformTransform(tCollider, getTransform());
+		mat3x3 rot = toRotMat(t.q);
+
+		if (m_numCollider > 1)
+		{
+			return overlapTree(m_tree, m_tree, collider, t.p, rot);
+		}
+		else if (m_numCollider == 1)
+		{
+			if (overlap(m_pCollider->getAABB(), collider->getAABB(), t.p, rot))
+			{
+				if (overlap(m_pCollider, collider))
+				{
+					return callback(collider, m_pCollider);;
+				}
+			}
+		}
+
+		return true;
+	}
+
+	bool Body::queryShape(ShapePtr shape, const Transform& transform)
+	{
+		Transform t = invTransformTransform(transform, getTransform());
+		mat3x3 rot = toRotMat(t.q);
+
+		if (m_numCollider > 1)
+		{
+			return overlapTree(m_tree, m_tree, shape, transform, t.p, rot);
+		}
+		else if (m_numCollider == 1)
+		{
+			if (overlap(m_pCollider->getAABB(), ong::calculateAABB(shape, { vec3(0, 0, 0), Quaternion(vec3(0, 0, 0), 1) }), t.p, rot))
+			{
+				return overlap(m_pCollider->getShape(), shape, transformTransform(m_pCollider->getTransform(), getTransform()), transform);
+			}
+		}
+
+		return false;
+	}
+
+
+	bool Body::queryShape(ShapePtr shape, const Transform& transform, ShapeQueryCallBack callback, void* userData)
+	{
+		Transform t = invTransformTransform(transform, getTransform());
+		mat3x3 rot = toRotMat(t.q);
+
+		if (m_numCollider > 1)
+		{
+			return overlapTree(m_tree, m_tree, shape, transform, t.p, rot, callback, userData);
+		}
+		else if (m_numCollider == 1)
+		{
+			if (overlap(m_pCollider->getAABB(), ong::calculateAABB(shape, { vec3(0, 0, 0), Quaternion(vec3(0, 0, 0), 1) }), t.p, rot))
+			{
+				if ((overlap(m_pCollider->getShape(), shape, transformTransform(m_pCollider->getTransform(), getTransform()), transform)))
+				{
+					return callback(m_pCollider, userData);
+				}
+			}
+		}
+
+		return true;
 	}
 
 
@@ -437,6 +614,11 @@ namespace ong
 	Transform Body::getTransform() const
 	{
 		return Transform(getPosition(), getOrientation());
+	}
+
+	const vec3& Body::getWorldCenter() const
+	{
+		return m_pWorld->m_r[m_index].p;
 	}
 
 
