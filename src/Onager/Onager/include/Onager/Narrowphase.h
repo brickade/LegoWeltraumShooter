@@ -1,8 +1,11 @@
 #pragma once
 
+#include "defines.h"
 #include "myMath.h"
-#include <vector>
 #include "Contact.h"
+#include "Allocator.h"
+#include <stack>
+#include <vector>
 
 namespace ong
 {
@@ -19,10 +22,12 @@ namespace ong
 	class ContactManager
 	{
 	public:
+		ContactManager();
+
 		void generateContacts(Pair* pairs, int numPairs, int maxContacts);
+		void removeBody(Body* body);
 
-		Contact* getContacts(int* numContacts);
-
+		Contact** getContacts(int* numContacts);
 
 
 	private:
@@ -32,17 +37,16 @@ namespace ong
 		void collide(BVTree* tree, BVTree* a, Collider* b, const vec3& t, const mat3x3& rot);
 		void collide(Collider* c1, Collider* c2);
 
+		void removeContact(int contact);
 
-		std::vector<Contact> m_contacts;
-		std::vector<ContactIter> m_contactIters;
-		std::vector<Contact> m_oldContacts;
-		// used for detecting ending of contacts
-		std::vector<bool> m_contactEnded;
-		std::vector<bool> m_oldContactEnded;
+		uint32 m_tick;
+		std::vector<Contact*> m_contacts;
+		Allocator<Contact> m_contactAllocator;
+		Allocator<ContactIter> m_contactIterAllocator;
 	};
 
 
-	inline Contact* ContactManager::getContacts(int* numContacts)
+	inline Contact** ContactManager::getContacts(int* numContacts)
 	{
 		if (numContacts)
 			*numContacts = m_contacts.size();

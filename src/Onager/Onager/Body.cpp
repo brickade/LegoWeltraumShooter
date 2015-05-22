@@ -712,6 +712,26 @@ namespace ong
 	}
 
 
+	void Body::removeContact(Contact* contact)
+	{
+		for (ContactIter* c = m_pContacts; c != 0; c = c->next)
+		{
+			if (c->contact == contact)
+			{
+				if (c->prev)
+					c->prev->next = c->next;
+				if (c->next)
+					c->next->prev = c->prev;
+
+				if (m_pContacts == c)
+					c = c->next;
+				m_numContacts--;
+
+				return;
+			}
+		}
+	}
+
 
 	void Body::setPosition(const vec3& position)
 	{

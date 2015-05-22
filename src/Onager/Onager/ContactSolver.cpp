@@ -10,11 +10,11 @@ namespace ong
 
 
 
-	void preSolveContacts(WorldContext* w, Contact* contacts, int numContacts, float invDt, ContactConstraint* contactConstraints)
+	void preSolveContacts(WorldContext* w, Contact** contacts, int numContacts, float invDt, ContactConstraint* contactConstraints)
 	{
 		for (int i = 0; i < numContacts; ++i)
 		{
-			Contact* c = contacts + i;
+			Contact* c = contacts[i];
 
 			Body* a = c->colliderA->getBody();
 			Body* b = c->colliderB->getBody();
@@ -99,11 +99,11 @@ namespace ong
 	}
 
 
-	void solveContacts(WorldContext* w, Contact* contacts, int numContacts, ContactConstraint* constraints)
+	void solveContacts(WorldContext* w, Contact** contacts, int numContacts, ContactConstraint* constraints)
 	{
 		for (int j = 0; j < numContacts; ++j)
 		{
-			Contact* c = contacts + j;
+			Contact* c = contacts[j];
 
 			Body* a = c->colliderA->getBody();
 			Body* b = c->colliderB->getBody();

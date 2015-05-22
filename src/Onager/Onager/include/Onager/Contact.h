@@ -88,12 +88,14 @@ namespace ong
 		float massT[MAX_CONTACT_POINTS]; // mass along tangent
 		float massBT[MAX_CONTACT_POINTS]; // mass along bitangent
 
-		vec3 rA[MAX_CONTACT_POINTS];
-		vec3 rB[MAX_CONTACT_POINTS];
+		vec3 rA[MAX_CONTACT_POINTS]; 
+		vec3 rB[MAX_CONTACT_POINTS]; 
 
 		float friction;
-		float e;
+		float e; // restitution
 		ContactManifold manifold;
+
+		int tick; //last update
 	};
 
 

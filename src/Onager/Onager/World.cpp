@@ -94,7 +94,7 @@ namespace ong
 			context.m = m_m.data();
 
 			int numContacts = 0;
-			Contact* c = m_contactManager.getContacts(&numContacts);
+			Contact** c = m_contactManager.getContacts(&numContacts);
 
 			ContactConstraint* contactConstraints = new ContactConstraint[numContacts];
 			preSolveContacts(&context, c, numContacts, 1.0f / dt, contactConstraints);
@@ -106,8 +106,8 @@ namespace ong
 
 			for (int i = 0; i < numContacts; ++i)
 			{
-				c[i].colliderA->callbackPostSolve(&c[i]);
-				c[i].colliderB->callbackPostSolve(&c[i]);
+				c[i]->colliderA->callbackPostSolve(c[i]);
+				c[i]->colliderB->callbackPostSolve(c[i]);
 			}
 
 			delete[] contactConstraints;
@@ -163,6 +163,9 @@ namespace ong
 
 	void World::destroyBody(Body* pBody)
 	{
+
+
+
 		int idx = pBody->getIndex();
 
 		m_numBodies--;
@@ -175,6 +178,7 @@ namespace ong
 
 		m_b[idx]->setIndex(idx);
 
+		m_contactManager.removeBody(pBody);
 
 
 		Collider* c = pBody->getCollider();
@@ -193,7 +197,7 @@ namespace ong
 			m_pBody = pBody->getNext();
 
 		m_hGrid.removeBody(pBody->getProxyID());
-		//todo remove from contactManager
+
 
 		m_bodyAllocator.sDelete(pBody);
 	}

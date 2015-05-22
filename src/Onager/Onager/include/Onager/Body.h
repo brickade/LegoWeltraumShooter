@@ -15,6 +15,7 @@ namespace ong
 
 	class Collider;
 
+	struct Contact;
 	struct ContactIter;
 	struct BVTree;
 	struct ProxyID;
@@ -144,6 +145,7 @@ namespace ong
 
 		void clearContacts();
 		void addContact(ContactIter* iter);
+		void removeContact(Contact* contact);
 
 		void setProxyID(const ProxyID* proxyID);
 		const ProxyID* getProxyID();

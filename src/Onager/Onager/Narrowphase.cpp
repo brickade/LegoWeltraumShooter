@@ -5,10 +5,22 @@
 #include "SAT.h"
 #include "BVH.h"
 #include <float.h>
+#include <cassert>
 
 
 namespace ong
 {
+
+
+	ContactManager::ContactManager()
+		: m_contactAllocator(64),
+		m_contactIterAllocator(128)
+	{
+
+	}
+
+
+
 	void collideHullHull(Collider* a, Transform* ta, Collider* b, Transform* tb, ContactManifold* manifold, Feature* feature)
 	{
 		SAT(a->getShape(), ta, b->getShape(), tb, manifold, feature);
@@ -479,74 +491,83 @@ namespace ong
 		Transform ta = transformTransform(ca->getTransform(), a->getTransform());
 		Transform tb = transformTransform(cb->getTransform(), b->getTransform());
 
+		ContactManifold manifold;
+		Feature feature;
+		
 
-		m_contacts.push_back(Contact());
-		Contact& contact = m_contacts.back();
+		collisionFuncMatrix[ca->getShape().getType()][cb->getShape().getType()](ca, &ta, cb, &tb, &manifold, &feature);
+		
+		if (manifold.numPoints == 0)
+			return;
 
-		m_contactEnded.push_back(true);
+		Contact* contact = nullptr;
 
-		collisionFuncMatrix[ca->getShape().getType()][cb->getShape().getType()](ca, &ta, cb, &tb, &contact.manifold, &contact.feature);
-
-		contact.colliderA = ca;
-		contact.colliderB = cb;
-
-		m_contactIters.push_back(ContactIter());
-		ContactIter& iterA = m_contactIters.back();
-
-		m_contactIters.push_back(ContactIter());
-		ContactIter& iterB = m_contactIters.back();
-
-		iterA.other = b;
-		iterA.dir = 1;
-		iterA.contact = &contact;
-		iterB.other = a;
-		iterB.dir = -1;
-		iterB.contact = &contact;
-
-		a->addContact(&iterA);
-		b->addContact(&iterB);
-
-		for (int i = 0; i < contact.manifold.numPoints; ++i)
+		// check if contact already exists
+		for (ContactIter* i = a->getContacts(); i != 0; i = i->next)
 		{
-			contact.accImpulseN[i] = 0.0f;
-			contact.accImpulseT[i] = 0.0f;
-			contact.accImpulseBT[i] = 0.0f;
-		}
-
-		// warm starting
-		// todo optimize me!
-
-		bool newContact = true;
-		for (int i = 0; i < m_oldContacts.size(); ++i)
-		{
-			Contact& oldContact = m_oldContacts[i];
-			if (oldContact.colliderA == contact.colliderA &&
-				oldContact.colliderB == contact.colliderB &&
-				oldContact.feature == contact.feature)
+			if (i->other == b &&
+				(i->contact->colliderA == ca || i->contact->colliderB == ca) &&
+				(i->contact->colliderA == cb || i->contact->colliderB == cb))
 			{
-				// copy old accumulated impulses over to new contact
-				// todo make sure points are the same
-				for (int i = 0; i < oldContact.manifold.numPoints && i < contact.manifold.numPoints; ++i)
+				contact = i->contact;
+				contact->manifold = manifold;
+				
+				// if features are different do not warmstart
+				if (!(i->contact->feature == feature))
 				{
-					contact.accImpulseN[i] = oldContact.accImpulseN[i];
-					contact.accImpulseT[i] = oldContact.accImpulseT[i];
-					contact.accImpulseBT[i] = oldContact.accImpulseBT[i];
+					for (int i = 0; i < contact->manifold.numPoints; ++i)
+					{
+						contact->accImpulseN[i] = 0.0f;
+						contact->accImpulseT[i] = 0.0f;
+						contact->accImpulseBT[i] = 0.0f;
+					}
+
+					contact->feature = feature;
 				}
-				newContact = false;
-				m_oldContactEnded[i] = false;
+
 				break;
 			}
-		}
 
-		if (newContact)
+		}
+		if (contact == nullptr) //create new contact
 		{
-			ca->callbackBeginContact(&contact);
-			cb->callbackBeginContact(&contact);
+			contact = m_contactAllocator();
+			m_contacts.push_back(contact);
+
+			contact->colliderA = ca;
+			contact->colliderB = cb;
+
+			contact->manifold = manifold;
+			contact->feature = feature;
+
+			ContactIter* iterA = m_contactIterAllocator();
+			ContactIter* iterB = m_contactIterAllocator();
+
+			iterA->other = b;
+			iterA->dir = 1;
+			iterA->contact = contact;
+			iterB->other = a;
+			iterB->dir = -1;
+			iterB->contact = contact;
+
+			a->addContact(iterA);
+			b->addContact(iterB);
+
+			for (int i = 0; i < contact->manifold.numPoints; ++i)
+			{
+				contact->accImpulseN[i] = 0.0f;
+				contact->accImpulseT[i] = 0.0f;
+				contact->accImpulseBT[i] = 0.0f;
+			}
+
+					
+			ca->callbackBeginContact(contact);
+			cb->callbackBeginContact(contact);
+
 		}
 
-		ca->callbackPreSolve(&contact);
-		cb->callbackPreSolve(&contact);
-
+		//set tick
+		contact->tick = m_tick;
 	}
 
 	void ContactManager::collide(Body*a, Body*b)
@@ -580,19 +601,12 @@ namespace ong
 		}
 	}
 
+
 	void ContactManager::generateContacts(Pair* pairs, int numPairs, int maxContacts)
 	{
-
-		m_oldContacts = std::move(m_contacts);
-		m_oldContactEnded = std::move(m_contactEnded);
-
-		m_contacts.clear();
-		m_contactIters.clear();
-		m_contactEnded.clear();
+		m_tick++;
 
 		m_contacts.reserve(maxContacts);
-		m_contactIters.reserve(2 * maxContacts);
-		m_contactEnded.reserve(maxContacts);
 
 
 		for (int i = 0; i < numPairs; ++i)
@@ -603,15 +617,52 @@ namespace ong
 			collide(a, b);
 		}
 
-		for (int i = 0; i < m_oldContactEnded.size(); ++i)
+		for (int i = 0; i < m_contacts.size(); ++i)
 		{
-			//if (m_oldContactEnded[i])
-			//{
-			//	m_oldContacts[i].colliderA->callbackEndContact(&m_oldContacts[i]);
-			//	m_oldContacts[i].colliderB->callbackEndContact(&m_oldContacts[i]);
-			//}
+			if (m_contacts[i]->tick != m_tick) //old contact
+			{
+				removeContact(i);
+				--i;
+			}
+			else
+			{
+				m_contacts[i]->colliderA->callbackPreSolve(m_contacts[i]);
+				m_contacts[i]->colliderB->callbackPreSolve(m_contacts[i]);
+			}
 		}
 
 	}
+	
+	
+	void ContactManager::removeBody(Body* body)
+	{
+		for (ContactIter* c = body->getContacts(); c != 0; c = c->next)
+		{
+			for (int i = 0; i < m_contacts.size(); ++i)
+			{
+				if (m_contacts[i] == c->contact)
+				{
+					removeContact(i);
+					break;
+				}
 
+			}
+		}
+	}
+
+	void ContactManager::removeContact(int contact)
+	{
+		m_contacts[contact]->colliderA->callbackEndContact(m_contacts[contact]);
+		m_contacts[contact]->colliderB->callbackEndContact(m_contacts[contact]);
+
+		//remove contacts from bodies
+		Body* a = m_contacts[contact]->colliderA->getBody();
+		Body* b = m_contacts[contact]->colliderA->getBody();
+
+		a->removeContact(m_contacts[contact]);
+		b->removeContact(m_contacts[contact]);
+
+		m_contacts[contact] = m_contacts.back();
+		m_contacts.pop_back();
+	}
 }

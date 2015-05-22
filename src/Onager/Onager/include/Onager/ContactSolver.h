@@ -12,6 +12,6 @@ namespace ong
 	};
 
 
-	void preSolveContacts(WorldContext* w, Contact* contacts, int numContacts, float invDt, ContactConstraint* contactConstraints);
-	void solveContacts(WorldContext* w, Contact* contacts, int numContacts, ContactConstraint* constraints);
+	void preSolveContacts(WorldContext* w, Contact** contacts, int numContacts, float invDt, ContactConstraint* contactConstraints);
+	void solveContacts(WorldContext* w, Contact** contacts, int numContacts, ContactConstraint* constraints);
 }
