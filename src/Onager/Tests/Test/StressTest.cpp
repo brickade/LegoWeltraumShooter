@@ -22,7 +22,7 @@ void StressTest::init()
 	colliderDescr.material = &m_Material;
 	colliderDescr.transform.p = vec3(0, 0, 0);
 	colliderDescr.transform.q = Quaternion(vec3(0, 0, 0), 1);
-
+	colliderDescr.isSensor = false;
 
 
 	//walls

@@ -11,7 +11,7 @@
 int main()
 {
 
-	Test* test = new FilterTest();
+	Test* test = new Test();
 	test->init();
 
 	test->run();

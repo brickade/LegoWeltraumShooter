@@ -45,6 +45,7 @@ namespace ong
 		Transform transform;
 		Material* material;
 		ShapePtr shape;
+		bool isSensor;
 	};
 
 	struct ColliderData
@@ -54,6 +55,9 @@ namespace ong
 		MassData massData;
 		AABB aabb;
 		ShapePtr shape;
+		uint32 collisionGroup;
+		uint32 collisionFilter;
+		bool isSensor;
 	};
 
 
@@ -99,6 +103,8 @@ namespace ong
 		Body* getBody();
 		const Body* getBody() const;
 
+		bool isSensor() const;
+
 		void* getUserData() const;
 
 		uint32 getCollisionGroup() const;
@@ -140,6 +146,8 @@ namespace ong
 
 		AABB m_aabb;
 		ShapePtr m_shape;
+
+		bool m_sensor;
 
 		void* m_pUserData;
 		ColliderCallbacks m_callbacks;
@@ -236,6 +244,11 @@ namespace ong
 	inline Material* Collider::getMaterial()
 	{
 		return m_pMaterial;
+	}
+
+	inline bool Collider::isSensor() const
+	{
+		return m_sensor;
 	}
 
 

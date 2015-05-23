@@ -12,6 +12,7 @@ namespace ong
 		m_transform(descr.transform),
 		m_pMaterial(descr.material),
 		m_shape(descr.shape),
+		m_sensor(descr.isSensor),
 		m_pUserData(nullptr),
 		m_next(nullptr),
 		m_collisionGroup(0),
@@ -28,15 +29,19 @@ namespace ong
 		m_massData(data.massData),
 		m_aabb(data.aabb),
 		m_shape(data.shape),
+		m_sensor(data.isSensor),
 		m_pUserData(nullptr),
-		m_next(nullptr)
+		m_next(nullptr),
+		m_collisionGroup(data.collisionGroup),
+		m_collisionFilter(data.collisionFilter)
 	{
 
 	}
 
 	void Collider::calculateMassProperties()
 	{
-		calculateMassData(m_shape, m_pMaterial->density, &m_massData);
+		if (!m_sensor)
+			calculateMassData(m_shape, m_pMaterial->density, &m_massData);
 	}
 
 	void Collider::setMaterial(Material* material)
@@ -136,6 +141,9 @@ namespace ong
 		data.massData = m_massData;
 		data.aabb = m_aabb;
 		data.shape = m_shape;
+		data.collisionGroup = m_collisionGroup;
+		data.collisionFilter = m_collisionFilter;
+		data.isSensor = m_sensor;
 
 		return data;
 	}

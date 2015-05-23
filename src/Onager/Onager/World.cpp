@@ -37,8 +37,7 @@ namespace ong
 		{
 			b->calculateAABB();
 			m_hGrid.updateBody(b->getProxyID());
-			//todo presistent contacts
-			b->clearContacts();
+			//b->clearContacts();
 			b = b->getNext();
 		}
 

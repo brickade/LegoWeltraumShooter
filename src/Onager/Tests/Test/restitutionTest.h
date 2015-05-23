@@ -44,6 +44,7 @@ public:
 		cDescr.transform.q = Quaternion(vec3(0, 0, 0),1);
 		cDescr.shape = m_world->createShape(sDescr);
 		cDescr.material = m0;
+		cDescr.isSensor = false;
 	
 		Body* body = m_world->createBody(descr);
 		body->addCollider(m_world->createCollider(cDescr));

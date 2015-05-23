@@ -56,9 +56,9 @@ namespace ong
 
 		assert(id->level < MAX_LEVELS);
 
-		int x = (int)object.sphere.c.x / size;
-		int y = (int)object.sphere.c.y / size;
-		int z = (int)object.sphere.c.z / size;
+		int x = (int)(object.sphere.c.x / size);
+		int y = (int)(object.sphere.c.y / size);
+		int z = (int)(object.sphere.c.z / size);
 
 		object.x = x;
 		object.y = y;
@@ -127,9 +127,9 @@ namespace ong
 			m_occupiedLevelsMask |= (1 << id->level);
 		}
 
-		int x = (int)object.sphere.c.x / size;
-		int y = (int)object.sphere.c.y / size;
-		int z = (int)object.sphere.c.z / size;
+		int x = (int)(object.sphere.c.x / size);
+		int y = (int)(object.sphere.c.y / size);
+		int z = (int)(object.sphere.c.z / size);
 
 		object.x = x;
 		object.y = y;
@@ -158,7 +158,7 @@ namespace ong
 		for (int bucket = 0; bucket < NUM_BUCKETS; ++bucket)
 		{
 
-			for (int j = 0; j < m_objectBucket[bucket].size(); ++j)
+			for (uint32 j = 0; j < m_objectBucket[bucket].size(); ++j)
 			{
 				Object &obj = m_objectBucket[bucket][j];
 
@@ -215,7 +215,7 @@ namespace ong
 
 								int startIndex = bucket == bucket2 ? j + 1 : 0;
 
-								for (int k = startIndex; k < m_objectBucket[bucket2].size(); ++k)
+								for (uint32 k = startIndex; k < m_objectBucket[bucket2].size(); ++k)
 								{
 									Object& obj2 = m_objectBucket[bucket2][k];
 
@@ -630,7 +630,7 @@ namespace ong
 							continue;
 						m_timeStamp[bucket] = m_tick;
 
-						for (int i = 0; i < m_objectBucket[bucket].size(); ++i)
+						for (uint32 i = 0; i < m_objectBucket[bucket].size(); ++i)
 						{
 							Body* body = m_objectBucket[bucket][i].id->pBody;
 
@@ -698,7 +698,7 @@ namespace ong
 							continue;
 						m_timeStamp[bucket] = m_tick;
 
-						for (int i = 0; i < m_objectBucket[bucket].size(); ++i)
+						for (uint32 i = 0; i < m_objectBucket[bucket].size(); ++i)
 						{
 							Body* body = m_objectBucket[bucket][i].id->pBody;
 
@@ -764,7 +764,7 @@ namespace ong
 							continue;
 						m_timeStamp[bucket] = m_tick;
 
-						for (int i = 0; i < m_objectBucket[bucket].size(); ++i)
+						for (uint32 i = 0; i < m_objectBucket[bucket].size(); ++i)
 						{
 							Body* body = m_objectBucket[bucket][i].id->pBody;
 
@@ -829,7 +829,7 @@ namespace ong
 							continue;
 						m_timeStamp[bucket] = m_tick;
 
-						for (int i = 0; i < m_objectBucket[bucket].size(); ++i)
+						for (uint32 i = 0; i < m_objectBucket[bucket].size(); ++i)
 						{
 							Body* body = m_objectBucket[bucket][i].id->pBody;
 

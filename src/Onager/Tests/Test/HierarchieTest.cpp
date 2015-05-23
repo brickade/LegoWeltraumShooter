@@ -23,7 +23,7 @@ void HierarchieTest::init()
 
 	m_eye.p = vec3(0, 0, 0);
 
-	srand(time(NULL));
+	srand((uint32)time(NULL));
 
 	m_Material.density = 1.0f;
 	m_Material.friction = 0.0f;
@@ -75,7 +75,7 @@ void HierarchieTest::init()
 	colliderDescr.material = &m_Material;
 	colliderDescr.transform = t;
 	colliderDescr.shape = capsule;
-
+	colliderDescr.isSensor = false;
 
 	m_collider = m_world->createCollider(colliderDescr);
 
@@ -126,22 +126,22 @@ bool HierarchieTest::procEvent(SDL_Event event)
 			switch (event.key.keysym.scancode)
 			{
 			case SDL_SCANCODE_KP_8:
-				t->p.z += 0.1;
+				t->p.z += 0.1f;
 				return true;
 			case SDL_SCANCODE_KP_2:
-				t->p.z -= 0.1;
+				t->p.z -= 0.1f;
 				return true;
 			case SDL_SCANCODE_KP_4:
-				t->p.x -= 0.1;
+				t->p.x -= 0.1f;
 				return true;
 			case SDL_SCANCODE_KP_6:
-				t->p.x += 0.1;
+				t->p.x += 0.1f;
 				return true;
 			case SDL_SCANCODE_KP_7:
-				t->p.y -= 0.1;
+				t->p.y -= 0.1f;
 				return true;
 			case SDL_SCANCODE_KP_9:
-				t->p.y += 0.1;
+				t->p.y += 0.1f;
 				return true;
 			case SDL_SCANCODE_SPACE:
 			{
@@ -167,9 +167,9 @@ void HierarchieTest::update(float dt)
 
 	if (SDL_GetKeyboardState(0)[SDL_SCANCODE_KP_PLUS])
 	{
-		float width = fmod(rand(), 10.0f) + 1;
-		float height = fmod(rand(), 10.0f) + 1;
-		float depth = fmod(rand(), 10.0f) + 1;
+		float width = fmodf((float)rand(), 10.0f) + 1;
+		float height = fmodf((float)rand(), 10.0f) + 1;
+		float depth = fmodf((float)rand(), 10.0f) + 1;
 
 
 		vec3 box[8] =
@@ -188,9 +188,9 @@ void HierarchieTest::update(float dt)
 
 
 		Transform t;
-		t.p.x = fmod(rand(), 20.0f) - 10.0f;
-		t.p.y = fmod(rand(), 20.0f) - 10.0f;
-		t.p.z = fmod(rand(), 20.0f) - 10.0f;
+		t.p.x = fmodf((float)rand(), 20.0f) - 10.0f;
+		t.p.y = fmodf((float)rand(), 20.0f) - 10.0f;
+		t.p.z = fmodf((float)rand(), 20.0f) - 10.0f;
 		
 		//t.q = QuatFromAxisAngle(vec3(rand(), rand(), rand()), rand());
 		t.q = QuatFromAxisAngle(vec3(1, 0, 0), 0);
@@ -198,6 +198,7 @@ void HierarchieTest::update(float dt)
 		ColliderDescription colliderDescr;
 		colliderDescr.material = &m_Material;
 		colliderDescr.transform = t;
+		colliderDescr.isSensor = false;
 		
 		int shapeChoice = rand() % 3;
 		ShapeDescription shapeDescr;

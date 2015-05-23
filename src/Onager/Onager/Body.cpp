@@ -116,8 +116,10 @@ namespace ong
 		}
 
 		Collider* c = m_pCollider;
-		while (c != nullptr)
+		for (; c != nullptr; c = c->getNext())
 		{
+			if (c->isSensor())
+				continue;
 
 			const MassData& data = c->getMassData();
 			Transform& t = c->getTransform();
@@ -135,8 +137,6 @@ namespace ong
 			_I = _I + data.m * (dot(_cm, _cm) * identity() - outerproduct(_cm, _cm));
 
 			I = I + _I;
-
-			c = c->getNext();
 		}
 
 
@@ -724,12 +724,14 @@ namespace ong
 					c->next->prev = c->prev;
 
 				if (m_pContacts == c)
-					c = c->next;
+					m_pContacts = c->next;
 				m_numContacts--;
 
 				return;
 			}
 		}
+
+		assert(true);
 	}
 
 

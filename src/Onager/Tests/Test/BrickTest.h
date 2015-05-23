@@ -21,7 +21,8 @@ public:
 		cDescr.material = m_world->createMaterial({ 1.0, 1.0, 1.0 });
 		cDescr.transform.p = vec3(0, 0, 0);
 		cDescr.transform.q = Quaternion(vec3(0, 0, 0), 1);
-		
+		cDescr.isSensor = false;
+
 		cDescr.shape = m_world->createShape(shapeDescr);
 		
 		Collider* testA = m_world->createCollider(cDescr);

@@ -64,11 +64,7 @@ namespace ong
 
 	// TODO
 	//	
-	//	-world queries
-	//  -collsion callback
-	//	-begin overlap/end overlap
-	//	-collision masks
-	//	-sensors??
+	//	-sensors
 	//	-continuos collision detection
 	//	-sleeping
 	//

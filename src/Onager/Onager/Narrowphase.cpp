@@ -499,11 +499,22 @@ namespace ong
 		ContactManifold manifold;
 		Feature feature;
 		
+		// check if either collider is a sensor
+		if (ca->isSensor() || cb->isSensor())
+		{
+			if (!overlap(ca->getShape(), cb->getShape(), ta, tb))
+				return;
+			manifold.numPoints = 0;
+			feature.type = Feature::NONE;
+		}
+		else
+		{
+			collisionFuncMatrix[ca->getShape().getType()][cb->getShape().getType()](ca, &ta, cb, &tb, &manifold, &feature);
 
-		collisionFuncMatrix[ca->getShape().getType()][cb->getShape().getType()](ca, &ta, cb, &tb, &manifold, &feature);
+			if (manifold.numPoints == 0)
+				return;
+		}
 		
-		if (manifold.numPoints == 0)
-			return;
 
 		Contact* contact = nullptr;
 
@@ -514,26 +525,33 @@ namespace ong
 				(i->contact->colliderA == ca || i->contact->colliderB == ca) &&
 				(i->contact->colliderA == cb || i->contact->colliderB == cb))
 			{
+
 				contact = i->contact;
+				
 				contact->manifold = manifold;
 				
+
 				// if features are different do not warmstart
-				if (!(i->contact->feature == feature))
+				if (i->contact->colliderA != ca || i->contact->colliderB != cb ||
+					!(i->contact->feature == feature))
 				{
-					for (int i = 0; i < contact->manifold.numPoints; ++i)
+					for (int j = 0; j < contact->manifold.numPoints; ++j)
 					{
-						contact->accImpulseN[i] = 0.0f;
-						contact->accImpulseT[i] = 0.0f;
-						contact->accImpulseBT[i] = 0.0f;
+						contact->accImpulseN[j] = 0.0f;
+						contact->accImpulseT[j] = 0.0f;
+						contact->accImpulseBT[j] = 0.0f;
 					}
 
 					contact->feature = feature;
+					contact->colliderA = ca;
+					contact->colliderB = cb;
 				}
 
 				break;
 			}
 
 		}
+
 		if (contact == nullptr) //create new contact
 		{
 			contact = m_contactAllocator();
@@ -662,7 +680,7 @@ namespace ong
 
 		//remove contacts from bodies
 		Body* a = m_contacts[contact]->colliderA->getBody();
-		Body* b = m_contacts[contact]->colliderA->getBody();
+		Body* b = m_contacts[contact]->colliderB->getBody();
 
 		a->removeContact(m_contacts[contact]);
 		b->removeContact(m_contacts[contact]);

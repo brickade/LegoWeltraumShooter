@@ -19,6 +19,25 @@ public:
 
 		Material* material = m_world->createMaterial(m);
 
+		ColliderData sensorData;
+		{
+			ShapeDescription sDescr;
+			sDescr.shapeType = ShapeType::SPHERE;
+			sDescr.sphere.c = vec3(0, 0, 0);
+			sDescr.sphere.r = 2.0f;
+
+			ColliderDescription cDescr;
+			cDescr.transform.p = vec3(0, 0, 0);
+			cDescr.transform.q = Quaternion(vec3(0, 0, 0), 1);
+			cDescr.material = material;
+			cDescr.isSensor = true;
+			cDescr.shape = m_world->createShape(sDescr);
+			Collider* c = m_world->createCollider(cDescr);
+			sensorData = c->getData();
+			m_world->destroyCollider(c);
+		}
+		ColliderCallbacks callbacks;
+
 		BodyDescription descr;
 		descr.angularMomentum = vec3(0.0f, 0.0f, 0.0f);
 		descr.linearMomentum = vec3(0.0f, 0.0f, 0.0f);
@@ -37,18 +56,32 @@ public:
 		cDescr.transform.q = Quaternion(vec3(0, 0, 0), 1);
 		cDescr.shape = m_world->createShape(sDescr);
 		cDescr.material = material;
+		cDescr.isSensor = false;
 
 		Body* body = m_world->createBody(descr);
 		Collider* collider = m_world->createCollider(cDescr);
-		collider->setCollisionFilter(0x1);
+		collider->setCollisionFilter(0x0);
 		body->addCollider(collider);
+		
+		collider = m_world->createCollider(sensorData);
+		callbacks.beginContact = [](Collider*, Contact*){printf("begin1\n"); };
+		callbacks.endContact = [](Collider*, Contact*){printf("end1\n"); };
+		collider->setCallbacks(callbacks);
+		body->addCollider(collider);
+
 		m_entities.push_back(new Entity(body, vec3(1, 0, 0)));
 
 
-		descr.transform.p.z = 3.0f;
+	/*	descr.transform.p.z = 3.0f;
 		collider = m_world->createCollider(cDescr);
 		collider->setCollisionFilter(0x2);
 		body = m_world->createBody(descr);
+		body->addCollider(collider);
+
+		collider = m_world->createCollider(sensorData);
+		callbacks.beginContact = [](Collider*, Contact*){printf("begin2\n"); };
+		callbacks.endContact = [](Collider*, Contact*){printf("end2\n"); };
+		collider->setCallbacks(callbacks);
 		body->addCollider(collider);
 
 		m_entities.push_back(new Entity(body, vec3(0, 1, 0)));
@@ -58,8 +91,15 @@ public:
 		collider->setCollisionFilter(0x1 | 0x2);
 		body = m_world->createBody(descr);
 		body->addCollider(collider);
-		m_entities.push_back(new Entity(body, vec3(1, 1, 0)));
 
+		collider = m_world->createCollider(sensorData);
+		callbacks.beginContact = [](Collider*, Contact*){printf("begin3\n"); };
+		callbacks.endContact = [](Collider*, Contact*){printf("end3\n"); };
+		collider->setCallbacks(callbacks);
+		body->addCollider(collider);
+
+		m_entities.push_back(new Entity(body, vec3(1, 1, 0)));
+*/
 		sDescr.constructionType = ShapeConstruction::HULL_FROM_BOX;
 		sDescr.hullFromBox.c = vec3(0, 0, 0);
 		sDescr.hullFromBox.e = vec3(7, 0.5, 7);

@@ -7,9 +7,6 @@
 
 namespace ong
 {
-
-
-
 	class Body;
 	class Collider;
 	struct RayQueryResult;

@@ -183,6 +183,7 @@ Entity* Test::addBox(World* world, BodyDescription descr, Material* material)
 	colliderDescr.transform.p = vec3(0.0f, 0.0f, 0.0f);
 	colliderDescr.transform.q = QuatFromAxisAngle(vec3(1.0f, 0.0f, 0.0f), 0.0f);
 	colliderDescr.shape = gBox;
+	colliderDescr.isSensor = false;
 
 	Collider* collider = world->createCollider(colliderDescr);
 
@@ -228,6 +229,7 @@ Entity* Test::addSlope(World* world, Transform t, Material* material)
 	colliderDescr.transform.p = vec3(0.0f, 0.0f, 0.0f);
 	colliderDescr.transform.q = QuatFromAxisAngle(vec3(1.0f, 0.0f, 0.0f), 0.0f);
 	colliderDescr.shape = gSlope;
+	colliderDescr.isSensor = false;
 
 	Collider* collider = world->createCollider(colliderDescr);
 
@@ -262,6 +264,7 @@ Entity* Test::addFloor(World* world, Material* material, vec3 pos)
 	colliderDescr.transform.p = vec3(0.0f, 0.0f, 0.0f);
 	colliderDescr.transform.q = QuatFromAxisAngle(vec3(1.0f, 0.0f, 0.0f), 0.0f);
 	colliderDescr.shape = gFloor;
+	colliderDescr.isSensor = false;
 
 	Collider* collider = world->createCollider(colliderDescr);
 
@@ -315,6 +318,7 @@ Player* Test::addPlayer(World* world, const Transform& transform)
 	colliderDescr.transform.p = vec3(0.75f, 0.0f, 0.0f);
 	colliderDescr.transform.q = QuatFromAxisAngle(vec3(1.0f, 0.0f, 0.0f), 0.0f);
 	colliderDescr.shape = shape;
+	colliderDescr.isSensor = false;
 
 	Collider* jet1 = world->createCollider(colliderDescr);
 
@@ -416,6 +420,7 @@ void Test::init()
 	colliderDescr.material = material;
 	colliderDescr.transform = Transform(vec3(0, 0, 0), QuatFromAxisAngle(vec3(1, 0, 0), 0));
 	colliderDescr.shape = gCapsule;
+	colliderDescr.isSensor = false;
 
 	descr.transform.p.x += 3.0f;
 

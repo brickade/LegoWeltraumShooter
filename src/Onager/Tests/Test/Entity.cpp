@@ -16,7 +16,7 @@ void impulseDamage(Collider* collider, Contact* contact)
 
 	Entity* entity = (Entity*)collider->getBody()->getUserData();
 
-	entity->damage(collider->getBody()->getInverseMass() * maxImpulse);
+	entity->damage((int)(collider->getBody()->getInverseMass() * maxImpulse));
 }						
 
 Entity::Entity(Body* body, vec3 color)
@@ -108,9 +108,9 @@ void Entity::render(GLuint colorLocation)
 	vec3 cm = m_body->getLocalCenter();
 	glBegin(GL_LINES);
 	glVertex3f(cm.x, cm.y, cm.z);
-	glVertex3f(cm.x, cm.y, cm.z + 0.1);
+	glVertex3f(cm.x, cm.y, cm.z + 0.1f);
 	glVertex3f(cm.x, cm.y, cm.z);
-	glVertex3f(cm.x, cm.y + 0.1, cm.z);
+	glVertex3f(cm.x, cm.y + 0.1f, cm.z);
 	glEnd();
 
 
@@ -258,6 +258,7 @@ void Entity::destroy(std::vector<Entity*>& entities)
 	ColliderDescription cDescr;
 	cDescr.transform.q = Quaternion(vec3(0, 0, 0), 1);
 	cDescr.transform.p = vec3(0, 0, 0);
+	cDescr.isSensor = false;
 
 	BodyDescription bDescr;
 	bDescr.type = BodyType::Dynamic;
@@ -290,7 +291,7 @@ void Entity::destroy(std::vector<Entity*>& entities)
 
 				for (int i = 0; i < 3; ++i)
 				{
-					bDescr.transform.p[i] = (fmod(rand(), (2.0f * c->getAABB().e.x)) - c->getAABB().e[i]) * 2.0f;
+					bDescr.transform.p[i] = (fmodf((float)rand(), (2.0f * c->getAABB().e.x)) - c->getAABB().e[i]) * 2.0f;
 				}
 
 				bDescr.transform.p += c->getAABB().c;

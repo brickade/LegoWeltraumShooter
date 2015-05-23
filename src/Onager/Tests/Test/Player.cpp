@@ -73,6 +73,7 @@ void Player::shoot()
 		colliderDescr.transform.p = vec3(0.0f, 0.0f, 0.0f);
 		colliderDescr.transform.q = QuatFromAxisAngle(vec3(1.0f, 0.0f, 0.0f),0.0f);
 		colliderDescr.shape = bulletShape;
+		colliderDescr.isSensor = false;
 
 		Collider* collider = m_body->getWorld()->createCollider(colliderDescr);
 
@@ -124,7 +125,7 @@ void Player::bomb()
 		colliderDescr.transform.p = vec3(0.0f, 0.0f, 0.0f);
 		colliderDescr.transform.q = QuatFromAxisAngle(vec3(1.0f, 0.0f, 0.0f), 0.0f);
 		colliderDescr.shape = m_bombShape;
-
+		colliderDescr.isSensor = false;
 
 		Collider* collider = m_body->getWorld()->createCollider(colliderDescr);
 
@@ -328,7 +329,7 @@ Transform Player::getView()
 {
 	Transform view;
 
-	float v = (m_body->getRelativeLinearVelocity().z * 0.8f) + 1.5;
+	float v = (m_body->getRelativeLinearVelocity().z * 0.8f) + 1.5f;
 	vec3 w = m_body->getRelativeAngularVelocity();
 
 	Quaternion q = QuatFromAxisAngle(normalize(w), -0.05f*length(w));

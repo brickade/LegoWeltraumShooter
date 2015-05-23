@@ -4,7 +4,7 @@
 namespace ong
 {
 
-	struct Collider;
+	class Collider;
 
 	//return true to stop querying
 	typedef bool(*ColliderQueryCallBack)(Collider* self, Collider* other);
