@@ -1,0 +1,15 @@
+#version 330 core
+
+in vec3 UV;
+in vec3 Normal;
+in vec4 Position;
+
+uniform samplerCube Diffuse;
+
+
+void main()
+{
+
+	vec4 blend = texture( Diffuse, UV );
+	gl_FragColor = blend;
+}

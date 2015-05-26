@@ -24,7 +24,7 @@ namespace TheBrick
 
     // **************************************************************************
     // **************************************************************************
-    void CBrickManager::Load(PuRe_IGraphics* a_pGraphics, PuRe_IWindow* a_pWindow, ong::World* a_pWorld, PuRe_IMaterial* a_pMaterial, const char* a_pFolder)
+    void CBrickManager::Load(PuRe_IGraphics* a_pGraphics, ong::World* a_pWorld, PuRe_IMaterial* a_pMaterial, const char* a_pFolder)
     {
         CSerializer* serializer = new CSerializer();
         int i = 0;

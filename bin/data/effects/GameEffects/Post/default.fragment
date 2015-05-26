@@ -1,0 +1,41 @@
+#version 330 core
+
+uniform sampler2D DiffuseMap;
+uniform sampler2D NormalMap;
+uniform sampler2D PositionMap;
+uniform sampler2D LightMap;
+uniform sampler2D DepthMap;
+
+uniform float textureID;
+uniform vec2 Resolution;
+uniform vec3 ambient;
+
+vec2 CalcTexCoord()
+{
+   return gl_FragCoord.xy / Resolution;
+}
+
+void main()
+{
+	vec2 TexCoord = CalcTexCoord();
+	vec4 blend = texture2D( DiffuseMap, TexCoord );
+	vec4 light = texture2D( LightMap, TexCoord );
+
+	vec4 norm = (texture2D( NormalMap, TexCoord )*2)-1;
+	vec4 pos = texture2D( PositionMap, TexCoord );
+	vec4 depth = texture2D( DepthMap, TexCoord );
+
+
+        blend = vec4((blend.xyz*light.xyz)+ambient,blend.a);
+
+	if(textureID == 0.0)
+	    gl_FragColor = blend;
+	else if(textureID == 1.0)
+	    gl_FragColor = norm;
+	else if(textureID == 2.0)
+	    gl_FragColor = vec4(1-depth.r,1-depth.r,1-depth.r,1);
+	else if(textureID == 3.0)
+	    gl_FragColor = vec4(light.xyz+ambient,light.a);
+	else
+	    gl_FragColor = pos;
+}

@@ -19,7 +19,7 @@ int PURE_MAIN
     description.Window.Title = "SpaceBrickArena - Development";
     description.Window.Width = 1280;
     description.Window.Height = 720;
-    description.Window.X = 1950;
+    description.Window.X = 100;
     description.Window.Y = 200;
     description.Window.DisplaySetting = PuRe_DisplaySetting::Windowed;
     description.Window.ShowCursor = false;

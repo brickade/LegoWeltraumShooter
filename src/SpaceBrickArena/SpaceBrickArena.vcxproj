@@ -148,7 +148,9 @@
     <ClInclude Include="include\EditorScene.h" />
     <ClInclude Include="include\GameScene.h" />
     <ClInclude Include="include\MainScene.h" />
+    <ClInclude Include="include\Minimap.h" />
     <ClInclude Include="include\Navigation.h" />
+    <ClInclude Include="include\NetworkHandler.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BrickCategory.cpp" />
@@ -161,7 +163,9 @@
     <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MainScene.cpp" />
+    <ClCompile Include="Minimap.cpp" />
     <ClCompile Include="Navigation.cpp" />
+    <ClCompile Include="NetworkHandler.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

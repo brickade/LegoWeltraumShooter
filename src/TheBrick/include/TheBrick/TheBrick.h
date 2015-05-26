@@ -7,6 +7,7 @@
 #include "Nub.h"
 #include "GameObject.h"
 #include "Spaceship.h"
+#include "Asteroid.h"
 #include "Bullet.h"
 
 #define TB_Brick TheBrick::CBrick

@@ -125,6 +125,15 @@ namespace TheBrick
                 break;
             }
             colliderData.shape = a_pWorld->createShape(shapeDesc);
+
+            ong::Material material;
+            material.density = 1.0f;
+            material.restitution = 0.6f;
+            material.friction = 1.0f;
+            ong::Material* mat = a_pWorld->createMaterial(material);
+
+            colliderData.pMaterial = mat;
+
             this->m_pColliderData.push_back(colliderData);
         }
     }

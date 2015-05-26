@@ -12,6 +12,8 @@
 #include <algorithm>
 
 #include "GameCamera.h"
+#include "Minimap.h"
+#include "NetworkHandler.h"
 
 // Declare namespace Game
 namespace Game
@@ -21,19 +23,33 @@ namespace Game
     class CGameScene : public PuRe_IScene
     {
     private:
+        float physicsTimer;
         int m_playerIdx;
-        PuRe_SkyBox* m_pSkyBox;
         int textureID;
-        PuRe_Rendertarget* m_pRenderTarget;
-        float rot;
+
+        bool gameStart;
+        int m_NetworkState;
+
+        CNetworkHandler* m_pNetwork;
+        PuRe_Font* m_pFont;
+        PuRe_PointLight* m_pPointLight;
+        PuRe_Renderer* m_pRenderer;
+        PuRe_SkyBox* m_pSkyBox;
         PuRe_Model* m_pModel;
         PuRe_IMaterial* m_pMaterial;
+        PuRe_IMaterial* m_pFontMaterial;
+        PuRe_IMaterial* m_pUIMaterial;
         PuRe_IMaterial* m_pSkyMaterial;
         PuRe_IMaterial* m_pPostMaterial;
-        PuRe_Camera* m_pPostCamera;
-        /// @brief Position for the MouseClick
-        ///
-        PuRe_Vector2F MouseClickPosition;
+        PuRe_IMaterial* m_pPointLightMaterial;
+        CMinimap* m_pMinimap;
+        PuRe_Camera* m_pUICamera;
+        PuRe_BoundingBox m_MapBoundaries;
+
+        std::vector<TheBrick::CBullet*> m_Bullets;
+
+        TheBrick::CSpaceship* m_pPlayerShip;
+        std::vector<TheBrick::CAsteroid*> m_Asteroids;
         /// @brief Cameras
         ///
         CGameCamera* m_pCamera;
