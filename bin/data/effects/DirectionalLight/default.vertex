@@ -1,0 +1,25 @@
+#version 330 core
+
+ layout(location = 0) in vec3 vertexPosition;
+ layout(location = 1) in vec2 vertexUV;
+ layout(location = 2) in vec3 vertexColor;
+ layout(location = 3) in vec3 vertexNormal;
+
+out vec2 UV;
+out vec3 Color;
+out vec3 Normal;
+
+void main()
+{
+	vec4 Pos = vec4(vertexPosition,1);
+
+	gl_Position = Pos;
+	
+	UV = vec2(vertexUV.x,-vertexUV.y);
+
+	Color = vertexColor;
+
+	Normal = vertexNormal;
+
+}
+

@@ -56,7 +56,6 @@ VertexShaderOutput VS_MAIN(VertexShaderInput input)
 
 float4 PS_MAIN(VertexShaderOutput input) : SV_TARGET
 {
-  // Sample texture
   float4 blend = Diffuse.Sample(TextureSampler, input.UV);
   if(blend.a < 0.1)
     discard;

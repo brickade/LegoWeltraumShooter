@@ -1,23 +1,17 @@
 #version 330 core
 
-// Interpolated values from the vertex shaders
 in vec2 UV;
-in vec3 Color;
+in vec4 OutColor;
 in vec3 Normal;
-in vec4 Position;
-// Values that stay constant for the whole mesh.
+in vec3 Position;
+
 uniform sampler2D Diffuse;
 
 
 void main()
 {
-
-	vec4 blend = texture2D( Diffuse, vec2(UV.x,UV.y) );
-
-	if(blend.a < 0.1)
-		discard;
-
-	gl_FragData[0] = blend;
-	gl_FragData[1] = vec4(Normal,1);
-	gl_FragData[2] = Position;
+	vec3 Color = vec3(1,1,1) * dot(Normal,vec3(0,0,-1));
+	gl_FragData[0] = vec4(Color,1);
+	gl_FragData[1] = (vec4(Normal,1)+1)/2;
+	gl_FragData[2] = vec4(Position,1);
 }

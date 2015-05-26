@@ -17,10 +17,8 @@ namespace TheBrick
 
 
     public:
-        CBullet(CBrickManager* a_pBrickManager,PuRe_Vector3F a_Position, PuRe_Vector3F a_Speed, ong::World* a_pWorld);
+        CBullet(CBrickManager* a_pBrickManager,PuRe_Vector3F a_Position, PuRe_Vector3F a_Speed, ong::World& a_rWorld);
         ~CBullet();
-
-        void Draw(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera) override;
         void Update(float a_DeltaTime) override;
     };
 }

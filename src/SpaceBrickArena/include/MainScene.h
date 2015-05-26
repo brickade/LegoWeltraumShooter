@@ -3,7 +3,6 @@
 // Framework specific includes
 #include <PuReEngine/Core.h>
 #include <PuReEngine/Defines.h>
-#include <TheBrick/TheBrick.h>
 
 #include "BrickBozz.h"
 
@@ -24,6 +23,10 @@ namespace Game
         /// @brief Engine's Application
         ///
         PuRe_Application* m_pApplication;
+
+        double m_LastPhysicsUpdate;
+        float m_PhysicsFramerate = 60.0f;
+
     public:
         /// @brief Constructor to Initialize the MainScene
         ///

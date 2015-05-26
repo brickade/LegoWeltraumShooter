@@ -3,7 +3,7 @@ namespace TheBrick
 {
     // **************************************************************************
     // **************************************************************************
-    CSpaceship::CSpaceship()
+    CSpaceship::CSpaceship(ong::World& a_rWorld) : CGameObject(a_rWorld, nullptr)
     {
         this->m_pCSVFile = new CCSVParser("../data/player.csv");
         this->m_TargetVec = ong::vec3(0.0f, 0.0f, 0.0f);
@@ -17,11 +17,11 @@ namespace TheBrick
         SAFE_DELETE(this->m_pCSVFile);
     }
 
-    // **************************************************************************
+	// **************************************************************************
     // **************************************************************************
     void CSpaceship::Draw(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera)
     {
-        for (unsigned int i = 0; i<this->m_pBricks.size(); i++)
+     	for (unsigned int i = 0; i<this->m_pBricks.size(); i++)
         {
             this->m_pBricks[i]->m_Transform = this->m_pBody->getTransform();
             this->m_pBricks[i]->Draw(a_pGraphics, a_pCamera);
@@ -29,7 +29,7 @@ namespace TheBrick
         DrawBody(this->m_pBody,a_pCamera,a_pGraphics);
     }
 
-    // **************************************************************************
+// **************************************************************************
     // **************************************************************************
     void CSpaceship::Shoot(std::vector<CBullet*>& a_rBullets, CBrickManager* a_pManager, float a_DeltaTime)
     {
@@ -284,31 +284,22 @@ namespace TheBrick
 
     // **************************************************************************
     // **************************************************************************
-    void CSpaceship::Deserialize(CSerializer* a_pSerializer, CBrickManager* a_pBrickManager, ong::World* a_pWorld)
+    void CSpaceship::Deserialize(CSerializer& a_pSerializer, CBrickManager& a_pBrickManager, ong::World& a_pWorld)
     {
-        //m_pBody
+        CGameObject::Deserialize(a_pSerializer, a_pBrickManager, a_pWorld);
+
+		//m_pBody
         ong::BodyDescription bdesc;
         bdesc.transform = ong::Transform(ong::vec3(10.0f, 10.0f, 10.0f), ong::Quaternion(ong::vec3(0, 0, 0), 1));
         bdesc.type = ong::BodyType::Dynamic;
         bdesc.angularMomentum = ong::vec3(0, 0, 0); //rotation speed
         bdesc.linearMomentum = ong::vec3(0, 0, 0);  //movement speed
         this->m_pBody = a_pWorld->createBody(bdesc);
-
-        ////////   TESTING ONLY   ////////
-
-        CBrickInstance* brick = new CBrickInstance(a_pBrickManager->GetBrick(1), a_pWorld);
-        brick->m_Transform = bdesc.transform;
-        brick->m_Color = PuRe_Color(1, 1, 1, 1);
-        for (int i = 0; i<brick->m_pCollider.size(); i++)
-            this->m_pBody->addCollider(brick->m_pCollider[i]);
-        this->m_pBricks.push_back(brick);
-        CGameObject::Deserialize(a_pSerializer, a_pBrickManager, a_pWorld);
-
     }
 
     // **************************************************************************
     // **************************************************************************
-    void CSpaceship::Serialize(CSerializer* a_pSerializer)
+    void CSpaceship::Serialize(CSerializer& a_pSerializer)
     {
         //GameObject
         reinterpret_cast<CGameObject*>(this)->Serialize(a_pSerializer);

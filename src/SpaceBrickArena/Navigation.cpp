@@ -26,7 +26,7 @@ namespace Game
 
     // **************************************************************************
     // **************************************************************************
-    void CNavigation::Update(PuRe_Timer* a_pTimer, PuRe_Vector2F a_InputVector)
+    void CNavigation::Update(PuRe_Timer& a_pTimer, PuRe_Vector2F a_InputVector)
     {
         EDirection::Type a_NewDirection = this->DirectionFromInputVector(a_InputVector);
         if (a_NewDirection != this->m_PreviousState)
@@ -40,7 +40,7 @@ namespace Game
         }
         else if (a_NewDirection != EDirection::None && this->m_pTimer->GetTotalElapsedSeconds() > this->m_ScrollingThreshold) //Scrolling
         {
-            this->Scroll(a_InputVector, a_pTimer->GetTotalElapsedSeconds());
+            this->Scroll(a_InputVector, a_pTimer.GetTotalElapsedSeconds());
         }
         this->m_PreviousState = a_NewDirection;
     }
@@ -62,10 +62,13 @@ namespace Game
             break;
         case EDirection::Down:
             this->m_FocusedElement += this->m_ElementsPerLine;
+            if (floor(this->m_FocusedElement / (float)this->m_ElementsPerLine) == floor(this->m_LastElement / (float)this->m_ElementsPerLine))
+            { //Bei Nav in Leerposition der letzten Reihe in letztes Element der letzten Reihe springen
+                this->m_FocusedElement = this->m_LastElement;
+            }
             break;
         }
         this->ClampFocus(true);
-        printf("%d\n", this->m_FocusedElement);
     }
 
     // **************************************************************************
@@ -177,7 +180,7 @@ namespace Game
         this->m_LastElement += this->m_ElementsPerLine;
         if (a_Position != -1 && a_Position < this->m_FocusedElement)
         {
-            this->m_FocusedElement+= this->m_ElementsPerLine;
+            this->m_FocusedElement += this->m_ElementsPerLine;
         }
     }
 

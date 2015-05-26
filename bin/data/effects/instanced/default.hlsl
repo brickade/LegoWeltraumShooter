@@ -33,7 +33,6 @@ struct PixelShaderOutput
 {
   float4 colorMap: SV_TARGET0;
   float4 normalMap: SV_TARGET1;
-  float4 positionMap: SV_TARGET2;
 };
 
 VertexShaderOutput VS_MAIN(VertexShaderInput input)
@@ -65,7 +64,6 @@ PixelShaderOutput PS_MAIN(VertexShaderOutput input) : SV_TARGET
   float4 blend = Diffuse.Sample(TextureSampler, input.UV);
   output.colorMap = blend;
   output.normalMap = float4(input.Normal,1);
-  output.positionMap = float4(input.Position.xyz,1);
 
 
   return output;

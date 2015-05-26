@@ -1,0 +1,61 @@
+#version 330 core
+
+uniform sampler2D NormalMap;
+uniform sampler2D DepthMap;
+
+uniform mat4 InvertViewProjection;
+uniform mat4 View;
+
+uniform vec3 LightPos;
+uniform vec3 LightColor;
+uniform vec2 Resolution;
+uniform float AttenuationConst;
+uniform float AttenuationLin;
+uniform float AttenuationExp;
+
+vec2 CalcTexCoord()
+{
+   return gl_FragCoord.xy / Resolution;
+}
+
+vec4 CalcPointLight(vec3 WorldPosition,vec3 LightPosition, vec3 Normal)
+{
+    vec3 LightDirection = WorldPosition - LightPosition;
+    float Distance = length(LightDirection);
+    LightDirection = normalize(LightDirection);
+
+    float DiffuseFactor = dot(Normal, -LightDirection);
+
+    vec4 Color = vec4(LightColor,1) * DiffuseFactor;
+    float Attenuation = AttenuationConst +
+                        AttenuationLin * Distance +
+                        AttenuationExp * Distance * Distance;
+
+    return clamp(Color / Attenuation, 0, 1);
+}
+
+void main()
+{
+	vec2 TexCoord = CalcTexCoord();
+	vec4 norm = (texture2D( NormalMap, TexCoord )*2)-1;
+	vec4 depth = texture2D( DepthMap, TexCoord );
+        
+
+        vec4 worldpos;
+
+  	worldpos.x = TexCoord.x * 2.0f -1.0f;
+
+  	worldpos.y = TexCoord.y * 2.0f -1.0f;
+
+        worldpos.z = depth.x * 2.0f - 1.0f;
+
+        worldpos.w = 1.0;
+
+        worldpos = InvertViewProjection * worldpos;
+
+  	worldpos /= worldpos.w;
+
+        vec4 lights = CalcPointLight(worldpos.xyz,LightPos,norm.xyz);
+
+	gl_FragColor = lights;
+}

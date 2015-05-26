@@ -23,7 +23,7 @@ namespace TheBrick
         bool OpenWrite(const char* a_pFile);
         void Close();
         void Read(void* a_pBuffer, size_t a_Size);
-        void Write(void* a_pData, size_t a_Size);
+        void Write(const void* a_pData, size_t a_Size);
 
         bool ReadBool();
         char ReadChar();

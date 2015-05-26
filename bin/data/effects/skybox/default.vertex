@@ -1,6 +1,5 @@
 #version 330 core
 
-// Input vertex data, different for all executions of this shader.
  layout(location = 0) in vec3 vertexPosition;
  layout(location = 1) in vec2 vertexUV;
  layout(location = 2) in vec3 vertexColor;
@@ -15,7 +14,6 @@ uniform mat4 Translation;
 
 out vec3 UV;
 
-out vec3 Color;
 out vec3 Normal;
 out vec4 Position;
 
@@ -30,8 +28,6 @@ void main()
 	gl_Position = Pos.xyww;
 	
 	UV = vertexPosition;
-
-	Color = vertexColor;
 
 	Normal = mat3(Model) * vertexNormal;
 

@@ -3,13 +3,11 @@
 
 #include <PuReEngine/Core.h>
 #include <PuReEngine/Defines.h>
-#include <TheBrick/TheBrick.h>
 #include <TheBrick/Brick.h>
 #include <TheBrick/Serializer.h>
 
 #include "BrickBozz.h"
 
-#include "EditorCamera.h"
 #include "BrickWorker.h"
 #include "BrickSupervisor.h"
 
@@ -22,10 +20,10 @@ namespace Game
 
         PuRe_SkyBox* m_pSkyBox;
         int textureID;
-        PuRe_Rendertarget* m_pRenderTarget;
         PuRe_IMaterial* m_pPostMaterial;
         PuRe_IMaterial* m_pSkyBoxMaterial;
-        PuRe_Camera* m_pPostCamera;
+        PuRe_PointLight* m_pPointLight;
+        PuRe_IMaterial* m_pPointLightMaterial;
         
         CBrickSupervisor* m_pBrickSupervisor;
         CBrickWorker* m_pBrickWorker;
@@ -33,9 +31,6 @@ namespace Game
         /// @brief Position for the MouseClick
         ///
         PuRe_Vector2F MouseClickPosition;
-        /// @brief Cameras
-        ///
-        CEditorCamera* m_pCamera;
         /// @brief Engine's Application
         ///
         PuRe_Application* m_pApplication;

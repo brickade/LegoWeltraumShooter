@@ -150,7 +150,6 @@
     <ClInclude Include="include\TheBrick\Serializer.h" />
     <ClInclude Include="include\TheBrick\Nub.h" />
     <ClInclude Include="include\TheBrick\Spaceship.h" />
-    <ClInclude Include="include\TheBrick\TheBrick.h" />
     <ClInclude Include="include\TheBrick\BrickTimer.h" />
   </ItemGroup>
   <ItemGroup>

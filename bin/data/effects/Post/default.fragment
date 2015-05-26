@@ -1,43 +1,58 @@
 #version 330 core
 
-// Interpolated values from the vertex shaders
-in vec2 UV;
-in vec3 Color;
-in vec3 Normal;
-// Values that stay constant for the whole mesh.
 uniform sampler2D DiffuseMap;
 uniform sampler2D NormalMap;
-uniform sampler2D PositionMap;
+uniform sampler2D LightMap;
 uniform sampler2D DepthMap;
+uniform sampler2D SSAOMap;
 
 uniform float textureID;
-uniform vec3 ambient;
+uniform vec2 Resolution;
+uniform vec3 ambient = vec3(0.1,0.1,0.1);
 
+uniform int BlurSize = 4;
+
+vec2 CalcTexCoord()
+{
+   return gl_FragCoord.xy / Resolution;
+}
 
 void main()
 {
+	vec2 TexCoord = CalcTexCoord();
+	vec4 blend = texture2D( DiffuseMap, TexCoord );
+	vec4 light = texture2D( LightMap, TexCoord );
 
-	vec4 blend = texture2D( DiffuseMap, vec2(UV.x,UV.y) );
+	vec4 norm = (texture2D( NormalMap, TexCoord )*2)-1;
+	vec4 depth = texture2D( DepthMap, TexCoord );
+	
+	float ssao = 0.0;
+   	vec2 texelSize = 1.0 / Resolution;
+   	vec2 hlim = vec2(float(-BlurSize) * 0.5 + 0.5);
+   	for (int y = 0; y < BlurSize; ++y) 
+	{
+      		for (int x = 0; x < BlurSize; ++x) 
+		{
+         	vec2 offset = (hlim + vec2(float(x), float(y))) * texelSize;
+         	ssao += texture(SSAOMap, TexCoord + offset).r;
+      		}
+   	}
+ 
+   	ssao = ssao / float(BlurSize * BlurSize);
 
-	vec4 norm = texture2D( NormalMap, vec2(UV.x,UV.y) );
-	vec4 pos = texture2D( PositionMap, vec2(UV.x,UV.y) );
-	vec4 depth = texture2D( DepthMap, vec2(UV.x,UV.y) );
 
-    	vec3 lightDir = vec3(1,0,-1);
-    	lightDir = normalize(lightDir);
-	float intensity = dot(norm.xyz,lightDir);
-	blend.r *= intensity;
-	blend.g *= intensity;
-	blend.b *= intensity;
-	blend.rgb += ambient * blend.rgb;
-          
-        
+        blend = vec4((blend.xyz*light.xyz+ambient)* ssao,blend.a);
+        if(blend.a < 0.1)
+         discard;
+
 	if(textureID == 0.0)
 	    gl_FragColor = blend;
 	else if(textureID == 1.0)
 	    gl_FragColor = norm;
 	else if(textureID == 2.0)
-	    gl_FragColor = vec4(depth.r,depth.r,depth.r,1);
+	    gl_FragColor = vec4(1-depth.r,1-depth.r,1-depth.r,1);
+	else if(textureID == 3.0)
+	    gl_FragColor = light;
 	else
-	    gl_FragColor = pos;
+	    gl_FragColor = vec4(ssao,ssao,ssao,1);
 }

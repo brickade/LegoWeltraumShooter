@@ -26,7 +26,6 @@ void main()
 
 	gl_Position = Pos;
 
-	Normal = mat3(Model) * vertexNormal;
+	Normal = normalize(mat3(Model) * vertexNormal);
 	Position = vec4(vertexPosition,1);
 }
-

@@ -4,12 +4,14 @@ float4x4 Translation;
 float4x4 View;
 float4x4 Projection;
 float textureID;
-float3 ambient;
+float2 Resolution;
+float3 ambient = float3(0.1,0.1,0.1);
 
 Texture2D DiffuseMap;
 Texture2D NormalMap;
-Texture2D PositionMap;
 Texture2D DepthMap;
+Texture2D LightMap;
+Texture2D SSAOMap;
 
 SamplerState TextureSampler
 {
@@ -38,6 +40,10 @@ struct PixelShaderOutput
   float4 color: SV_TARGET0;
 };
 
+float2 CalcTexCoord(float4 Position)
+{
+    return Position.xy / Resolution;
+}
 
 VertexShaderOutput VS_MAIN(VertexShaderInput input)
 {
@@ -63,18 +69,18 @@ PixelShaderOutput PS_MAIN(VertexShaderOutput input)
 {
   PixelShaderOutput output;
 
-  float4 blend = DiffuseMap.Sample(TextureSampler, input.UV);
-  float4 norm = NormalMap.Sample(TextureSampler, input.UV);
-  float4 pos = PositionMap.Sample(TextureSampler, input.UV);
-  float4 depth = DepthMap.Sample(TextureSampler, input.UV);
+  float2 TexCoord = CalcTexCoord(input.Position);
 
-  float3 lightDir = float3(1,0,-1);
-  lightDir = normalize(lightDir);
-  float intensity = dot(norm.xyz,lightDir);
-  blend.r *= intensity;
-  blend.g *= intensity;
-  blend.b *= intensity;
-  blend.rgb += ambient * blend.rgb;
+  float4 blend = DiffuseMap.Sample(TextureSampler, TexCoord);
+  float4 norm = (NormalMap.Sample(TextureSampler, TexCoord)*2)-1;
+  float4 depth = DepthMap.Sample(TextureSampler, TexCoord);
+  float4 light = LightMap.Sample(TextureSampler, TexCoord);
+  float4 ssao = SSAOMap.Sample(TextureSampler, TexCoord);
+
+
+  blend = float4((blend.xyz*light.xyz+ambient),blend.a) * ssao;
+  if(blend.a < 0.1)
+	discard;
 
 
   if(textureID == 0.0)
@@ -82,9 +88,11 @@ PixelShaderOutput PS_MAIN(VertexShaderOutput input)
   else if(textureID == 1.0)
     output.color = norm;
   else if(textureID == 2.0)
-    output.color = float4(depth.r,depth.r,depth.r,1);
+    output.color = float4(1-depth.r,1-depth.r,1-depth.r,1);
+  else if(textureID == 3.0)
+    output.color = float4(light.xyz+ambient,light.a);
   else
-    output.color = pos;
+    output.color = float4(ssao.r,ssao.g,ssao.b,1);
   return output;
 }
 

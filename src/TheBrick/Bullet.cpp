@@ -3,7 +3,7 @@ namespace TheBrick
 {
     // **************************************************************************
     // **************************************************************************
-    CBullet::CBullet(CBrickManager* a_pBrickManager, PuRe_Vector3F a_Position, PuRe_Vector3F a_Speed, ong::World* a_pWorld)
+    CBullet::CBullet(CBrickManager* a_pBrickManager, PuRe_Vector3F a_Position, PuRe_Vector3F a_Speed, ong::World& a_rWorld) : CGameObject(a_rWorld, nullptr)
     {
         //m_pBody
         ong::BodyDescription bdesc;

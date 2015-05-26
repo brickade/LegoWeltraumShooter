@@ -23,10 +23,12 @@ namespace TheBrick
         ong::vec3 m_TargetAng;
 
     public:
-        CSpaceship();
+        CSpaceship(ong::World& a_rWorld);
         ~CSpaceship();
 
         void Draw(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera) override;
+
+        void Deserialize(CSerializer& a_pSerializer, CBrickManager& a_pBrickManager, ong::World& a_pWorld) override;
         void Update(float a_DeltaTime) override;
 
         void HandleInput(PuRe_IInput* a_pInput, float a_DeltaTime, std::vector<CBullet*>& a_rBullets, CBrickManager* a_pManager);

@@ -23,19 +23,33 @@ namespace TheBrick
     {
     public:
         CBrick* m_pBrick;
-        ong::Transform m_Transform;
         PuRe_List<ong::Collider*> m_pCollider;
         PuRe_Color m_Color;
 
     private:
 
     public:
-        CBrickInstance(CBrick* a_pBrick, ong::World* a_pWorld, PuRe_Color a_pColor = PuRe_Color(0.7f, 0.7f, 0.7f, 1.0f));
+        const ong::Transform& GetTransform() const
+        {
+            assert(!this->m_pCollider.empty());
+            return this->m_pCollider[0]->getTransform();
+        }
+
+        void SetTransform(const ong::Transform& a_rTransform)
+        {
+            assert(!this->m_pCollider.empty());
+            for (size_t i = 0; i < this->m_pCollider.size(); i++)
+            {
+                this->m_pCollider[i]->setTransform(a_rTransform);
+            }
+        }
+
+    public:
+        CBrickInstance(CBrick& a_pBrick, ong::World& a_pWorld, PuRe_Color a_pColor = PuRe_Color(0.7f, 0.7f, 0.7f, 1.0f));
         ~CBrickInstance();
 
-        void Draw(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera);
-
-        PuRe_List<SNub>* GetWorldSpaceNubs();
+        PuRe_Vector3F TransformToBrickSpace(PuRe_Vector3F a_WorldSpacePos);
+        void RotateAroundPivotOffset(PuRe_QuaternionF a_Quaternion);
     };
 }
 
