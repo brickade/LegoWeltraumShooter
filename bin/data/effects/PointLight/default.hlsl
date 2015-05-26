@@ -1,11 +1,5 @@
 cbuffer MatrixBuffer
 {
-	matrix Scale;
-	matrix Rotation;
-	matrix Translation;
-	matrix View;
-	matrix Projection;
-
 	matrix InvertViewProjection;
 
 	float3 LightPos;
@@ -17,11 +11,8 @@ cbuffer MatrixBuffer
 };
 tbuffer textureBuffer
 {
-	Texture2D DiffuseMap;
 	Texture2D NormalMap;
-	Texture2D PositionMap;
 	Texture2D DepthMap;
-	Texture2D LightMap;
 };
 
 SamplerState TextureSampler;
@@ -77,11 +68,7 @@ VertexShaderOutput VS_MAIN(VertexShaderInput input)
   
   float4 pos = float4(input.Position.xyz, 1);
 
-
-  float4x4 Model = mul(mul(Scale,Rotation),Translation);
-  float4x4 MVP = mul(mul(Model,View),Projection);
-
-  Output.Position = mul(pos,MVP);
+  Output.Position = pos;
 
   Output.UV = input.UV;
 
@@ -99,11 +86,8 @@ PixelShaderOutput PS_MAIN(VertexShaderOutput input)
 
   float2 TexCoord = CalcTexCoord(input.Position);
 
-  float4 blend = DiffuseMap.Sample(TextureSampler, TexCoord);
   float4 norm = (NormalMap.Sample(TextureSampler, TexCoord)*2)-1;
-  float4 pos = PositionMap.Sample(TextureSampler, TexCoord);
   float4 depth = DepthMap.Sample(TextureSampler, TexCoord);
-  float4 light = LightMap.Sample(TextureSampler, TexCoord);
 
 
   float4 worldpos;

@@ -65,10 +65,10 @@ namespace Game
 
             PuRe_MatrixF rot = PuRe_MatrixF::Translation(-this->m_Bricks[i]->GetPivotOffset() * this->m_ElementSize) * PuRe_MatrixF::RotationAxis(PuRe_Vector3F(0, 1, 0), this->m_Rotation) * PuRe_MatrixF::Rotation(-this->m_Pitch, 0, 0);
             
-            PuRe_Color color = PuRe_Color(0, 0.5f, 0);
+            PuRe_Color color = PuRe_Color(0, 1.0f, 0);
             if (this->m_pNavigation->GetFocusedElementId() == i)
             {
-                color = PuRe_Color(0, 0.1f, 0);
+                color = PuRe_Color(0, 0.5f, 0);
             }
 
             float size = this->m_ElementSize / this->m_Bricks[i]->GetPivotOffset().Length();
@@ -87,10 +87,10 @@ namespace Game
 
         PuRe_MatrixF rot = PuRe_MatrixF::Translation(-this->m_Bricks[0]->GetPivotOffset() * this->m_TabSize) * PuRe_MatrixF::RotationAxis(PuRe_Vector3F(0, 1, 0), a_TabRotation) * PuRe_MatrixF::Rotation(-this->m_Pitch, 0, 0);
         
-        PuRe_Color color = PuRe_Color(0.5f, 0, 0);
+        PuRe_Color color = PuRe_Color(1.0f, 0, 0);
         if (a_IsSelected)
         {
-            color = PuRe_Color(0.1f, 0, 0);
+            color = PuRe_Color(0.5f, 0, 0);
         }
 
         float size = this->m_TabSize / this->m_Bricks[0]->GetPivotOffset().Length();

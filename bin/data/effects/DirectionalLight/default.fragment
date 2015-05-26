@@ -1,8 +1,6 @@
 #version 330 core
 
-uniform sampler2D DiffuseMap;
 uniform sampler2D NormalMap;
-uniform sampler2D PositionMap;
 uniform sampler2D DepthMap;
 
 uniform vec3 LightDirection;

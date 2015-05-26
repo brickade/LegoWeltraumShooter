@@ -1,20 +1,12 @@
 cbuffer MatrixBuffer
 {
-    matrix Scale;
-    matrix Rotation;
-    matrix Translation;
-    matrix View;
-    matrix Projection;
-
     float3 LightDirection;
     float3 LightColor;
     float2 Resolution;
 };
 tbuffer textureBuffer
 {
-    Texture2D DiffuseMap;
     Texture2D NormalMap;
-    Texture2D PositionMap;
     Texture2D DepthMap;
 };
 
@@ -59,11 +51,7 @@ VertexShaderOutput VS_MAIN(VertexShaderInput input)
 
     float4 pos = float4(input.Position.xyz, 1);
 
-
-    float4x4 Model = mul(mul(Scale, Rotation), Translation);
-    float4x4 MVP = mul(mul(Model, View), Projection);
-
-    Output.Position = mul(pos, MVP);
+    Output.Position = pos;
 
     Output.UV = input.UV;
 

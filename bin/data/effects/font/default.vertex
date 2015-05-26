@@ -1,6 +1,5 @@
 #version 330 core
 
-// Input vertex data, different for all executions of this shader.
  layout(location = 0) in vec3 vertexPosition;
  layout(location = 1) in vec2 vertexUV;
  layout(location = 2) in vec3 vertexColor;
@@ -25,7 +24,7 @@ void main()
 	mat4 Model = Translation * Rotation * Scale;
 	mat4 MVP = Projection * View * Model;
 	gl_Position = MVP * vec4(vertexPosition,1);
-	//vec2 NUV = vertexUV;
+
 	vec2 NUV = vec2((vertexUV.x*UVSize.x)+UVPosition.x,(vertexUV.y*UVSize.y)+UVPosition.y);
 	UV = NUV;
 

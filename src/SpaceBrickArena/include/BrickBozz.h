@@ -22,6 +22,8 @@ namespace Game
 
     private:
         static BrickBozz* g_pInstance;
+
+        PuRe_IMaterial* m_SSAOMaterial;
     
     public:
         void Initialize(PuRe_IGraphics& a_pGraphics, PuRe_SoundPlayer& a_pSoundPlayer);

@@ -17,7 +17,9 @@ struct VertexShaderInput
   float3 Position : POSITION0;
   float2 UV       : TEXCOORD0;
   float3 Color    : COLOR0;
-  float3 Normal   : NORMAL0;
+  float3 Normal   : NORMAL;
+  row_major float4x4 Offset   : MATRIX;
+  float4 IColor    : COLOR1;
 };
 
 struct VertexShaderOutput
@@ -25,7 +27,7 @@ struct VertexShaderOutput
   float4 PositionOut : SV_POSITION;
   float4 Position : POSITION0;
   float2 UV       : TEXCOORD0;
-  float3 Color    : COLOR0;
+  float4 Color    : COLOR0;
   float3 Normal   : NORMAL0;
 };
 
@@ -43,7 +45,9 @@ VertexShaderOutput VS_MAIN(VertexShaderInput input)
   
   float4 pos = float4(input.Position.xyz, 1);
 
+
   float4x4 Model = mul(mul(Scale,Rotation),Translation);
+
   float4x4 MVP = mul(mul(Model,View),Projection);
 
   Output.Position = mul(pos,MVP);
@@ -51,9 +55,9 @@ VertexShaderOutput VS_MAIN(VertexShaderInput input)
 
   Output.UV = input.UV;
 
-  Output.Color = input.Color;
+  Output.Color = float4(input.Color,1);
 
-  Output.Normal = normalize(mul(input.Normal,(float3x3)Model));
+  Output.Normal = mul(input.Normal,(float3x3)Model);
   
   return Output;
 }
@@ -62,9 +66,9 @@ PixelShaderOutput PS_MAIN(VertexShaderOutput input)
 {
   PixelShaderOutput output;
 
-  float4 blend = Diffuse.Sample(TextureSampler, input.UV);
+  float4 blend = input.Color;
   output.colorMap = blend;
-  output.normalMap = float4(input.Normal,1);
+  output.normalMap = (float4(input.Normal,1) +1)/2;
   output.positionMap = float4(input.Position.xyz,1);
 
   return output;

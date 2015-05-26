@@ -1,11 +1,10 @@
 #version 330 core
 
-uniform sampler2D DiffuseMap;
 uniform sampler2D NormalMap;
-uniform sampler2D PositionMap;
 uniform sampler2D DepthMap;
 
 uniform mat4 InvertViewProjection;
+uniform mat4 View;
 
 uniform vec3 LightPos;
 uniform vec3 LightColor;
@@ -32,14 +31,13 @@ vec4 CalcPointLight(vec3 WorldPosition,vec3 LightPosition, vec3 Normal)
                         AttenuationLin * Distance +
                         AttenuationExp * Distance * Distance;
 
-    return Color / Attenuation;
+    return clamp(Color / Attenuation, 0, 1);
 }
 
 void main()
 {
 	vec2 TexCoord = CalcTexCoord();
 	vec4 norm = (texture2D( NormalMap, TexCoord )*2)-1;
-	vec4 pos = texture2D( PositionMap, TexCoord );
 	vec4 depth = texture2D( DepthMap, TexCoord );
         
 
@@ -59,6 +57,5 @@ void main()
 
         vec4 lights = CalcPointLight(worldpos.xyz,LightPos,norm.xyz);
 
-  	vec3 dir = clamp(normalize(pos.xyz)-normalize(LightPos),0.0,1.0);
 	gl_FragColor = lights;
 }
