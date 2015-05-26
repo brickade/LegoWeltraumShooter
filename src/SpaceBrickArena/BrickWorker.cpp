@@ -223,5 +223,6 @@ namespace Game
         this->m_pCurrentBrick->SetTransform(transform);
         this->m_pCurrentBrick->RotateAroundPivotOffset(PuRe_QuaternionF(0.0f, this->m_currentBrickRotation, 0.0f));
         this->m_pCurrentBrick->m_Color = PuRe_Color(this->m_currentBrickColor.R * 1.2f, this->m_currentBrickColor.G * 1.2f, this->m_currentBrickColor.B * 1.2f, this->m_currentBrickColor.A * 0.6f);
+        this->m_pCurrentBrick->m_Color = this->m_currentBrickColor; //TODO Wenn alpha geht diese Zeile löschen
     }
 }
