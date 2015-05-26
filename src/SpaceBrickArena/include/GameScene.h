@@ -13,6 +13,7 @@
 
 #include "GameCamera.h"
 #include "Minimap.h"
+#include "NetworkHandler.h"
 
 // Declare namespace Game
 namespace Game
@@ -25,12 +26,18 @@ namespace Game
         float physicsTimer;
         int m_playerIdx;
         int textureID;
-        float rot;
+
+        bool gameStart;
+        int m_NetworkState;
+
+        CNetworkHandler* m_pNetwork;
+        PuRe_Font* m_pFont;
         PuRe_PointLight* m_pPointLight;
         PuRe_Renderer* m_pRenderer;
         PuRe_SkyBox* m_pSkyBox;
         PuRe_Model* m_pModel;
         PuRe_IMaterial* m_pMaterial;
+        PuRe_IMaterial* m_pFontMaterial;
         PuRe_IMaterial* m_pUIMaterial;
         PuRe_IMaterial* m_pSkyMaterial;
         PuRe_IMaterial* m_pPostMaterial;
