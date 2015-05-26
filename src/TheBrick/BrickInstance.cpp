@@ -25,13 +25,6 @@ namespace TheBrick
 
     // **************************************************************************
     // **************************************************************************
-    void CBrickInstance::Draw(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera)
-    {
-        this->m_pBrick->Draw(a_pGraphics, a_pCamera, TheBrick::OngToPuRe(this->m_Transform.p), TheBrick::OngToPuRe(this->m_Transform.q).GetMatrix(), this->m_Color);
-    }
-
-    // **************************************************************************
-    // **************************************************************************
     void CBrickInstance::RotateAroundPivotOffset(PuRe_QuaternionF a_Quaternion)
     {
         //Get

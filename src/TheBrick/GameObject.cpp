@@ -24,17 +24,26 @@ namespace TheBrick
 
     }
 
-    // **************************************************************************
-    // **************************************************************************
-    void CGameObject::Deserialize(CSerializer& a_pSerializer, CBrickManager& a_pBrickManager, ong::World& a_pWorld)
-    {
 
     // **************************************************************************
     // **************************************************************************
     void CGameObject::Update(float a_DeltaTime)
     {
+
     }
 
+    // **************************************************************************
+    // **************************************************************************
+    void CGameObject::Draw(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera)
+    {
+        
+    }
+
+
+    // **************************************************************************
+    // **************************************************************************
+    void CGameObject::Deserialize(CSerializer& a_pSerializer, CBrickManager& a_pBrickManager, ong::World& a_pWorld)
+    {
         //m_pBricks
         unsigned int bricksSize = a_pSerializer.ReadIntUnsigned();
         for (unsigned int i = 0; i < bricksSize; i++)

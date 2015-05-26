@@ -123,13 +123,13 @@ namespace Game
             if (a_pInput->KeyPressed(a_pInput->F3))
             {
 
-                this->m_pPlayerShip = new TheBrick::CSpaceship();
-                this->m_pPlayerShip->Deserialize(nullptr, BrickBozz::Instance()->BrickManager, BrickBozz::Instance()->World);
+                this->m_pPlayerShip = new TheBrick::CSpaceship(*BrickBozz::Instance()->World);
+                //this->m_pPlayerShip->Deserialize(nullptr, *BrickBozz::Instance()->BrickManager, *BrickBozz::Instance()->World); //Needs serializer
                 ong::vec3 start(50.0f, 50.0f, 50.0f);
                 for (int i = 0; i < 10; i++)
                 {
-                    TheBrick::CAsteroid* asteroid = new TheBrick::CAsteroid(BrickBozz::Instance()->World, start + ong::vec3((i % 2)*5.0f,(i % 2) * 5.0f,i*2.0f));
-                    asteroid->Deserialize(nullptr, BrickBozz::Instance()->BrickManager, BrickBozz::Instance()->World);
+                    TheBrick::CAsteroid* asteroid = new TheBrick::CAsteroid(*BrickBozz::Instance()->World, start + ong::vec3((i % 2)*5.0f,(i % 2) * 5.0f,i*2.0f));
+                    //asteroid->Deserialize(nullptr, *BrickBozz::Instance()->BrickManager, *BrickBozz::Instance()->World); //Needs serializer
                     this->m_Asteroids.push_back(asteroid);
                 }
                 this->gameStart = true;

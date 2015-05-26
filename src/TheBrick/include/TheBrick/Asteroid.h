@@ -14,14 +14,14 @@ namespace TheBrick
     class CAsteroid : public CGameObject
     {
     public:
-        CAsteroid(ong::World* a_pWorld,ong::vec3 a_Position);
+        CAsteroid(ong::World& a_rWorld, ong::vec3 a_Position);
         ~CAsteroid();
 
         void Draw(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera) override;
         void Update(float a_DeltaTime) override;
 
-        void Deserialize(CSerializer* a_pSerializer, CBrickManager* a_pBrickManager, ong::World* a_pWorld) override;
-        void Serialize(CSerializer* a_pSerializer);
+        void Deserialize(CSerializer& a_pSerializer, CBrickManager& a_pBrickManager, ong::World& a_pWorld) override;
+        void Serialize(CSerializer& a_pSerializer);
     };
 }
 

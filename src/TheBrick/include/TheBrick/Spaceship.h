@@ -27,8 +27,6 @@ namespace TheBrick
         ~CSpaceship();
 
         void Draw(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera) override;
-
-        void Deserialize(CSerializer& a_pSerializer, CBrickManager& a_pBrickManager, ong::World& a_pWorld) override;
         void Update(float a_DeltaTime) override;
 
         void HandleInput(PuRe_IInput* a_pInput, float a_DeltaTime, std::vector<CBullet*>& a_rBullets, CBrickManager* a_pManager);
@@ -38,8 +36,8 @@ namespace TheBrick
         void Move(PuRe_Vector2F a_Move, float a_DeltaTime);
         void Shoot(std::vector<CBullet*>& a_rBullets, CBrickManager* a_pManager, float a_DeltaTime);
 
-        void Deserialize(CSerializer* a_pSerializer, CBrickManager* a_pBrickManager, ong::World* a_pWorld) override;
-        void Serialize(CSerializer* a_pSerializer);
+        void Deserialize(CSerializer& a_pSerializer, CBrickManager& a_pBrickManager, ong::World& a_pWorld) override;
+        void Serialize(CSerializer& a_pSerializer);
     };
 }
 

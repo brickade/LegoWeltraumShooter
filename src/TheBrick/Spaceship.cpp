@@ -21,11 +21,6 @@ namespace TheBrick
     // **************************************************************************
     void CSpaceship::Draw(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera)
     {
-     	for (unsigned int i = 0; i<this->m_pBricks.size(); i++)
-        {
-            this->m_pBricks[i]->m_Transform = this->m_pBody->getTransform();
-            this->m_pBricks[i]->Draw(a_pGraphics, a_pCamera);
-        }
         DrawBody(this->m_pBody,a_pCamera,a_pGraphics);
     }
 
@@ -36,7 +31,7 @@ namespace TheBrick
         ong::Body* b = this->m_pBody;
         ong::World* w = b->getWorld();
         PuRe_Vector3F forward = TheBrick::OngToPuRe(ong::rotate(ong::vec3(0, 0, 1), b->getOrientation()));
-        a_rBullets.push_back(new TheBrick::CBullet(a_pManager, TheBrick::OngToPuRe(this->m_Transform.p) + PuRe_Vector3F(-0.5f, -0.5f, 0.0f) + forward*10.0f, forward*50.0f, w));
+        a_rBullets.push_back(new TheBrick::CBullet(a_pManager, TheBrick::OngToPuRe(this->GetTransform().p) + PuRe_Vector3F(-0.5f, -0.5f, 0.0f) + forward*10.0f, forward*50.0f, *w));
     }
 
     // **************************************************************************
@@ -277,7 +272,7 @@ namespace TheBrick
             }
         }
 
-        this->m_Transform = this->m_pBody->getTransform();
+        //this->m_Transform = this->m_pBody->getTransform();
         this->m_TargetVec = ong::vec3(0.0f,0.0f,0.0f);
         this->m_TargetAng = ong::vec3(0.0f, 0.0f, 0.0f);
     }
@@ -294,7 +289,7 @@ namespace TheBrick
         bdesc.type = ong::BodyType::Dynamic;
         bdesc.angularMomentum = ong::vec3(0, 0, 0); //rotation speed
         bdesc.linearMomentum = ong::vec3(0, 0, 0);  //movement speed
-        this->m_pBody = a_pWorld->createBody(bdesc);
+        this->m_pBody = a_pWorld.createBody(bdesc);
     }
 
     // **************************************************************************

@@ -37,7 +37,7 @@ namespace TheBrick
     // **************************************************************************
     CBrickInstance* CBrick::CreateInstance(ong::World& a_pWorld)
     {
-        return new CBrickInstance(this, a_pWorld);
+        return new CBrickInstance(*this, a_pWorld);
     }
 
     // **************************************************************************
@@ -175,7 +175,7 @@ namespace TheBrick
             material.density = 1.0f;
             material.restitution = 0.6f;
             material.friction = 1.0f;
-            ong::Material* mat = a_pWorld->createMaterial(material);
+            ong::Material* mat = a_pWorld.createMaterial(material);
 
             colliderData.pMaterial = mat;
 
