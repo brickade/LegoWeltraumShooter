@@ -34,10 +34,16 @@ namespace TheBrick
     // **************************************************************************
     void CBrickInstance::RotateAroundPivotOffset(PuRe_QuaternionF a_Quaternion)
     {
-        PuRe_MatrixF rot = PuRe_MatrixF::Translation(-this->m_pBrick->GetPivotOffset()) * a_Quaternion.GetMatrix() * PuRe_MatrixF::Translation(this->m_pBrick->GetPivotOffset());
-        ong::Transform transform;
-        transform.p = this->GetTransform().p * PuReToOng(rot);
-        transform.q = PuReToOng(a_Quaternion) * this->GetTransform().q;
-        this->SetTransform(transform);
+        //Get
+        PuRe_Vector3F pivotOffset = this->m_pBrick->GetPivotOffset();
+        ong::Transform currentTransform = this->GetTransform();
+        ong::Transform newTransform;
+        //Rotation
+        newTransform.q = PuReToOng(a_Quaternion) * currentTransform.q;
+        //Position
+        PuRe_MatrixF rotTransform = PuRe_MatrixF::Translation(-pivotOffset) * a_Quaternion.GetMatrix() * PuRe_MatrixF::Translation(pivotOffset);
+        newTransform.p = currentTransform.p + ong::vec3(0, 0, 0) * PuReToOng(rotTransform) - PuReToOng(pivotOffset * OngToPuRe(newTransform.q).GetMatrix());
+        //Set
+        this->SetTransform(newTransform);
     }
 }

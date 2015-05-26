@@ -21,7 +21,7 @@ namespace Game
         this->m_pPostMaterial = a_pGraphics->LoadMaterial("../data/effects/Post/default");
         this->m_pSkyMaterial = a_pGraphics->LoadMaterial("../data/effects/skybox/default");
         this->m_pModel = new PuRe_Model(a_pGraphics, "../data/models/brick1.obj");
-        this->m_pRenderTarget = a_pGraphics->CreateRendertarget();
+        //this->m_pRenderTarget = a_pGraphics->CreateRendertarget();
         this->m_pSkyBox = new PuRe_SkyBox(a_pGraphics, "../data/textures/skybox/");
         this->rot = 0.0f;
         this->textureID = 0;

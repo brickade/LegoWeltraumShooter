@@ -20,7 +20,6 @@ namespace Game
 
         PuRe_SkyBox* m_pSkyBox;
         int textureID;
-        PuRe_Rendertarget* m_pRenderTarget;
         PuRe_IMaterial* m_pPostMaterial;
         PuRe_IMaterial* m_pSkyBoxMaterial;
         PuRe_PointLight* m_pPointLight;

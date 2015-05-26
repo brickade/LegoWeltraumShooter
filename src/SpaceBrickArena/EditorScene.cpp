@@ -23,7 +23,6 @@ namespace Game
         PuRe_GraphicsDescription gdesc = a_pGraphics->GetDescription();
         this->m_pPostMaterial = a_pGraphics->LoadMaterial("../data/effects/Post/default");
         this->m_pSkyBoxMaterial = a_pGraphics->LoadMaterial("../data/effects/skybox/default");
-        this->m_pRenderTarget = a_pGraphics->CreateRendertarget();
 
         this->m_pPointLightMaterial = a_pGraphics->LoadMaterial("../data/effects/PointLight/default");
         this->m_pPointLight = new PuRe_PointLight(a_pGraphics);
@@ -94,7 +93,7 @@ namespace Game
         renderer->Set((float)this->textureID, "textureID");
         renderer->Set(PuRe_Vector3F(0.02f, 0.02f, 0.02f), "ambient");
         PuRe_Vector3F size = PuRe_Vector3F(a_pGraphics->GetDescription().ResolutionWidth, a_pGraphics->GetDescription().ResolutionHeight, 0.0f);
-        renderer->Render(this->m_pBrickWorker->GetCamera(), this->m_pPostMaterial, PuRe_Vector3F::Zero(), size);
+        renderer->Render(this->m_pBrickWorker->GetCamera(), this->m_pPostMaterial, PuRe_Vector3F::Zero());
         renderer->End();
     }
 
@@ -105,7 +104,6 @@ namespace Game
         SAFE_DELETE(this->m_pBrickWorker);
         SAFE_DELETE(this->m_pBrickSupervisor);
         SAFE_DELETE(this->m_pSkyBox);
-        SAFE_DELETE(this->m_pRenderTarget);
         SAFE_DELETE(this->m_pPostMaterial);
     }
 }
