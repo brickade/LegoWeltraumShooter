@@ -11,9 +11,9 @@ uniform vec2 Resolution;
 uniform mat4 InvertViewProjection;
 
 uniform float g_sample_rad = 0.1;
-uniform float g_intensity = 3.0;
+uniform float g_intensity = 2.0;
 uniform float g_scale = 0.1;
-uniform float g_bias = 0.1;
+uniform float g_bias = 0.0;
 
 vec2 CalcTexCoord()
 {
@@ -30,15 +30,13 @@ vec3 getPosition(vec2 uv)
 
     worldpos.y = uv.y * 2.0f - 1.0f;
 
-    worldpos.z = depth * 2.0f - 1.0f;
+    worldpos.z = depth;
 
     worldpos.w = 1.0;
 
     worldpos = InvertViewProjection * worldpos;
 
     worldpos /= worldpos.w;
-
-    worldpos = worldpos;
 
     return worldpos.rgb;
 }

@@ -1,7 +1,7 @@
 float4x4 InvertViewProjection;
 
 float3 LightPos;
-float3 LightColor;
+float4 LightColor;
 float2 Resolution;
 float AttenuationConst;
 float AttenuationLin;
@@ -50,7 +50,7 @@ float4 CalcPointLight(float3 WorldPosition,float3 LightPosition, float3 Normal)
 
     float DiffuseFactor = dot(Normal, -LightDirection);
 
-    float4 Color = float4(LightColor,1) * DiffuseFactor;
+    float4 Color = LightColor * DiffuseFactor;
     float Attenuation = AttenuationConst +
                         AttenuationLin * Distance +
                         AttenuationExp * Distance * Distance;

@@ -4,7 +4,7 @@ uniform sampler2D NormalMap;
 uniform sampler2D DepthMap;
 
 uniform vec3 LightDirection;
-uniform vec3 LightColor;
+uniform vec4 LightColor;
 uniform vec2 Resolution;
 
 vec2 CalcTexCoord()
@@ -22,7 +22,7 @@ void main()
 
         float Factor = dot(norm.xyz,-LightDirection);
 
-        vec4 lights = vec4(LightColor*Factor,1);
+        vec4 lights = vec4(LightColor.rgb*Factor,LightColor.a);
 
 	gl_FragColor = lights;
 }

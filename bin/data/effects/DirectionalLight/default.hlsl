@@ -1,7 +1,7 @@
 cbuffer MatrixBuffer
 {
     float3 LightDirection;
-    float3 LightColor;
+    float4 LightColor;
     float2 Resolution;
 };
 tbuffer textureBuffer
@@ -73,7 +73,7 @@ PixelShaderOutput PS_MAIN(VertexShaderOutput input)
     
     float Factor = dot(norm.xyz,-LightDirection);
 
-    float4 lights = float4(LightColor*Factor, 1);
+    float4 lights = float4(LightColor.rgb*Factor, LightColor.a);
     
     output.color = lights;
 

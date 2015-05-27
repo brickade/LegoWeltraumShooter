@@ -54,7 +54,7 @@ VertexShaderOutput VS_MAIN(VertexShaderInput input)
   Output.Color = input.IColor;
 
 
-  Output.Normal = mul(input.Normal,(float3x3)Model);
+  Output.Normal = normalize(mul(input.Normal,(float3x3)Model));
   
   return Output;
 }

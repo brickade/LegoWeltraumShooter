@@ -7,7 +7,7 @@ uniform mat4 InvertViewProjection;
 uniform mat4 View;
 
 uniform vec3 LightPos;
-uniform vec3 LightColor;
+uniform vec4 LightColor;
 uniform vec2 Resolution;
 uniform float AttenuationConst;
 uniform float AttenuationLin;
@@ -24,14 +24,14 @@ vec4 CalcPointLight(vec3 WorldPosition,vec3 LightPosition, vec3 Normal)
     float Distance = length(LightDirection);
     LightDirection = normalize(LightDirection);
 
-    float DiffuseFactor = dot(Normal, -LightDirection);
+    float DiffuseFactor = max(dot(Normal, -LightDirection),0.0);
 
-    vec4 Color = vec4(LightColor,1) * DiffuseFactor;
+    vec4 Color = LightColor * DiffuseFactor;
     float Attenuation = AttenuationConst +
                         AttenuationLin * Distance +
                         AttenuationExp * Distance * Distance;
 
-    return clamp(Color / Attenuation, 0, 1);
+    return Color / Attenuation;
 }
 
 void main()
