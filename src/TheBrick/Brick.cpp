@@ -180,6 +180,8 @@ namespace TheBrick
             colliderData.pMaterial = mat;
 
             colliderData.isSensor = false;
+            colliderData.collisionFilter = 0;
+            colliderData.collisionGroup = 0;
 
             this->m_pColliderData.push_back(colliderData);
         }
