@@ -38,7 +38,7 @@ namespace Game
         /// @param Material to use
         /// @param Position to draw at
         ///
-        void Draw(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera, PuRe_IMaterial* a_pMaterial, PuRe_Vector3F a_Position, PuRe_MatrixF a_CamRotation);
+        void Draw(PuRe_Renderer* a_pRenderer, PuRe_IMaterial* a_pMaterial, PuRe_Vector3F a_Position, PuRe_MatrixF a_CamRotation);
         /// @brief Draw the Player at Position (Screenposition)
         ///
         /// @param Graphic Object
@@ -47,7 +47,7 @@ namespace Game
         /// @param Position to draw at
         /// @param Bounding Box
         ///
-        void DrawPlayer(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera, PuRe_IMaterial* a_pMaterial, PuRe_Vector3F a_Position, const PuRe_BoundingBox &a_Boundaries, PuRe_MatrixF a_CamRotation);
+        void DrawPlayer(PuRe_Renderer* a_pRenderer, PuRe_IMaterial* a_pMaterial, PuRe_Vector3F a_Position, const PuRe_BoundingBox &a_Boundaries, PuRe_MatrixF a_CamRotation);
     };
 }
 #endif /* _MINIMAP_H_ */

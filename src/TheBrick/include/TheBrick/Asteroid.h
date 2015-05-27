@@ -14,7 +14,7 @@ namespace TheBrick
     class CAsteroid : public CGameObject
     {
     public:
-        CAsteroid(ong::World& a_rWorld, ong::vec3 a_Position);
+        CAsteroid(CBrickManager* a_pBrickManager, ong::World& a_rWorld, ong::vec3 a_Position);
         ~CAsteroid();
 
         void Draw(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera) override;

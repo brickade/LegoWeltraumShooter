@@ -27,23 +27,25 @@ namespace Game
 
     // **************************************************************************
     // **************************************************************************
-    void CMinimap::Draw(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera, PuRe_IMaterial* a_pMaterial, PuRe_Vector3F a_Position, PuRe_MatrixF a_CamRotation)
+    void CMinimap::Draw(PuRe_Renderer* a_pRenderer, PuRe_IMaterial* a_pMaterial, PuRe_Vector3F a_Position, PuRe_MatrixF a_CamRotation)
     {
+        
         this->m_Position = a_Position;
-        a_pMaterial->Apply();
-        a_pCamera->Apply(a_pMaterial);
-        a_pMaterial->SetMatrix(PuRe_MatrixF::Scale(PuRe_Vector3F(128.0f, 128.0f, 128.0f)), "Scale");
-        a_pMaterial->SetMatrix(a_CamRotation, "Rotation");
-        a_pMaterial->SetMatrix(PuRe_MatrixF::Translation(a_Position), "Translation");
-        a_pGraphics->SetVertexBuffer(this->m_pBoxVertexBuffer);
-        a_pMaterial->Apply();
-        a_pGraphics->Draw(PuRe_Primitive::Linestrip, this->m_pBoxVertexBuffer->GetSize());
+        a_pRenderer->DrawUI(this->m_pBoxVertexBuffer, this->m_pBoxVertexBuffer->GetSize(), PuRe_Primitive::Linestrip, a_pMaterial, a_Position, a_CamRotation, PuRe_Vector3F(), PuRe_Vector3F(128.0f, 128.0f, 128.0f));
+        //a_pMaterial->Apply();
+        //a_pCamera->Apply(a_pMaterial);
+        //a_pMaterial->SetMatrix(PuRe_MatrixF::Scale(PuRe_Vector3F(128.0f, 128.0f, 128.0f)), "Scale");
+        //a_pMaterial->SetMatrix(a_CamRotation, "Rotation");
+        //a_pMaterial->SetMatrix(PuRe_MatrixF::Translation(a_Position), "Translation");
+        //a_pGraphics->SetVertexBuffer(this->m_pBoxVertexBuffer);
+        //a_pMaterial->Apply();
+        //a_pGraphics->Draw(PuRe_Primitive::Linestrip, this->m_pBoxVertexBuffer->GetSize());
         //this->m_pMinimapSprite->Draw(a_pCamera, a_pMaterial, a_Position, PuRe_Vector3F(128.0f, 128.0f, 1.0f), PuRe_Vector3F());
     }
 
     // **************************************************************************
     // **************************************************************************
-    void CMinimap::DrawPlayer(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera, PuRe_IMaterial* a_pMaterial, PuRe_Vector3F a_Position, const PuRe_BoundingBox &a_Boundaries, PuRe_MatrixF a_CamRotation)
+    void CMinimap::DrawPlayer(PuRe_Renderer* a_pRenderer, PuRe_IMaterial* a_pMaterial, PuRe_Vector3F a_Position, const PuRe_BoundingBox &a_Boundaries, PuRe_MatrixF a_CamRotation)
     {
         a_Position.X /= a_Boundaries.m_Size.X;
         a_Position.Y /= a_Boundaries.m_Size.Y;
@@ -57,15 +59,16 @@ namespace Game
 
         a_Position = this->m_Position + a_Position;
 
+        a_pRenderer->DrawUI(this->m_pBoxVertexBuffer, this->m_pBoxVertexBuffer->GetSize(), PuRe_Primitive::Linestrip, a_pMaterial, a_Position, a_CamRotation, PuRe_Vector3F(), PuRe_Vector3F(8.0f, 8.0f, 8.0f));
 
-        a_pMaterial->Apply();
-        a_pCamera->Apply(a_pMaterial);
-        a_pMaterial->SetMatrix(PuRe_MatrixF::Scale(PuRe_Vector3F(8.0f, 8.0f, 8.0f)), "Scale");
-        a_pMaterial->SetMatrix(a_CamRotation, "Rotation");
-        a_pMaterial->SetMatrix(PuRe_MatrixF::Translation(a_Position), "Translation");
-        a_pGraphics->SetVertexBuffer(this->m_pBoxVertexBuffer);
-        a_pMaterial->Apply();
-        a_pGraphics->Draw(PuRe_Primitive::Linestrip, this->m_pBoxVertexBuffer->GetSize());
+        //a_pMaterial->Apply();
+        //a_pCamera->Apply(a_pMaterial);
+        //a_pMaterial->SetMatrix(PuRe_MatrixF::Scale(PuRe_Vector3F(8.0f, 8.0f, 8.0f)), "Scale");
+        //a_pMaterial->SetMatrix(a_CamRotation, "Rotation");
+        //a_pMaterial->SetMatrix(PuRe_MatrixF::Translation(a_Position), "Translation");
+        //a_pGraphics->SetVertexBuffer(this->m_pBoxVertexBuffer);
+        //a_pMaterial->Apply();
+        //a_pGraphics->Draw(PuRe_Primitive::Linestrip, this->m_pBoxVertexBuffer->GetSize());
 
         //a_Position.X /= a_Boundaries.m_Size.X;
         //a_Position.Y /= a_Boundaries.m_Size.Y;

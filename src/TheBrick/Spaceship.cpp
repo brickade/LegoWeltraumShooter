@@ -14,6 +14,13 @@ namespace TheBrick
     // **************************************************************************
     CSpaceship::~CSpaceship()
     {
+        for (int i = 0; i < this->m_pBricks.size(); i++)
+        {
+            SAFE_DELETE(this->m_pBricks[i]);
+            this->m_pBricks.erase(this->m_pBricks.begin() + i);
+        }
+        this->m_pBody->getWorld()->destroyBody(this->m_pBody);
+        this->m_pBody = nullptr;
         SAFE_DELETE(this->m_pCSVFile);
     }
 
@@ -275,21 +282,28 @@ namespace TheBrick
         //this->m_Transform = this->m_pBody->getTransform();
         this->m_TargetVec = ong::vec3(0.0f,0.0f,0.0f);
         this->m_TargetAng = ong::vec3(0.0f, 0.0f, 0.0f);
+
+        ong::Transform t = ong::Transform(ong::vec3(0.0f, 0.0f, 0.0f), ong::Quaternion(ong::vec3(0, 0, 0), 1));
     }
 
     // **************************************************************************
     // **************************************************************************
     void CSpaceship::Deserialize(CSerializer& a_pSerializer, CBrickManager& a_pBrickManager, ong::World& a_pWorld)
     {
-        CGameObject::Deserialize(a_pSerializer, a_pBrickManager, a_pWorld);
-
-		//m_pBody
-        ong::BodyDescription bdesc;
-        bdesc.transform = ong::Transform(ong::vec3(10.0f, 10.0f, 10.0f), ong::Quaternion(ong::vec3(0, 0, 0), 1));
-        bdesc.type = ong::BodyType::Dynamic;
-        bdesc.angularMomentum = ong::vec3(0, 0, 0); //rotation speed
-        bdesc.linearMomentum = ong::vec3(0, 0, 0);  //movement speed
-        this->m_pBody = a_pWorld.createBody(bdesc);
+        ////////   TESTING ONLY   ////////
+        CBrickInstance* brick = new CBrickInstance(a_pBrickManager.GetBrick(1), a_pWorld);
+        //m_Transform
+        brick->SetTransform(ong::Transform(ong::vec3(0.0f, 0.0f, 0.0f), ong::Quaternion(ong::vec3(0, 0, 0), 1)));
+        //m_pCollider: Add Collider to Body
+        for (int i = 0; i < brick->m_pCollider.size(); i++)
+        {
+            this->m_pBody->addCollider(brick->m_pCollider[i]);
+        }
+        //m_Color
+        brick->m_Color = PuRe_Color(1,0,0,1);
+        this->m_pBricks.push_back(brick);
+        this->m_pBody->setPosition(ong::vec3(10.0f,10.0f,10.0f));
+        //CGameObject::Deserialize(a_pSerializer, a_pBrickManager, a_pWorld);
     }
 
     // **************************************************************************
