@@ -179,6 +179,8 @@ namespace TheBrick
 
             colliderData.pMaterial = mat;
 
+            colliderData.isSensor = false;
+
             this->m_pColliderData.push_back(colliderData);
         }
     }
