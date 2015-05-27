@@ -1,4 +1,7 @@
 #include "include/TheBrick/Spaceship.h"
+
+#include "include/TheBrick/Conversion.h"
+
 namespace TheBrick
 {
     // **************************************************************************

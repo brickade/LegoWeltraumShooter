@@ -1,4 +1,10 @@
 #include "include/TheBrick/GameObject.h"
+
+#include "include/TheBrick/BrickInstance.h"
+#include "include/TheBrick/Serializer.h"
+#include "include/TheBrick/BrickManager.h"
+#include "include/TheBrick/Brick.h"
+
 namespace TheBrick
 {
     // **************************************************************************
@@ -21,7 +27,7 @@ namespace TheBrick
     // **************************************************************************
     CGameObject::~CGameObject()
     {
-
+        SAFE_DELETE_ARRAY(this->m_pBricks.data()); //Delete BrickInstances
     }
 
 
@@ -50,7 +56,7 @@ namespace TheBrick
         {
             //m_pBrick
             int brickId = a_pSerializer.ReadInt();
-            CBrickInstance* brick = new CBrickInstance(a_pBrickManager.GetBrick(brickId), a_pWorld);
+            CBrickInstance* brick = new CBrickInstance(a_pBrickManager.GetBrick(brickId), *this, a_pWorld);
             //m_Transform
             ong::Transform transform;
             a_pSerializer.Read(&transform, sizeof(transform));
@@ -95,6 +101,7 @@ namespace TheBrick
             this->m_pBody->addCollider(a_pBrickInstance->m_pCollider[i]);
         }
         this->m_pBricks.push_back(a_pBrickInstance);
+        a_pBrickInstance->SetGameObject(this);
     }
 
 

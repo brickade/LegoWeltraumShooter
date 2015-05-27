@@ -46,13 +46,13 @@ namespace Game
         }
 
         //Update Physics
-        if (a_pTimer->GetTotalElapsedMilliseconds() - this->m_LastPhysicsUpdate >= 1/this->m_PhysicsFramerate)
+        if (a_pTimer->GetTotalElapsedSeconds() - this->m_LastPhysicsUpdate >= 1 / this->m_PhysicsFramerate)
         {
             do
             {
                 this->m_LastPhysicsUpdate += 1 / this->m_PhysicsFramerate;
                 //BrickBozz::Instance()->World->step(1 / this->m_PhysicsFramerate);
-            } while (a_pTimer->GetTotalElapsedMilliseconds() - this->m_LastPhysicsUpdate >= 1 / this->m_PhysicsFramerate);
+            } while (a_pTimer->GetTotalElapsedSeconds() - this->m_LastPhysicsUpdate >= 1 / this->m_PhysicsFramerate);
             BrickBozz::Instance()->BrickManager->RebuildRenderInstances(); //Update RenderInstances
         }
 

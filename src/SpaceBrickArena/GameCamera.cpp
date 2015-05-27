@@ -1,5 +1,7 @@
 #include "include\GameCamera.h"
 
+#include "TheBrick/Conversion.h"
+
 namespace Game
 {
     CGameCamera::CGameCamera(PuRe_Vector3F a_Position, PuRe_Vector3F a_Direction, PuRe_Vector3F a_Up, float a_FOV, float a_AspectRatio,

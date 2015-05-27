@@ -77,7 +77,7 @@ namespace Game
         PuRe_Renderer* renderer = BrickBozz::Instance()->Renderer;
         renderer->Begin(PuRe_Color(0.1f, 0.5f, 0.1f));
         //Lights
-        renderer->Draw(this->m_pPointLight, this->m_pPointLightMaterial, PuRe_Vector3F(0.0f, 5.0f, 0.0f), PuRe_Vector3F(1, 1, 1), 0.1f, 0.01f, 0.01f);
+        renderer->Draw(this->m_pPointLight, this->m_pPointLightMaterial, PuRe_Vector3F(0.0f, 5.0f, 0.0f), PuRe_Color(1, 1, 1), 0.1f, 0.01f, 0.01f);
         
         //Skybox
         //renderer->Draw(this->m_pSkyBox, this->m_pSkyBoxMaterial);
@@ -88,8 +88,7 @@ namespace Game
         //Post
         renderer->Set((float)this->textureID, "textureID");
         renderer->Set(PuRe_Vector3F(0.02f, 0.02f, 0.02f), "ambient");
-        PuRe_Vector3F size = PuRe_Vector3F(a_pGraphics->GetDescription().ResolutionWidth, a_pGraphics->GetDescription().ResolutionHeight, 0.0f);
-        renderer->Render(this->m_pBrickWorker->GetCamera(), this->m_pPostMaterial, PuRe_Vector3F::Zero());
+        renderer->Render(this->m_pBrickWorker->GetCamera(), this->m_pPostMaterial);
         renderer->End();
     }
 

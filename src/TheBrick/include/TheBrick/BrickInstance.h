@@ -8,15 +8,10 @@
 #include <Onager/myMath.h>
 #include <Onager/World.h>
 
-#include "Conversion.h"
-#include "Brick.h"
-#include "Nub.h"
-#include "Conversion.h"
-
-
 namespace TheBrick
 {
     //Forward declaration
+    class CGameObject;
     class CBrick;
 
     class CBrickInstance
@@ -27,6 +22,8 @@ namespace TheBrick
         PuRe_Color m_Color;
 
     private:
+
+        CGameObject* m_pGameObject;
 
     public:
         const ong::Transform& GetTransform() const
@@ -44,11 +41,20 @@ namespace TheBrick
             }
         }
 
+        CGameObject* GetGameObject() const
+        {
+            return this->m_pGameObject;
+        }
+
+        void SetGameObject(CGameObject* a_pGameObject)
+        {
+            this->m_pGameObject = a_pGameObject;
+        }
+
     public:
-        CBrickInstance(CBrick& a_pBrick, ong::World& a_pWorld, PuRe_Color a_pColor = PuRe_Color(0.7f, 0.7f, 0.7f, 1.0f));
+        CBrickInstance(CBrick& a_pBrick, CGameObject& a_rGameObject, ong::World& a_pWorld, PuRe_Color a_pColor = PuRe_Color(0.7f, 0.7f, 0.7f, 1.0f));
         ~CBrickInstance();
 
-        PuRe_Vector3F TransformToBrickSpace(PuRe_Vector3F a_WorldSpacePos);
         void RotateAroundPivotOffset(PuRe_QuaternionF a_Quaternion);
     };
 }

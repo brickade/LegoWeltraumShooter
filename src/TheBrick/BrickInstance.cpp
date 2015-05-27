@@ -1,25 +1,31 @@
 #include "include/TheBrick/BrickInstance.h"
+
+#include "include/TheBrick/Brick.h"
+#include "include/TheBrick/GameObject.h"
 #include "include/TheBrick/Conversion.h"
 
 namespace TheBrick
 {
     // **************************************************************************
     // **************************************************************************
-    CBrickInstance::CBrickInstance(CBrick& a_pBrick, ong::World& a_pWorld, PuRe_Color a_pColor)
+    CBrickInstance::CBrickInstance(CBrick& a_pBrick, CGameObject& a_rGameObject, ong::World& a_pWorld, PuRe_Color a_pColor)
     {
         this->m_pBrick = &a_pBrick;
+        this->m_pGameObject = &a_rGameObject;
         for (size_t i = 0; i < this->m_pBrick->GetColliderData().size(); i++)
         {
             this->m_pCollider.push_back(a_pWorld.createCollider(this->m_pBrick->GetColliderData()[i]));
         }
         this->m_Color = a_pColor;
         a_pBrick.AddInstance(*this);
+        a_rGameObject.AddBrickInstance(this, a_pWorld);
     }
 
     // **************************************************************************
     // **************************************************************************
     CBrickInstance::~CBrickInstance()
     {
+        this->m_pGameObject->RemoveBrickInstance(*this);
         this->m_pBrick->DeleteInstance(*this);
     }
 

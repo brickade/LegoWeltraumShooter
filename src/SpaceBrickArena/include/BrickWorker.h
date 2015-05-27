@@ -5,9 +5,15 @@
 #include <PuReEngine/Defines.h>
 #include <Onager/World.h>
 
-#include "BrickBozz.h"
 #include "EditorCamera.h"
-#include <TheBrick/Spaceship.h>
+
+namespace TheBrick
+{
+    class CGameObject;
+    class CBrickInstance;
+    class CSpaceship;
+    class CBrick;
+}
 
 namespace Game
 {

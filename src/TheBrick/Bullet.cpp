@@ -1,4 +1,9 @@
 #include "include/TheBrick/Bullet.h"
+
+#include "include/TheBrick/Conversion.h"
+#include "include/TheBrick/BrickInstance.h"
+#include "include/TheBrick/BrickManager.h"
+
 namespace TheBrick
 {
     // **************************************************************************
@@ -13,16 +18,9 @@ namespace TheBrick
         bdesc.linearMomentum = TheBrick::PuReToOng(a_Speed);  //movement speed
 
         this->m_pBody = a_rWorld.createBody(bdesc);
-        CBrickInstance* brick = new CBrickInstance(a_pBrickManager->GetBrick(2), a_rWorld);
+        CBrickInstance* brick = new CBrickInstance(a_pBrickManager->GetBrick(2), *this, a_rWorld);
         //brick->GetTransform() = ong::Transform(ong::vec3(0.0f, 0.0f, 0.0f), ong::Quaternion(ong::vec3(0, 0, 0), 1));
         brick->m_Color = PuRe_Color(1, 1, 1, 1);
-        for (int i = 0; i<brick->m_pCollider.size(); i++)
-        {
-            brick->m_pCollider[i]->setTransform(brick->GetTransform());
-            this->m_pBody->addCollider(brick->m_pCollider[i]);
-        }
-        this->m_pBricks.push_back(brick);
-
         this->m_lifeTime = 0.0f;
     }
 
@@ -43,7 +41,7 @@ namespace TheBrick
     // **************************************************************************
     void CBullet::Draw(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera)
     {
-        DrawBody(this->m_pBody, a_pCamera, a_pGraphics);
+        //DrawBody(this->m_pBody, a_pCamera, a_pGraphics);
     }
 
     // **************************************************************************

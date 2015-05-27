@@ -35,9 +35,9 @@ namespace TheBrick
 
     // **************************************************************************
     // **************************************************************************
-    CBrickInstance* CBrick::CreateInstance(ong::World& a_pWorld)
+    CBrickInstance* CBrick::CreateInstance(CGameObject& a_rGameObject, ong::World& a_pWorld)
     {
-        return new CBrickInstance(*this, a_pWorld);
+        return new CBrickInstance(*this, a_rGameObject, a_pWorld);
     }
 
     // **************************************************************************
@@ -72,8 +72,23 @@ namespace TheBrick
             CBrickInstance* instance = *it;
             assert(instance != nullptr);
             ong::Transform transform = instance->GetTransform();
-            this->m_pRenderInstances[this->m_RenderInstancesCount].Position = OngToPuRe(transform.p);
-            this->m_pRenderInstances[this->m_RenderInstancesCount].Rotation = OngToPuRe(transform.q).GetMatrix();
+            assert(instance->GetGameObject() != nullptr);
+            ong::Transform goTransform = instance->GetGameObject()->GetTransform();
+            this->m_pRenderInstances[this->m_RenderInstancesCount].Position = OngToPuRe(goTransform.p) + OngToPuRe(transform.p);
+            this->m_pRenderInstances[this->m_RenderInstancesCount].Rotation = OngToPuRe(goTransform.q).GetMatrix() * OngToPuRe(transform.q).GetMatrix();
+            /* when GameObject is allowed to be null
+            if (gameObject != nullptr)
+            { //Add GameObject Transform
+                ong::Transform goTransform = gameObject->GetTransform();
+                this->m_pRenderInstances[this->m_RenderInstancesCount].Position = OngToPuRe(goTransform.p) + OngToPuRe(transform.p);
+                this->m_pRenderInstances[this->m_RenderInstancesCount].Rotation = OngToPuRe(goTransform.q).GetMatrix() * OngToPuRe(transform.q).GetMatrix();
+            }
+            else
+            { //GameObject Transform = 0
+                this->m_pRenderInstances[this->m_RenderInstancesCount].Position = OngToPuRe(transform.p);
+                this->m_pRenderInstances[this->m_RenderInstancesCount].Rotation = OngToPuRe(transform.q).GetMatrix();
+            }
+            */
             this->m_pRenderInstances[this->m_RenderInstancesCount].Color = instance->m_Color;
             this->m_pRenderInstances[this->m_RenderInstancesCount].Size = PuRe_Vector3F::One();
             this->m_pRenderInstances[this->m_RenderInstancesCount].Center = PuRe_Vector3F::Zero();

@@ -1,4 +1,7 @@
 #include "include/TheBrick/Asteroid.h"
+
+#include "Onager/World.h"
+
 namespace TheBrick
 {
     // **************************************************************************
