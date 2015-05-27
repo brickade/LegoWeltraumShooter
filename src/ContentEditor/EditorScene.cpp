@@ -202,7 +202,6 @@ namespace Content
 		
 		m_pPostCamera = new PuRe_Camera(PuRe_Vector2F((float)gdesc.ResolutionWidth, (float)gdesc.ResolutionHeight), PuRe_Camera_Orthogonal);
 		m_pPostMaterial = a_pGraphics->LoadMaterial("../data/effects/Post/default");
-		m_pRenderTarget = a_pGraphics->CreateRendertarget();
 
 		m_pCamera = new PuRe_Camera(PuRe_Vector2F(gdesc.ResolutionWidth, gdesc.ResolutionHeight), PuRe_Camera_Perspective);
 		m_pCamera->SetFoV(45.0f);
@@ -264,7 +263,7 @@ namespace Content
 						strcat(modelDir, fileName);
 
 
-                        TheBrick::CBrick* newBrick = new TheBrick::CBrick(pModel, m_pMaterial);
+                        TheBrick::CBrick* newBrick = new TheBrick::CBrick(*pModel, *m_pMaterial);
 						newBrick->SetMaterial(m_pMaterial);
 						newBrick->SetModelPath(modelDir);
 						m_BrickQueue.push(std::make_pair(fileName, newBrick));
@@ -273,11 +272,11 @@ namespace Content
 				else if (wcscmp(fileType, L".brick") == 0)
 				{
 
-                    TheBrick::CBrick* newBrick = new TheBrick::CBrick(m_pMaterial);
+                    TheBrick::CBrick* newBrick = new TheBrick::CBrick(*m_pMaterial);
 
 					if (m_Serializer.OpenRead(fileDir))
 					{
-						newBrick->Deserialize(&m_Serializer, a_pGraphics, &m_World);
+						newBrick->Deserialize(m_Serializer, *a_pGraphics, m_World);
 						m_Serializer.Close();
 
 
@@ -542,7 +541,7 @@ namespace Content
 				}
 				if (m_Serializer.OpenWrite(m_CurrFileName.c_str()))
 				{
-					m_pCurrBrick->Serialize(&m_Serializer);
+					m_pCurrBrick->Serialize(m_Serializer);
 					m_Serializer.Close();
 				}
 
@@ -657,14 +656,17 @@ namespace Content
 
 
         a_pGraphics->Clear(clear);
-		a_pGraphics->Begin();
+        PuRe_BoundingBox box;
+        box.m_Position = PuRe_Vector3F();
+        box.m_Size = PuRe_Vector3F(gdesc.ResolutionWidth,gdesc.ResolutionHeight,0.0f);
+		a_pGraphics->Begin(box);
 		
 		// draw brick
 		if (m_pCurrBrick)
 		{
 
 			m_pMaterial->Apply();
-			m_pCurrBrick->Draw(a_pGraphics, m_pCamera, PuRe_Vector3F(0, 0, 0), PuRe_MatrixF::Identity(), PuRe_Color(0.4, 0.4, 0.4));
+            m_pCurrBrick->GetModel()->Draw(m_pCamera, m_pMaterial, PuRe_Primitive::Triangles);
 
 			
 			for (auto nub : m_pCurrBrick->GetNubs())
