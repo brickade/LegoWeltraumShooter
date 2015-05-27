@@ -71,7 +71,8 @@ namespace TheBrick
         {
             CBrickInstance* instance = *it;
             assert(instance != nullptr);
-            ong::Transform transform = instance->GetTransform();
+            ong::Body* body = instance->m_pCollider[0]->getBody();
+            ong::Transform transform = ong::transformTransform(instance->GetTransform(),body->getTransform());
             this->m_pRenderInstances[this->m_RenderInstancesCount].Position = OngToPuRe(transform.p);
             this->m_pRenderInstances[this->m_RenderInstancesCount].Rotation = OngToPuRe(transform.q).GetMatrix();
             this->m_pRenderInstances[this->m_RenderInstancesCount].Color = instance->m_Color;
