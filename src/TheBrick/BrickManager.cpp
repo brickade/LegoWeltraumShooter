@@ -1,4 +1,7 @@
 #include "include/TheBrick/BrickManager.h"
+
+#include "include/TheBrick/Brick.h"
+
 namespace TheBrick
 {
     // **************************************************************************

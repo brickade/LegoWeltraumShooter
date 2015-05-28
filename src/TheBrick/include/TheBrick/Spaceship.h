@@ -4,8 +4,9 @@
 #include <PuReEngine/Core.h>
 #include <PuReEngine/Defines.h>
 
-#include "GameObject.h"
+#include "Onager/World.h"
 
+#include "GameObject.h"
 #include "DebugDraw.h"
 #include "CSVParser.h"
 #include "Bullet.h"

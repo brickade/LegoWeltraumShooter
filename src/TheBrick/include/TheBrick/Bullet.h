@@ -4,6 +4,8 @@
 #include <PuReEngine/Core.h>
 #include <PuReEngine/Defines.h>
 
+#include "Onager/World.h"
+
 #include "GameObject.h"
 
 

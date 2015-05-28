@@ -163,8 +163,10 @@ namespace ong
 	{
 		if (m_numCollider > 1)
 			m_aabb = transformAABB(&m_tree->aabb, &getTransform());
-		else
+		else if (m_numCollider == 1)
 			m_aabb = transformAABB(&m_pCollider->getAABB(), &getTransform());
+		else
+			m_aabb = { getTransform().p, vec3(0, 0, 0) };
 	}
 
 

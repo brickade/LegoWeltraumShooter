@@ -18,11 +18,9 @@ namespace Game
         BrickBozz::Instance()->BrickManager->Load(*a_pGraphics, *a_pWindow, *BrickBozz::Instance()->World, *BrickBozz::Instance()->BrickManager->GetBrickMaterial(), "../data/bricks/");
 
         //Scenes
-        //this->m_pEditorScene->Initialize(a_pGraphics, a_pWindow, a_pSoundPlayer);
         this->m_pGameScene->Initialize(a_pGraphics, a_pWindow, a_pSoundPlayer);
 
         this->m_pActiveScene = this->m_pGameScene;
-        //this->m_pActiveScene = this->m_pEditorScene; //Comment out for Init GameScene
     }
 
     // **************************************************************************
@@ -43,19 +41,6 @@ namespace Game
         if (a_pTimer->GetElapsedMilliseconds() > 200)
         {
             return false;
-        }
-
-        //Update Physics
-        int count = 0;
-        if (a_pTimer->GetTotalElapsedSeconds() - this->m_LastPhysicsUpdate >= 1/this->m_PhysicsFramerate)
-        {
-            do
-            {
-                this->m_LastPhysicsUpdate += 1 / this->m_PhysicsFramerate;
-                BrickBozz::Instance()->World->step(1 / this->m_PhysicsFramerate);
-                count++;
-            } while (a_pTimer->GetTotalElapsedSeconds() - this->m_LastPhysicsUpdate >= 1 / this->m_PhysicsFramerate);
-            BrickBozz::Instance()->BrickManager->RebuildRenderInstances(); //Update RenderInstances
         }
 
         //Update Active Scene

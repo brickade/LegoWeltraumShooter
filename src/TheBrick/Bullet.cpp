@@ -1,10 +1,33 @@
 #include "include/TheBrick/Bullet.h"
+
+#include "include/TheBrick/Conversion.h"
+#include "include/TheBrick/BrickInstance.h"
+#include "include/TheBrick/BrickManager.h"
+
 namespace TheBrick
 {
     // **************************************************************************
     // **************************************************************************
     CBullet::CBullet(CBrickManager* a_pBrickManager, PuRe_Vector3F a_Position, PuRe_Vector3F a_Speed, ong::World& a_rWorld) : CGameObject(a_rWorld, nullptr)
     {
+        //m_pBody
+        ong::BodyDescription bdesc;
+        bdesc.transform = ong::Transform(TheBrick::PuReToOng(a_Position), ong::Quaternion(ong::vec3(0, 0, 0), 1));
+        bdesc.type = ong::BodyType::Dynamic;
+        bdesc.angularMomentum = ong::vec3(0, 0, 0); //rotation speed
+        bdesc.linearMomentum = TheBrick::PuReToOng(a_Speed);  //movement speed
+
+        this->m_pBody = a_rWorld.createBody(bdesc);
+        CBrickInstance* brick = new CBrickInstance(a_pBrickManager->GetBrick(2), a_rWorld);
+        //brick->GetTransform() = ong::Transform(ong::vec3(0.0f, 0.0f, 0.0f), ong::Quaternion(ong::vec3(0, 0, 0), 1));
+        brick->m_Color = PuRe_Color(1, 1, 1, 1);
+        for (int i = 0; i<brick->m_pCollider.size(); i++)
+        {
+            brick->m_pCollider[i]->setTransform(brick->GetTransform());
+            this->m_pBody->addCollider(brick->m_pCollider[i]);
+        }
+        this->m_pBricks.push_back(brick);
+
         ////////   TESTING ONLY   ////////
         CBrickInstance* brick = new CBrickInstance(a_pBrickManager->GetBrick(0), a_rWorld);
         //m_Transform
@@ -20,6 +43,7 @@ namespace TheBrick
         this->m_pBody->setPosition(TheBrick::PuReToOng(a_Position));
         this->m_pBody->applyImpulse(TheBrick::PuReToOng(a_Speed));
 
+        this->m_lifeTime = 0.0f;
     }
 
     // **************************************************************************

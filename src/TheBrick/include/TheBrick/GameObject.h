@@ -7,14 +7,12 @@
 #include <Onager/Body.h>
 #include <Onager/myMath.h>
 
-#include "BrickInstance.h"
-#include "Serializer.h"
-#include "BrickManager.h"
-
-#include "DebugDraw.h"
-
 namespace TheBrick
 {
+    class CBrickInstance;
+    class CSerializer;
+    class CBrickManager;
+
     class CGameObject
     {
     public:

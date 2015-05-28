@@ -593,36 +593,36 @@ namespace ong
 		contact->tick = m_tick;
 	}
 
-	void ContactManager::collide(Body*a, Body*b)
-	{
-		if (a->getNumCollider() > 1 && b->getNumCollider() > 1)
-		{
-			Transform t = invTransformTransform(b->getTransform(), a->getTransform());
-			mat3x3 rot = toRotMat(t.q);
+    void ContactManager::collide(Body*a, Body*b)
+    {
+        if (a->getNumCollider() > 1 && b->getNumCollider() > 1)
+        {
+            Transform t = invTransformTransform(b->getTransform(), a->getTransform());
+            mat3x3 rot = toRotMat(t.q);
 
-			collide(a->getBVTree(), b->getBVTree(), a->getBVTree(), b->getBVTree(), t.p, rot);
+            collide(a->getBVTree(), b->getBVTree(), a->getBVTree(), b->getBVTree(), t.p, rot);
 
-		}
-		else if (a->getNumCollider() > 1)
-		{
-			Transform t = invTransformTransform(b->getTransform(), a->getTransform());
-			mat3x3 rot = toRotMat(t.q);
+        }
+        else if (a->getNumCollider() > 1)
+        {
+            Transform t = invTransformTransform(b->getTransform(), a->getTransform());
+            mat3x3 rot = toRotMat(t.q);
 
-			collide(a->getBVTree(), a->getBVTree(), b->getCollider(), t.p, rot);
+            collide(a->getBVTree(), a->getBVTree(), b->getCollider(), t.p, rot);
 
-		}
-		else if (b->getNumCollider() > 1)
-		{
-			Transform t = invTransformTransform(a->getTransform(), b->getTransform());
-			mat3x3 rot = toRotMat(t.q);
+        }
+        else if (b->getNumCollider() > 1)
+        {
+            Transform t = invTransformTransform(a->getTransform(), b->getTransform());
+            mat3x3 rot = toRotMat(t.q);
 
-			collide(b->getBVTree(), b->getBVTree(), a->getCollider(), t.p, rot);
-		}
-		else
-		{
-			collide(a->getCollider(), b->getCollider());
-		}
-	}
+            collide(b->getBVTree(), b->getBVTree(), a->getCollider(), t.p, rot);
+        }
+        else if (a->getNumCollider() == 1 && b->getNumCollider() == 1)
+        {
+            collide(a->getCollider(), b->getCollider());
+        }
+    }
 
 
 	void ContactManager::generateContacts(Pair* pairs, int numPairs, int maxContacts)

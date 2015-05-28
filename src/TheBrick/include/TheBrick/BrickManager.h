@@ -4,14 +4,15 @@
 #include <PuReEngine/Core.h>
 #include <PuReEngine/Defines.h>
 
+#include "Onager/World.h"
+
 #include <array>
 #include <cstring>
-#include <exception>
-
-#include "Brick.h"
 
 namespace TheBrick
 {
+    class CBrick;
+
     class CBrickManager
     {
     public:

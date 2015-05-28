@@ -11,14 +11,12 @@
 #include <cstring>
 
 #include "BrickInstance.h"
+#include "GameObject.h"
 #include "Nub.h"
 #include "Serializer.h"
 
 namespace TheBrick
 {
-    //Forward declaration
-    class CBrickInstance;
-
     class CBrick
     {
     // ------------------------------------------------------------------------
@@ -144,7 +142,7 @@ namespace TheBrick
         CBrick(PuRe_Model& a_pModel, PuRe_IMaterial& a_pMaterial);
         ~CBrick();
 
-        CBrickInstance* CreateInstance(ong::World& a_pWorld);
+        CBrickInstance* CreateInstance(CGameObject& a_rGameObject, ong::World& a_pWorld);
         void AddInstance(CBrickInstance& a_rBrickInstance);
         void DeleteInstance(CBrickInstance& a_rBrickInstance);
         void RebuildRenderInstances();
