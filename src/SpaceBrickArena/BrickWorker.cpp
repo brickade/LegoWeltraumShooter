@@ -54,7 +54,6 @@ namespace Game
         {
             if (this->m_pCurrentBrick != nullptr)
             {
-                this->m_pCurrentBrickObject->RemoveBrickInstance(*this->m_pCurrentBrick);
                 SAFE_DELETE(this->m_pCurrentBrick);
             }
             this->m_pCurrentBrick = a_pCurrentBrick->CreateInstance(*this->m_pCurrentBrickObject, *BrickBozz::Instance()->World); //Create Instance
