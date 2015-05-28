@@ -5,6 +5,8 @@
 #include "TheBrick/Brick.h"
 #include "TheBrick/Spaceship.h"
 #include "include/BrickBozz.h"
+#include "include/History.h"
+#include <TheBrick/Conversion.h>
 
 namespace Game
 {
@@ -35,13 +37,23 @@ namespace Game
         this->m_currentHeight = 0;
         
         this->m_pGridMaterial = a_pGraphics.LoadMaterial("../data/effects/editor/grid");
-        this->m_pGridBrick = new PuRe_Model(&a_pGraphics, "../data/models/brick1.obj");
+        this->m_pGridBrick = new PuRe_Model(&a_pGraphics, "../data/models/brick1X1.obj");
         
         this->m_maxBrickDistance = 15;
 
         this->lastInputIsGamepad = false;
 
+        this->m_pHistory = new CHistory(300, 100);
+
+        this->m_placeBelow = false;
+
         this->m_pSpaceship = new TheBrick::CSpaceship(*BrickBozz::Instance()->World);
+
+        TheBrick::CBrickInstance* brickInstance = BrickBozz::Instance()->BrickManager->GetBrick(1).CreateInstance(*this->m_pSpaceship, *BrickBozz::Instance()->World);
+        brickInstance->SetTransform(ong::Transform(ong::vec3(0, 0, 0), ong::Quaternion(ong::vec3(0, 0, 0), 1)));
+        brickInstance->RotateAroundPivotOffset(PuRe_QuaternionF(0.0f, 0.0f, 0.0f));
+        brickInstance->m_Color = PuRe_Color(0,0,1);
+        
         this->m_pCurrentBrickObject = new TheBrick::CGameObject(*BrickBozz::Instance()->World, nullptr);
     }
 
@@ -61,6 +73,7 @@ namespace Game
         this->m_pCamera->Update(&a_pGraphics, &a_pWindow, &a_pInput, &a_pTimer);
         this->UpdateTranslation(a_pInput, this->m_pCamera->GetForward(), a_pTimer.GetElapsedSeconds());
         this->UpdateRotation(a_pInput, 90.0f * 0.0174532925f);
+        this->UpdateHeight(a_pInput);
         this->ApplyToCurrentBrick();
         this->UpdatePlacement(a_pInput);
     }
@@ -165,8 +178,6 @@ namespace Game
         //Snap to grid
         this->m_currentBrickPosition.X = this->m_currentBrickPosition.X - fmod(this->m_currentBrickPosition.X, TheBrick::CBrick::SEGMENT_WIDTH);
         this->m_currentBrickPosition.Y = this->m_currentBrickPosition.Y - fmod(this->m_currentBrickPosition.Y, TheBrick::CBrick::SEGMENT_WIDTH);
-
-        //printf("brickpos:%f,%f\n", this->m_currentBrickPosition.X, this->m_currentBrickPosition.Y);
     }
 
     // **************************************************************************
@@ -200,15 +211,68 @@ namespace Game
 
     // **************************************************************************
     // **************************************************************************
-    void CBrickWorker::UpdatePlacement(PuRe_IInput& a_pInput)
+    void CBrickWorker::UpdateHeight(PuRe_IInput& a_pInput)
     {
-        //Gamepad & Mouse
-        if (a_pInput.GamepadPressed(a_pInput.Pad_A, this->m_playerIdx) || a_pInput.MousePressed(a_pInput.LeftClick))
+        if (a_pInput.GamepadPressed(a_pInput.Pad_B, this->m_playerIdx) || a_pInput.KeyPressed(a_pInput.Space))
         {
-            TheBrick::CBrickInstance* brickInstance = this->m_pCurrentBrick->m_pBrick->CreateInstance(*this->m_pSpaceship, *BrickBozz::Instance()->World);
-            brickInstance->SetTransform(this->m_pCurrentBrick->GetTransform());
-            brickInstance->m_Color = this->m_currentBrickColor;
+            this->m_placeBelow = !this->m_placeBelow;
         }
+        //Set Brick up
+        this->m_currentHeight = this->m_maxBrickDistance;
+        if (this->m_placeBelow)
+        {
+            this->m_currentHeight *= -1;
+        }
+        this->ApplyToCurrentBrick();
+        this->m_canPlaceHere = false; //Block placing
+
+        const ong::Transform& brickTransform = this->m_pCurrentBrick->GetTransform();
+        std::vector<TheBrick::SNub>& nubs = this->m_pCurrentBrick->m_pBrick->GetNubs(); //Get currentBrick Nubs
+        ong::RayQueryResult hitResult;
+        ong::vec3 dockingNubDirection = ong::vec3(0, -1, 0);
+        bool dockingNubShouldBeMale = false;
+        if (this->m_placeBelow)
+        {
+            dockingNubShouldBeMale = true;
+            dockingNubDirection.y *= -1;
+        }
+        bool hit = false;
+        for (int i = 0; i < nubs.size(); i++) //Go through currentBrick Nubs
+        {
+            const ong::vec3 dir = TheBrick::PuReToOng(this->m_pCurrentBrick->DirToWorldSpace(nubs[i].Direction)); //Transform nubDirection to WorldSpace
+            if (nubs[i].isMale == dockingNubShouldBeMale || dot(ong::normalize(dir), dockingNubDirection) < 0.99f)
+            { //Wrong Direction
+                continue;
+            }
+            const ong::vec3 origin = TheBrick::PuReToOng(this->m_pCurrentBrick->PosToWorldSpace(nubs[i].Position)); //Transform nubPosition to WorldSpace
+
+            ong::RayQueryResult hs = {0}; //Allocate
+            if (this->m_pCurrentBrickObject->m_pBody->queryRay(brickTransform.p, dir, &hs)) //Cast Ray
+            { //Ray Hit
+                hit = true;
+                if (ong::length(origin - hs.point) < ong::length(origin - hitResult.point))
+                { //This Hit is nearer to the brick than the saved one
+                    hitResult = hs;
+                }
+            }
+        }
+        if (!hit)
+        { //Nothing hit
+            return;
+        }
+        TheBrick::CBrickInstance* brickInstance = reinterpret_cast<TheBrick::CBrickInstance*>(hitResult.collider->getUserData()); //Get hit BrickInstance
+        
+        //Transform hitResult direction to brickInstance BrickSpace
+        ong::vec3 dockingdir = TheBrick::PuReToOng(brickInstance->PosToBrickSpace(TheBrick::OngToPuRe(hitResult.normal)));
+        //Get hitBrick Nub at that position
+        TheBrick::SNub& nub = *brickInstance->GetNubAtWorldPos(TheBrick::OngToPuRe(hitResult.point), this->m_nubDockThreshold);
+        if (nub.isMale != dockingNubShouldBeMale || dot(ong::normalize(TheBrick::PuReToOng(nub.Direction)), dockingdir) < 0.99f)
+        { //Wrong Direction
+            return;
+        }
+        this->m_canPlaceHere = true; //Enable placing
+        this->m_currentHeight = TheBrick::OngToPuRe(hitResult.point).Y; //set Brick Height
+        this->m_currentHeight = floor(this->m_currentHeight / TheBrick::CBrick::SEGMENT_HEIGHT); //Snap Height
     }
 
     // **************************************************************************
@@ -226,5 +290,46 @@ namespace Game
         this->m_pCurrentBrick->RotateAroundPivotOffset(PuRe_QuaternionF(0.0f, this->m_currentBrickRotation, 0.0f));
         this->m_pCurrentBrick->m_Color = PuRe_Color(this->m_currentBrickColor.R * 1.2f, this->m_currentBrickColor.G * 1.2f, this->m_currentBrickColor.B * 1.2f, this->m_currentBrickColor.A * 0.6f);
         this->m_pCurrentBrick->m_Color = this->m_currentBrickColor; //TODO Wenn alpha geht diese Zeile löschen
+    }
+
+    // **************************************************************************
+    // **************************************************************************
+    void CBrickWorker::UpdatePlacement(PuRe_IInput& a_pInput)
+    {
+        if (a_pInput.GamepadPressed(a_pInput.Pad_Y, this->m_playerIdx) || (a_pInput.KeyIsPressed(a_pInput.Ctrl) && a_pInput.KeyPressed(a_pInput.Z)))
+        { //Undo
+            HistoryStep* step = this->m_pHistory->Undo();
+            if (step != nullptr)
+            {
+                delete step->BrickInstance;
+            }
+        }
+        else if (a_pInput.GamepadPressed(a_pInput.Pad_X, this->m_playerIdx) || (a_pInput.KeyIsPressed(a_pInput.Ctrl) && a_pInput.KeyPressed(a_pInput.Y)))
+        { //Redo
+            HistoryStep* step = this->m_pHistory->Redo();
+            if (step != nullptr)
+            {
+                step->BrickInstance = new TheBrick::CBrickInstance(*step->Brick, *this->m_pCurrentBrickObject, *BrickBozz::Instance()->World, step->Color);
+                step->BrickInstance->SetTransform(step->Transform);
+            }
+        }
+        if (!this->m_canPlaceHere)
+        {
+            //return;
+        }
+        //Gamepad & Mouse
+        if (a_pInput.GamepadPressed(a_pInput.Pad_A, this->m_playerIdx) || a_pInput.MousePressed(a_pInput.LeftClick))
+        {
+            TheBrick::CBrickInstance* brickInstance = this->m_pCurrentBrick->m_pBrick->CreateInstance(*this->m_pSpaceship, *BrickBozz::Instance()->World);
+            brickInstance->SetTransform(this->m_pCurrentBrick->GetTransform());
+            brickInstance->m_Color = this->m_currentBrickColor;
+            this->m_pHistory->CutRedos();
+            HistoryStep step;
+            step.BrickInstance = brickInstance;
+            step.Brick = brickInstance->m_pBrick;
+            step.Transform = this->m_pCurrentBrick->GetTransform();
+            step.Color = this->m_currentBrickColor;
+            this->m_pHistory->AddStep(step);
+        }
     }
 }

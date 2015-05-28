@@ -75,6 +75,9 @@
     <ClInclude Include="include\NetworkHandler.h">
       <Filter>Headerdateien\Game</Filter>
     </ClInclude>
+    <ClInclude Include="include\History.h">
+      <Filter>Headerdateien\Editor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -115,6 +118,9 @@
     </ClCompile>
     <ClCompile Include="NetworkHandler.cpp">
       <Filter>Quelldateien\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="History.cpp">
+      <Filter>Quelldateien\Editor</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

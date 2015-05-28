@@ -20,7 +20,9 @@ namespace TheBrick
             body.linearMomentum = ong::vec3(0, 0, 0);
             a_pBodyDesc = &body;
         }
-        this->m_pBody = a_rWorld.createBody(*a_pBodyDesc);
+        ong::Body* body = a_rWorld.createBody(*a_pBodyDesc);
+        body->setUserData(this);
+        this->m_pBody = body;
     }
 
     // **************************************************************************

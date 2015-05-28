@@ -17,8 +17,11 @@ namespace TheBrick
 
 namespace Game
 {
+    class CHistory;
+
     class CBrickWorker
     {
+
     public:
 
     private:
@@ -31,6 +34,13 @@ namespace Game
         PuRe_Vector2F m_currentPosition;
         float m_currentHeight;
         PuRe_Color m_currentBrickColor;
+        bool m_canPlaceHere = false;
+        float m_nubDockThreshold = 0.01f;
+        float m_nubDirThreshold = 0.01f;
+
+        bool m_placeBelow;
+
+        CHistory* m_pHistory;
 
         int m_playerIdx;
 
@@ -61,8 +71,9 @@ namespace Game
     private:
         void UpdateTranslation(PuRe_IInput& a_pInput, PuRe_Vector3F a_cameraLook, float a_speed);
         void UpdateRotation(PuRe_IInput& a_pInput, float a_rotationPerClick);
-        void UpdatePlacement(PuRe_IInput& a_pInput);
+        void UpdateHeight(PuRe_IInput& a_pInput);
         void ApplyToCurrentBrick();
+        void UpdatePlacement(PuRe_IInput& a_pInput);
     };
 }
 

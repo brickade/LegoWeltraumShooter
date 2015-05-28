@@ -28,7 +28,7 @@ namespace Game
         this->m_pPostMaterial = a_pGraphics->LoadMaterial("../data/effects/GameEffects/Post/default");
         this->m_pSkyMaterial = a_pGraphics->LoadMaterial("../data/effects/GameEffects/skybox/default");
         this->m_pPointLightMaterial = a_pGraphics->LoadMaterial("../data/effects/GameEffects/PointLight/default");
-        this->m_pModel = new PuRe_Model(a_pGraphics, "../data/models/brick1.obj");
+        this->m_pModel = new PuRe_Model(a_pGraphics, "../data/models/brick1X1.obj");
         this->m_pSkyBox = new PuRe_SkyBox(a_pGraphics, "../data/textures/cube/");
         this->m_pPointLight = new PuRe_PointLight(a_pGraphics);
         this->m_pRenderer = new PuRe_Renderer(a_pGraphics,PuRe_Vector2I(size.X,size.Y));

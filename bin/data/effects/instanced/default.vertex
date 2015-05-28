@@ -5,12 +5,13 @@
  layout(location = 2) in vec3 vertexColor;
  layout(location = 3) in vec3 vertexNormal;
  layout(location = 4) in mat4 offset;
+ layout(location = 8) in vec4 IColor;
 
 uniform mat4 Projection;
 uniform mat4 View;
 
 out vec2 UV;
-out vec3 Color;
+out vec4 Color;
 out vec3 Normal;
 out vec3 Position;
 
@@ -27,7 +28,7 @@ void main()
 	
 	UV = vertexUV;
 
-	Color = vertexColor;
+	Color = IColor;
 
 	Normal = mat3(Model) * vertexNormal;
 

@@ -24,9 +24,6 @@ namespace Game
         ///
         PuRe_Application* m_pApplication;
 
-        double m_LastPhysicsUpdate;
-        float m_PhysicsFramerate = 60.0f;
-
     public:
         /// @brief Constructor to Initialize the MainScene
         ///

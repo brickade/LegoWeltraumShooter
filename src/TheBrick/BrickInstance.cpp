@@ -14,7 +14,9 @@ namespace TheBrick
         this->m_pGameObject = &a_rGameObject;
         for (size_t i = 0; i < this->m_pBrick->GetColliderData().size(); i++)
         {
-            this->m_pCollider.push_back(a_pWorld.createCollider(this->m_pBrick->GetColliderData()[i]));
+            ong::Collider* collider = a_pWorld.createCollider(this->m_pBrick->GetColliderData()[i]);
+            collider->setUserData(this);
+            this->m_pCollider.push_back(collider);
         }
         this->m_Color = a_pColor;
         a_pBrick.AddInstance(*this);
@@ -44,5 +46,54 @@ namespace TheBrick
         newTransform.p = currentTransform.p + ong::vec3(0, 0, 0) * PuReToOng(rotTransform) - PuReToOng(pivotOffset * OngToPuRe(newTransform.q).GetMatrix());
         //Set
         this->SetTransform(newTransform);
+    }
+
+    // **************************************************************************
+    // **************************************************************************
+    PuRe_Vector3F CBrickInstance::PosToBrickSpace(const PuRe_Vector3F& a_rWorldSpacePosition) const
+    {
+        PuRe_Vector3F pivotOffset = this->m_pBrick->GetPivotOffset();
+        ong::Transform currentTransform = this->GetTransform();
+        PuRe_MatrixF transform = PuRe_MatrixF::Translation(-pivotOffset) * OngToPuRe(currentTransform.q).GetMatrix() * PuRe_MatrixF::Translation(pivotOffset) * PuRe_MatrixF::Translation(OngToPuRe(currentTransform.p));
+        return a_rWorldSpacePosition * PuRe_MatrixF::Invert(transform);
+    }
+
+    // **************************************************************************
+    // **************************************************************************
+    PuRe_Vector3F CBrickInstance::DirToBrickSpace(const PuRe_Vector3F& a_rWorldSpaceRotation) const
+    {
+        return a_rWorldSpaceRotation * OngToPuRe(ong::conjugate(this->GetTransform().q));
+    }
+
+    // **************************************************************************
+    // **************************************************************************
+    PuRe_Vector3F CBrickInstance::PosToWorldSpace(const PuRe_Vector3F& a_rBrickSpacePosition) const
+    {
+        PuRe_Vector3F pivotOffset = this->m_pBrick->GetPivotOffset();
+        ong::Transform currentTransform = this->GetTransform();
+        PuRe_MatrixF transform = PuRe_MatrixF::Translation(-pivotOffset) * OngToPuRe(currentTransform.q).GetMatrix() * PuRe_MatrixF::Translation(pivotOffset) * PuRe_MatrixF::Translation(OngToPuRe(currentTransform.p));
+        return a_rBrickSpacePosition * transform;
+    }
+
+    // **************************************************************************
+    // **************************************************************************
+    PuRe_Vector3F CBrickInstance::DirToWorldSpace(const PuRe_Vector3F& a_rBrickSpaceRotation) const
+    {
+        return a_rBrickSpaceRotation * OngToPuRe(this->GetTransform().q);
+    }
+
+    // **************************************************************************
+    // **************************************************************************
+    SNub* CBrickInstance::GetNubAtWorldPos(const PuRe_Vector3F& a_WorldPos, float a_threshold) const
+    {
+        std::vector<SNub>& nubs = this->m_pBrick->GetNubs();
+        PuRe_Vector3F brickPos = this->PosToBrickSpace(a_WorldPos);
+        for (size_t i = 0; i < nubs.size(); i++)
+        {
+            if ((nubs[i].Position - brickPos).Length() < a_threshold)
+            {
+                return &nubs[i];
+            }
+        }
     }
 }

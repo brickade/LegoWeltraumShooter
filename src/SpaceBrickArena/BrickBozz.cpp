@@ -12,7 +12,6 @@ namespace Game
         this->World = new ong::World();
     }
 
-
     // **************************************************************************
     // **************************************************************************
     BrickBozz::~BrickBozz()
@@ -39,5 +38,20 @@ namespace Game
         this->m_SSAOMaterial = a_pGraphics.LoadMaterial("../data/effects/SSAO/default");
         this->Renderer->SetSSAO(this->m_SSAOMaterial, "../data/textures/ssao.jpg");
         this->BrickManager->Initialize(a_pGraphics, a_pSoundPlayer);
+    }
+
+    // **************************************************************************
+    // **************************************************************************
+    void BrickBozz::UpdatePhysics(PuRe_Timer* a_pTimer)
+    {
+        if (a_pTimer->GetTotalElapsedSeconds() - this->m_LastPhysicsUpdate >= 1 / this->m_PhysicsFramerate)
+        {
+            do
+            {
+                this->m_LastPhysicsUpdate += 1 / this->m_PhysicsFramerate;
+                BrickBozz::Instance()->World->step(1 / this->m_PhysicsFramerate);
+            } while (a_pTimer->GetTotalElapsedSeconds() - this->m_LastPhysicsUpdate >= 1 / this->m_PhysicsFramerate);
+            BrickBozz::Instance()->BrickManager->RebuildRenderInstances(); //Update RenderInstances
+        }
     }
 }
