@@ -7,6 +7,26 @@ namespace Game
         this->m_playerIdx = a_playerIdx;
     }
 
+    void CGameScene::StartGame()
+    {
+        TheBrick::CSerializer serializer;
+        for (int i = 0; i < this->m_Players.size(); i++)
+        {
+            ong::vec3 pos = ong::vec3(10.0f,10.0f,10.0f);
+            pos.x += this->m_Players[i]->ID*3.0f;
+            this->m_Players[i]->Ship = new TheBrick::CSpaceship(*BrickBozz::Instance()->World,pos);
+            this->m_Players[i]->Ship->Deserialize(serializer, *BrickBozz::Instance()->BrickManager, *BrickBozz::Instance()->World);
+        }
+        ong::vec3 start(50.0f, 50.0f, 50.0f);
+        for (int i = 0; i < 10; i++)
+        {
+            TheBrick::CAsteroid* asteroid = new TheBrick::CAsteroid(BrickBozz::Instance()->BrickManager, *BrickBozz::Instance()->World, start + ong::vec3((i % 2)*10.0f, (i % 2) * 10.0f, i*5.0f));
+            this->m_Asteroids.push_back(asteroid);
+        }
+        this->gameStart = true;
+
+    }
+
     // **************************************************************************
     // **************************************************************************
     void CGameScene::ReceiveData()
@@ -20,7 +40,7 @@ namespace Game
             {
                 ReceivePacket* Packet = (ReceivePacket*)buffer;
                 if (Packet->Head.Type == 0)
-                {  
+                {
                     int ID = 0; // 0 is Host
                     for (int i = 0; i < this->m_Players.size(); i++)
                     {
@@ -34,12 +54,26 @@ namespace Game
                     p->ID = ID;
                     p->NetworkInformation = sender;
                     this->m_Players.push_back(p);
-                    printf("User %i joined!\n",ID);
+                    printf("User %i joined!\n", ID);
                     //Tell him who he is
                     LeftPacket lPacket;
                     lPacket.Head.Type = 2;
                     lPacket.Who = ID;
-                    this->m_pNetwork->Send((char*)&lPacket, sizeof(LeftPacket),sender);
+                    this->m_pNetwork->Send((char*)&lPacket, sizeof(LeftPacket), sender);
+
+                    //Send to JOINER all existing players
+                    lPacket.Head.Type = 3;
+                    for (int i = 0; i < this->m_Players.size(); i++)
+                    {
+                        lPacket.Who = this->m_Players[i]->ID;
+                        this->m_pNetwork->Send((char*)&lPacket, sizeof(LeftPacket), sender);
+                        //Same call send this player about the JOINER
+                        if (this->m_Players[i]->ID != ID)
+                        {
+                            lPacket.Who = ID;
+                            this->m_pNetwork->Send((char*)&lPacket, sizeof(LeftPacket), this->m_Players[i]->NetworkInformation);
+                        }
+                    }
                 }
                 else if (Packet->Head.Type == 1)
                 {
@@ -59,15 +93,64 @@ namespace Game
                     {
                         for (int i = 0; i < this->m_Players.size(); i++)
                         {
-                            this->m_pNetwork->Send((char*)lPacket,sizeof(LeftPacket),this->m_Players[i]->NetworkInformation);
+                            this->m_pNetwork->Send((char*)lPacket, sizeof(LeftPacket), this->m_Players[i]->NetworkInformation);
                         }
                     }
                 }
                 else if (Packet->Head.Type == 2)
                 {
                     LeftPacket* LPacket = (LeftPacket*)Packet;
-                    this->ID = LPacket->Who;
-                    printf("I am %i!\n", this->ID);
+                    this->m_ID = LPacket->Who;
+                    printf("I am %i!\n", this->m_ID);
+                }
+                else if (Packet->Head.Type == 3)
+                {
+                    LeftPacket* LPacket = (LeftPacket*)Packet;
+                    Player* p = new Player();
+                    p->ID = LPacket->Who;
+                    if (p->ID == this->m_ID)
+                        this->m_ArrayID = this->m_Players.size();
+                    p->NetworkInformation = sender;
+                    this->m_Players.push_back(p);
+                    printf("User %i joined!\n", p->ID);
+
+                }
+                else if (Packet->Head.Type == 4)
+                {
+                    this->StartGame();
+                }
+                else if (Packet->Head.Type == 5)
+                {
+                    InputBasePacket* IPacket = (InputBasePacket*)Packet;
+                    for (int i = 0; i < this->m_Players.size(); i++)
+                    {
+                        if (this->m_Players[i]->ID == IPacket->Who)
+                        {
+                            if (IPacket->Input == 0)
+                            {
+                                this->m_Players[i]->Ship->Shoot(this->m_Bullets, BrickBozz::Instance()->BrickManager);
+                            }
+                            else if (IPacket->Input == 1)
+                            {
+                                MovePacket* MPacket = (MovePacket*)Packet;
+                                this->m_Players[i]->Ship->Move(MPacket->Move);
+                            }
+                        }
+                        //send to everyone that someone shot if HOST
+                        if (this->m_pNetwork->m_Host&&i != 0)
+                        {
+                            if (IPacket->Input == 0)
+                            {
+                                this->m_pNetwork->Send((char*)IPacket, sizeof(InputBasePacket), this->m_Players[i]->NetworkInformation);
+                            }
+                            else if (IPacket->Input == 1)
+                            {
+                                MovePacket* MPacket = (MovePacket*)Packet;
+                                this->m_pNetwork->Send((char*)MPacket, sizeof(MovePacket), this->m_Players[i]->NetworkInformation);
+                            }
+                        }
+
+                    }
                 }
             }
         }
@@ -82,7 +165,7 @@ namespace Game
         //Camera
         PuRe_Vector2F size = PuRe_Vector2F((float)gdesc.ResolutionWidth, (float)gdesc.ResolutionHeight);
         this->m_pUICamera = new PuRe_Camera(size, PuRe_Camera_Orthogonal);
-        this->m_pUICamera->setNearFar(PuRe_Vector2F(0.01f,1000.0f));
+        this->m_pUICamera->setNearFar(PuRe_Vector2F(0.01f, 1000.0f));
         this->m_pCamera = new CGameCamera(size, PuRe_Camera_Perspective);
         this->m_pCamera->Initialize();
         this->m_pMaterial = a_pGraphics->LoadMaterial("../data/effects/GameEffects/default/default");
@@ -94,7 +177,7 @@ namespace Game
         this->m_pModel = new PuRe_Model(a_pGraphics, "../data/models/brick1.obj");
         //this->m_pSkyBox = new PuRe_SkyBox(a_pGraphics, "../data/textures/cube/");
         this->m_pPointLight = new PuRe_PointLight(a_pGraphics);
-        this->m_pRenderer = new PuRe_Renderer(a_pGraphics,PuRe_Vector2I(size.X,size.Y));
+        this->m_pRenderer = new PuRe_Renderer(a_pGraphics, PuRe_Vector2I(size.X, size.Y));
         this->m_pMinimap = new CMinimap(a_pGraphics);
         this->m_pFont = new PuRe_Font(a_pGraphics, "../data/textures/font.png");
         this->m_pNetwork = new CNetworkHandler();
@@ -102,7 +185,7 @@ namespace Game
         this->m_MapBoundaries = PuRe_BoundingBox(PuRe_Vector3F(0.0f, 0.0f, 0.0f), PuRe_Vector3F(100.0f, 100.0f, 100.0f));
 
         this->gameStart = false;
-        this->ID = 0;
+        this->m_ID = 0;
 
         //this->m_pPlayerShip = new TheBrick::CSpaceship();
         //this->m_pPlayerShip->Deserialize(nullptr, BrickBozz::Instance()->BrickManager, BrickBozz::Instance()->World);
@@ -156,36 +239,78 @@ namespace Game
         }
         if (this->gameStart)
         {
-            this->m_pPlayerShip->HandleInput(a_pInput, a_pTimer->GetElapsedSeconds(), this->m_Bullets, BrickBozz::Instance()->BrickManager);
-            PuRe_Vector3F playerpos = TheBrick::OngToPuRe(this->m_pPlayerShip->m_pBody->getTransform().p);
 
-            //Move player inside of map if hes outside
-            float mapEnd = this->m_MapBoundaries.m_Position.X + this->m_MapBoundaries.m_Size.X;
-            if (playerpos.X > mapEnd)
-                playerpos.X = playerpos.X - mapEnd;
-            else if (playerpos.X < this->m_MapBoundaries.m_Position.X)
-                playerpos.X = mapEnd + playerpos.X;
+            if (a_pInput->GamepadPressed(a_pInput->Pad_A,0))
+            {
+                InputBasePacket IPacket;
+                IPacket.Head.Type = 5;
+                IPacket.Input = 0;
+                IPacket.Who = this->m_ID;
+                if (this->m_pNetwork->m_Host)
+                {
+                    this->m_Players[this->m_ArrayID]->Ship->Shoot(this->m_Bullets, BrickBozz::Instance()->BrickManager);
+                    for (int i = 1; i < this->m_Players.size(); i++)
+                        this->m_pNetwork->Send((char*)&IPacket, sizeof(InputBasePacket), this->m_Players[i]->NetworkInformation);
+                }
+                else
+                {
+                    this->m_pNetwork->SendHost((char*)&IPacket, sizeof(InputBasePacket));
+                }
+            }
 
-            mapEnd = this->m_MapBoundaries.m_Position.Y + this->m_MapBoundaries.m_Size.Y;
-            if (playerpos.Y > mapEnd)
-                playerpos.Y = playerpos.Y - mapEnd;
-            else if (playerpos.Y < this->m_MapBoundaries.m_Position.Y)
-                playerpos.Y = mapEnd + playerpos.Y;
+            PuRe_Vector2F Move = a_pInput->GetGamepadLeftThumb(0);
+            if (Move.Length() > 0.5f)
+            {
+                MovePacket MPacket;
+                MPacket.InputBase.Head.Type = 5;
+                MPacket.InputBase.Input = 1;
+                MPacket.InputBase.Who = this->m_ID;
+                MPacket.Move = Move;
+                if (this->m_pNetwork->m_Host)
+                {
+                    this->m_Players[this->m_ArrayID]->Ship->Move(Move);
+                    for (int i = 1; i < this->m_Players.size(); i++)
+                        this->m_pNetwork->Send((char*)&MPacket, sizeof(MovePacket), this->m_Players[i]->NetworkInformation);
+                }
+                else
+                {
+                    this->m_pNetwork->SendHost((char*)&MPacket, sizeof(MovePacket));
+                }
+            }
+            //player->HandleInput(a_pInput, a_pTimer->GetElapsedSeconds(), this->m_Bullets, BrickBozz::Instance()->BrickManager);
 
-            mapEnd = this->m_MapBoundaries.m_Position.Z + this->m_MapBoundaries.m_Size.Z;
-            if (playerpos.Z > mapEnd)
-                playerpos.Z = playerpos.Z - mapEnd;
-            else if (playerpos.Z < this->m_MapBoundaries.m_Position.Z)
-                playerpos.Z = mapEnd + playerpos.Z;
+            for (int i = 0; i<this->m_Players.size();i++)
+            {
+                TheBrick::CSpaceship* player = this->m_Players[i]->Ship;
+                PuRe_Vector3F playerpos = TheBrick::OngToPuRe(player->m_pBody->getTransform().p);
 
-            this->m_pPlayerShip->m_pBody->setPosition(TheBrick::PuReToOng(playerpos));
+                //Move player inside of map if hes outside
+                float mapEnd = this->m_MapBoundaries.m_Position.X + this->m_MapBoundaries.m_Size.X;
+                if (playerpos.X > mapEnd)
+                    playerpos.X = playerpos.X - mapEnd;
+                else if (playerpos.X < this->m_MapBoundaries.m_Position.X)
+                    playerpos.X = mapEnd + playerpos.X;
 
-            this->m_pCamera->Update(this->m_pPlayerShip, a_pInput, a_pTimer);
-            this->m_pPlayerShip->Update(a_pTimer->GetElapsedSeconds());
+                mapEnd = this->m_MapBoundaries.m_Position.Y + this->m_MapBoundaries.m_Size.Y;
+                if (playerpos.Y > mapEnd)
+                    playerpos.Y = playerpos.Y - mapEnd;
+                else if (playerpos.Y < this->m_MapBoundaries.m_Position.Y)
+                    playerpos.Y = mapEnd + playerpos.Y;
+
+                mapEnd = this->m_MapBoundaries.m_Position.Z + this->m_MapBoundaries.m_Size.Z;
+                if (playerpos.Z > mapEnd)
+                    playerpos.Z = playerpos.Z - mapEnd;
+                else if (playerpos.Z < this->m_MapBoundaries.m_Position.Z)
+                    playerpos.Z = mapEnd + playerpos.Z;
+
+                player->m_pBody->setPosition(TheBrick::PuReToOng(playerpos));
+                player->Update(a_pTimer->GetElapsedSeconds());
+            }
+            this->m_pCamera->Update(this->m_Players[this->m_ArrayID]->Ship, a_pInput, a_pTimer);
         }
         else
         {
-            
+
             //Check last network state
             int networkState = this->m_pNetwork->GetState();
 
@@ -196,23 +321,32 @@ namespace Game
             {
                 printf("Connecting!\n");
                 this->m_pNetwork->Connect();
+                //Add self as 0 if host
+                if (this->m_pNetwork->m_Host)
+                {
+                    printf("You are the Host!\n");
+                    Player* p = new Player();
+                    p->ID = 0;
+                    p->NetworkInformation = SOCKADDR_IN();
+                    this->m_ArrayID = this->m_Players.size();
+                    this->m_Players.push_back(p);
+                    this->m_ID = p->ID;
+                }
+                //Start thread to listen
                 std::thread receiveThread(&CGameScene::ReceiveData, this);
                 receiveThread.detach();
             }
 
-            if (a_pInput->KeyPressed(a_pInput->F3))
+            if (a_pInput->KeyPressed(a_pInput->F3) && networkState == 3 && this->m_pNetwork->m_Host)
             {
-
-                this->m_pPlayerShip = new TheBrick::CSpaceship(*BrickBozz::Instance()->World);
-                TheBrick::CSerializer ser;
-                this->m_pPlayerShip->Deserialize(ser, *BrickBozz::Instance()->BrickManager, *BrickBozz::Instance()->World);
-                ong::vec3 start(50.0f, 50.0f, 50.0f);
-                for (int i = 0; i < 10; i++)
+                //Send to everyone that
+                HeadPacket Packet;
+                Packet.Type = 4;
+                for (int i = 1; i < this->m_Players.size(); i++)
                 {
-                    TheBrick::CAsteroid* asteroid = new TheBrick::CAsteroid(BrickBozz::Instance()->BrickManager, *BrickBozz::Instance()->World, start + ong::vec3((i % 2)*10.0f, (i % 2) * 10.0f, i*5.0f));
-                    this->m_Asteroids.push_back(asteroid);
+                    this->m_pNetwork->Send((char*)&Packet, sizeof(HeadPacket), this->m_Players[i]->NetworkInformation);
                 }
-                this->gameStart = true;
+                this->StartGame();
             }
         }
 
@@ -223,7 +357,9 @@ namespace Game
             if (this->m_Bullets[i]->m_lifeTime > 5.0f)
             {
                 SAFE_DELETE(this->m_Bullets[i]);
-                this->m_Bullets.erase(this->m_Bullets.begin() + i);
+                if (this->m_Bullets.begin() + i < this->m_Bullets.end())
+                    this->m_Bullets.erase(this->m_Bullets.begin() + i);
+                i--;
             }
         }
 
@@ -242,7 +378,7 @@ namespace Game
         renderer->Begin(PuRe_Color(0.1f, 0.5f, 0.1f));
 
 
-          /////////////  DRAW SKY  ///////////////////////
+        /////////////  DRAW SKY  ///////////////////////
         //renderer->Draw(this->m_pSkyBox, this->m_pSkyMaterial);
         ////////////////////////////////////////////////////
 
@@ -256,12 +392,13 @@ namespace Game
         rot *= PuRe_DegToRad;
         PuRe_MatrixF rotation = PuRe_QuaternionF(rot).GetMatrix();
         this->m_pMinimap->Draw(renderer, this->m_pUIMaterial, minipos, rotation);
-         // Draw Players
+        // Draw Players
         if (this->gameStart)
         {
-            PuRe_Vector3F playerpos = TheBrick::OngToPuRe(this->m_pPlayerShip->m_pBody->getWorldCenter());
-
-            this->m_pMinimap->DrawPlayer(renderer, this->m_pUIMaterial, playerpos, this->m_MapBoundaries, rotation);
+            for (int i = 0; i < this->m_Players.size(); i++)
+            {
+                this->m_pMinimap->DrawPlayer(renderer, this->m_pUIMaterial, TheBrick::OngToPuRe(this->m_Players[i]->Ship->m_pBody->getWorldCenter()), this->m_MapBoundaries, rotation);
+            }
             for (unsigned int i = 0; i < this->m_Bullets.size(); i++)
                 this->m_Bullets[i]->Draw(a_pGraphics, this->m_pCamera);
             for (unsigned int i = 0; i < this->m_Asteroids.size(); i++)
@@ -280,14 +417,15 @@ namespace Game
         ////////////////////////////////////////////////////
         if (this->gameStart)
         {
-            this->m_pPlayerShip->Draw(a_pGraphics,this->m_pCamera);
+            for (int i = 0; i < this->m_Players.size(); i++)
+                this->m_Players[i]->Ship->Draw(a_pGraphics, this->m_pCamera);
         }
 
         //////////////////// POST SCREEN ////////////////////////////////
         renderer->Set((float)this->textureID, "textureID");
         renderer->Set(PuRe_Vector3F(0.2f, 0.2f, 0.2f), "ambient");
         PuRe_Vector3F size = PuRe_Vector3F(a_pGraphics->GetDescription().ResolutionWidth, a_pGraphics->GetDescription().ResolutionHeight, 0.0f);
-         renderer->Render(this->m_pCamera, this->m_pPostMaterial, PuRe_Vector3F::Zero());
+        renderer->Render(this->m_pCamera, this->m_pPostMaterial, PuRe_Vector3F::Zero());
         renderer->End();
         ////////////////////////////////////////////////////
 
@@ -300,12 +438,12 @@ namespace Game
         this->m_pSkyBox->Draw(this->m_pCamera, this->m_pSkyMaterial);
         if (this->gameStart)
         {
-            this->m_pPlayerShip->Draw(a_pGraphics, this->m_pCamera);
-            for (unsigned int i = 0; i < this->m_Asteroids.size(); i++)
-                this->m_Asteroids[i]->Draw(a_pGraphics, this->m_pCamera);
+        this->m_pPlayerShip->Draw(a_pGraphics, this->m_pCamera);
+        for (unsigned int i = 0; i < this->m_Asteroids.size(); i++)
+        this->m_Asteroids[i]->Draw(a_pGraphics, this->m_pCamera);
         }
         for (unsigned int i = 0; i < this->m_Bullets.size(); i++)
-            this->m_Bullets[i]->Draw(a_pGraphics, this->m_pCamera);
+        this->m_Bullets[i]->Draw(a_pGraphics, this->m_pCamera);
 
         PuRe_Vector3F minipos = PuRe_Vector3F(Screen.m_Size.X - 150.0f, Screen.m_Size.Y - 150.0f, 128.0f);
 
@@ -316,17 +454,17 @@ namespace Game
         this->m_pMinimap->Draw(a_pGraphics, this->m_pUICamera, this->m_pUIMaterial, minipos, rotation);
         if (this->gameStart)
         {
-            PuRe_Vector3F playerpos = TheBrick::OngToPuRe(this->m_pPlayerShip->m_pBody->getTransform().p);
-            this->m_pMinimap->DrawPlayer(a_pGraphics, this->m_pUICamera, this->m_pUIMaterial, playerpos, this->m_MapBoundaries, rotation);
+        PuRe_Vector3F playerpos = TheBrick::OngToPuRe(this->m_pPlayerShip->m_pBody->getTransform().p);
+        this->m_pMinimap->DrawPlayer(a_pGraphics, this->m_pUICamera, this->m_pUIMaterial, playerpos, this->m_MapBoundaries, rotation);
         }
 
         int nstate = this->m_pNetwork->GetState();
         if (nstate == 0)
-            this->m_pFont->Draw(this->m_pUICamera, this->m_pFontMaterial, "Press << 0 >> to Host and << 1 >> to Join", PuRe_Vector3F(10.0f, gdesc.ResolutionHeight - 32.0f, 0.0f), PuRe_Vector3F(32.0f, 32.0f, 0.0f), PuRe_MatrixF::Identity(), 32.0f);
+        this->m_pFont->Draw(this->m_pUICamera, this->m_pFontMaterial, "Press << 0 >> to Host and << 1 >> to Join", PuRe_Vector3F(10.0f, gdesc.ResolutionHeight - 32.0f, 0.0f), PuRe_Vector3F(32.0f, 32.0f, 0.0f), PuRe_MatrixF::Identity(), 32.0f);
         else if (nstate == 1)
-            this->m_pFont->Draw(this->m_pUICamera, this->m_pFontMaterial, ("IP: " + this->m_pNetwork->m_IP).c_str(), PuRe_Vector3F(10.0f, gdesc.ResolutionHeight - 32.0f, 0.0f), PuRe_Vector3F(32.0f, 32.0f, 0.0f), PuRe_MatrixF::Identity(), 32.0f);
+        this->m_pFont->Draw(this->m_pUICamera, this->m_pFontMaterial, ("IP: " + this->m_pNetwork->m_IP).c_str(), PuRe_Vector3F(10.0f, gdesc.ResolutionHeight - 32.0f, 0.0f), PuRe_Vector3F(32.0f, 32.0f, 0.0f), PuRe_MatrixF::Identity(), 32.0f);
         else if (nstate == 2)
-            this->m_pFont->Draw(this->m_pUICamera, this->m_pFontMaterial, ("Port: " + this->m_pNetwork->m_Port).c_str(), PuRe_Vector3F(10.0f, gdesc.ResolutionHeight - 32.0f, 0.0f), PuRe_Vector3F(32.0f, 32.0f, 0.0f), PuRe_MatrixF::Identity(), 32.0f);
+        this->m_pFont->Draw(this->m_pUICamera, this->m_pFontMaterial, ("Port: " + this->m_pNetwork->m_Port).c_str(), PuRe_Vector3F(10.0f, gdesc.ResolutionHeight - 32.0f, 0.0f), PuRe_Vector3F(32.0f, 32.0f, 0.0f), PuRe_MatrixF::Identity(), 32.0f);
 
 
         a_pGraphics->End();*/
@@ -349,11 +487,12 @@ namespace Game
         //Send to Host that we left
         LeftPacket lPacket;
         lPacket.Head.Type = 1;
-        lPacket.Who = this->ID;
-        this->m_pNetwork->SendHost((char*)&lPacket,sizeof(LeftPacket));
+        lPacket.Who = this->m_ID;
+        this->m_pNetwork->SendHost((char*)&lPacket, sizeof(LeftPacket));
         //Clear Memory
         for (int i = 0; i < this->m_Players.size(); i++)
         {
+            SAFE_DELETE(this->m_Players[i]->Ship);
             SAFE_DELETE(this->m_Players[i]);
         }
         this->m_Players.clear();
@@ -369,7 +508,6 @@ namespace Game
             SAFE_DELETE(this->m_Bullets[i]);
         for (unsigned int i = 0; i < this->m_Asteroids.size(); i++)
             SAFE_DELETE(this->m_Asteroids[i]);
-        SAFE_DELETE(this->m_pPlayerShip);
         SAFE_DELETE(this->m_pSkyBox);
         SAFE_DELETE(this->m_pPointLight);
         // DELETE CAMERAS

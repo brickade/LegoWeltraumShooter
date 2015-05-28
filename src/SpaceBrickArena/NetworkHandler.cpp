@@ -39,7 +39,8 @@ namespace Game
     // **************************************************************************
     void CNetworkHandler::SendHost(char* a_pBuffer, int a_Size)
     {
-        this->Send(a_pBuffer, a_Size, this->m_pSocket->GetAddress());
+        if (this->m_pSocket != NULL)
+            this->Send(a_pBuffer, a_Size, this->m_pSocket->GetAddress());
     }
 
 
@@ -47,7 +48,8 @@ namespace Game
     // **************************************************************************
     void CNetworkHandler::Send(char* a_pBuffer, int a_Size, SOCKADDR_IN a_Receiver)
     {
-        this->m_pSocket->Send(a_Receiver,a_pBuffer,a_Size);
+        if (this->m_pSocket != NULL)
+            this->m_pSocket->Send(a_Receiver,a_pBuffer,a_Size);
     }
 
 

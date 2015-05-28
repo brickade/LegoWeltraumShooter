@@ -21,13 +21,17 @@ namespace Game
     {
         int ID;
         SOCKADDR_IN NetworkInformation;
+        TheBrick::CSpaceship* Ship;
     };
     /// @brief MainScene where the game functions are in, inherits from the Scene interface
     ///
     class CGameScene : public PuRe_IScene
     {
     private:
-        int ID;
+
+        int m_ID;
+        int m_ArrayID;
+
         std::vector<Player*> m_Players;
 
         float physicsTimer;
@@ -53,8 +57,6 @@ namespace Game
         PuRe_BoundingBox m_MapBoundaries;
 
         std::vector<TheBrick::CBullet*> m_Bullets;
-
-        TheBrick::CSpaceship* m_pPlayerShip;
         std::vector<TheBrick::CAsteroid*> m_Asteroids;
         /// @brief Cameras
         ///
@@ -67,6 +69,9 @@ namespace Game
         ///
         CGameScene(PuRe_Application* a_pApplication, int a_playerIdx);
     public:
+        /// @brief Start the Game
+        ///
+        void StartGame();
         /// @brief Receives Data which were send via Network.
         ///
         void ReceiveData();

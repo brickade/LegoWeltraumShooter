@@ -36,7 +36,7 @@ namespace Game
 
         this->lastInputIsGamepad = false;
 
-        this->m_pSpaceship = new TheBrick::CSpaceship(*BrickBozz::Instance()->World);
+        this->m_pSpaceship = new TheBrick::CSpaceship(*BrickBozz::Instance()->World,ong::vec3(0,0,0));
         this->m_pCurrentBrickObject = new TheBrick::CGameObject(*BrickBozz::Instance()->World, nullptr);
     }
 

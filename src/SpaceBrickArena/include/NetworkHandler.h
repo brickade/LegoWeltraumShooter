@@ -32,6 +32,23 @@ namespace Game
         int Who;
     };
 
+    /// @brief Base Packet for Inputs
+    ///
+    struct InputBasePacket
+    {
+        HeadPacket Head;
+        int Who;
+        int Input;
+    };
+
+    /// @brief Base Packet for Movement Input
+    ///
+    struct MovePacket
+    {
+        InputBasePacket InputBase;
+        PuRe_Vector2F Move;
+    };
+
 
     class CNetworkHandler
     {

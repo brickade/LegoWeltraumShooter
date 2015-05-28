@@ -3,11 +3,12 @@ namespace TheBrick
 {
     // **************************************************************************
     // **************************************************************************
-    CSpaceship::CSpaceship(ong::World& a_rWorld) : CGameObject(a_rWorld, nullptr)
+    CSpaceship::CSpaceship(ong::World& a_rWorld, ong::vec3& a_rPosition) : CGameObject(a_rWorld, nullptr)
     {
         this->m_pCSVFile = new CCSVParser("../data/player.csv");
         this->m_TargetVec = ong::vec3(0.0f, 0.0f, 0.0f);
         this->m_TargetAng = ong::vec3(0.0f, 0.0f, 0.0f);
+        this->m_pBody->setPosition(a_rPosition);
     }
 
     // **************************************************************************
@@ -33,7 +34,7 @@ namespace TheBrick
 
 // **************************************************************************
     // **************************************************************************
-    void CSpaceship::Shoot(std::vector<CBullet*>& a_rBullets, CBrickManager* a_pManager, float a_DeltaTime)
+    void CSpaceship::Shoot(std::vector<CBullet*>& a_rBullets, CBrickManager* a_pManager)
     {
         ong::Body* b = this->m_pBody;
         ong::World* w = b->getWorld();
@@ -52,7 +53,7 @@ namespace TheBrick
 
     // **************************************************************************
     // **************************************************************************
-    void CSpaceship::Move(PuRe_Vector2F a_Move, float a_DeltaTime)
+    void CSpaceship::Move(PuRe_Vector2F a_Move)
     {
         float maxYawSpeed = (float)atof(this->m_pCSVFile->GetValue("MaxYawSpeed").c_str());
         float maxPitchSpeed = (float)atof(this->m_pCSVFile->GetValue("MaxPitchSpeed").c_str());
@@ -106,7 +107,7 @@ namespace TheBrick
             shoot = a_pInput->GetGamepadLeftTrigger(0) > 0.2f;
 
         if (shoot)
-            this->Shoot(a_rBullets, a_pManager, a_DeltaTime);
+            this->Shoot(a_rBullets, a_pManager);
 
         //handle thrust from file
         Key = this->m_pCSVFile->GetValue("Thrust");
@@ -181,7 +182,7 @@ namespace TheBrick
             Move.Y = -Move.Y;
         //apply X/Y Rotation via Input
 
-        this->Move(Move,a_DeltaTime);
+        this->Move(Move);
 
 
         //handle LeftSpin from file
@@ -302,7 +303,6 @@ namespace TheBrick
         //m_Color
         brick->m_Color = PuRe_Color(1,0,0,1);
         this->m_pBricks.push_back(brick);
-        this->m_pBody->setPosition(ong::vec3(10.0f,10.0f,10.0f));
         //CGameObject::Deserialize(a_pSerializer, a_pBrickManager, a_pWorld);
     }
 
