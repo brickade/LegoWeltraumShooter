@@ -48,7 +48,7 @@ namespace TheBrick
 
     // **************************************************************************
     // **************************************************************************
-    void CSpaceship::Spin(float a_Spin, float a_DeltaTime)
+    void CSpaceship::Spin(float a_Spin)
     {
         float maxRollSpeed = (float)atof(this->m_pCSVFile->GetValue("MaxRollSpeed").c_str());
         if (a_Spin > 0.2f || a_Spin < -0.2f)
@@ -71,7 +71,7 @@ namespace TheBrick
 
     // **************************************************************************
     // **************************************************************************
-    void CSpaceship::Thrust(float a_Thrust,float a_DeltaTime)
+    void CSpaceship::Thrust(float a_Thrust)
     {
         float maxSpeed = (float)atof(this->m_pCSVFile->GetValue("MaxSpeed").c_str());
         if (a_Thrust > 0.2f || a_Thrust < -0.2f)
@@ -143,7 +143,7 @@ namespace TheBrick
         if (invert)
             thrust = -thrust;
 
-        this->Thrust(thrust,a_DeltaTime);
+        this->Thrust(thrust);
 
         //handle X/YRotation from file
         PuRe_Vector2F Move;
@@ -245,7 +245,7 @@ namespace TheBrick
             SpinR = -SpinR;
         float Spin = SpinR+SpinL;
 
-        this->Spin(Spin,a_DeltaTime);
+        this->Spin(Spin);
     }
 
     // **************************************************************************

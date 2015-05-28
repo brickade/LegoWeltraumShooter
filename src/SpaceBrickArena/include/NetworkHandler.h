@@ -49,6 +49,14 @@ namespace Game
         PuRe_Vector2F Move;
     };
 
+    /// @brief Base Packet for Movement Input
+    ///
+    struct ThrustPacket
+    {
+        InputBasePacket InputBase;
+        float Thrust;
+    };
+
 
     class CNetworkHandler
     {

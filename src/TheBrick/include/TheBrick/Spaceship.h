@@ -32,8 +32,8 @@ namespace TheBrick
 
         void HandleInput(PuRe_IInput* a_pInput, float a_DeltaTime, std::vector<CBullet*>& a_rBullets, CBrickManager* a_pManager);
 
-        void Thrust(float a_Thrust, float a_DeltaTime);
-        void Spin(float a_Spin, float a_DeltaTime);
+        void Thrust(float a_Thrust);
+        void Spin(float a_Spin);
         void Move(PuRe_Vector2F a_Move);
         void Shoot(std::vector<CBullet*>& a_rBullets, CBrickManager* a_pManager);
 

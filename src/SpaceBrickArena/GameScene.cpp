@@ -138,6 +138,16 @@ namespace Game
                                 MovePacket* MPacket = (MovePacket*)Packet;
                                 this->m_Players[i]->Ship->Move(MPacket->Move);
                             }
+                            else if (IPacket->Input == 2)
+                            {
+                                ThrustPacket* TPacket = (ThrustPacket*)Packet;
+                                this->m_Players[i]->Ship->Thrust(TPacket->Thrust);
+                            }
+                            else if (IPacket->Input == 3)
+                            {
+                                ThrustPacket* TPacket = (ThrustPacket*)Packet;
+                                this->m_Players[i]->Ship->Spin(TPacket->Thrust);
+                            }
                         }
                         //send to everyone that someone shot if HOST
                         if (this->m_pNetwork->m_Host&&i != 0)
@@ -150,6 +160,11 @@ namespace Game
                             {
                                 MovePacket* MPacket = (MovePacket*)Packet;
                                 this->m_pNetwork->Send((char*)MPacket, sizeof(MovePacket), this->m_Players[i]->NetworkInformation);
+                            }
+                            else if (IPacket->Input == 2||IPacket->Input == 3)
+                            {
+                                ThrustPacket* TPacket = (ThrustPacket*)Packet;
+                                this->m_pNetwork->Send((char*)TPacket, sizeof(ThrustPacket), this->m_Players[i]->NetworkInformation);
                             }
                         }
 
@@ -276,10 +291,48 @@ namespace Game
                         this->m_pNetwork->Send((char*)&MPacket, sizeof(MovePacket), this->m_Players[i]->NetworkInformation);
                 }
                 else
-                {
                     this->m_pNetwork->SendHost((char*)&MPacket, sizeof(MovePacket));
-                }
             }
+
+            float Thrust = a_pInput->GetGamepadRightTrigger(0);
+            if (Thrust > 0.2f)
+            {
+                ThrustPacket TPacket;
+                TPacket.InputBase.Head.Type = 5;
+                TPacket.InputBase.Input = 2;
+                TPacket.InputBase.Who = this->m_ID;
+                TPacket.Thrust = Thrust;
+                if (this->m_pNetwork->m_Host)
+                {
+                    this->m_Players[this->m_ArrayID]->Ship->Thrust(Thrust);
+                    for (int i = 1; i < this->m_Players.size(); i++)
+                        this->m_pNetwork->Send((char*)&TPacket, sizeof(ThrustPacket), this->m_Players[i]->NetworkInformation);
+                }
+                else
+                    this->m_pNetwork->SendHost((char*)&TPacket, sizeof(ThrustPacket));
+            }
+            float Spin = 0.0f;
+            if (a_pInput->GamepadIsPressed(a_pInput->Left_Shoulder, 0))
+                Spin -= 1.0f;
+            else if (a_pInput->GamepadIsPressed(a_pInput->Right_Shoulder, 0))
+                Spin += 1.0f;
+            if (Spin > 0.2f||Spin < -0.2f)
+            {
+                ThrustPacket TPacket;
+                TPacket.InputBase.Head.Type = 5;
+                TPacket.InputBase.Input = 3;
+                TPacket.InputBase.Who = this->m_ID;
+                TPacket.Thrust = Spin;
+                if (this->m_pNetwork->m_Host)
+                {
+                    this->m_Players[this->m_ArrayID]->Ship->Spin(Spin);
+                    for (int i = 1; i < this->m_Players.size(); i++)
+                        this->m_pNetwork->Send((char*)&TPacket, sizeof(ThrustPacket), this->m_Players[i]->NetworkInformation);
+                }
+                else
+                    this->m_pNetwork->SendHost((char*)&TPacket, sizeof(ThrustPacket));
+            }
+
             //player->HandleInput(a_pInput, a_pTimer->GetElapsedSeconds(), this->m_Bullets, BrickBozz::Instance()->BrickManager);
 
             for (int i = 0; i<this->m_Players.size();i++)
@@ -365,6 +418,8 @@ namespace Game
                 i--;
             }
         }
+
+        BrickBozz::Instance()->UpdatePhysics(a_pTimer);
 
 
         return false;
