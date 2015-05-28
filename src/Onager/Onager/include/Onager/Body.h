@@ -65,8 +65,9 @@ namespace ong
 
 
 		void setPosition(const vec3& position);
-
 		void setUserData(void* pUserData);
+
+		void setContinuousPhysics(bool useCCD);
 
 		void applyImpulse(const vec3& impulse);
 		void applyImpulse(const vec3& impulse, const vec3& point);
@@ -107,6 +108,8 @@ namespace ong
 		const vec3& getLocalCenter() const;
 
 		const Quaternion& getOrientation() const;
+		
+		bool getContinuousPhysics() const;
 
 		vec3 getLinearMomentum();
 		vec3 getRelativeLinearMomentum();
@@ -157,9 +160,10 @@ namespace ong
 	private:
 		enum
 		{
-			DYNAMIC = 1,
-			STATIC = 2,
-			TYPE = DYNAMIC + STATIC,
+			DYNAMIC = 0x1,
+			STATIC = 0x2,
+			TYPE = DYNAMIC | STATIC,
+			CCD = 0x3,
 		};
 
 		World* m_pWorld;
@@ -187,7 +191,11 @@ namespace ong
 	};
 
 
+	bool overlap(Body* a, Body* b, const Transform& transformA = { vec3(0, 0, 0), Quaternion(vec3(0, 0, 0), 1) },
+		const Transform& transformB = { vec3(0, 0, 0), Quaternion(vec3(0, 0, 0), 1) });
 
+
+	// inlines
 	inline void Body::setIndex(int idx)
 	{
 		m_index = idx;
@@ -215,6 +223,13 @@ namespace ong
 		m_pUserData = pUserData;
 	}
 
+	inline void Body::setContinuousPhysics(bool useCCD)
+	{
+		if (useCCD)
+			m_flags |= CCD;
+		else
+			m_flags &= ~CCD;
+	}
 
 	inline int Body::getIndex()
 	{
@@ -266,6 +281,11 @@ namespace ong
 	inline BodyType::Type Body::getType()
 	{
 		return (BodyType::Type)(m_flags & TYPE);
+	}
+
+	inline bool Body::getContinuousPhysics() const
+	{
+		return m_flags & CCD;
 	}
 
 	inline int Body::getNumContacts()

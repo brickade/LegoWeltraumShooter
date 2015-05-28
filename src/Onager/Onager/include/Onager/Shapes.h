@@ -180,6 +180,7 @@ namespace ong
 	bool overlap(const AABB& a, const AABB& b, const vec3& t, const mat3x3& rot);
 
 	// narrow
+	// todo with matrix maybe not...
 	bool overlap(const ShapePtr shapeA, const ShapePtr shapeB, const Transform& ta, const Transform& tb);
 	bool overlap(const Hull* hullA, const Hull* hullB, const Transform& t1, const Transform& t2);
 	bool overlap(const Sphere* sphereA, const Sphere* sphereB, const Transform& t1, const Transform& t2);
