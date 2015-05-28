@@ -20,6 +20,34 @@ namespace Game
     void CNetworkHandler::Connect()
     {
         this->m_pSocket = new PuRe_Socket(this->m_IP.c_str(), std::stoi(this->m_Port), this->m_Host);
+        //send that we are connecting to him
+        HeadPacket h;
+        h.Type = 0;
+        this->Send((char*)&h, sizeof(HeadPacket), this->m_pSocket->GetAddress());
+    }
+
+
+    // **************************************************************************
+    // **************************************************************************
+    long CNetworkHandler::Receive(char* a_pBuffer, int a_Size, SOCKADDR_IN* a_pSender)
+    {
+        return this->m_pSocket->Receive(a_pBuffer, a_Size, a_pSender);
+    }
+
+
+    // **************************************************************************
+    // **************************************************************************
+    void CNetworkHandler::SendHost(char* a_pBuffer, int a_Size)
+    {
+        this->Send(a_pBuffer, a_Size, this->m_pSocket->GetAddress());
+    }
+
+
+    // **************************************************************************
+    // **************************************************************************
+    void CNetworkHandler::Send(char* a_pBuffer, int a_Size, SOCKADDR_IN a_Receiver)
+    {
+        this->m_pSocket->Send(a_Receiver,a_pBuffer,a_Size);
     }
 
 

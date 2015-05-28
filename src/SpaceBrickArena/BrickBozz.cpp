@@ -36,6 +36,7 @@ namespace Game
     void BrickBozz::Initialize(PuRe_IGraphics& a_pGraphics, PuRe_SoundPlayer& a_pSoundPlayer)
     {
         this->Renderer = new PuRe_Renderer(&a_pGraphics, PuRe_Vector2I(a_pGraphics.GetDescription().ResolutionWidth, a_pGraphics.GetDescription().ResolutionHeight));
+        this->Renderer->m_pPostCamera->setNearFar(PuRe_Vector2F(0.01f, 1000.0f));
         this->m_SSAOMaterial = a_pGraphics.LoadMaterial("../data/effects/SSAO/default");
         this->Renderer->SetSSAO(this->m_SSAOMaterial, "../data/textures/ssao.jpg");
         this->BrickManager->Initialize(a_pGraphics, a_pSoundPlayer);

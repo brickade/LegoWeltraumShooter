@@ -17,17 +17,24 @@
 // Declare namespace Game
 namespace Game
 {
+    struct Player
+    {
+        int ID;
+        SOCKADDR_IN NetworkInformation;
+    };
     /// @brief MainScene where the game functions are in, inherits from the Scene interface
     ///
     class CGameScene : public PuRe_IScene
     {
     private:
+        int ID;
+        std::vector<Player*> m_Players;
+
         float physicsTimer;
         int m_playerIdx;
         int textureID;
 
         bool gameStart;
-        int m_NetworkState;
 
         CNetworkHandler* m_pNetwork;
         PuRe_Font* m_pFont;
@@ -60,6 +67,9 @@ namespace Game
         ///
         CGameScene(PuRe_Application* a_pApplication, int a_playerIdx);
     public:
+        /// @brief Receives Data which were send via Network.
+        ///
+        void ReceiveData();
         /// @brief Initializes the scene.
         ///
         /// @param graphics The graphics interface.

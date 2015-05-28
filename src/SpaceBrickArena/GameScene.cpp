@@ -9,6 +9,72 @@ namespace Game
 
     // **************************************************************************
     // **************************************************************************
+    void CGameScene::ReceiveData()
+    {
+        char buffer[256];
+        SOCKADDR_IN sender;
+        while (true)
+        {
+            printf("Receiving Data!\n");
+            if (this->m_pNetwork->Receive(buffer, 256, &sender) != -1)
+            {
+                ReceivePacket* Packet = (ReceivePacket*)buffer;
+                if (Packet->Head.Type == 0)
+                {  
+                    int ID = 0; // 0 is Host
+                    for (int i = 0; i < this->m_Players.size(); i++)
+                    {
+                        if (ID == this->m_Players[i]->ID)
+                        {
+                            ID++;
+                            i = 0;
+                        }
+                    }
+                    Player* p = new Player();
+                    p->ID = ID;
+                    p->NetworkInformation = sender;
+                    this->m_Players.push_back(p);
+                    printf("User %i joined!\n",ID);
+                    //Tell him who he is
+                    LeftPacket lPacket;
+                    lPacket.Head.Type = 2;
+                    lPacket.Who = ID;
+                    this->m_pNetwork->Send((char*)&lPacket, sizeof(LeftPacket),sender);
+                }
+                else if (Packet->Head.Type == 1)
+                {
+                    LeftPacket* lPacket = (LeftPacket*)Packet;
+
+                    for (int i = 0; i < this->m_Players.size(); i++)
+                    {
+                        if (this->m_Players[i]->ID == lPacket->Who)
+                        {
+                            SAFE_DELETE(this->m_Players[i]);
+                            this->m_Players.erase(this->m_Players.begin() + i);
+                        }
+                    }
+                    printf("User % i left!\n", lPacket->Who);
+                    //Send to everyone else that one left
+                    if (this->m_pNetwork->m_Host)
+                    {
+                        for (int i = 0; i < this->m_Players.size(); i++)
+                        {
+                            this->m_pNetwork->Send((char*)lPacket,sizeof(LeftPacket),this->m_Players[i]->NetworkInformation);
+                        }
+                    }
+                }
+                else if (Packet->Head.Type == 2)
+                {
+                    LeftPacket* LPacket = (LeftPacket*)Packet;
+                    this->ID = LPacket->Who;
+                    printf("I am %i!\n", this->ID);
+                }
+            }
+        }
+    }
+
+    // **************************************************************************
+    // **************************************************************************
     void CGameScene::Initialize(PuRe_IGraphics* a_pGraphics, PuRe_IWindow* a_pWindow, PuRe_SoundPlayer* a_pSoundPlayer)
     {
         PuRe_GraphicsDescription gdesc = a_pGraphics->GetDescription();
@@ -26,7 +92,7 @@ namespace Game
         this->m_pSkyMaterial = a_pGraphics->LoadMaterial("../data/effects/skybox/default");
         this->m_pPointLightMaterial = a_pGraphics->LoadMaterial("../data/effects/PointLight/default");
         this->m_pModel = new PuRe_Model(a_pGraphics, "../data/models/brick1.obj");
-        this->m_pSkyBox = new PuRe_SkyBox(a_pGraphics, "../data/textures/cube/");
+        //this->m_pSkyBox = new PuRe_SkyBox(a_pGraphics, "../data/textures/cube/");
         this->m_pPointLight = new PuRe_PointLight(a_pGraphics);
         this->m_pRenderer = new PuRe_Renderer(a_pGraphics,PuRe_Vector2I(size.X,size.Y));
         this->m_pMinimap = new CMinimap(a_pGraphics);
@@ -36,7 +102,7 @@ namespace Game
         this->m_MapBoundaries = PuRe_BoundingBox(PuRe_Vector3F(0.0f, 0.0f, 0.0f), PuRe_Vector3F(100.0f, 100.0f, 100.0f));
 
         this->gameStart = false;
-        this->m_NetworkState = 0;
+        this->ID = 0;
 
         //this->m_pPlayerShip = new TheBrick::CSpaceship();
         //this->m_pPlayerShip->Deserialize(nullptr, BrickBozz::Instance()->BrickManager, BrickBozz::Instance()->World);
@@ -119,7 +185,21 @@ namespace Game
         }
         else
         {
-            this->m_pNetwork->Update(a_pInput);
+            
+            //Check last network state
+            int networkState = this->m_pNetwork->GetState();
+
+            this->m_pNetwork->Update(a_pInput); //Update Network State
+
+            //If he connected
+            if (networkState != 3 && this->m_pNetwork->GetState() == 3)
+            {
+                printf("Connecting!\n");
+                this->m_pNetwork->Connect();
+                std::thread receiveThread(&CGameScene::ReceiveData, this);
+                receiveThread.detach();
+            }
+
             if (a_pInput->KeyPressed(a_pInput->F3))
             {
 
@@ -146,7 +226,6 @@ namespace Game
                 this->m_Bullets.erase(this->m_Bullets.begin() + i);
             }
         }
-        printf("Fps: %s\n", std::to_string(a_pTimer->GetFPS()).c_str());
 
 
         return false;
@@ -164,7 +243,7 @@ namespace Game
 
 
           /////////////  DRAW SKY  ///////////////////////
-        renderer->Draw(this->m_pSkyBox, this->m_pSkyMaterial);
+        //renderer->Draw(this->m_pSkyBox, this->m_pSkyMaterial);
         ////////////////////////////////////////////////////
 
         /////////////  DRAW BRICKS  ///////////////////////
@@ -267,6 +346,17 @@ namespace Game
     // **************************************************************************
     void CGameScene::Exit()
     {
+        //Send to Host that we left
+        LeftPacket lPacket;
+        lPacket.Head.Type = 1;
+        lPacket.Who = this->ID;
+        this->m_pNetwork->SendHost((char*)&lPacket,sizeof(LeftPacket));
+        //Clear Memory
+        for (int i = 0; i < this->m_Players.size(); i++)
+        {
+            SAFE_DELETE(this->m_Players[i]);
+        }
+        this->m_Players.clear();
         // DELETE MATERIALS
         SAFE_DELETE(this->m_pPointLightMaterial);
         SAFE_DELETE(this->m_pFontMaterial);

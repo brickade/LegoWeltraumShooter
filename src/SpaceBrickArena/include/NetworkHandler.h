@@ -9,6 +9,30 @@
 // Declare namespace Game
 namespace Game
 {
+    /// @brief HeaderPacket, used to tell which Packet we got
+    ///
+    struct HeadPacket
+    {
+        int Type;
+    };
+
+    /// @brief Packet used when Data is received, this checks the Header
+    ///
+    struct ReceivePacket
+    {
+        HeadPacket Head;
+        char* Buffer;
+    };
+
+    /// @brief Packet used to detect who left
+    ///
+    struct LeftPacket
+    {
+        HeadPacket Head;
+        int Who;
+    };
+
+
     class CNetworkHandler
     {
     public:
@@ -26,6 +50,9 @@ namespace Game
             void Connect();
             void Update(PuRe_IInput* a_pInput);
             int GetState();
+            long Receive(char* a_pBuffer, int a_Size, SOCKADDR_IN* a_pSender);
+            void Send(char* a_pBuffer, int a_Size, SOCKADDR_IN a_Receiver);
+            void SendHost(char* a_pBuffer, int a_Size);
     };
 }
 #endif /* _NETWORKHANDLER_H_ */

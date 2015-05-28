@@ -77,7 +77,7 @@ namespace Game
         PuRe_Renderer* renderer = BrickBozz::Instance()->Renderer;
         renderer->Begin(PuRe_Color(0.1f, 0.5f, 0.1f));
         //Lights
-        renderer->Draw(this->m_pPointLight, this->m_pPointLightMaterial, PuRe_Vector3F(0.0f, 5.0f, 0.0f), PuRe_Vector3F(1, 1, 1), 0.1f, 0.01f, 0.01f);
+        renderer->Draw(this->m_pPointLight, this->m_pPointLightMaterial, PuRe_Vector3F(0.0f, 5.0f, 0.0f), PuRe_Color(1, 1, 1), 0.1f, 0.01f, 0.01f);
         
         //Skybox
         //renderer->Draw(this->m_pSkyBox, this->m_pSkyBoxMaterial);
