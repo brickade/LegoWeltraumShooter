@@ -1,6 +1,8 @@
 #include "include/TheBrick/Asteroid.h"
 
 #include "Onager/World.h"
+#include "include/TheBrick/BrickManager.h"
+#include "include/TheBrick/BrickInstance.h"
 
 namespace TheBrick
 {
@@ -11,7 +13,7 @@ namespace TheBrick
         ////////   TESTING ONLY   ////////
         for (int i=0;i<2;i++)
         {
-            CBrickInstance* brick = new CBrickInstance(a_pBrickManager->GetBrick(2), a_rWorld);
+            CBrickInstance* brick = new CBrickInstance(a_pBrickManager->GetBrick(2), *this, a_rWorld);
             //m_Transform
             ong::AABB aabb = brick->m_pCollider[0]->getAABB();
             brick->SetTransform(ong::Transform(ong::vec3(0.0f, i*(aabb.c.y+0.005f)*2.0f, 0.0f), ong::Quaternion(ong::vec3(0, 0, 0), 1)));

@@ -3,6 +3,7 @@
 #include "include/TheBrick/Conversion.h"
 #include "include/TheBrick/BrickInstance.h"
 #include "include/TheBrick/BrickManager.h"
+#include "include/TheBrick/DebugDraw.h"
 
 namespace TheBrick
 {
@@ -18,7 +19,7 @@ namespace TheBrick
         bdesc.linearMomentum = TheBrick::PuReToOng(a_Speed);  //movement speed
 
         this->m_pBody = a_rWorld.createBody(bdesc);
-        CBrickInstance* brick = new CBrickInstance(a_pBrickManager->GetBrick(2), a_rWorld);
+        CBrickInstance* brick = new CBrickInstance(a_pBrickManager->GetBrick(2), *this, a_rWorld);
         //brick->GetTransform() = ong::Transform(ong::vec3(0.0f, 0.0f, 0.0f), ong::Quaternion(ong::vec3(0, 0, 0), 1));
         brick->m_Color = PuRe_Color(1, 1, 1, 1);
         for (int i = 0; i<brick->m_pCollider.size(); i++)
@@ -29,7 +30,7 @@ namespace TheBrick
         this->m_pBricks.push_back(brick);
 
         ////////   TESTING ONLY   ////////
-        CBrickInstance* brick = new CBrickInstance(a_pBrickManager->GetBrick(0), a_rWorld);
+        //CBrickInstance* brick = new CBrickInstance(a_pBrickManager->GetBrick(0), *this, a_rWorld);
         //m_Transform
         brick->SetTransform(ong::Transform(ong::vec3(0.0f, 0.0f, 0.0f), ong::Quaternion(ong::vec3(0, 0, 0), 1)));
         //m_pCollider: Add Collider to Body

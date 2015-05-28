@@ -24,7 +24,7 @@ int PURE_MAIN
     description.Window.DisplaySetting = PuRe_DisplaySetting::Windowed;
     description.Window.ShowCursor = true;
     description.Window.CursorInWindow = false;
-    description.Window.LockCursor = false;
+    description.Window.LockCursor = true;
     PuRe_Application* papplication = new PuRe_Application(pplatform, description);
     Game::CMainScene scene(papplication);
 

@@ -1,4 +1,7 @@
 #include "include/GameScene.h"
+
+#include "TheBrick/Conversion.h"
+
 namespace Game
 {
     CGameScene::CGameScene(PuRe_Application* a_pApplication, int a_playerIdx)
