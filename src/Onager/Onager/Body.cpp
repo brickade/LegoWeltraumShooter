@@ -32,6 +32,9 @@ namespace ong
 
 	void Body::addCollider(Collider* pCollider)
 	{
+
+		assert(pCollider->getBody() == NULL);
+
 		pCollider->setBody(this);
 
 		m_numCollider++;

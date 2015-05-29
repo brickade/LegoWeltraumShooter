@@ -175,7 +175,17 @@ namespace ong
 		m_m[idx] = m_m[m_numBodies];
 		m_b[idx] = m_b[m_numBodies];
 
+
 		m_b[idx]->setIndex(idx);
+
+		m_r.pop_back();
+		m_v.pop_back();
+		m_p.pop_back();
+		m_m.pop_back();
+		m_b.pop_back();
+
+
+
 
 		m_contactManager.removeBody(pBody);
 
