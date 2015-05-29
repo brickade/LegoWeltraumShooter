@@ -65,27 +65,35 @@ namespace ong
 	void Collider::setPosition(const vec3& p)
 	{
 		m_aabb.c += (p - m_transform.p);
-
-
 		m_transform.p = p;
+
+		if (m_pBody)
+			m_pBody->calculateTree();
 	}
 	void Collider::translate(const vec3& translation)
 	{
 		m_transform.p += translation;
 		m_aabb.c += translation;
+
+		if (m_pBody)
+			m_pBody->calculateTree();
 	}
 
 	void Collider::setOrientation(const Quaternion& q)
 	{
 		m_transform.q = q;
-
 		calculateAABB();
+
+		if (m_pBody)
+			m_pBody->calculateTree();
 	}
 	void Collider::rotate(const Quaternion& rotation)
 	{
 		m_transform.q = rotation * m_transform.q;
-
 		calculateAABB();
+
+		if (m_pBody)
+			m_pBody->calculateTree();
 	}
 
 
@@ -93,6 +101,9 @@ namespace ong
 	{
 		m_transform = t;
 		calculateAABB();
+
+		if (m_pBody)
+			m_pBody->calculateTree();
 	}
 
 	void Collider::setBody(Body* pBody)

@@ -51,13 +51,8 @@ namespace ong
 
 		if (m_numCollider >= 2)
 		{
-			if (m_tree)
-				delete[] m_tree;
-			m_tree = new BVTree[m_numCollider + m_numCollider - 1];
-
-			constructBVTree(m_pCollider, m_numCollider, m_tree);
+			calculateTree();
 		}
-
 		calculateAABB();
 		m_pWorld->updateProxy(m_proxyID);
 	}
@@ -81,11 +76,7 @@ namespace ong
 
 		if (m_numCollider >= 2)
 		{
-			if (m_tree)
-				delete[] m_tree;
-			m_tree = new BVTree[m_numCollider + m_numCollider - 1];
-
-			constructBVTree(m_pCollider, m_numCollider, m_tree);
+			calculateTree();
 		}
 
 		m_pWorld->updateProxy(m_proxyID);
@@ -170,6 +161,18 @@ namespace ong
 			m_aabb = transformAABB(&m_pCollider->getAABB(), &getTransform());
 		else
 			m_aabb = { getTransform().p, vec3(0, 0, 0) };
+	}
+
+	void Body::calculateTree()
+	{	
+		if (m_numCollider <= 1)
+			return;
+
+		if (m_tree)
+			delete[] m_tree;
+		m_tree = new BVTree[m_numCollider + m_numCollider - 1];
+
+		constructBVTree(m_pCollider, m_numCollider, m_tree);
 	}
 
 

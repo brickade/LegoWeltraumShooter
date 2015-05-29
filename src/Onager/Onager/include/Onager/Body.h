@@ -150,6 +150,9 @@ namespace ong
 		void setProxyID(const ProxyID* proxyID);
 		const ProxyID* getProxyID();
 
+
+		void calculateTree();
+
 		//	--ACCESSORS--
 
 		int getIndex();
