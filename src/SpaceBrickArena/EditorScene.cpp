@@ -27,7 +27,7 @@ namespace Game
         this->m_pPointLightMaterial = a_pGraphics->LoadMaterial("../data/effects/PointLight/default");
         this->m_pPointLight = new PuRe_PointLight(a_pGraphics);
 
-        this->m_pSkyBox = new PuRe_SkyBox(a_pGraphics, "../data/textures/skybox/");
+        //this->m_pSkyBox = new PuRe_SkyBox(a_pGraphics, "../data/textures/skybox/");
 
         this->textureID = 0;
 
@@ -80,7 +80,7 @@ namespace Game
         renderer->Draw(this->m_pPointLight, this->m_pPointLightMaterial, PuRe_Vector3F(0.0f, 5.0f, 0.0f), PuRe_Color(1, 1, 1), 0.1f, 0.01f, 0.01f);
         
         //Skybox
-        renderer->Draw(this->m_pSkyBox, this->m_pSkyBoxMaterial);
+        //renderer->Draw(this->m_pSkyBox, this->m_pSkyBoxMaterial);
         //Bricks
         //this->m_pBrickWorker->Render();
         BrickBozz::Instance()->BrickManager->Render(*BrickBozz::Instance()->Renderer);

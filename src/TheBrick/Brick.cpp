@@ -71,12 +71,9 @@ namespace TheBrick
         {
             CBrickInstance* instance = *it;
             assert(instance != nullptr);
-            ong::Body* body = instance->m_pCollider[0]->getBody();
-            ong::Transform transform = ong::transformTransform(instance->GetTransform(),body->getTransform());
-            assert(instance->GetGameObject() != nullptr);
-            ong::Transform goTransform = instance->GetGameObject()->GetTransform();
-            this->m_pRenderInstances[this->m_RenderInstancesCount].Position = OngToPuRe(goTransform.p) + OngToPuRe(transform.p);
-            this->m_pRenderInstances[this->m_RenderInstancesCount].Rotation = OngToPuRe(goTransform.q).GetMatrix() * OngToPuRe(transform.q).GetMatrix();
+            ong::Transform transform = ong::transformTransform(instance->GetTransform(), instance->m_pCollider[0]->getBody()->getTransform());
+            this->m_pRenderInstances[this->m_RenderInstancesCount].Position = OngToPuRe(transform.p);
+            this->m_pRenderInstances[this->m_RenderInstancesCount].Rotation = OngToPuRe(transform.q).GetMatrix();
             /* when GameObject is allowed to be null
             if (gameObject != nullptr)
             { //Add GameObject Transform
