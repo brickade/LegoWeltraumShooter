@@ -33,8 +33,6 @@ namespace TheBrick
         //    SAFE_DELETE(this->m_pBricks[i]);
         //    this->m_pBricks.erase(this->m_pBricks.begin()+i);
         //}
-        this->m_pBody->getWorld()->destroyBody(this->m_pBody);
-        this->m_pBody = nullptr;
     }
 
     // **************************************************************************
