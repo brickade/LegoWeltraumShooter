@@ -75,7 +75,7 @@ namespace TheBrick
 
     // **************************************************************************
     // **************************************************************************
-    void CSpaceship::HandleInput(PuRe_IInput* a_pInput, float a_DeltaTime, std::vector<CBullet*>& a_rBullets, CBrickManager* a_pManager)
+    void CSpaceship::HandleInput(int a_CID, PuRe_IInput* a_pInput, float a_DeltaTime, std::vector<CBullet*>& a_rBullets, CBrickManager* a_pManager)
     {
         if (a_pInput->KeyPressed(a_pInput->R))
         {
@@ -87,21 +87,21 @@ namespace TheBrick
         std::string Key = this->m_pCSVFile->GetValue("Shoot");
         bool shoot = false;
         if (Key == "A")
-            shoot = a_pInput->GamepadPressed(a_pInput->Pad_A, 0);
+            shoot = a_pInput->GamepadPressed(a_pInput->Pad_A, a_CID);
         else if (Key == "X")
-            shoot = a_pInput->GamepadPressed(a_pInput->Pad_X, 0);
+            shoot = a_pInput->GamepadPressed(a_pInput->Pad_X, a_CID);
         else if (Key == "Y")
-            shoot = a_pInput->GamepadPressed(a_pInput->Pad_Y, 0);
+            shoot = a_pInput->GamepadPressed(a_pInput->Pad_Y, a_CID);
         else if (Key == "B")
-            shoot = a_pInput->GamepadPressed(a_pInput->Pad_B, 0);
+            shoot = a_pInput->GamepadPressed(a_pInput->Pad_B, a_CID);
         else if (Key == "LB")
-            shoot = a_pInput->GamepadPressed(a_pInput->Left_Shoulder, 0);
+            shoot = a_pInput->GamepadPressed(a_pInput->Left_Shoulder, a_CID);
         else if (Key == "RB")
-            shoot = a_pInput->GamepadPressed(a_pInput->Right_Shoulder, 0);
+            shoot = a_pInput->GamepadPressed(a_pInput->Right_Shoulder, a_CID);
         else if (Key == "RT")
-            shoot = a_pInput->GetGamepadRightTrigger(0) > 0.2f;
+            shoot = a_pInput->GetGamepadRightTrigger(a_CID) > 0.2f;
         else if (Key == "LT")
-            shoot = a_pInput->GetGamepadLeftTrigger(0) > 0.2f;
+            shoot = a_pInput->GetGamepadLeftTrigger(a_CID) > 0.2f;
 
         if (shoot)
             this->Shoot(a_rBullets, a_pManager);
@@ -118,21 +118,21 @@ namespace TheBrick
 
         float thrust = 0.0f;
         if (Key == "RT")
-            thrust = a_pInput->GetGamepadRightTrigger(0);
+            thrust = a_pInput->GetGamepadRightTrigger(a_CID);
         else if (Key == "LT")
-            thrust = a_pInput->GetGamepadLeftTrigger(0);
-        else if (Key == "LB"&&a_pInput->GamepadIsPressed(a_pInput->Left_Shoulder, 0))
+            thrust = a_pInput->GetGamepadLeftTrigger(a_CID);
+        else if (Key == "LB"&&a_pInput->GamepadIsPressed(a_pInput->Left_Shoulder, a_CID))
             thrust = 1.0f;
-        else if (Key == "RB"&&a_pInput->GamepadIsPressed(a_pInput->Right_Shoulder, 0))
+        else if (Key == "RB"&&a_pInput->GamepadIsPressed(a_pInput->Right_Shoulder, a_CID))
             thrust = 1.0f;
         else if (Key == "LeftThumb.X")
-            thrust = a_pInput->GetGamepadLeftThumb(0).X;
+            thrust = a_pInput->GetGamepadLeftThumb(a_CID).X;
         else if (Key == "RightThumb.X")
-            thrust = a_pInput->GetGamepadRightThumb(0).X;
+            thrust = a_pInput->GetGamepadRightThumb(a_CID).X;
         else if (Key == "LeftThumb.Y")
-            thrust = a_pInput->GetGamepadLeftThumb(0).Y;
+            thrust = a_pInput->GetGamepadLeftThumb(a_CID).Y;
         else if (Key == "RightThumb.Y")
-            thrust = a_pInput->GetGamepadRightThumb(0).Y;
+            thrust = a_pInput->GetGamepadRightThumb(a_CID).Y;
         if (invert)
             thrust = -thrust;
 
@@ -148,13 +148,13 @@ namespace TheBrick
             invert = true;
         }
         if (Key == "LeftThumb.X")
-            Move.X = a_pInput->GetGamepadLeftThumb(0).X;
+            Move.X = a_pInput->GetGamepadLeftThumb(a_CID).X;
         else if (Key == "RightThumb.X")
-            Move.X = a_pInput->GetGamepadRightThumb(0).X;
+            Move.X = a_pInput->GetGamepadRightThumb(a_CID).X;
         else if (Key == "LeftThumb.Y")
-            Move.X = a_pInput->GetGamepadLeftThumb(0).Y;
+            Move.X = a_pInput->GetGamepadLeftThumb(a_CID).Y;
         else if (Key == "RightThumb.Y")
-            Move.X = a_pInput->GetGamepadRightThumb(0).Y;
+            Move.X = a_pInput->GetGamepadRightThumb(a_CID).Y;
         if (invert)
             Move.X = -Move.X;
 
@@ -168,13 +168,13 @@ namespace TheBrick
         }
 
         if (Key == "LeftThumb.X")
-            Move.Y = a_pInput->GetGamepadLeftThumb(0).X;
+            Move.Y = a_pInput->GetGamepadLeftThumb(a_CID).X;
         else if (Key == "RightThumb.X")
-            Move.Y = a_pInput->GetGamepadRightThumb(0).X;
+            Move.Y = a_pInput->GetGamepadRightThumb(a_CID).X;
         else if (Key == "LeftThumb.Y")
-            Move.Y = a_pInput->GetGamepadLeftThumb(0).Y;
+            Move.Y = a_pInput->GetGamepadLeftThumb(a_CID).Y;
         else if (Key == "RightThumb.Y")
-            Move.Y = a_pInput->GetGamepadRightThumb(0).Y;
+            Move.Y = a_pInput->GetGamepadRightThumb(a_CID).Y;
         if (invert)
             Move.Y = -Move.Y;
         //apply X/Y Rotation via Input
@@ -193,21 +193,21 @@ namespace TheBrick
         float SpinL = 0.0f;
         float SpinR = 0.0f;
         if (Key == "RT")
-            SpinL += a_pInput->GetGamepadRightTrigger(0);
+            SpinL += a_pInput->GetGamepadRightTrigger(a_CID);
         else if (Key == "LT")
-            SpinL += a_pInput->GetGamepadLeftTrigger(0);
-        else if (Key == "LB"&&a_pInput->GamepadIsPressed(a_pInput->Left_Shoulder, 0))
+            SpinL += a_pInput->GetGamepadLeftTrigger(a_CID);
+        else if (Key == "LB"&&a_pInput->GamepadIsPressed(a_pInput->Left_Shoulder, a_CID))
             SpinL += 1.0f;
-        else if (Key == "RB"&&a_pInput->GamepadIsPressed(a_pInput->Right_Shoulder, 0))
+        else if (Key == "RB"&&a_pInput->GamepadIsPressed(a_pInput->Right_Shoulder, a_CID))
             SpinL += 1.0f;
         else if (Key == "LeftThumb.X")
-            SpinL += a_pInput->GetGamepadLeftThumb(0).X;
+            SpinL += a_pInput->GetGamepadLeftThumb(a_CID).X;
         else if (Key == "RightThumb.X")
-            SpinL += a_pInput->GetGamepadRightThumb(0).X;
+            SpinL += a_pInput->GetGamepadRightThumb(a_CID).X;
         else if (Key == "LeftThumb.Y")
-            SpinL += a_pInput->GetGamepadLeftThumb(0).Y;
+            SpinL += a_pInput->GetGamepadLeftThumb(a_CID).Y;
         else if (Key == "RightThumb.Y")
-            SpinL += a_pInput->GetGamepadRightThumb(0).Y;
+            SpinL += a_pInput->GetGamepadRightThumb(a_CID).Y;
         if (invert)
             SpinL = -SpinL;
         //handle RightSpin from file
@@ -219,21 +219,21 @@ namespace TheBrick
             invert = true;
         }
         if (Key == "RT")
-            SpinR += a_pInput->GetGamepadRightTrigger(0);
+            SpinR += a_pInput->GetGamepadRightTrigger(a_CID);
         else if (Key == "LT")
-            SpinR += a_pInput->GetGamepadLeftTrigger(0);
-        else if (Key == "LB"&&a_pInput->GamepadIsPressed(a_pInput->Left_Shoulder, 0))
+            SpinR += a_pInput->GetGamepadLeftTrigger(a_CID);
+        else if (Key == "LB"&&a_pInput->GamepadIsPressed(a_pInput->Left_Shoulder, a_CID))
             SpinR += 1.0f;
-        else if (Key == "RB"&&a_pInput->GamepadIsPressed(a_pInput->Right_Shoulder, 0))
+        else if (Key == "RB"&&a_pInput->GamepadIsPressed(a_pInput->Right_Shoulder, a_CID))
             SpinR += 1.0f;
         else if (Key == "LeftThumb.X")
-            SpinR += a_pInput->GetGamepadLeftThumb(0).X;
+            SpinR += a_pInput->GetGamepadLeftThumb(a_CID).X;
         else if (Key == "RightThumb.X")
-            SpinR += a_pInput->GetGamepadRightThumb(0).X;
+            SpinR += a_pInput->GetGamepadRightThumb(a_CID).X;
         else if (Key == "LeftThumb.Y")
-            SpinR += a_pInput->GetGamepadLeftThumb(0).Y;
+            SpinR += a_pInput->GetGamepadLeftThumb(a_CID).Y;
         else if (Key == "RightThumb.Y")
-            SpinR += a_pInput->GetGamepadRightThumb(0).Y;
+            SpinR += a_pInput->GetGamepadRightThumb(a_CID).Y;
         if (invert)
             SpinR = -SpinR;
         float Spin = SpinR+SpinL;
@@ -289,12 +289,12 @@ namespace TheBrick
     void CSpaceship::Deserialize(CSerializer& a_pSerializer, CBrickManager& a_pBrickManager, ong::World& a_pWorld)
     {
         ////////   TESTING ONLY   ////////
-        CBrickInstance* brick = new CBrickInstance(a_pBrickManager.GetBrick(1), *this, a_pWorld);
-        //m_Transform
-        brick->SetTransform(ong::Transform(ong::vec3(0.0f, 0.0f, 0.0f), ong::Quaternion(ong::vec3(0, 0, 0), 1)));
-        //m_Color
-        brick->m_Color = PuRe_Color(1,0,0,1);
-        //CGameObject::Deserialize(a_pSerializer, a_pBrickManager, a_pWorld);
+        //CBrickInstance* brick = new CBrickInstance(a_pBrickManager.GetBrick(1), *this, a_pWorld);
+        ////m_Transform
+        //brick->SetTransform(ong::Transform(ong::vec3(0.0f, 0.0f, 0.0f), ong::Quaternion(ong::vec3(0, 0, 0), 1)));
+        ////m_Color
+        //brick->m_Color = PuRe_Color(0.01f, 0.1f, 0.3f, 1);
+        CGameObject::Deserialize(a_pSerializer, a_pBrickManager, a_pWorld);
     }
 
     // **************************************************************************

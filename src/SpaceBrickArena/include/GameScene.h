@@ -33,6 +33,7 @@ namespace Game
         int m_ArrayID;
 
         std::vector<Player*> m_Players;
+        std::vector<CGameCamera*> m_Cameras;
 
         float physicsTimer;
         int m_playerIdx;
@@ -43,7 +44,7 @@ namespace Game
         CNetworkHandler* m_pNetwork;
         PuRe_Font* m_pFont;
         PuRe_PointLight* m_pPointLight;
-        PuRe_Renderer* m_pRenderer;
+        PuRe_DirectionalLight* m_pDirectionalLight;
         PuRe_SkyBox* m_pSkyBox;
         PuRe_Model* m_pModel;
         PuRe_IMaterial* m_pMaterial;
@@ -52,15 +53,12 @@ namespace Game
         PuRe_IMaterial* m_pSkyMaterial;
         PuRe_IMaterial* m_pPostMaterial;
         PuRe_IMaterial* m_pPointLightMaterial;
+        PuRe_IMaterial* m_pDirectionalLightMaterial;
         CMinimap* m_pMinimap;
-        PuRe_Camera* m_pUICamera;
         PuRe_BoundingBox m_MapBoundaries;
 
         std::vector<TheBrick::CBullet*> m_Bullets;
         std::vector<TheBrick::CAsteroid*> m_Asteroids;
-        /// @brief Cameras
-        ///
-        CGameCamera* m_pCamera;
         /// @brief Engine's Application
         ///
         PuRe_Application* m_pApplication;

@@ -7,7 +7,6 @@ namespace Game
     CGameCamera::CGameCamera(PuRe_Vector3F a_Position, PuRe_Vector3F a_Direction, PuRe_Vector3F a_Up, float a_FOV, float a_AspectRatio,
         PuRe_Vector2F a_NearFar, PuRe_Vector2F a_Resolution, PuReEngine::Core::CameraProjection a_UsedProjection) : PuRe_Camera(a_Position, a_Direction, a_Up, a_FOV, a_AspectRatio, a_NearFar, a_Resolution, a_UsedProjection)
     {
-
     }
 
     CGameCamera::CGameCamera(PuRe_Vector2F a_Resolution, PuReEngine::Core::CameraProjection a_UsedProjection) : PuRe_Camera(a_Resolution, a_UsedProjection)
@@ -23,10 +22,11 @@ namespace Game
     void CGameCamera::Initialize()
     {
         this->SetFoV(45.0f);
-        this->m_ZOffset = 5.0f;
+        this->m_ZOffset = 20.0f;
+        this->setNearFar(PuRe_Vector2F(0.1f, 1000.0f));
     }
 
-    void CGameCamera::Update(TheBrick::CSpaceship* a_pPlayer, PuRe_IInput* a_pInput, PuRe_Timer* a_pTimer)
+    void CGameCamera::Update(int a_CID, TheBrick::CSpaceship* a_pPlayer, PuRe_IInput* a_pInput, PuRe_Timer* a_pTimer)
     {
         //Seconds for frame independent movement
         float Seconds = a_pTimer->GetElapsedSeconds();
@@ -57,10 +57,10 @@ namespace Game
         //this->Move(CameraMove);
 
         this->m_ZOffset += a_pInput->GetMouseScroll();
-        if (this->m_ZOffset < 5.0f)
-            this->m_ZOffset = 5.0f;
-        else if (this->m_ZOffset > 10.0f)
-            this->m_ZOffset = 10.0f;
+        if (this->m_ZOffset < 20.0f)
+            this->m_ZOffset = 20.0f;
+        else if (this->m_ZOffset > 50.0f)
+            this->m_ZOffset = 50.0f;
 
         this->SetPosition(TheBrick::OngToPuRe(a_pPlayer->m_pBody->getWorldCenter()));
 
@@ -87,13 +87,13 @@ namespace Game
             invert = true;
         }
         if (Key == "LeftThumb.X")
-            Cam.X = a_pInput->GetGamepadLeftThumb(0).X;
+            Cam.X = a_pInput->GetGamepadLeftThumb(a_CID).X;
         else if (Key == "RightThumb.X")
-            Cam.X = a_pInput->GetGamepadRightThumb(0).X;
+            Cam.X = a_pInput->GetGamepadRightThumb(a_CID).X;
         else if (Key == "LeftThumb.Y")
-            Cam.X = a_pInput->GetGamepadLeftThumb(0).Y;
+            Cam.X = a_pInput->GetGamepadLeftThumb(a_CID).Y;
         else if (Key == "RightThumb.Y")
-            Cam.X = a_pInput->GetGamepadRightThumb(0).Y;
+            Cam.X = a_pInput->GetGamepadRightThumb(a_CID).Y;
         if (invert)
             Cam.X = -Cam.X;
 
@@ -105,17 +105,17 @@ namespace Game
             invert = true;
         }
         if (Key == "LeftThumb.X")
-            Cam.Y = a_pInput->GetGamepadLeftThumb(0).X;
+            Cam.Y = a_pInput->GetGamepadLeftThumb(a_CID).X;
         else if (Key == "RightThumb.X")
-            Cam.Y = a_pInput->GetGamepadRightThumb(0).X;
+            Cam.Y = a_pInput->GetGamepadRightThumb(a_CID).X;
         else if (Key == "LeftThumb.Y")
-            Cam.Y = a_pInput->GetGamepadLeftThumb(0).Y;
+            Cam.Y = a_pInput->GetGamepadLeftThumb(a_CID).Y;
         else if (Key == "RightThumb.Y")
-            Cam.Y = a_pInput->GetGamepadRightThumb(0).Y;
+            Cam.Y = a_pInput->GetGamepadRightThumb(a_CID).Y;
         if (invert)
             Cam.Y = -Cam.Y;
 
-        if (Cam.Length() > 1.0f)
+        if (Cam.Length() > 0.5f)
             this->Rotate(cameraLook.Y + Cam.Y, cameraLook.X + Cam.X, cameraLook.Z);
 
         this->Move(PuRe_Vector3F(0.0f, 0.0f, -this->m_ZOffset));

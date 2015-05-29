@@ -41,7 +41,7 @@ void main()
    	ssao = ssao / float(BlurSize * BlurSize);
 
 
-        blend = vec4((blend.xyz*light.xyz+ambient)* ssao,blend.a);
+        blend = vec4((blend.xyz*(light.xyz+ambient))*ssao,blend.a);
         if(blend.a < 0.1)
          discard;
 

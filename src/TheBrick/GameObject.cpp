@@ -66,14 +66,8 @@ namespace TheBrick
             ong::Transform transform;
             a_pSerializer.Read(&transform, sizeof(transform));
             brick->SetTransform(transform);
-            //m_pCollider: Add Collider to Body
-            for (int i = 0; i < brick->m_pCollider.size(); i++)
-            {
-                this->m_pBody->addCollider(brick->m_pCollider[i]);
-            }
             //m_Color
             a_pSerializer.Read(&brick->m_Color, sizeof(*&brick->m_Color));
-            this->m_pBricks.push_back(brick);
         }
         //m_pBody
     }

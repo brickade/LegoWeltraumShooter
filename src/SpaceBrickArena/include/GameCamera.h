@@ -18,7 +18,7 @@ namespace Game
     ~CGameCamera();
 
     void Initialize();
-    void Update(TheBrick::CSpaceship* a_pPlayer,PuRe_IInput* a_pInput, PuRe_Timer* a_pTimer);
+    void Update(int a_CID,TheBrick::CSpaceship* a_pPlayer,PuRe_IInput* a_pInput, PuRe_Timer* a_pTimer);
 
   private:
       float m_ZOffset;

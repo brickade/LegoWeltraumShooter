@@ -78,7 +78,7 @@ PixelShaderOutput PS_MAIN(VertexShaderOutput input)
   float4 ssao = SSAOMap.Sample(TextureSampler, TexCoord);
 
 
-  blend = float4((blend.xyz*light.xyz+ambient),blend.a) * ssao;
+  blend = float4((blend.xyz*(light.xyz+ambient))*ssao,blend.a);
   if(blend.a < 0.1)
 	discard;
 

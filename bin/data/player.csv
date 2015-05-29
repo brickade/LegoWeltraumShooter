@@ -7,10 +7,10 @@ SpinLeft;LB
 SpinRight;-RB
 Shoot;A
 SpeedAcceleration;10
-PitchAcceleration;5
-YawAcceleration;5
+PitchAcceleration;10
+YawAcceleration;10
 RollAcceleration;5
 MaxSpeed;10
-MaxYawSpeed;3
-MaxPitchSpeed;3
+MaxYawSpeed;5
+MaxPitchSpeed;5
 MaxRollSpeed;3

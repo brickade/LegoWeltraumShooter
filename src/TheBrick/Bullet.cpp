@@ -17,7 +17,7 @@ namespace TheBrick
         //m_Transform
         brick->SetTransform(ong::Transform(ong::vec3(0.0f, 0.0f, 0.0f), ong::Quaternion(ong::vec3(0, 0, 0), 1)));
         //m_Color
-        brick->m_Color = PuRe_Color(1, 1, 1, 1);
+        brick->m_Color = PuRe_Color(0.3f, 0, 0, 1);
         this->m_pBody->setPosition(TheBrick::PuReToOng(a_Position));
         this->m_pBody->applyImpulse(TheBrick::PuReToOng(a_Speed));
 
