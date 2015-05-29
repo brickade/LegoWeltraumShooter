@@ -29,7 +29,10 @@ namespace TheBrick
     // **************************************************************************
     CGameObject::~CGameObject()
     {
-        SAFE_DELETE_ARRAY(this->m_pBricks.data()); //Delete BrickInstances
+        for (int i = 0; i < this->m_pBricks.size(); i++)
+            SAFE_DELETE(this->m_pBricks[i]);
+        this->m_pBody->getWorld()->destroyBody(this->m_pBody);
+        this->m_pBody = nullptr;
     }
 
 

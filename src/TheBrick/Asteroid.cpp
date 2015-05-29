@@ -16,7 +16,7 @@ namespace TheBrick
             CBrickInstance* brick = new CBrickInstance(a_pBrickManager->GetBrick(2), *this, a_rWorld);
             //m_Transform
             ong::AABB aabb = brick->m_pCollider[0]->getAABB();
-            brick->SetTransform(ong::Transform(ong::vec3(0.0f, i*(aabb.c.y+0.005f)*2.0f, 0.0f), ong::Quaternion(ong::vec3(0, 0, 0), 1)));
+            brick->SetTransform(ong::Transform(ong::vec3(0.0f, i*(aabb.c.y+0.1f)*2.0f, 0.0f), ong::Quaternion(ong::vec3(0, 0, 0), 1)));
         }
         //m_Color
         this->m_pBody->setPosition(a_Position);
@@ -26,13 +26,11 @@ namespace TheBrick
     // **************************************************************************
     CAsteroid::~CAsteroid()
     {
-        for (int i = 0; i < this->m_pBricks.size(); i++)
-        {
-            SAFE_DELETE(this->m_pBricks[i]);
-            this->m_pBricks.erase(this->m_pBricks.begin() + i);
-        }
-        this->m_pBody->getWorld()->destroyBody(this->m_pBody);
-        this->m_pBody = nullptr;
+        //for (int i = 0; i < this->m_pBricks.size(); i++)
+        //{
+        //    SAFE_DELETE(this->m_pBricks[i]);
+        //    this->m_pBricks.erase(this->m_pBricks.begin() + i);
+        //}
     }
 
     // **************************************************************************
