@@ -17,7 +17,7 @@ namespace Game
             TheBrick::CSerializer serializer;
             serializer.OpenRead("../data/ships/banana.ship");
             ong::vec3 pos = ong::vec3(10.0f,10.0f,10.0f);
-            pos.x += this->m_Players[i]->ID*3.0f;
+            pos.x += this->m_Players[i]->ID*10.0f;
             this->m_Players[i]->Ship = new TheBrick::CSpaceship(*BrickBozz::Instance()->World,pos);
             this->m_Players[i]->Ship->Deserialize(serializer, *BrickBozz::Instance()->BrickManager, *BrickBozz::Instance()->World);
             serializer.Close();
@@ -490,8 +490,8 @@ namespace Game
         ////////////////////////////////////////////////////
         //if (this->gameStart)
         //{
-        //    for (int i = 0; i < this->m_Players.size(); i++)
-        //        this->m_Players[i]->Ship->Draw(a_pGraphics, this->m_pCamera);
+  /*          for (int i = 0; i < this->m_Players.size(); i++)
+                this->m_Players[i]->Ship->Draw(a_pGraphics, this->m_Cameras[0]);*/
         //}
 
         //////////////////// POST SCREEN ////////////////////////////////
