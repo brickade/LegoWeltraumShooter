@@ -17,13 +17,6 @@ namespace TheBrick
             //m_Transform
             ong::AABB aabb = brick->m_pCollider[0]->getAABB();
             brick->SetTransform(ong::Transform(ong::vec3(0.0f, i*(aabb.c.y+0.005f)*2.0f, 0.0f), ong::Quaternion(ong::vec3(0, 0, 0), 1)));
-            //m_pCollider: Add Collider to Body
-            for (int i = 0; i < brick->m_pCollider.size(); i++)
-            {
-                this->m_pBody->addCollider(brick->m_pCollider[i]);
-            }
-            brick->m_Color = PuRe_Color(1, 1, 1, 1);
-            this->m_pBricks.push_back(brick);
         }
         //m_Color
         this->m_pBody->setPosition(a_Position);

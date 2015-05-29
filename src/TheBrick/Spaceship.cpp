@@ -299,14 +299,8 @@ namespace TheBrick
         CBrickInstance* brick = new CBrickInstance(a_pBrickManager.GetBrick(1), *this, a_pWorld);
         //m_Transform
         brick->SetTransform(ong::Transform(ong::vec3(0.0f, 0.0f, 0.0f), ong::Quaternion(ong::vec3(0, 0, 0), 1)));
-        //m_pCollider: Add Collider to Body
-        for (int i = 0; i < brick->m_pCollider.size(); i++)
-        {
-            this->m_pBody->addCollider(brick->m_pCollider[i]);
-        }
         //m_Color
         brick->m_Color = PuRe_Color(1,0,0,1);
-        this->m_pBricks.push_back(brick);
         //CGameObject::Deserialize(a_pSerializer, a_pBrickManager, a_pWorld);
     }
 
