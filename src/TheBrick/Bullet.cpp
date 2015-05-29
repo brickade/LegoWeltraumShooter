@@ -28,11 +28,6 @@ namespace TheBrick
     // **************************************************************************
     CBullet::~CBullet()
     {
-        //for (int i = 0; i < this->m_pBricks.size(); i++)
-        //{
-        //    SAFE_DELETE(this->m_pBricks[i]);
-        //    this->m_pBricks.erase(this->m_pBricks.begin()+i);
-        //}
     }
 
     // **************************************************************************
