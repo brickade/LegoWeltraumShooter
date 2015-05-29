@@ -30,7 +30,7 @@ namespace TheBrick
         CGameObject::Draw(a_pGraphics, a_pCamera);
     }
 
-// **************************************************************************
+    // **************************************************************************
     // **************************************************************************
     void CSpaceship::Shoot(std::vector<CBullet*>& a_rBullets, CBrickManager* a_pManager)
     {
@@ -71,7 +71,6 @@ namespace TheBrick
         if (a_Thrust > 0.2f || a_Thrust < -0.2f)
             this->m_TargetVec.z += a_Thrust * maxSpeed;
     }
-
 
 
     // **************************************************************************
