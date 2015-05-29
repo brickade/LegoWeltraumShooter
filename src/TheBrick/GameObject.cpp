@@ -4,6 +4,8 @@
 #include "include/TheBrick/Serializer.h"
 #include "include/TheBrick/BrickManager.h"
 #include "include/TheBrick/Brick.h"
+#include "include/TheBrick/DebugDraw.h"
+#include "include/TheBrick/Conversion.h"
 
 namespace TheBrick
 {
@@ -29,12 +31,14 @@ namespace TheBrick
     // **************************************************************************
     CGameObject::~CGameObject()
     {
-        for (int i = 0; i < this->m_pBricks.size(); i++)
+        //Delete BrickInstances
+        for (size_t i = 0; i < this->m_pBricks.size(); i++)
+        {
             SAFE_DELETE(this->m_pBricks[i]);
+        }
         this->m_pBody->getWorld()->destroyBody(this->m_pBody);
         this->m_pBody = nullptr;
     }
-
 
     // **************************************************************************
     // **************************************************************************
@@ -47,7 +51,19 @@ namespace TheBrick
     // **************************************************************************
     void CGameObject::Draw(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera)
     {
-        
+        DrawBody(this->m_pBody, a_pCamera, a_pGraphics);
+        return;
+        for (auto&& brickinstance : this->m_pBricks)
+        {
+            std::vector<TheBrick::SNub>& nubs = brickinstance->m_pBrick->GetNubs();
+            for (auto&& nub : nubs)
+            {
+                ong::Sphere s;
+                s.r = 0.1f;
+                s.c = TheBrick::PuReToOng(nub.Position);
+                TheBrick::DrawShape(&s, ong::Transform(brickinstance->GetTransform()), PuRe_Vector3F(0, 1, 1), a_pCamera, a_pGraphics);
+            }
+        }
     }
 
 
@@ -69,7 +85,6 @@ namespace TheBrick
             //m_Color
             a_pSerializer.Read(&brick->m_Color, sizeof(*&brick->m_Color));
         }
-        //m_pBody
     }
 
     // **************************************************************************
@@ -88,7 +103,6 @@ namespace TheBrick
             //m_Color
             a_pSerializer.Write(&brick->m_Color, sizeof(*&brick->m_Color));
         }
-        //m_pBody
     }
 
     // **************************************************************************

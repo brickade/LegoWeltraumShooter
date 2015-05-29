@@ -58,9 +58,9 @@ namespace TheBrick
 
         void RotateAroundPivotOffset(PuRe_QuaternionF a_Quaternion);
         PuRe_Vector3F PosToBrickSpace(const PuRe_Vector3F& a_rWorldSpacePosition) const;
-        PuRe_Vector3F DirToBrickSpace(const PuRe_Vector3F& a_rWorldSpaceRotation) const;
+        PuRe_Vector3F DirToBrickSpace(const PuRe_Vector3F& a_rWorldSpaceDir) const;
         PuRe_Vector3F PosToWorldSpace(const PuRe_Vector3F& a_rBrickSpacePosition) const;
-        PuRe_Vector3F DirToWorldSpace(const PuRe_Vector3F& a_rBrickSpaceRotation) const;
+        PuRe_Vector3F DirToWorldSpace(const PuRe_Vector3F& a_rBrickSpaceDir) const;
 
         SNub* GetNubAtWorldPos(const PuRe_Vector3F& a_WorldPos, float a_threshold) const;
     };

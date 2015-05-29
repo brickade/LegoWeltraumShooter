@@ -8,6 +8,8 @@
 #include "include/History.h"
 #include <TheBrick/Conversion.h>
 
+#include "TheBrick/DebugDraw.h"
+
 namespace Game
 {
     // **************************************************************************
@@ -47,12 +49,12 @@ namespace Game
 
         this->m_placeBelow = false;
 
+        //Load Ship from file
         this->m_pSpaceship = new TheBrick::CSpaceship(*BrickBozz::Instance()->World, ong::vec3(0,0,0));
-
-        TheBrick::CBrickInstance* brickInstance = BrickBozz::Instance()->BrickManager->GetBrick(1).CreateInstance(*this->m_pSpaceship, *BrickBozz::Instance()->World);
-        brickInstance->SetTransform(ong::Transform(ong::vec3(0, 0, 0), ong::Quaternion(ong::vec3(0, 0, 0), 1)));
-        brickInstance->RotateAroundPivotOffset(PuRe_QuaternionF(0.0f, 0.0f, 0.0f));
-        brickInstance->m_Color = PuRe_Color(0,0,1);
+        TheBrick::CSerializer* serializer = new TheBrick::CSerializer();
+        serializer->OpenRead("../data/ships/banana.ship");
+        this->m_pSpaceship->Deserialize(*serializer, *BrickBozz::Instance()->BrickManager, *BrickBozz::Instance()->World);
+        serializer->Close();
         
         this->m_pCurrentBrickObject = new TheBrick::CGameObject(*BrickBozz::Instance()->World, nullptr);
     }
@@ -76,6 +78,26 @@ namespace Game
         this->UpdateHeight(a_pInput);
         this->ApplyToCurrentBrick();
         this->UpdatePlacement(a_pInput);
+
+        //Safe Ship to file
+        if (a_pInput.KeyIsPressed(a_pInput.Ctrl) && a_pInput.KeyPressed(a_pInput.S))
+        {
+            TheBrick::CSerializer* serializer = new TheBrick::CSerializer();
+            serializer->OpenWrite("../data/ships/banana.ship");
+            this->m_pSpaceship->Serialize(*serializer);
+            serializer->Close();
+        }
+
+        //Reset/Delete Ship
+        if (a_pInput.KeyPressed(a_pInput.Backspace))
+        {
+            SAFE_DELETE(this->m_pSpaceship);
+            this->m_pSpaceship = new TheBrick::CSpaceship(*BrickBozz::Instance()->World, ong::vec3(0, 0, 0));
+            TheBrick::CBrickInstance* brickInstance = BrickBozz::Instance()->BrickManager->GetBrick(1).CreateInstance(*this->m_pSpaceship, *BrickBozz::Instance()->World);
+            brickInstance->SetTransform(ong::Transform(ong::vec3(0, 0, 0), ong::Quaternion(ong::vec3(0, 0, 0), 1)));
+            brickInstance->RotateAroundPivotOffset(PuRe_QuaternionF(0.0f, 0.0f, 0.0f));
+            brickInstance->m_Color = PuRe_Color(0,0,1);
+        }
     }
 
     // **************************************************************************
@@ -88,7 +110,7 @@ namespace Game
         {
             for (int z = -this->m_maxBrickDistance; z < this->m_maxBrickDistance; z++)
             {
-                renderer->Draw(this->m_pGridBrick, PuRe_Primitive::Triangles, this->m_pGridMaterial, PuRe_Vector3F(x* TheBrick::CBrick::SEGMENT_WIDTH, -TheBrick::CBrick::SEGMENT_HEIGHT, z* TheBrick::CBrick::SEGMENT_WIDTH), PuRe_MatrixF::Identity(), PuRe_Vector3F(0.0f, 0.0f, 0.0f), PuRe_Vector3F(1.0f, 1.0f, 1.0f), PuRe_Color(0.7f, 0.2f, 0.2f));
+                //renderer->Draw(this->m_pGridBrick, PuRe_Primitive::Triangles, this->m_pGridMaterial, PuRe_Vector3F(x* TheBrick::CBrick::SEGMENT_WIDTH, -TheBrick::CBrick::SEGMENT_HEIGHT, z* TheBrick::CBrick::SEGMENT_WIDTH), PuRe_MatrixF::Identity(), PuRe_Vector3F(0.0f, 0.0f, 0.0f), PuRe_Vector3F(1.0f, 1.0f, 1.0f), PuRe_Color(0.7f, 0.2f, 0.2f));
             }
         }
     }
@@ -205,8 +227,7 @@ namespace Game
         }
 
         this->m_currentBrickRotation = this->m_currentRotation;
-        //float rotationSpeed = speed * 1;
-        //this->m_currentBrickRotation += round(clamp(this->m_currentBrickRotation - this->m_currentRotation, 0, 1)) * rotationSpeed;
+        this->m_currentBrickRotation = this->m_currentBrickRotation - fmod(this->m_currentBrickRotation, 1.57079633f); //Snap Rotation
     }
 
     // **************************************************************************
@@ -226,9 +247,11 @@ namespace Game
         this->ApplyToCurrentBrick();
         this->m_canPlaceHere = false; //Block placing
 
-        const ong::Transform& brickTransform = this->m_pCurrentBrick->GetTransform();
+        const ong::Transform& brickTransform = ong::transformTransform(this->m_pCurrentBrick->GetTransform(), this->m_pCurrentBrick->GetGameObject()->GetTransform());
         std::vector<TheBrick::SNub>& nubs = this->m_pCurrentBrick->m_pBrick->GetNubs(); //Get currentBrick Nubs
         ong::RayQueryResult hitResult;
+        hitResult.t = FLT_MAX;
+
         ong::vec3 dockingNubDirection = ong::vec3(0, -1, 0);
         bool dockingNubShouldBeMale = false;
         if (this->m_placeBelow)
@@ -237,20 +260,23 @@ namespace Game
             dockingNubDirection.y *= -1;
         }
         bool hit = false;
-        for (int i = 0; i < nubs.size(); i++) //Go through currentBrick Nubs
+        for (size_t i = 0; i < nubs.size(); i++) //Go through currentBrick Nubs
         {
-            const ong::vec3 dir = TheBrick::PuReToOng(this->m_pCurrentBrick->DirToWorldSpace(nubs[i].Direction)); //Transform nubDirection to WorldSpace
-            if (nubs[i].isMale == dockingNubShouldBeMale || dot(ong::normalize(dir), dockingNubDirection) < 0.99f)
+            const ong::vec3 rayDir = TheBrick::PuReToOng(this->m_pCurrentBrick->DirToWorldSpace(nubs[i].Direction)); //Transform nubDirection to WorldSpace
+            if (nubs[i].isMale != dockingNubShouldBeMale || dot(ong::normalize(rayDir), dockingNubDirection) < 0.99f)
             { //Wrong Direction
                 continue;
             }
-            const ong::vec3 origin = TheBrick::PuReToOng(this->m_pCurrentBrick->PosToWorldSpace(nubs[i].Position)); //Transform nubPosition to WorldSpace
+            const ong::vec3 rayOrigin = TheBrick::PuReToOng(this->m_pCurrentBrick->PosToWorldSpace(nubs[i].Position)); //Transform nubPosition to WorldSpace
 
             ong::RayQueryResult hs = {0}; //Allocate
-            if (this->m_pCurrentBrickObject->m_pBody->queryRay(brickTransform.p, dir, &hs)) //Cast Ray
+            hs.t = FLT_MAX;
+            //--------------------------------------------------------------------------------
+            if (this->m_pSpaceship->m_pBody->queryRay(rayOrigin, rayDir, &hs)) //Cast Ray
             { //Ray Hit
                 hit = true;
-                if (ong::length(origin - hs.point) < ong::length(origin - hitResult.point))
+                printf("RayPointHeight %i: %i\n", i, (int)(hs.point.y / TheBrick::CBrick::SEGMENT_HEIGHT));
+                if (hs.t < hitResult.t)
                 { //This Hit is nearer to the brick than the saved one
                     hitResult = hs;
                 }
@@ -258,21 +284,27 @@ namespace Game
         }
         if (!hit)
         { //Nothing hit
+            this->m_currentHeight = 0;
             return;
         }
         TheBrick::CBrickInstance* brickInstance = reinterpret_cast<TheBrick::CBrickInstance*>(hitResult.collider->getUserData()); //Get hit BrickInstance
-        
         //Transform hitResult direction to brickInstance BrickSpace
-        ong::vec3 dockingdir = TheBrick::PuReToOng(brickInstance->PosToBrickSpace(TheBrick::OngToPuRe(hitResult.normal)));
+        ong::vec3 dockingdir = TheBrick::PuReToOng(brickInstance->DirToBrickSpace(TheBrick::OngToPuRe(hitResult.normal)));
         //Get hitBrick Nub at that position
-        TheBrick::SNub& nub = *brickInstance->GetNubAtWorldPos(TheBrick::OngToPuRe(hitResult.point), this->m_nubDockThreshold);
-        if (nub.isMale != dockingNubShouldBeMale || dot(ong::normalize(TheBrick::PuReToOng(nub.Direction)), dockingdir) < 0.99f)
+        TheBrick::SNub* nub = brickInstance->GetNubAtWorldPos(TheBrick::OngToPuRe(hitResult.point), this->m_nubDockThreshold);
+        assert(nub != nullptr);
+        if (nub->isMale == dockingNubShouldBeMale || dot(ong::normalize(TheBrick::PuReToOng(nub->Direction)), dockingdir) < 0.99f)
         { //Wrong Direction
             return;
         }
         this->m_canPlaceHere = true; //Enable placing
-        this->m_currentHeight = TheBrick::OngToPuRe(hitResult.point).Y; //set Brick Height
-        this->m_currentHeight = floor(this->m_currentHeight / TheBrick::CBrick::SEGMENT_HEIGHT); //Snap Height
+        float heightOffset = 0;
+        if (this->m_placeBelow)
+        {
+            heightOffset = -TheBrick::CBrick::SEGMENT_HEIGHT * 3;
+        }
+        this->m_currentHeight = TheBrick::OngToPuRe(hitResult.point).Y + heightOffset; //Set Brick Height;
+        this->m_currentHeight = this->m_currentHeight - fmod(this->m_currentHeight, TheBrick::CBrick::SEGMENT_HEIGHT); //Snap Height
     }
 
     // **************************************************************************
@@ -315,7 +347,7 @@ namespace Game
         }
         if (!this->m_canPlaceHere)
         {
-            //return;
+            return;
         }
         //Gamepad & Mouse
         if (a_pInput.GamepadPressed(a_pInput.Pad_A, this->m_playerIdx) || a_pInput.MousePressed(a_pInput.LeftClick))

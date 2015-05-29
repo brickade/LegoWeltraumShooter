@@ -83,11 +83,12 @@ namespace Game
         //renderer->Draw(this->m_pSkyBox, this->m_pSkyBoxMaterial);
         //Bricks
         //this->m_pBrickWorker->Render();
-        BrickBozz::Instance()->BrickManager->Render(*BrickBozz::Instance()->Renderer);
+        //BrickBozz::Instance()->BrickManager->Render(*BrickBozz::Instance()->Renderer);
         this->m_pBrickSupervisor->Render(*a_pGraphics);
+        this->m_pBrickWorker->DrawDebug(a_pGraphics);
         //Post
         renderer->Set((float)this->textureID, "textureID");
-        renderer->Set(PuRe_Vector3F(0.02f, 0.02f, 0.02f), "ambient");
+        renderer->Set(PuRe_Vector3F(0.2f, 0.2f, 0.2f), "ambient");
         renderer->Render(this->m_pBrickWorker->GetCamera(), this->m_pPostMaterial);
         renderer->End();
     }

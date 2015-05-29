@@ -5,6 +5,9 @@
 #include <PuReEngine/Defines.h>
 #include <Onager/World.h>
 
+#include "TheBrick/GameObject.h"
+#include "TheBrick/Spaceship.h"
+
 #include "EditorCamera.h"
 
 namespace TheBrick
@@ -58,6 +61,11 @@ namespace Game
         CEditorCamera* GetCamera() const
         {
             return this->m_pCamera;
+        }
+        void DrawDebug(PuRe_IGraphics* a_pGraphics)
+        {
+            m_pCurrentBrickObject->Draw(a_pGraphics, m_pCamera);
+            this->m_pSpaceship->Draw(a_pGraphics, m_pCamera);
         }
 
     public:

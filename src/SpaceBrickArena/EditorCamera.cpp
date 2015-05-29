@@ -59,7 +59,7 @@ namespace Game
             MoveInput.X -= keyboardSpeed;
         if (a_pInput->KeyIsPressed(a_pInput->W))
             MoveInput.Y += keyboardSpeed;
-        else if (a_pInput->KeyIsPressed(a_pInput->S))
+        else if (a_pInput->KeyIsPressed(a_pInput->S) && !a_pInput->KeyIsPressed(a_pInput->Ctrl))
             MoveInput.Y -= keyboardSpeed;
         //Zoom
         if (a_pInput->KeyIsPressed(a_pInput->R))

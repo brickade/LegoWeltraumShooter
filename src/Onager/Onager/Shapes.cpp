@@ -988,7 +988,7 @@ namespace ong
 			Plane& p = hull->pPlanes[i];
 
 			float denom = dot(p.n, dir);
-			float dist = p.d - dot(p.n, origin);
+            float dist = distPointPlane(origin, p);
 
 			// ray parallel to face
 			if (abs(denom) < FLT_EPSILON)
@@ -998,7 +998,7 @@ namespace ong
 			}
 			else
 			{
-				float t = dist / denom;
+				float t = -dist / denom;
 				if (denom < 0.0f)
 				{
 					if (t > tmin)
@@ -1013,7 +1013,8 @@ namespace ong
 				}
 			}
 
-			if (tmin > tmax) return false;
+			if (tmin > tmax)
+                return false;
 
 		}
 

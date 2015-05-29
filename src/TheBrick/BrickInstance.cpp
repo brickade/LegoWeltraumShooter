@@ -52,34 +52,28 @@ namespace TheBrick
     // **************************************************************************
     PuRe_Vector3F CBrickInstance::PosToBrickSpace(const PuRe_Vector3F& a_rWorldSpacePosition) const
     {
-        PuRe_Vector3F pivotOffset = this->m_pBrick->GetPivotOffset();
-        ong::Transform currentTransform = this->GetTransform();
-        PuRe_MatrixF transform = PuRe_MatrixF::Translation(-pivotOffset) * OngToPuRe(currentTransform.q).GetMatrix() * PuRe_MatrixF::Translation(pivotOffset) * PuRe_MatrixF::Translation(OngToPuRe(currentTransform.p));
-        return a_rWorldSpacePosition * PuRe_MatrixF::Invert(transform);
+        return OngToPuRe(ong::invTransformVec3(PuReToOng(a_rWorldSpacePosition), ong::transformTransform(this->GetTransform(), this->GetGameObject()->GetTransform())));
     }
 
     // **************************************************************************
     // **************************************************************************
-    PuRe_Vector3F CBrickInstance::DirToBrickSpace(const PuRe_Vector3F& a_rWorldSpaceRotation) const
+    PuRe_Vector3F CBrickInstance::DirToBrickSpace(const PuRe_Vector3F& a_rWorldSpaceDir) const
     {
-        return a_rWorldSpaceRotation * OngToPuRe(ong::conjugate(this->GetTransform().q));
+        return OngToPuRe(ong::rotate(ong::rotate(PuReToOng(a_rWorldSpaceDir), ong::conjugate(this->GetGameObject()->GetTransform().q)), ong::conjugate(this->GetTransform().q)));
     }
 
     // **************************************************************************
     // **************************************************************************
     PuRe_Vector3F CBrickInstance::PosToWorldSpace(const PuRe_Vector3F& a_rBrickSpacePosition) const
     {
-        PuRe_Vector3F pivotOffset = this->m_pBrick->GetPivotOffset();
-        ong::Transform currentTransform = this->GetTransform();
-        PuRe_MatrixF transform = PuRe_MatrixF::Translation(-pivotOffset) * OngToPuRe(currentTransform.q).GetMatrix() * PuRe_MatrixF::Translation(pivotOffset) * PuRe_MatrixF::Translation(OngToPuRe(currentTransform.p));
-        return a_rBrickSpacePosition * transform;
+        return OngToPuRe(ong::transformVec3(PuReToOng(a_rBrickSpacePosition), ong::transformTransform(this->GetTransform(), this->GetGameObject()->GetTransform())));
     }
 
     // **************************************************************************
     // **************************************************************************
-    PuRe_Vector3F CBrickInstance::DirToWorldSpace(const PuRe_Vector3F& a_rBrickSpaceRotation) const
+    PuRe_Vector3F CBrickInstance::DirToWorldSpace(const PuRe_Vector3F& a_rBrickSpaceDir) const
     {
-        return a_rBrickSpaceRotation * OngToPuRe(this->GetTransform().q);
+        return OngToPuRe(ong::rotate(ong::rotate(PuReToOng(a_rBrickSpaceDir), this->GetTransform().q), this->GetGameObject()->GetTransform().q));
     }
 
     // **************************************************************************
@@ -95,5 +89,6 @@ namespace TheBrick
                 return &nubs[i];
             }
         }
+        return nullptr;
     }
 }

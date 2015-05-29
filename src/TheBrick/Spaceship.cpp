@@ -27,6 +27,7 @@ namespace TheBrick
     void CSpaceship::Draw(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera)
     {
         DrawBody(this->m_pBody,a_pCamera,a_pGraphics);
+        CGameObject::Draw(a_pGraphics, a_pCamera);
     }
 
 // **************************************************************************
@@ -288,12 +289,6 @@ namespace TheBrick
     // **************************************************************************
     void CSpaceship::Deserialize(CSerializer& a_pSerializer, CBrickManager& a_pBrickManager, ong::World& a_pWorld)
     {
-        ////////   TESTING ONLY   ////////
-        //CBrickInstance* brick = new CBrickInstance(a_pBrickManager.GetBrick(1), *this, a_pWorld);
-        ////m_Transform
-        //brick->SetTransform(ong::Transform(ong::vec3(0.0f, 0.0f, 0.0f), ong::Quaternion(ong::vec3(0, 0, 0), 1)));
-        ////m_Color
-        //brick->m_Color = PuRe_Color(0.01f, 0.1f, 0.3f, 1);
         CGameObject::Deserialize(a_pSerializer, a_pBrickManager, a_pWorld);
     }
 

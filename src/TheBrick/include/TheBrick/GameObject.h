@@ -22,7 +22,7 @@ namespace TheBrick
     private:
 
     public:
-        const ong::Transform& GetTransform() const
+        const ong::Transform GetTransform() const
         {
             return this->m_pBody->getTransform();
         }
