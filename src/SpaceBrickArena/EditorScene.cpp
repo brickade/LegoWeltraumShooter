@@ -25,7 +25,9 @@ namespace Game
         this->m_pSkyBoxMaterial = a_pGraphics->LoadMaterial("../data/effects/skybox/default");
 
         this->m_pPointLightMaterial = a_pGraphics->LoadMaterial("../data/effects/PointLight/default");
+        this->m_pDirectionalLightMaterial = a_pGraphics->LoadMaterial("../data/effects/DirectionalLight/default");
         this->m_pPointLight = new PuRe_PointLight(a_pGraphics);
+        this->m_pDirectionalLight = new PuRe_DirectionalLight(a_pGraphics);
 
         this->m_pSkyBox = new PuRe_SkyBox(a_pGraphics, "../data/textures/cube/");
 
@@ -77,7 +79,8 @@ namespace Game
         PuRe_Renderer* renderer = BrickBozz::Instance()->Renderer;
         renderer->Begin(PuRe_Color(0.1f, 0.5f, 0.1f));
         //Lights
-        renderer->Draw(this->m_pPointLight, this->m_pPointLightMaterial, PuRe_Vector3F(0.0f, 5.0f, 0.0f), PuRe_Color(1, 1, 1), 0.1f, 0.01f, 0.01f);
+        renderer->Draw(this->m_pDirectionalLight, this->m_pDirectionalLightMaterial, PuRe_Vector3F(1.0f, 0.0f, 0.0f), PuRe_Color(0.3f, 0.3f, 0.3f));
+        //renderer->Draw(this->m_pPointLight, this->m_pPointLightMaterial, PuRe_Vector3F(0.0f, 5.0f, 0.0f), PuRe_Color(1, 1, 1), 0.1f, 0.01f, 0.01f);
         
         //Skybox
         renderer->Draw(this->m_pSkyBox, this->m_pSkyBoxMaterial);

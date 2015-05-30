@@ -28,7 +28,22 @@ namespace Game
     {
         PuRe_Vector2F navInput = PuRe_Vector2F::Zero();
         //Gamepad
-        navInput += a_pInput.GetGamepadLeftThumb(a_PlayerIdx);
+        if (a_pInput.GamepadIsPressed(a_pInput.DPAD_Right, a_PlayerIdx))
+        {
+            navInput.X += 1;
+        }
+        if (a_pInput.GamepadIsPressed(a_pInput.DPAD_Left, a_PlayerIdx))
+        {
+            navInput.X -= 1;
+        }
+        if (a_pInput.GamepadIsPressed(a_pInput.DPAD_Up, a_PlayerIdx))
+        {
+            navInput.Y += 1;
+        }
+        if (a_pInput.GamepadIsPressed(a_pInput.DPAD_Down, a_PlayerIdx))
+        {
+            navInput.Y -= 1;
+        }
         //Keyboard
         if (a_pInput.KeyPressed(a_pInput.Right))
         {

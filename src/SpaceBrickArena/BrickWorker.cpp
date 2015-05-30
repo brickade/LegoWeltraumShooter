@@ -123,22 +123,10 @@ namespace Game
 
         //----------Gamepad
         float gamepadSpeed = a_speed * 10;
-        PuRe_Vector2F gamepadInput;
-        if (a_pInput.GamepadIsPressed(a_pInput.DPAD_Right, this->m_playerIdx))
+        PuRe_Vector2F gamepadInput = a_pInput.GetGamepadLeftThumb(this->m_playerIdx);
+        if (gamepadInput.Length() < 0.25f)
         {
-            gamepadInput.X += 1;
-        }
-        if (a_pInput.GamepadIsPressed(a_pInput.DPAD_Left, this->m_playerIdx))
-        {
-            gamepadInput.X -= 1;
-        }
-        if (a_pInput.GamepadIsPressed(a_pInput.DPAD_Up, this->m_playerIdx))
-        {
-            gamepadInput.Y += 1;
-        }
-        if (a_pInput.GamepadIsPressed(a_pInput.DPAD_Down, this->m_playerIdx))
-        {
-            gamepadInput.Y -= 1;
+            gamepadInput = PuRe_Vector2F::Zero();
         }
         MoveInput = gamepadInput * gamepadSpeed;
         if (gamepadInput.Length() > 0)

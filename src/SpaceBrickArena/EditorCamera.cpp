@@ -86,6 +86,19 @@ namespace Game
 
         this->m_distance = PuRe_clamp(this->m_distance, 5, 40);
         PuRe_Vector3F rot = this->GetRotation();
+        //Align
+        /*float step = 0.785398163f;
+        float target = fmod(rot.Y, step);
+        if (target < step / 2)
+        {
+            target = rot.Y - target;
+        }
+        else
+        {
+            target = rot.Y + (step - target);
+        }
+        rot.Y = ((rot.Y * 2 + target) / 3 - target) * speed + target;*/
+
         rot.X = PuRe_clamp(rot.X, -89, 89);
         this->SetRotation(rot);
 

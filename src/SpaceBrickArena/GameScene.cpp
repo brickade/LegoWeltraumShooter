@@ -184,9 +184,9 @@ namespace Game
 
         //Camera
         PuRe_Vector2F size = PuRe_Vector2F((float)gdesc.ResolutionWidth/2, (float)gdesc.ResolutionHeight);
-        this->m_pMaterial = a_pGraphics->LoadMaterial("../data/effects/GameEffects/default/default");
+        //this->m_pMaterial = a_pGraphics->LoadMaterial("../data/effects/GameEffects/default/default"); //Kann weg
         this->m_pFontMaterial = a_pGraphics->LoadMaterial("../data/effects/font/default");
-        this->m_pUIMaterial = a_pGraphics->LoadMaterial("../data/effects/GameEffects/UI/default");
+        this->m_pUIMaterial = a_pGraphics->LoadMaterial("../data/effects/UI/default");
         this->m_pPostMaterial = a_pGraphics->LoadMaterial("../data/effects/Post/default");
         this->m_pSkyMaterial = a_pGraphics->LoadMaterial("../data/effects/skybox/default");
         this->m_pPointLightMaterial = a_pGraphics->LoadMaterial("../data/effects/PointLight/default");

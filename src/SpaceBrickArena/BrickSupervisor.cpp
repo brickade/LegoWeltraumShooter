@@ -36,16 +36,37 @@ namespace Game
     // **************************************************************************
     void CBrickSupervisor::Update(PuRe_IGraphics& a_pGraphics, PuRe_IWindow& a_pWindow, PuRe_IInput& a_pInput, PuRe_Timer& a_pTimer, PuRe_SoundPlayer& a_pSoundPlayer)
     {
-        if (a_pInput.GamepadPressed(a_pInput.Left_Thumb, this->m_PlayerIdx) || a_pInput.KeyPressed(a_pInput.X))
+        
+        if (a_pInput.GamepadIsPressed(a_pInput.Right_Thumb, this->m_PlayerIdx) || a_pInput.KeyIsPressed(a_pInput.X))
         {
-            this->m_NavigateTabs = !this->m_NavigateTabs;
+            this->m_NavigateTabs = true;
+        }
+        else
+        {
+            this->m_NavigateTabs = false;
             this->m_TabRotation = 0.4f;
         }
         if (this->m_NavigateTabs)
         {
             PuRe_Vector2F navInput = PuRe_Vector2F::Zero();
             //Gamepad
-            navInput += a_pInput.GetGamepadLeftThumb(this->m_PlayerIdx);
+            if (a_pInput.GamepadIsPressed(a_pInput.DPAD_Right, this->m_PlayerIdx))
+            {
+                navInput.X += 1;
+            }
+            if (a_pInput.GamepadIsPressed(a_pInput.DPAD_Left, this->m_PlayerIdx))
+            {
+                navInput.X -= 1;
+            }
+            if (a_pInput.GamepadIsPressed(a_pInput.DPAD_Up, this->m_PlayerIdx))
+            {
+                navInput.Y += 1;
+            }
+            if (a_pInput.GamepadIsPressed(a_pInput.DPAD_Down, this->m_PlayerIdx))
+            {
+                navInput.Y -= 1;
+            }
+
             //Keyboard
             if (a_pInput.KeyPressed(a_pInput.Right))
             {
