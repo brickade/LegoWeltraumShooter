@@ -34,7 +34,7 @@ namespace Editor
     {
         PuRe_GraphicsDescription gdesc = a_pGraphics.GetDescription();
         this->m_pCamera = new CCamera(PuRe_Vector2F((float)gdesc.ResolutionWidth, (float)gdesc.ResolutionHeight), PuRe_Camera_Perspective, this->m_playerIdx);
-        this->m_pCamera->Initialize(PuRe_Vector3F(20, 135, 0), PuRe_Vector3F(0,0,0));
+        this->m_pCamera->Initialize(PuRe_Vector3F(20, 135, 0), PuRe_Vector3F(-5,0,0));
         this->m_currentPosition = PuRe_Vector2F(0, 0);
         this->m_currentHeight = 0;
 

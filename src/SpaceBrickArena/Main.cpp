@@ -16,12 +16,12 @@ int PURE_MAIN
     description.Graphics.ResolutionWidth = 1920;
     description.Graphics.ResolutionHeight = 1080;
     description.Graphics.Module = PuRe_GraphicsModuleType::OpenGL;
-    description.Window.Title = "SpaceBrickArena - Development";
+    description.Window.Title = "SpacebrickArena - Development";
     description.Window.Width = 1280;
     description.Window.Height = 720;
     description.Window.X = 100;
     description.Window.Y = 200;
-    description.Window.DisplaySetting = PuRe_DisplaySetting::Windowed;
+    description.Window.DisplaySetting = PuRe_DisplaySetting::FullscreenWindowed;
     description.Window.ShowCursor = false;
     description.Window.CursorInWindow = false;
     description.Window.LockCursor = true;

@@ -49,7 +49,7 @@ namespace Editor
     // **************************************************************************
     void CShipWorker::ResetShip()
     {
-        SAFE_DELETE(reinterpret_cast<TheBrick::CGameObject*>(this->m_pCurrentSpaceship));
+        SAFE_DELETE(this->m_pCurrentSpaceship);
         this->m_pCurrentSpaceship = new TheBrick::CSpaceship(*sba::Space::Instance()->World, ong::vec3(0, 0, 0));
         TheBrick::CBrickInstance* brickInstance = sba::Space::Instance()->BrickManager->GetBrick(1).CreateInstance(*this->m_pCurrentSpaceship, *sba::Space::Instance()->World);
         brickInstance->SetTransform(ong::Transform(ong::vec3(0, 0, 0), ong::Quaternion(ong::vec3(0, 0, 0), 1)));
