@@ -5,7 +5,7 @@
 #include <PuReEngine/Core.h>
 #include <PuReEngine/Defines.h>
 
-#include "BrickBozz.h"
+#include "Space.h"
 
 #include <math.h>
 #include <algorithm>

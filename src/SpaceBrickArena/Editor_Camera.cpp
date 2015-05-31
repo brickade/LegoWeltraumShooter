@@ -1,32 +1,35 @@
-#include "include\EditorCamera.h"
+#include "include\Editor_Camera.h"
 
-namespace Game
+namespace Editor
 {
-    CEditorCamera::CEditorCamera(PuRe_Vector3F a_Position, PuRe_Vector3F a_Direction, PuRe_Vector3F a_Up, float a_FOV, float a_AspectRatio,
+    CCamera::CCamera(PuRe_Vector3F a_Position, PuRe_Vector3F a_Direction, PuRe_Vector3F a_Up, float a_FOV, float a_AspectRatio,
         PuRe_Vector2F a_NearFar, PuRe_Vector2F a_Resolution, PuReEngine::Core::CameraProjection a_UsedProjection, int a_playerIdx) : PuRe_Camera(a_Position, a_Direction, a_Up, a_FOV, a_AspectRatio, a_NearFar, a_Resolution, a_UsedProjection)
     {
         this->m_playerIdx = a_playerIdx;
     }
 
-    CEditorCamera::CEditorCamera(PuRe_Vector2F a_Resolution, PuReEngine::Core::CameraProjection a_UsedProjection, int a_playerIdx) : PuRe_Camera(a_Resolution, a_UsedProjection)
+    CCamera::CCamera(PuRe_Vector2F a_Resolution, PuReEngine::Core::CameraProjection a_UsedProjection, int a_playerIdx) : PuRe_Camera(a_Resolution, a_UsedProjection)
     {
         this->m_playerIdx = a_playerIdx;
     }
 
-    CEditorCamera::~CEditorCamera()
+    CCamera::~CCamera()
     {
 
     }
 
-    void CEditorCamera::Initialize()
+    void CCamera::Initialize(PuRe_Vector3F a_InitRotation, PuRe_Vector3F a_PositionOffset, float a_MinDistance, float a_MaxDistance, float a_InitDistance, float a_FoV)
     {
-        this->SetFoV(45.0f);
-        this->Move(PuRe_Vector3F(5.0f, 5.0f, -10.0f));
+        this->SetFoV(a_FoV);
+        this->Move(this->m_PositionOffset = a_PositionOffset);
+        this->Rotate(a_InitRotation.X, a_InitRotation.Y, a_InitRotation.Z);
+        this->Move(PuRe_Vector3F(0, 0, this->m_distance = a_InitDistance));
         this->m_gamepadThreshold = 0.25f;
-        this->m_distance = 100;
+        this->m_MinDistance = a_MinDistance;
+        this->m_MaxDistance = a_MaxDistance;
     }
 
-    void CEditorCamera::Update(PuRe_IGraphics* a_pGraphics, PuRe_IWindow* a_pWindow, PuRe_IInput* a_pInput, PuRe_Timer* a_pTimer)
+    void CCamera::Update(PuRe_IGraphics* a_pGraphics, PuRe_IWindow* a_pWindow, PuRe_IInput* a_pInput, PuRe_Timer* a_pTimer)
     {
         //Handle Movement
         PuRe_Vector2F MoveInput;
@@ -34,7 +37,7 @@ namespace Game
 
         //----------Gamepad
         float gamepadSpeed = speed * 250;
-        float gamepadZoomSpeed = gamepadSpeed * 0.05f;
+        float gamepadZoomSpeed = gamepadSpeed * 0.1f;
         PuRe_Vector2F gamepadInput;
         gamepadInput = a_pInput->GetGamepadRightThumb(this->m_playerIdx);
         if (std::abs(gamepadInput.X) < this->m_gamepadThreshold)
@@ -84,7 +87,7 @@ namespace Game
         this->SetPosition(PuRe_Vector3F(0, 0, 0));
         this->Rotate(MoveInput.Y, -MoveInput.X, 0);
 
-        this->m_distance = PuRe_clamp(this->m_distance, 5, 40);
+        this->m_distance = PuRe_clamp(this->m_distance, this->m_MinDistance, this->m_MaxDistance);
         PuRe_Vector3F rot = this->GetRotation();
         //Align
         /*float step = 0.785398163f;
@@ -100,8 +103,8 @@ namespace Game
         rot.Y = ((rot.Y * 2 + target) / 3 - target) * speed + target;*/
 
         rot.X = PuRe_clamp(rot.X, -89, 89);
+        this->Move(this->m_PositionOffset);
         this->SetRotation(rot);
-
         this->Move(PuRe_Vector3F(0, 0, -this->m_distance));
     }
 }

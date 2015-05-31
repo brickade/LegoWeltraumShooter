@@ -1,5 +1,5 @@
-#ifndef _BRICKBOZZ_H_
-#define _BRICKBOZZ_H_
+#ifndef _SPACE_H_
+#define _SPACE_H_
 
 // Framework specific includes
 #include <PuReEngine/Core.h>
@@ -9,19 +9,19 @@
 
 #include <TheBrick/BrickManager.h>
 
-namespace Game
+namespace sba
 {
-    class BrickBozz
+    class Space
     {
     public:
-        static BrickBozz* Instance();
+        static Space* Instance();
 
         TheBrick::CBrickManager* BrickManager;
         ong::World* World;
         PuRe_Renderer* Renderer;
 
     private:
-        static BrickBozz* g_pInstance;
+        static Space* g_pInstance;
 
         PuRe_IMaterial* m_SSAOMaterial;
 
@@ -33,9 +33,9 @@ namespace Game
         void UpdatePhysics(PuRe_Timer* a_pTimer);
 
     private:
-        BrickBozz();
-        ~BrickBozz();
+        Space();
+        ~Space();
     };
 }
 
-#endif /* _BRICKBOZZ_H_ */
+#endif /* _SPACE_H_ */

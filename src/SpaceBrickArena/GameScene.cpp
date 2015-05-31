@@ -18,14 +18,14 @@ namespace Game
             serializer.OpenRead("../data/ships/banana.ship");
             ong::vec3 pos = ong::vec3(10.0f,10.0f,10.0f);
             pos.x += this->m_Players[i]->ID*10.0f;
-            this->m_Players[i]->Ship = new TheBrick::CSpaceship(*BrickBozz::Instance()->World,pos);
-            this->m_Players[i]->Ship->Deserialize(serializer, *BrickBozz::Instance()->BrickManager, *BrickBozz::Instance()->World);
+            this->m_Players[i]->Ship = new TheBrick::CSpaceship(*sba::Space::Instance()->World, pos);
+            this->m_Players[i]->Ship->Deserialize(serializer, *sba::Space::Instance()->BrickManager, *sba::Space::Instance()->World);
             serializer.Close();
         }
         ong::vec3 start(50.0f, 50.0f, 50.0f);
         for (int i = 0; i < 10; i++)
         {
-            TheBrick::CAsteroid* asteroid = new TheBrick::CAsteroid(BrickBozz::Instance()->BrickManager, *BrickBozz::Instance()->World, start + ong::vec3((i % 2)*10.0f, (i % 2) * 10.0f, i*5.0f));
+            TheBrick::CAsteroid* asteroid = new TheBrick::CAsteroid(sba::Space::Instance()->BrickManager, *sba::Space::Instance()->World, start + ong::vec3((i % 2)*10.0f, (i % 2) * 10.0f, i*5.0f));
             this->m_Asteroids.push_back(asteroid);
         }
         this->gameStart = true;
@@ -133,7 +133,7 @@ namespace Game
                         {
                             if (IPacket->Input == 0)
                             {
-                                this->m_Players[i]->Ship->Shoot(this->m_Bullets, BrickBozz::Instance()->BrickManager);
+                                this->m_Players[i]->Ship->Shoot(this->m_Bullets, sba::Space::Instance()->BrickManager);
                             }
                             else if (IPacket->Input == 1)
                             {
@@ -244,7 +244,7 @@ namespace Game
             return true;
         }
 
-        BrickBozz::Instance()->UpdatePhysics(a_pTimer);
+        sba::Space::Instance()->UpdatePhysics(a_pTimer);
 
         //this->physicsTimer += a_pTimer->GetElapsedSeconds();
         //float constval = 1.0f / 60.0f;
@@ -351,7 +351,7 @@ namespace Game
             for (int i = 0; i<this->m_Players.size();i++)
             {
                 TheBrick::CSpaceship* player = this->m_Players[i]->Ship;
-                player->HandleInput(i, a_pInput, a_pTimer->GetElapsedSeconds(), this->m_Bullets, BrickBozz::Instance()->BrickManager);
+                player->HandleInput(i, a_pInput, a_pTimer->GetElapsedSeconds(), this->m_Bullets, sba::Space::Instance()->BrickManager);
                 PuRe_Vector3F playerpos = TheBrick::OngToPuRe(player->m_pBody->getTransform().p);
 
                 //Move player inside of map if hes outside
@@ -445,7 +445,7 @@ namespace Game
         PuRe_Color clear = PuRe_Color(0.0f, 0.4f, 1.0f);
         PuRe_GraphicsDescription gdesc = a_pGraphics->GetDescription();
 
-        PuRe_Renderer* renderer = BrickBozz::Instance()->Renderer;
+        PuRe_Renderer* renderer = sba::Space::Instance()->Renderer;
         renderer->Begin(PuRe_Color(0.1f, 0.5f, 0.1f));
 
 
@@ -456,7 +456,7 @@ namespace Game
         ////////////////////////////////////////////////////
 
         /////////////  DRAW BRICKS  ///////////////////////
-        BrickBozz::Instance()->BrickManager->Render(*BrickBozz::Instance()->Renderer);
+        sba::Space::Instance()->BrickManager->Render(*sba::Space::Instance()->Renderer);
         ////////////////////////////////////////////////////
 
         /////////////  DRAW MINIMAP  ////////////////////////

@@ -4,21 +4,21 @@
 #include <PuReEngine/Core.h>
 #include <PuReEngine/Defines.h>
 
-#include "BrickBozz.h"
+#include "Space.h"
 
 #include "EditorScene.h"
 #include "GameScene.h"
 
 // Declare namespace Game
-namespace Game
+namespace sba
 {
     /// @brief MainScene where the game functions are in, inherits from the Scene interface
     ///
     class CMainScene : public PuRe_IScene
     {
     private:
-        CEditorScene* m_pEditorScene;
-        CGameScene* m_pGameScene;
+        Editor::CEditorScene* m_pEditorScene;
+        Game::CGameScene* m_pGameScene;
         PuRe_IScene* m_pActiveScene;
         /// @brief Engine's Application
         ///

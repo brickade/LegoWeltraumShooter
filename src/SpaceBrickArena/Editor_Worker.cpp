@@ -1,20 +1,21 @@
-#include "include/BrickWorker.h"
+#include "include/Editor_Worker.h"
 
 #include <algorithm>
 #include "TheBrick/BrickInstance.h"
 #include "TheBrick/Brick.h"
 #include "TheBrick/Spaceship.h"
-#include "include/BrickBozz.h"
-#include "include/History.h"
+#include "include/Space.h"
+#include "include/Editor_History.h"
 #include <TheBrick/Conversion.h>
+#include "include\Editor_ShipWorker.h"
 
 #include "TheBrick/DebugDraw.h"
 
-namespace Game
+namespace Editor
 {
     // **************************************************************************
     // **************************************************************************
-    CBrickWorker::CBrickWorker(int a_playerIdx)
+    CWorker::CWorker(int a_playerIdx)
     {
         this->m_playerIdx = a_playerIdx;
     }
@@ -22,25 +23,24 @@ namespace Game
 
     // **************************************************************************
     // **************************************************************************
-    CBrickWorker::~CBrickWorker()
+    CWorker::~CWorker()
     {
         SAFE_DELETE(this->m_pCamera);
     }
 
     // **************************************************************************
     // **************************************************************************
-    void CBrickWorker::Initialize(PuRe_IGraphics& a_pGraphics)
+    void CWorker::Initialize(PuRe_IGraphics& a_pGraphics)
     {
         PuRe_GraphicsDescription gdesc = a_pGraphics.GetDescription();
-        this->m_pCamera = new CEditorCamera(PuRe_Vector2F((float)gdesc.ResolutionWidth, (float)gdesc.ResolutionHeight), PuRe_Camera_Perspective, this->m_playerIdx);
-        this->m_pCamera->Initialize();
-        this->m_pCamera->Rotate(10, 0, 0);
+        this->m_pCamera = new CCamera(PuRe_Vector2F((float)gdesc.ResolutionWidth, (float)gdesc.ResolutionHeight), PuRe_Camera_Perspective, this->m_playerIdx);
+        this->m_pCamera->Initialize(PuRe_Vector3F(20, 135, 0), PuRe_Vector3F(0,0,0));
         this->m_currentPosition = PuRe_Vector2F(0, 0);
         this->m_currentHeight = 0;
-        
-        this->m_pGridMaterial = a_pGraphics.LoadMaterial("../data/effects/editor/grid");
-        this->m_pGridBrick = new PuRe_Model(&a_pGraphics, "../data/models/brick1X1.obj");
-        
+
+        /*this->m_pGridMaterial = a_pGraphics.LoadMaterial("../data/effects/editor/grid");
+        this->m_pGridBrick = new PuRe_Model(&a_pGraphics, "../data/models/Brick1X1.obj");*/
+
         this->m_maxBrickDistance = 15;
 
         this->lastInputIsGamepad = false;
@@ -49,19 +49,16 @@ namespace Game
 
         this->m_placeBelow = false;
 
+        this->m_pShipWorker = new CShipWorker();
         //Load Ship from file
-        this->m_pSpaceship = new TheBrick::CSpaceship(*BrickBozz::Instance()->World, ong::vec3(0,0,0));
-        TheBrick::CSerializer* serializer = new TheBrick::CSerializer();
-        serializer->OpenRead("../data/ships/banana.ship");
-        this->m_pSpaceship->Deserialize(*serializer, *BrickBozz::Instance()->BrickManager, *BrickBozz::Instance()->World);
-        serializer->Close();
-        
-        this->m_pCurrentBrickObject = new TheBrick::CGameObject(*BrickBozz::Instance()->World, nullptr);
+        this->m_pShipWorker->LoadShipFromFile("../data/ships/banana.ship");
+
+        this->m_pCurrentBrickObject = new TheBrick::CGameObject(*sba::Space::Instance()->World, nullptr);
     }
 
     // **************************************************************************
     // **************************************************************************
-    void CBrickWorker::Update(PuRe_IGraphics& a_pGraphics, PuRe_IWindow& a_pWindow, PuRe_IInput& a_pInput, PuRe_Timer& a_pTimer, PuRe_SoundPlayer& a_pSoundPlayer, TheBrick::CBrick* a_pCurrentBrick, PuRe_Color& a_rCurrentColor)
+    void CWorker::Update(PuRe_IGraphics& a_pGraphics, PuRe_IWindow& a_pWindow, PuRe_IInput& a_pInput, PuRe_Timer& a_pTimer, PuRe_SoundPlayer& a_pSoundPlayer, TheBrick::CBrick* a_pCurrentBrick, PuRe_Color& a_rCurrentColor)
     {
         this->m_currentBrickColor = a_rCurrentColor;
         if (this->m_pCurrentBrick == nullptr || this->m_pCurrentBrick->m_pBrick != a_pCurrentBrick)
@@ -70,7 +67,7 @@ namespace Game
             {
                 SAFE_DELETE(this->m_pCurrentBrick);
             }
-            this->m_pCurrentBrick = a_pCurrentBrick->CreateInstance(*this->m_pCurrentBrickObject, *BrickBozz::Instance()->World); //Create Instance
+            this->m_pCurrentBrick = a_pCurrentBrick->CreateInstance(*this->m_pCurrentBrickObject, *sba::Space::Instance()->World); //Create Instance
         }
         this->m_pCamera->Update(&a_pGraphics, &a_pWindow, &a_pInput, &a_pTimer);
         this->UpdateTranslation(a_pInput, this->m_pCamera->GetForward(), a_pTimer.GetElapsedSeconds());
@@ -82,42 +79,34 @@ namespace Game
         //Safe Ship to file
         if (a_pInput.KeyIsPressed(a_pInput.Ctrl) && a_pInput.KeyPressed(a_pInput.S))
         {
-            TheBrick::CSerializer* serializer = new TheBrick::CSerializer();
-            serializer->OpenWrite("../data/ships/banana.ship");
-            this->m_pSpaceship->Serialize(*serializer);
-            serializer->Close();
+            this->m_pShipWorker->SaveShipToFile("../data/ships/banana.ship");
         }
 
         //Reset/Delete Ship
         if (a_pInput.KeyPressed(a_pInput.Backspace))
         {
-            SAFE_DELETE(this->m_pSpaceship);
-            this->m_pSpaceship = new TheBrick::CSpaceship(*BrickBozz::Instance()->World, ong::vec3(0, 0, 0));
-            TheBrick::CBrickInstance* brickInstance = BrickBozz::Instance()->BrickManager->GetBrick(1).CreateInstance(*this->m_pSpaceship, *BrickBozz::Instance()->World);
-            brickInstance->SetTransform(ong::Transform(ong::vec3(0, 0, 0), ong::Quaternion(ong::vec3(0, 0, 0), 1)));
-            brickInstance->RotateAroundPivotOffset(PuRe_QuaternionF(0.0f, 0.0f, 0.0f));
-            brickInstance->m_Color = PuRe_Color(0,0,1);
+            this->m_pShipWorker->ResetShip();
         }
     }
 
     // **************************************************************************
     // **************************************************************************
-    void CBrickWorker::Render()
+    void CWorker::Render()
     {
-        PuRe_Renderer* renderer = BrickBozz::Instance()->Renderer;
+        PuRe_Renderer* renderer = sba::Space::Instance()->Renderer;
         //Grid
-        for (int x = -this->m_maxBrickDistance; x < this->m_maxBrickDistance; x++)
+        /*for (int x = -this->m_maxBrickDistance; x < this->m_maxBrickDistance; x++)
         {
             for (int z = -this->m_maxBrickDistance; z < this->m_maxBrickDistance; z++)
             {
-                //renderer->Draw(this->m_pGridBrick, PuRe_Primitive::Triangles, this->m_pGridMaterial, PuRe_Vector3F(x* TheBrick::CBrick::SEGMENT_WIDTH, -TheBrick::CBrick::SEGMENT_HEIGHT, z* TheBrick::CBrick::SEGMENT_WIDTH), PuRe_MatrixF::Identity(), PuRe_Vector3F(0.0f, 0.0f, 0.0f), PuRe_Vector3F(1.0f, 1.0f, 1.0f), PuRe_Color(0.7f, 0.2f, 0.2f));
+                renderer->Draw(this->m_pGridBrick, PuRe_Primitive::Triangles, this->m_pGridMaterial, PuRe_Vector3F(x* TheBrick::CBrick::SEGMENT_WIDTH, 0, z* TheBrick::CBrick::SEGMENT_WIDTH), PuRe_MatrixF::Identity(), PuRe_Vector3F(0.0f, 0.0f, 0.0f), PuRe_Vector3F(1.0f, 1.0f, 1.0f), PuRe_Color(0.7f, 0.2f, 0.2f));
             }
-        }
+        }*/
     }
 
     // **************************************************************************
     // **************************************************************************
-    void CBrickWorker::UpdateTranslation(PuRe_IInput& a_pInput, PuRe_Vector3F a_cameraLook, float a_speed)
+    void CWorker::UpdateTranslation(PuRe_IInput& a_pInput, PuRe_Vector3F a_cameraLook, float a_speed)
     {
         PuRe_Vector2F MoveInput;
 
@@ -192,7 +181,7 @@ namespace Game
 
     // **************************************************************************
     // **************************************************************************
-    void CBrickWorker::UpdateRotation(PuRe_IInput& a_pInput, float a_rotationPerClick)
+    void CWorker::UpdateRotation(PuRe_IInput& a_pInput, float a_rotationPerClick)
     {
         //----------Gamepad
         if (a_pInput.GamepadPressed(a_pInput.Right_Shoulder, this->m_playerIdx))
@@ -220,7 +209,7 @@ namespace Game
 
     // **************************************************************************
     // **************************************************************************
-    void CBrickWorker::UpdateHeight(PuRe_IInput& a_pInput)
+    void CWorker::UpdateHeight(PuRe_IInput& a_pInput)
     {
         if (a_pInput.GamepadPressed(a_pInput.Pad_B, this->m_playerIdx) || a_pInput.KeyPressed(a_pInput.Space))
         {
@@ -247,6 +236,7 @@ namespace Game
             dockingNubShouldBeMale = true;
             dockingNubDirection.y *= -1;
         }
+        ong::Body& shipBody = *this->m_pShipWorker->GetCurrentSpaceShip()->m_pBody;
         bool hit = false;
         for (size_t i = 0; i < nubs.size(); i++) //Go through currentBrick Nubs
         {
@@ -257,13 +247,13 @@ namespace Game
             }
             const ong::vec3 rayOrigin = TheBrick::PuReToOng(this->m_pCurrentBrick->PosToWorldSpace(nubs[i].Position)); //Transform nubPosition to WorldSpace
 
-            ong::RayQueryResult hs = {0}; //Allocate
+            ong::RayQueryResult hs = { 0 }; //Allocate
             hs.t = FLT_MAX;
             //--------------------------------------------------------------------------------
-            if (this->m_pSpaceship->m_pBody->queryRay(rayOrigin, rayDir, &hs)) //Cast Ray
+            if (shipBody.queryRay(rayOrigin, rayDir, &hs)) //Cast Ray
             { //Ray Hit
                 hit = true;
-                printf("RayPointHeight %i: %i\n", i, (int)(hs.point.y / TheBrick::CBrick::SEGMENT_HEIGHT));
+                //printf("RayPointHeight %i: %i\n", i, (int)(hs.point.y / TheBrick::CBrick::SEGMENT_HEIGHT));
                 if (hs.t < hitResult.t)
                 { //This Hit is nearer to the brick than the saved one
                     hitResult = hs;
@@ -297,7 +287,7 @@ namespace Game
 
     // **************************************************************************
     // **************************************************************************
-    void CBrickWorker::ApplyToCurrentBrick()
+    void CWorker::ApplyToCurrentBrick()
     {
         if (this->m_pCurrentBrick == nullptr)
         {
@@ -308,17 +298,32 @@ namespace Game
         transform.q = ong::Quaternion(ong::vec3(0, 0, 0), 1);
         this->m_pCurrentBrick->SetTransform(transform);
         this->m_pCurrentBrick->RotateAroundPivotOffset(PuRe_QuaternionF(0.0f, this->m_currentBrickRotation, 0.0f));
-        this->m_pCurrentBrick->m_Color = PuRe_Color(this->m_currentBrickColor.R * 1.2f, this->m_currentBrickColor.G * 1.2f, this->m_currentBrickColor.B * 1.2f, this->m_currentBrickColor.A * 0.6f);
-        this->m_pCurrentBrick->m_Color = this->m_currentBrickColor; //TODO Wenn alpha geht diese Zeile löschen
+//#define ALPHAREADY
+        if (this->m_canPlaceHere)
+        {
+#ifdef ALPHAREADY
+            this->m_pCurrentBrick->m_Color = PuRe_Color(this->m_currentBrickColor.R, this->m_currentBrickColor.G, this->m_currentBrickColor.B, this->m_currentBrickColor.A * 0.6f);
+#else
+            this->m_pCurrentBrick->m_Color = PuRe_Color(this->m_currentBrickColor.R * 1.5f, this->m_currentBrickColor.G * 1.5f, this->m_currentBrickColor.B * 1.5f, 1);
+#endif
+        }
+        else
+        {
+#ifdef ALPHAREADY
+            this->m_pCurrentBrick->m_Color = PuRe_Color(1, 0, 0, 0.6f);
+#else
+            this->m_pCurrentBrick->m_Color = PuRe_Color(1, 0, 0, 1);
+#endif
+        }
     }
 
     // **************************************************************************
     // **************************************************************************
-    void CBrickWorker::UpdatePlacement(PuRe_IInput& a_pInput)
+    void CWorker::UpdatePlacement(PuRe_IInput& a_pInput)
     {
         if (a_pInput.GamepadPressed(a_pInput.Pad_Y, this->m_playerIdx) || (a_pInput.KeyIsPressed(a_pInput.Ctrl) && a_pInput.KeyPressed(a_pInput.Z)))
         { //Undo
-            HistoryStep* step = this->m_pHistory->Undo();
+            SHistoryStep* step = this->m_pHistory->Undo();
             if (step != nullptr)
             {
                 delete step->BrickInstance;
@@ -326,10 +331,10 @@ namespace Game
         }
         else if (a_pInput.GamepadPressed(a_pInput.Pad_X, this->m_playerIdx) || (a_pInput.KeyIsPressed(a_pInput.Ctrl) && a_pInput.KeyPressed(a_pInput.Y)))
         { //Redo
-            HistoryStep* step = this->m_pHistory->Redo();
+            SHistoryStep* step = this->m_pHistory->Redo();
             if (step != nullptr)
             {
-                step->BrickInstance = new TheBrick::CBrickInstance(*step->Brick, *this->m_pCurrentBrickObject, *BrickBozz::Instance()->World, step->Color);
+                step->BrickInstance = new TheBrick::CBrickInstance(*step->Brick, *this->m_pCurrentBrickObject, *sba::Space::Instance()->World, step->Color);
                 step->BrickInstance->SetTransform(step->Transform);
             }
         }
@@ -340,13 +345,11 @@ namespace Game
         //Gamepad & Mouse
         if (a_pInput.GamepadPressed(a_pInput.Pad_A, this->m_playerIdx) || a_pInput.MousePressed(a_pInput.LeftClick))
         {
-            TheBrick::CBrickInstance* brickInstance = this->m_pCurrentBrick->m_pBrick->CreateInstance(*this->m_pSpaceship, *BrickBozz::Instance()->World);
-            brickInstance->SetTransform(this->m_pCurrentBrick->GetTransform());
-            brickInstance->m_Color = this->m_currentBrickColor;
+            this->m_pCurrentBrick->m_Color = this->m_currentBrickColor; //Apply right color
             this->m_pHistory->CutRedos();
-            HistoryStep step;
-            step.BrickInstance = brickInstance;
-            step.Brick = brickInstance->m_pBrick;
+            SHistoryStep step;
+            step.BrickInstance = this->m_pShipWorker->AddBrickInstanceToShip(*this->m_pCurrentBrick);;
+            step.Brick = step.BrickInstance->m_pBrick;
             step.Transform = this->m_pCurrentBrick->GetTransform();
             step.Color = this->m_currentBrickColor;
             this->m_pHistory->AddStep(step);

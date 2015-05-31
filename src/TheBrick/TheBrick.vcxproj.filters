@@ -5,69 +5,55 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Headerdateien">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
-    </Filter>
-    <Filter Include="Ressourcendateien">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
     <Filter Include="Quelldateien\Brick">
       <UniqueIdentifier>{b0217b2c-c0c6-4333-b46e-88b46a0b5f3d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Headerdateien\Brick">
-      <UniqueIdentifier>{69c625ce-928d-4c27-9345-2dba154e59af}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Headerdateien\GameObject">
-      <UniqueIdentifier>{2717c639-189f-4112-8bcc-e43cda509b99}</UniqueIdentifier>
     </Filter>
     <Filter Include="Quelldateien\GameObject">
       <UniqueIdentifier>{6bed82d1-b0bb-4634-bfae-f92f0708666d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\TheBrick\Brick.h">
-      <Filter>Headerdateien\Brick</Filter>
-    </ClInclude>
-    <ClInclude Include="include\TheBrick\BrickInstance.h">
-      <Filter>Headerdateien\Brick</Filter>
-    </ClInclude>
-    <ClInclude Include="include\TheBrick\BrickManager.h">
-      <Filter>Headerdateien\Brick</Filter>
-    </ClInclude>
-    <ClInclude Include="include\TheBrick\Nub.h">
-      <Filter>Headerdateien\Brick</Filter>
-    </ClInclude>
-    <ClInclude Include="include\TheBrick\GameObject.h">
-      <Filter>Headerdateien\GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="include\TheBrick\Spaceship.h">
-      <Filter>Headerdateien\GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="include\TheBrick\Bullet.h">
-      <Filter>Headerdateien\GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="include\TheBrick\Serializer.h">
-      <Filter>Headerdateien</Filter>
+    <ClInclude Include="include\TheBrick\BrickTimer.h">
+      <Filter>Quelldateien</Filter>
     </ClInclude>
     <ClInclude Include="include\TheBrick\ByteBuffer.h">
-      <Filter>Headerdateien</Filter>
+      <Filter>Quelldateien</Filter>
     </ClInclude>
     <ClInclude Include="include\TheBrick\Conversion.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="include\TheBrick\DebugDraw.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="include\TheBrick\BrickTimer.h">
-      <Filter>Headerdateien</Filter>
+      <Filter>Quelldateien</Filter>
     </ClInclude>
     <ClInclude Include="include\TheBrick\CSVParser.h">
-      <Filter>Headerdateien</Filter>
+      <Filter>Quelldateien</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TheBrick\DebugDraw.h">
+      <Filter>Quelldateien</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TheBrick\Serializer.h">
+      <Filter>Quelldateien</Filter>
     </ClInclude>
     <ClInclude Include="include\TheBrick\Asteroid.h">
-      <Filter>Headerdateien\GameObject</Filter>
+      <Filter>Quelldateien\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TheBrick\Bullet.h">
+      <Filter>Quelldateien\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TheBrick\GameObject.h">
+      <Filter>Quelldateien\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TheBrick\Spaceship.h">
+      <Filter>Quelldateien\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TheBrick\Brick.h">
+      <Filter>Quelldateien\Brick</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TheBrick\BrickInstance.h">
+      <Filter>Quelldateien\Brick</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TheBrick\BrickManager.h">
+      <Filter>Quelldateien\Brick</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TheBrick\Nub.h">
+      <Filter>Quelldateien\Brick</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

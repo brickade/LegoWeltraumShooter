@@ -1,5 +1,6 @@
 #include "include/EditorScene.h"
-namespace Game
+
+namespace Editor
 {
     CEditorScene::CEditorScene(PuRe_Application* a_pApplication, int a_playerIdx)
     {
@@ -33,11 +34,11 @@ namespace Game
 
         this->textureID = 0;
 
-        this->m_pBrickSupervisor = new CBrickSupervisor(this->m_playerIdx);
+        this->m_pBrickSupervisor = new Editor::CBrickSupervisor(this->m_playerIdx);
         this->m_pBrickSupervisor->Initialize(*a_pGraphics);
 
-        this->m_pBrickWorker = new CBrickWorker(this->m_playerIdx);
-        this->m_pBrickWorker->Initialize(*a_pGraphics);
+        this->m_pWorker = new Editor::CWorker(this->m_playerIdx);
+        this->m_pWorker->Initialize(*a_pGraphics);
     }
 
     // **************************************************************************
@@ -67,8 +68,8 @@ namespace Game
         }
 
         this->m_pBrickSupervisor->Update(*a_pGraphics, *a_pWindow, *a_pInput, *a_pTimer, *a_pSoundPlayer);
-        this->m_pBrickWorker->Update(*a_pGraphics, *a_pWindow, *a_pInput, *a_pTimer, *a_pSoundPlayer, this->m_pBrickSupervisor->GetSelectedBrick(), PuRe_Color(0.5f, 0.6f, 1.0f));
-        BrickBozz::Instance()->BrickManager->RebuildRenderInstances(); //Update RenderInstances
+        this->m_pWorker->Update(*a_pGraphics, *a_pWindow, *a_pInput, *a_pTimer, *a_pSoundPlayer, this->m_pBrickSupervisor->GetSelectedBrick(), PuRe_Color(0.5f, 0.6f, 1.0f));
+        sba::Space::Instance()->BrickManager->RebuildRenderInstances(); //Update RenderInstances
         return false;
     }
 
@@ -76,7 +77,7 @@ namespace Game
     // **************************************************************************
     void CEditorScene::Render(PuRe_IGraphics* a_pGraphics)
     {
-        PuRe_Renderer* renderer = BrickBozz::Instance()->Renderer;
+        PuRe_Renderer* renderer = sba::Space::Instance()->Renderer;
         renderer->Begin(PuRe_Color(0.1f, 0.5f, 0.1f));
         //Lights
         renderer->Draw(this->m_pDirectionalLight, this->m_pDirectionalLightMaterial, PuRe_Vector3F(1.0f, 0.0f, 0.0f), PuRe_Color(0.3f, 0.3f, 0.3f));
@@ -85,14 +86,14 @@ namespace Game
         //Skybox
         renderer->Draw(this->m_pSkyBox, this->m_pSkyBoxMaterial);
         //Bricks
-        //this->m_pBrickWorker->Render();
-        BrickBozz::Instance()->BrickManager->Render(*BrickBozz::Instance()->Renderer);
+        this->m_pWorker->Render();
+        sba::Space::Instance()->BrickManager->Render(*sba::Space::Instance()->Renderer);
         this->m_pBrickSupervisor->Render(*a_pGraphics);
         //this->m_pBrickWorker->DrawDebug(a_pGraphics);
         //Post
         renderer->Set((float)this->textureID, "textureID");
         renderer->Set(PuRe_Vector3F(0.2f, 0.2f, 0.2f), "ambient");
-        renderer->Render(this->m_pBrickWorker->GetCamera(), this->m_pPostMaterial);
+        renderer->Render(this->m_pWorker->GetCamera(), this->m_pPostMaterial);
         renderer->End();
     }
 
@@ -100,7 +101,7 @@ namespace Game
     // **************************************************************************
     void CEditorScene::Exit()
     {
-        SAFE_DELETE(this->m_pBrickWorker);
+        SAFE_DELETE(this->m_pWorker);
         SAFE_DELETE(this->m_pBrickSupervisor);
         SAFE_DELETE(this->m_pSkyBox);
         SAFE_DELETE(this->m_pPostMaterial);

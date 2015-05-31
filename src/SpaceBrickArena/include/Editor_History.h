@@ -1,5 +1,5 @@
-#ifndef _HISTORY_H_
-#define _HISTORY_H_
+#ifndef _EDITORHISTORY_H_
+#define _EDITORHISTORY_H_
 
 #include <PuReEngine/Core.h>
 #include <PuReEngine/Defines.h>
@@ -8,9 +8,9 @@
 
 #include <TheBrick/BrickInstance.h>
 
-namespace Game
+namespace Editor
 {
-    struct HistoryStep
+    struct SHistoryStep
     {
         TheBrick::CBrickInstance* BrickInstance;
         TheBrick::CBrick* Brick;
@@ -23,7 +23,7 @@ namespace Game
     public:
 
     private:
-        HistoryStep* m_Storage;
+        SHistoryStep* m_Storage;
         int m_CurrentPos;
         int m_RedoEndPos;
         int m_StorageEnd;
@@ -33,11 +33,11 @@ namespace Game
         CHistory(int a_size, int a_performanceBuffer);
         ~CHistory();
 
-        void AddStep(HistoryStep& step);
+        void AddStep(SHistoryStep& step);
         void CutRedos();
-        HistoryStep* Undo();
-        HistoryStep* Redo();
+        SHistoryStep* Undo();
+        SHistoryStep* Redo();
     };
 }
 
-#endif /* _HISTORY_H_ */
+#endif /* _EDITORHISTORY_H_ */

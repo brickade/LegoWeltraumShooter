@@ -1,15 +1,15 @@
-#ifndef _BRICKSUPERVISOR_H_
-#define _BRICKSUPERVISOR_H_
+#ifndef _EDITORBRICKSUPERVISOR_H_
+#define _EDITORBRICKSUPERVISOR_H_
 
 #include <PuReEngine/Core.h>
 #include <PuReEngine/Defines.h>
 
 #include <cassert>
 
-#include "BrickCategory.h"
-#include "BrickBozz.h"
+#include "Editor_BrickCategory.h"
+#include "Space.h"
 
-namespace Game
+namespace Editor
 {
     class CBrickSupervisor
     {
@@ -18,7 +18,7 @@ namespace Game
         std::array<CBrickCategory*, 10> m_Categories;
         int m_CategoriesCount;
         CBrickCategory* m_pActiveCategory;
-        CNavigation* m_pNavigation;
+        sba::CNavigation* m_pNavigation;
         PuRe_Camera* m_pCamera;
         bool m_NavigateTabs = false;
         float m_RotationSpeed = 1;
@@ -37,4 +37,4 @@ namespace Game
     };
 }
 
-#endif /* _BRICKSUPERVISOR_H_ */
+#endif /* _EDITORBRICKSUPERVISOR_H_ */

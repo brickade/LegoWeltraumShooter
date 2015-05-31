@@ -1,18 +1,18 @@
-#include "include/BrickCategory.h"
-namespace Game
+#include "include/Editor_BrickCategory.h"
+namespace Editor
 {
     // **************************************************************************
     // **************************************************************************
     CBrickCategory::CBrickCategory(int a_Id)
     {
         this->m_Id = a_Id;
-        this->m_Bricks = BrickBozz::Instance()->BrickManager->GetCategoryStart(a_Id);
+        this->m_Bricks = sba::Space::Instance()->BrickManager->GetCategoryStart(a_Id);
         int lastBrickSubId = -1;
         while (this->m_Bricks[lastBrickSubId + 1] != nullptr)
         {
             lastBrickSubId++;
         }
-        this->m_pNavigation = new CNavigation(3, lastBrickSubId);
+        this->m_pNavigation = new sba::CNavigation(3, lastBrickSubId);
     }
 
     // **************************************************************************
@@ -71,7 +71,7 @@ namespace Game
     // **************************************************************************
     void CBrickCategory::Render(PuRe_IGraphics& a_pGraphics, PuRe_Camera& a_pCamera)
     {
-        PuRe_Renderer* renderer = BrickBozz::Instance()->Renderer;
+        PuRe_Renderer* renderer = sba::Space::Instance()->Renderer;
         for (int i = 0; i <= this->m_pNavigation->GetLastElementId(); i++)
         {
             PuRe_Vector2F listPos = PuRe_Vector2F(i % this->m_pNavigation->GetElementsCountPerLine(), floor(i / this->m_pNavigation->GetElementsCountPerLine()));
@@ -89,7 +89,7 @@ namespace Game
             float size = this->m_ElementSize / this->m_Bricks[i]->GetPivotOffset().Length();
             size += this->m_ElementSize;
             size *= 0.5f;
-            renderer->DrawUI(this->m_Bricks[i]->GetModel(), PuRe_Primitive::Triangles, BrickBozz::Instance()->BrickManager->GetBrickUIMaterial(), pos, rot, PuRe_Vector3F::Zero(), PuRe_Vector3F(size, size, size), color);
+            renderer->DrawUI(this->m_Bricks[i]->GetModel(), PuRe_Primitive::Triangles, sba::Space::Instance()->BrickManager->GetBrickUIMaterial(), pos, rot, PuRe_Vector3F::Zero(), PuRe_Vector3F(size, size, size), color);
         }
     }
 
@@ -111,7 +111,7 @@ namespace Game
         float size = this->m_TabSize / this->m_Bricks[0]->GetPivotOffset().Length();
         size += this->m_TabSize;
         size *= 0.5f;
-        BrickBozz::Instance()->Renderer->DrawUI(this->m_Bricks[0]->GetModel(), PuRe_Primitive::Triangles, BrickBozz::Instance()->BrickManager->GetBrickUIMaterial(), pos, rot, PuRe_Vector3F::Zero(), PuRe_Vector3F(size, size, size), color);
+        sba::Space::Instance()->Renderer->DrawUI(this->m_Bricks[0]->GetModel(), PuRe_Primitive::Triangles, sba::Space::Instance()->BrickManager->GetBrickUIMaterial(), pos, rot, PuRe_Vector3F::Zero(), PuRe_Vector3F(size, size, size), color);
     }
 
     // **************************************************************************

@@ -1,5 +1,5 @@
-#ifndef _BRICKWORKER_H_
-#define _BRICKWORKER_H_
+#ifndef _EDITORWORKER_H_
+#define _EDITORWORKER_H_
 
 #include <PuReEngine/Core.h>
 #include <PuReEngine/Defines.h>
@@ -8,7 +8,8 @@
 #include "TheBrick/GameObject.h"
 #include "TheBrick/Spaceship.h"
 
-#include "EditorCamera.h"
+#include "Editor_Camera.h"
+#include "Editor_ShipWorker.h"
 
 namespace TheBrick
 {
@@ -18,17 +19,18 @@ namespace TheBrick
     class CBrick;
 }
 
-namespace Game
+namespace Editor
 {
     class CHistory;
+    class CShipWorker;
 
-    class CBrickWorker
+    class CWorker
     {
 
     public:
 
     private:
-        CEditorCamera* m_pCamera;
+        CCamera* m_pCamera;
 
         float m_currentBrickRotation;
         float m_currentRotation;
@@ -50,7 +52,7 @@ namespace Game
         TheBrick::CGameObject* m_pCurrentBrickObject;
         TheBrick::CBrickInstance* m_pCurrentBrick;
 
-        TheBrick::CSpaceship* m_pSpaceship;
+        CShipWorker* m_pShipWorker;
 
         PuRe_IMaterial* m_pGridMaterial;
         PuRe_Model* m_pGridBrick;
@@ -58,19 +60,19 @@ namespace Game
         bool lastInputIsGamepad;
 
     public:
-        CEditorCamera* GetCamera() const
+        CCamera* GetCamera() const
         {
             return this->m_pCamera;
         }
         void DrawDebug(PuRe_IGraphics* a_pGraphics)
         {
             m_pCurrentBrickObject->Draw(a_pGraphics, m_pCamera);
-            this->m_pSpaceship->Draw(a_pGraphics, m_pCamera);
+            this->m_pShipWorker->GetCurrentSpaceShip()->Draw(a_pGraphics, this->m_pCamera);
         }
 
     public:
-        CBrickWorker(int a_playerIdx);
-        ~CBrickWorker();
+        CWorker(int a_playerIdx);
+        ~CWorker();
 
         void Initialize(PuRe_IGraphics& a_pGraphics);
         void Update(PuRe_IGraphics& a_pGraphics, PuRe_IWindow& a_pWindow, PuRe_IInput& a_pInput, PuRe_Timer& a_pTimer, PuRe_SoundPlayer& a_pSoundPlayer, TheBrick::CBrick* a_pCurrentBrick, PuRe_Color& a_rCurrentColor);
@@ -85,4 +87,4 @@ namespace Game
     };
 }
 
-#endif /* _BRICKWORKER_H_ */
+#endif /* _EDITORWORKER_H_ */

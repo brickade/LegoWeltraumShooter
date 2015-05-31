@@ -5,7 +5,7 @@
 #include <PuReEngine/Defines.h>
 #include <TheBrick/BrickTimer.h>
 
-namespace Game
+namespace sba
 {
     struct EDirection
     {

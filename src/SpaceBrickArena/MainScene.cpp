@@ -1,11 +1,21 @@
 #include "include/MainScene.h"
-namespace Game
+namespace sba
 {
+    //####################################################################################################
+    //####################################################################################################
+                                    /*COMMENT OUT FOR GAME SCENE*/
+                                            #define EDITOR
+    //####################################################################################################
+    //####################################################################################################
+    
     CMainScene::CMainScene(PuRe_Application* a_pApplication)
     {
         this->m_pApplication = a_pApplication;
-        this->m_pEditorScene = new CEditorScene(a_pApplication, 0);
-        this->m_pGameScene = new CGameScene(a_pApplication, 0);
+#ifdef EDITOR
+        this->m_pEditorScene = new Editor::CEditorScene(a_pApplication, 0);
+#else
+        this->m_pGameScene = new Game::CGameScene(a_pApplication, 0);
+#endif
     }
 
     // **************************************************************************
@@ -14,15 +24,17 @@ namespace Game
     {
         PuRe_GraphicsDescription gdesc = a_pGraphics->GetDescription();
 
-        BrickBozz::Instance()->Initialize(*a_pGraphics, *a_pSoundPlayer);
-        BrickBozz::Instance()->BrickManager->Load(*a_pGraphics, *a_pWindow, *BrickBozz::Instance()->World, *BrickBozz::Instance()->BrickManager->GetBrickMaterial(), "../data/bricks/");
+        Space::Instance()->Initialize(*a_pGraphics, *a_pSoundPlayer);
+        Space::Instance()->BrickManager->Load(*a_pGraphics, *a_pWindow, *Space::Instance()->World, *Space::Instance()->BrickManager->GetBrickMaterial(), "../data/bricks/");
 
         //Scenes
+#ifdef EDITOR
         this->m_pEditorScene->Initialize(a_pGraphics, a_pWindow, a_pSoundPlayer);
-        //this->m_pGameScene->Initialize(a_pGraphics, a_pWindow, a_pSoundPlayer);
-
+        this->m_pActiveScene = this->m_pEditorScene;
+#else
+        this->m_pGameScene->Initialize(a_pGraphics, a_pWindow, a_pSoundPlayer);
         this->m_pActiveScene = this->m_pGameScene;
-        this->m_pActiveScene = this->m_pEditorScene; //Comment out for Init GameScene
+#endif
     }
 
     // **************************************************************************
@@ -46,18 +58,11 @@ namespace Game
         }
 
         //Update Active Scene
-        if (this->m_pActiveScene->Update(a_pGraphics, a_pWindow, a_pInput, a_pTimer, a_pSoundPlayer))
+        if (!this->m_pActiveScene->Update(a_pGraphics, a_pWindow, a_pInput, a_pTimer, a_pSoundPlayer))
         {
-            if (this->m_pActiveScene == this->m_pGameScene)
-            {
-                this->m_pActiveScene = this->m_pEditorScene;
-            }
-            else
-            {
-                this->m_pActiveScene = this->m_pGameScene;
-            }
+            return false;
         }
-        return false;
+        return true;
     }
 
     // **************************************************************************
@@ -71,9 +76,12 @@ namespace Game
     // **************************************************************************
     void CMainScene::Exit()
     {
+#ifdef EDITOR
         this->m_pEditorScene->Exit();
-        this->m_pGameScene->Exit();
         SAFE_DELETE(this->m_pEditorScene);
+#else
+        this->m_pGameScene->Exit();
         SAFE_DELETE(this->m_pGameScene);
+#endif
     }
 }

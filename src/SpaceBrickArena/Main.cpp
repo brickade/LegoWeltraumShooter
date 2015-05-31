@@ -26,7 +26,7 @@ int PURE_MAIN
     description.Window.CursorInWindow = false;
     description.Window.LockCursor = true;
     PuRe_Application* papplication = new PuRe_Application(pplatform, description);
-    Game::CMainScene scene(papplication);
+    sba::CMainScene scene(papplication);
 
     papplication->Run(&scene);
 

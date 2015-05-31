@@ -6,12 +6,12 @@
 #include <TheBrick/Brick.h>
 #include <TheBrick/Serializer.h>
 
-#include "BrickBozz.h"
+#include "Space.h"
 
-#include "BrickWorker.h"
-#include "BrickSupervisor.h"
+#include "Editor_Worker.h"
+#include "Editor_BrickSupervisor.h"
 
-namespace Game
+namespace Editor
 {
     class CEditorScene : public PuRe_IScene
     {
@@ -27,8 +27,8 @@ namespace Game
         PuRe_IMaterial* m_pPointLightMaterial;
         PuRe_IMaterial* m_pDirectionalLightMaterial;
         
-        CBrickSupervisor* m_pBrickSupervisor;
-        CBrickWorker* m_pBrickWorker;
+        Editor::CBrickSupervisor* m_pBrickSupervisor;
+        Editor::CWorker* m_pWorker;
 
         /// @brief Position for the MouseClick
         ///

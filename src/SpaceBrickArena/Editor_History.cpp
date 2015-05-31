@@ -1,6 +1,6 @@
-#include "include/History.h"
+#include "include/Editor_History.h"
 
-namespace Game
+namespace Editor
 {
     // **************************************************************************
     // **************************************************************************
@@ -8,7 +8,7 @@ namespace Game
     {
         this->m_PerformanceBuffer = a_performanceBuffer;
         this->m_StorageEnd = a_size + a_performanceBuffer;
-        this->m_Storage = new HistoryStep[this->m_StorageEnd-1];
+        this->m_Storage = new SHistoryStep[this->m_StorageEnd - 1];
         this->m_CurrentPos = 0;
         this->m_RedoEndPos = 0;
     }
@@ -23,7 +23,7 @@ namespace Game
 
     // **************************************************************************
     // **************************************************************************
-    void CHistory::AddStep(HistoryStep& step)
+    void CHistory::AddStep(SHistoryStep& step)
     {
         //Add to History
         this->m_CurrentPos++;
@@ -49,7 +49,7 @@ namespace Game
 
     // **************************************************************************
     // **************************************************************************
-    HistoryStep* CHistory::Undo()
+    SHistoryStep* CHistory::Undo()
     {
         this->m_CurrentPos--;
         if (this->m_CurrentPos < 0)
@@ -62,7 +62,7 @@ namespace Game
 
     // **************************************************************************
     // **************************************************************************
-    HistoryStep* CHistory::Redo()
+    SHistoryStep* CHistory::Redo()
     {
         this->m_CurrentPos++;
         if (this->m_CurrentPos > this->m_RedoEndPos)

@@ -1,15 +1,15 @@
-#ifndef _BRICKCATEGORY_H_
-#define _BRICKCATEGORY_H_
+#ifndef _EDITORBRICKCATEGORY_H_
+#define _EDITORBRICKCATEGORY_H_
 
 #include <PuReEngine/Core.h>
 #include <PuReEngine/Defines.h>
 #include <TheBrick/Brick.h>
 #include <TheBrick/BrickTimer.h>
 
-#include "BrickBozz.h"
+#include "Space.h"
 #include "Navigation.h"
 
-namespace Game
+namespace Editor
 {
     class CBrickCategory
     {
@@ -17,7 +17,7 @@ namespace Game
     public:
         int m_Id;
         TheBrick::CBrick** m_Bricks;
-        CNavigation* m_pNavigation;
+        sba::CNavigation* m_pNavigation;
 
     private:
         float m_ElementSize = 30;
@@ -43,4 +43,4 @@ namespace Game
     };
 }
 
-#endif /* _BRICKCATEGORY_H_ */
+#endif /* _EDITORBRICKCATEGORY_H_ */

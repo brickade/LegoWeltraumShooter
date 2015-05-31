@@ -1,12 +1,12 @@
-#include "include/BrickBozz.h"
+#include "include/Space.h"
 
-namespace Game
+namespace sba
 {
-    BrickBozz* BrickBozz::g_pInstance = 0;
+    Space* Space::g_pInstance = 0;
 
     // **************************************************************************
     // **************************************************************************
-    BrickBozz::BrickBozz()
+    Space::Space()
     {
         this->BrickManager = new TheBrick::CBrickManager();
         this->World = new ong::World();
@@ -14,25 +14,25 @@ namespace Game
 
     // **************************************************************************
     // **************************************************************************
-    BrickBozz::~BrickBozz()
+    Space::~Space()
     {
 
     }
 
     // **************************************************************************
     // **************************************************************************
-    BrickBozz* BrickBozz::Instance()
+    Space* Space::Instance()
     {
-        if (BrickBozz::g_pInstance == nullptr)
+        if (Space::g_pInstance == nullptr)
         {
-            BrickBozz::g_pInstance = new BrickBozz();
+            Space::g_pInstance = new Space();
         }
-        return BrickBozz::g_pInstance;
+        return Space::g_pInstance;
     }
 
     // **************************************************************************
     // **************************************************************************
-    void BrickBozz::Initialize(PuRe_IGraphics& a_pGraphics, PuRe_SoundPlayer& a_pSoundPlayer)
+    void Space::Initialize(PuRe_IGraphics& a_pGraphics, PuRe_SoundPlayer& a_pSoundPlayer)
     {
         this->Renderer = new PuRe_Renderer(&a_pGraphics, PuRe_Vector2I(a_pGraphics.GetDescription().ResolutionWidth, a_pGraphics.GetDescription().ResolutionHeight));
         this->Renderer->m_pPostCamera->setNearFar(PuRe_Vector2F(0.01f, 1000.0f));
@@ -43,16 +43,16 @@ namespace Game
 
     // **************************************************************************
     // **************************************************************************
-    void BrickBozz::UpdatePhysics(PuRe_Timer* a_pTimer)
+    void Space::UpdatePhysics(PuRe_Timer* a_pTimer)
     {
         if (a_pTimer->GetTotalElapsedSeconds() - this->m_LastPhysicsUpdate >= 1 / this->m_PhysicsFramerate)
         {
             do
             {
                 this->m_LastPhysicsUpdate += 1 / this->m_PhysicsFramerate;
-                BrickBozz::Instance()->World->step(1 / this->m_PhysicsFramerate);
+                Space::Instance()->World->step(1 / this->m_PhysicsFramerate);
             } while (a_pTimer->GetTotalElapsedSeconds() - this->m_LastPhysicsUpdate >= 1 / this->m_PhysicsFramerate);
-            BrickBozz::Instance()->BrickManager->RebuildRenderInstances(); //Update RenderInstances
+            Space::Instance()->BrickManager->RebuildRenderInstances(); //Update RenderInstances
         }
     }
 }
