@@ -35,6 +35,7 @@ namespace TheBrick
         for (size_t i = 0; i < this->m_pBricks.size(); i++)
         {
             SAFE_DELETE(this->m_pBricks[i]);
+            i--;
         }
         this->m_pBody->getWorld()->destroyBody(this->m_pBody);
         this->m_pBody = nullptr;

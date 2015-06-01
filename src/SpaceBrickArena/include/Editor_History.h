@@ -35,6 +35,7 @@ namespace Editor
 
         void AddStep(SHistoryStep& step);
         void CutRedos();
+        void Clear();
         SHistoryStep* Undo();
         SHistoryStep* Redo();
     };

@@ -51,8 +51,8 @@ namespace Editor
 
         this->m_pShipWorker = new CShipWorker();
         //Load Ship from file
-        //this->m_pShipWorker->LoadShipFromFile("../data/ships/banana.ship");
-        this->m_pShipWorker->ResetShip();
+        this->m_pShipWorker->LoadShipFromFile("../data/ships/banana.ship");
+        //this->m_pShipWorker->ResetShip();
 
         this->m_pCurrentBrickObject = new TheBrick::CGameObject(*sba::Space::Instance()->World, nullptr);
     }
@@ -87,6 +87,7 @@ namespace Editor
         if (a_pInput.KeyPressed(a_pInput.Backspace))
         {
             this->m_pShipWorker->ResetShip();
+            this->m_pHistory->Clear();
         }
     }
 
@@ -335,7 +336,7 @@ namespace Editor
             SHistoryStep* step = this->m_pHistory->Redo();
             if (step != nullptr)
             {
-                step->BrickInstance = new TheBrick::CBrickInstance(*step->Brick, *this->m_pCurrentBrickObject, *sba::Space::Instance()->World, step->Color);
+                step->BrickInstance = new TheBrick::CBrickInstance(*step->Brick, *this->m_pShipWorker->GetCurrentSpaceShip(), *sba::Space::Instance()->World, step->Color);
                 step->BrickInstance->SetTransform(step->Transform);
             }
         }
