@@ -1,20 +1,13 @@
 #include "include/EditorScene.h"
 
+#include <random>
+
 namespace Editor
 {
     CEditorScene::CEditorScene(PuRe_Application* a_pApplication, int a_playerIdx)
     {
         this->m_pApplication = a_pApplication;
         this->m_playerIdx = a_playerIdx;
-
-        /*
-        TheBrick::CSerializer serializer;
-        serializer.OpenWrite("test.sbab");
-        TheBrick::CBrick brick;
-        brick.m_BrickId = 2;
-        brick.m_Pivotoffset = PuRe_Vector3F(5, 5, 5);
-        brick.Serialize(&serializer);
-        serializer.Close();*/
     }
 
     // **************************************************************************
@@ -39,6 +32,7 @@ namespace Editor
 
         this->m_pWorker = new Editor::CWorker(this->m_playerIdx);
         this->m_pWorker->Initialize(*a_pGraphics);
+        this->m_CurrentColor = PuRe_Color(0.5f, 0.6f, 1.0f);
     }
 
     // **************************************************************************
@@ -67,8 +61,13 @@ namespace Editor
                 this->textureID = 0;
         }
 
+        if (a_pInput->KeyPressed(a_pInput->C))
+        {
+            this->m_CurrentColor = PuRe_Color((std::rand() / (float)RAND_MAX), (std::rand() / (float)RAND_MAX), (std::rand() / (float)RAND_MAX));
+        }
+
         this->m_pBrickSupervisor->Update(*a_pGraphics, *a_pWindow, *a_pInput, *a_pTimer, *a_pSoundPlayer);
-        this->m_pWorker->Update(*a_pGraphics, *a_pWindow, *a_pInput, *a_pTimer, *a_pSoundPlayer, this->m_pBrickSupervisor->GetSelectedBrick(), PuRe_Color(0.5f, 0.6f, 1.0f));
+        this->m_pWorker->Update(*a_pGraphics, *a_pWindow, *a_pInput, *a_pTimer, *a_pSoundPlayer, this->m_pBrickSupervisor->GetSelectedBrick(), this->m_CurrentColor);
         sba::Space::Instance()->BrickManager->RebuildRenderInstances(); //Update RenderInstances
         return false;
     }

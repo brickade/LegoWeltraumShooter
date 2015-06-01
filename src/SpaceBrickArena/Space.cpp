@@ -34,7 +34,11 @@ namespace sba
     // **************************************************************************
     void Space::Initialize(PuRe_IGraphics& a_pGraphics, PuRe_SoundPlayer& a_pSoundPlayer)
     {
+#ifdef EDITOR
         this->Renderer = new PuRe_Renderer(&a_pGraphics, PuRe_Vector2I(a_pGraphics.GetDescription().ResolutionWidth, a_pGraphics.GetDescription().ResolutionHeight));
+#else
+        this->Renderer = new PuRe_Renderer(&a_pGraphics, PuRe_Vector2I(a_pGraphics.GetDescription().ResolutionWidth / 2, a_pGraphics.GetDescription().ResolutionHeight));
+#endif
         this->Renderer->m_pPostCamera->setNearFar(PuRe_Vector2F(0.01f, 1000.0f));
         this->m_SSAOMaterial = a_pGraphics.LoadMaterial("../data/effects/SSAO/default");
         this->Renderer->SetSSAO(this->m_SSAOMaterial, "../data/textures/ssao.jpg");

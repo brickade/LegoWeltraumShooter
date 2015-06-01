@@ -21,12 +21,13 @@ namespace Editor
     void CCamera::Initialize(PuRe_Vector3F a_InitRotation, PuRe_Vector3F a_PositionOffset, float a_MinDistance, float a_MaxDistance, float a_InitDistance, float a_FoV)
     {
         this->SetFoV(a_FoV);
-        this->Move(this->m_PositionOffset = a_PositionOffset);
+        this->m_MinDistance = a_MinDistance;
+        this->m_MaxDistance = a_MaxDistance;
+        this->m_PositionOffset = a_PositionOffset;
+        this->Move(this->m_PositionOffset * (1.0f + (((this->m_distance - this->m_MinDistance) / (this->m_MaxDistance - this->m_MinDistance))) * 4));
         this->Rotate(a_InitRotation.X, a_InitRotation.Y, a_InitRotation.Z);
         this->Move(PuRe_Vector3F(0, 0, this->m_distance = a_InitDistance));
         this->m_gamepadThreshold = 0.25f;
-        this->m_MinDistance = a_MinDistance;
-        this->m_MaxDistance = a_MaxDistance;
     }
 
     void CCamera::Update(PuRe_IGraphics* a_pGraphics, PuRe_IWindow* a_pWindow, PuRe_IInput* a_pInput, PuRe_Timer* a_pTimer)
@@ -103,7 +104,7 @@ namespace Editor
         rot.Y = ((rot.Y * 2 + target) / 3 - target) * speed + target;*/
 
         rot.X = PuRe_clamp(rot.X, -89, 89);
-        this->Move(this->m_PositionOffset);
+        this->Move(this->m_PositionOffset * (1.0f + (((this->m_distance - this->m_MinDistance) / (this->m_MaxDistance - this->m_MinDistance))) * 4));
         this->SetRotation(rot);
         this->Move(PuRe_Vector3F(0, 0, -this->m_distance));
     }

@@ -34,7 +34,7 @@ namespace Editor
     {
         PuRe_GraphicsDescription gdesc = a_pGraphics.GetDescription();
         this->m_pCamera = new CCamera(PuRe_Vector2F((float)gdesc.ResolutionWidth, (float)gdesc.ResolutionHeight), PuRe_Camera_Perspective, this->m_playerIdx);
-        this->m_pCamera->Initialize(PuRe_Vector3F(20, 135, 0), PuRe_Vector3F(-5,0,0));
+        this->m_pCamera->Initialize(PuRe_Vector3F(20, 135, 0), PuRe_Vector3F(-2,0,0));
         this->m_currentPosition = PuRe_Vector2F(0, 0);
         this->m_currentHeight = 0;
 
@@ -51,7 +51,8 @@ namespace Editor
 
         this->m_pShipWorker = new CShipWorker();
         //Load Ship from file
-        this->m_pShipWorker->LoadShipFromFile("../data/ships/banana.ship");
+        //this->m_pShipWorker->LoadShipFromFile("../data/ships/banana.ship");
+        this->m_pShipWorker->ResetShip();
 
         this->m_pCurrentBrickObject = new TheBrick::CGameObject(*sba::Space::Instance()->World, nullptr);
     }
@@ -204,7 +205,7 @@ namespace Editor
         }
 
         this->m_currentBrickRotation = this->m_currentRotation;
-        this->m_currentBrickRotation = this->m_currentBrickRotation - fmod(this->m_currentBrickRotation, 1.57079633f); //Snap Rotation
+        //this->m_currentBrickRotation = this->m_currentBrickRotation - fmod(this->m_currentBrickRotation, 1.57079633f); //Snap Rotation
     }
 
     // **************************************************************************
@@ -282,7 +283,7 @@ namespace Editor
             heightOffset = -TheBrick::CBrick::SEGMENT_HEIGHT * 3;
         }
         this->m_currentHeight = TheBrick::OngToPuRe(hitResult.point).Y + heightOffset; //Set Brick Height;
-        this->m_currentHeight = this->m_currentHeight - fmod(this->m_currentHeight, TheBrick::CBrick::SEGMENT_HEIGHT); //Snap Height
+        //this->m_currentHeight = this->m_currentHeight - fmod(this->m_currentHeight, TheBrick::CBrick::SEGMENT_HEIGHT); //Snap Height
     }
 
     // **************************************************************************

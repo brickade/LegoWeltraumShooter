@@ -30,6 +30,8 @@ namespace Editor
         Editor::CBrickSupervisor* m_pBrickSupervisor;
         Editor::CWorker* m_pWorker;
 
+        PuRe_Color m_CurrentColor;
+
         /// @brief Position for the MouseClick
         ///
         PuRe_Vector2F MouseClickPosition;
