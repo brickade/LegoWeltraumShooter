@@ -267,6 +267,6 @@ namespace TheBrick
     // **************************************************************************
     int CBrick::GetCategoryId()
     {
-        return floor(this->m_BrickId / 100.0f);
+        return (int)floor(this->m_BrickId / 100.0f);
     }
 }

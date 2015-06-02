@@ -113,7 +113,7 @@ namespace TheBrick
 
 			static const int POINTCOUNT = 16;
 
-			int pointCount = ong_MAX(POINTCOUNT, POINTCOUNT * sphere->r);
+			int pointCount = (int)ong_MAX(POINTCOUNT, POINTCOUNT * sphere->r);
 
 			int numVerts = 2 * pointCount;
 
@@ -162,7 +162,7 @@ namespace TheBrick
 			const ong::Capsule* c = a_Shape;
 
 			static const int POINTCOUNT = 32;
-			int pointCount = ong_MAX(POINTCOUNT, POINTCOUNT * c->r);
+			int pointCount = (int)ong_MAX(POINTCOUNT, POINTCOUNT * c->r);
 
 			int numVerts = 2 * pointCount;
 
@@ -198,7 +198,7 @@ namespace TheBrick
 					else
 						p2.y -= h;
 
-					int idx1 = 0.5f*i*numVerts + j * 2;
+					int idx1 = (int)(0.5f*i*numVerts + j * 2);
 					int idx2 = idx1 + 1;
 
 					assert(idx1 < numVerts * 4);

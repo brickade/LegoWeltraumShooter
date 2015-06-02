@@ -10,6 +10,11 @@ namespace Game
 {
   class CGameCamera : public PuRe_Camera
   {
+
+  private:
+      float m_ZOffset;
+      PuRe_QuaternionF m_Rotation;
+
   public:
 
     CGameCamera(PuRe_Vector3F a_Position, PuRe_Vector3F a_Direction, PuRe_Vector3F a_Up, float a_FOV, float a_AspectRatio,
@@ -20,8 +25,6 @@ namespace Game
     void Initialize();
     void Update(int a_CID,TheBrick::CSpaceship* a_pPlayer,PuRe_IInput* a_pInput, PuRe_Timer* a_pTimer);
 
-  private:
-      float m_ZOffset;
 
   };
 }
