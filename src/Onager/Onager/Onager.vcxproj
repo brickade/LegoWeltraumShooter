@@ -88,6 +88,7 @@
     <ClCompile Include="Contact.cpp" />
     <ClCompile Include="ContactSolver.cpp" />
     <ClCompile Include="geomMath.cpp" />
+    <ClCompile Include="include\Onager\TimeOfImpact.cpp" />
     <ClCompile Include="MassProperties.cpp" />
     <ClCompile Include="Narrowphase.cpp" />
     <ClCompile Include="Profiler.cpp" />
@@ -114,6 +115,7 @@
     <ClInclude Include="include\Onager\QuickHull.h" />
     <ClInclude Include="include\Onager\SAT.h" />
     <ClInclude Include="include\Onager\Shapes.h" />
+    <ClInclude Include="include\Onager\TimeOfImpact.h" />
     <ClInclude Include="include\Onager\VolumeIntegration.h" />
     <ClInclude Include="include\Onager\World.h" />
     <ClInclude Include="Profiler.h" />

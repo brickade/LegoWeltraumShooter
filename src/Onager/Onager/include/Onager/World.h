@@ -64,11 +64,14 @@ namespace ong
 
 	// TODO
 	//	
-	//	-sensors
+	//
 	//	-continuos collision detection
 	//	-sleeping
 	//
-	//	-hull memory leaking
+	//	- body queryRay with callback
+	//	- body setTransform
+	//	-world popback
+	
 
 	class World
 	{
