@@ -52,6 +52,7 @@ int PURE_MAIN
 
     SAFE_DELETE(papplication);
     SAFE_DELETE(pplatform);
+    SAFE_DELETE(Game::CIniReader::Instance());
     //Print memory leak in output
     //_CrtDumpMemoryLeaks();
 }
