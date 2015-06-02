@@ -9,12 +9,6 @@ namespace Game
     class CMinimap
     {
     private:
-        /// @brief Sprite to display the MiniMap
-        ///
-        PuRe_Sprite* m_pMinimapSprite;
-        /// @brief Sprite to display the Players on the Minimap
-        ///
-        PuRe_Sprite* m_pMinimapPlayer;
         /// @brief Minimap's Position
         ///
         PuRe_Vector3F m_Position;

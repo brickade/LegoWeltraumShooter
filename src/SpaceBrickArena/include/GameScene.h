@@ -28,26 +28,21 @@ namespace Game
     class CGameScene : public PuRe_IScene
     {
     private:
-
+        int m_TextureID;
+        //used for networking
         int m_ID;
         int m_ArrayID;
-
+        //multiple players
         std::vector<Player*> m_Players;
         std::vector<CGameCamera*> m_Cameras;
-
-        float physicsTimer;
-        int m_playerIdx;
-        int textureID;
-
+        //whether we are still in menu or not
         bool gameStart;
-
         CNetworkHandler* m_pNetwork;
+
         PuRe_Font* m_pFont;
         PuRe_PointLight* m_pPointLight;
         PuRe_DirectionalLight* m_pDirectionalLight;
         PuRe_SkyBox* m_pSkyBox;
-        PuRe_Model* m_pModel;
-        PuRe_IMaterial* m_pMaterial;
         PuRe_IMaterial* m_pFontMaterial;
         PuRe_IMaterial* m_pUIMaterial;
         PuRe_IMaterial* m_pSkyMaterial;
@@ -55,7 +50,6 @@ namespace Game
         PuRe_IMaterial* m_pPointLightMaterial;
         PuRe_IMaterial* m_pDirectionalLightMaterial;
         CMinimap* m_pMinimap;
-        PuRe_BoundingBox m_MapBoundaries;
 
         std::vector<TheBrick::CBullet*> m_Bullets;
         std::vector<TheBrick::CAsteroid*> m_Asteroids;

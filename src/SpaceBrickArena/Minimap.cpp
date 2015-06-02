@@ -4,8 +4,6 @@ namespace Game
 {
     CMinimap::CMinimap(PuRe_IGraphics* a_pGraphics)
     {
-        this->m_pMinimapSprite = new PuRe_Sprite(a_pGraphics, "../data/textures/minimap.png");
-        this->m_pMinimapPlayer = new PuRe_Sprite(a_pGraphics, "../data/textures/minimap_player.png");
         int size = 36;
         PuReEngine::Core::SVertex* pData = new PuReEngine::Core::SVertex[size];
         PuRe_Box::GetVertices(pData);
@@ -21,8 +19,6 @@ namespace Game
     CMinimap::~CMinimap()
     {
         SAFE_DELETE(this->m_pBoxVertexBuffer);
-        SAFE_DELETE(this->m_pMinimapPlayer);
-        SAFE_DELETE(this->m_pMinimapSprite);
     }
 
     // **************************************************************************

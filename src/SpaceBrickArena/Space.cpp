@@ -16,7 +16,10 @@ namespace sba
     // **************************************************************************
     Space::~Space()
     {
-
+        SAFE_DELETE(this->Renderer);
+        SAFE_DELETE(this->m_SSAOMaterial);
+        SAFE_DELETE(this->BrickManager);
+        SAFE_DELETE(this->World);
     }
 
     // **************************************************************************
@@ -40,8 +43,11 @@ namespace sba
         this->Renderer = new PuRe_Renderer(&a_pGraphics, PuRe_Vector2I(a_pGraphics.GetDescription().ResolutionWidth / 2, a_pGraphics.GetDescription().ResolutionHeight));
 #endif
         this->Renderer->m_pPostCamera->setNearFar(PuRe_Vector2F(0.01f, 1000.0f));
-        this->m_SSAOMaterial = a_pGraphics.LoadMaterial("../data/effects/SSAO/default");
-        this->Renderer->SetSSAO(this->m_SSAOMaterial, "../data/textures/ssao.jpg");
+        if (Game::CIniReader::Instance()->GetValue("SSAO") == "On")
+        {
+            this->m_SSAOMaterial = a_pGraphics.LoadMaterial("../data/effects/SSAO/default");
+            this->Renderer->SetSSAO(this->m_SSAOMaterial, "../data/textures/ssao.jpg");
+        }
         this->BrickManager->Initialize(a_pGraphics, a_pSoundPlayer);
     }
 

@@ -15,6 +15,7 @@
 #include <Onager/World.h>
 
 #include <TheBrick/BrickManager.h>
+#include "INIReader.h"
 
 namespace sba
 {
