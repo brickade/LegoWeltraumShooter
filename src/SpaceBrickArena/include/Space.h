@@ -27,7 +27,7 @@ namespace sba
         TheBrick::CBrickManager* BrickManager;
         ong::World* World;
         PuRe_Renderer* Renderer;
-        SpacebrickArena::CInputManager* InputManager;
+        sba::CInputManager* InputManager;
 
     private:
         static Space* g_pInstance;

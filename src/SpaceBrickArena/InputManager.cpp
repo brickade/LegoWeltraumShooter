@@ -1,6 +1,6 @@
 #include "include/InputManager.h"
 
-namespace SpacebrickArena
+namespace sba
 {
     // **************************************************************************
     // **************************************************************************
@@ -21,316 +21,316 @@ namespace SpacebrickArena
         this->m_pInput = a_pInput;
 
         //Direction
-        this->m_pDirectionMapping[EDirection::EditorCameraRotate] =
+        this->m_pDirectionMapping[Input::EDirection::EditorCameraRotate] =
         {
-            EGamepadDirection::RightThumb,
+            Input::EGamepadDirection::RightThumb,
             {
-                EKeyboardDirection::ArrowKeys,
-                EKeyboardDirection::ArrowKeys,
-                EKeyboardDirection::ArrowKeys,
-                EKeyboardDirection::ArrowKeys
+                Input::EKeyboardDirection::ArrowKeys,
+                Input::EKeyboardDirection::ArrowKeys,
+                Input::EKeyboardDirection::ArrowKeys,
+                Input::EKeyboardDirection::ArrowKeys
             }
         };
-        this->m_pDirectionMapping[EDirection::EditorMoveBrick] =
+        this->m_pDirectionMapping[Input::EDirection::EditorMoveBrick] =
         {
-            EGamepadDirection::LeftThumb,
+            Input::EGamepadDirection::LeftThumb,
             {
-                EKeyboardDirection::WSAD,
-                EKeyboardDirection::WSAD,
-                EKeyboardDirection::WSAD,
-                EKeyboardDirection::WSAD
+                Input::EKeyboardDirection::WSAD,
+                Input::EKeyboardDirection::WSAD,
+                Input::EKeyboardDirection::WSAD,
+                Input::EKeyboardDirection::WSAD
             }
         };
-        this->m_pDirectionMapping[EDirection::EditorNavigateCategory] =
+        this->m_pDirectionMapping[Input::EDirection::EditorNavigateCategory] =
         {
-            EGamepadDirection::DPad,
+            Input::EGamepadDirection::DPad,
             {
-                EKeyboardDirection::IKJL,
-                EKeyboardDirection::IKJL,
-                EKeyboardDirection::IKJL,
-                EKeyboardDirection::IKJL
+                Input::EKeyboardDirection::IKJL,
+                Input::EKeyboardDirection::IKJL,
+                Input::EKeyboardDirection::IKJL,
+                Input::EKeyboardDirection::IKJL
             }
         };
 
         //Axis
-        this->m_pAxisMapping[EAxis::EditorCameraZoom] =
+        this->m_pAxisMapping[Input::EAxis::EditorCameraZoom] =
         {
-            EGamepadAxis::BothTrigger,
+            Input::EGamepadAxis::BothTrigger,
             {
-                EKeyboardAxis::RF,
-                EKeyboardAxis::RF,
-                EKeyboardAxis::RF,
-                EKeyboardAxis::RF
+                Input::EKeyboardAxis::RF,
+                Input::EKeyboardAxis::RF,
+                Input::EKeyboardAxis::RF,
+                Input::EKeyboardAxis::RF
             }
         };
-        this->m_pAxisMapping[EAxis::EditorColorSlider] =
+        this->m_pAxisMapping[Input::EAxis::EditorColorSlider] =
         {
-            EGamepadAxis::BothTrigger,
+            Input::EGamepadAxis::BothTrigger,
             {
-                EKeyboardAxis::RF,
-                EKeyboardAxis::RF,
-                EKeyboardAxis::RF,
-                EKeyboardAxis::RF
+                Input::EKeyboardAxis::RF,
+                Input::EKeyboardAxis::RF,
+                Input::EKeyboardAxis::RF,
+                Input::EKeyboardAxis::RF
             }
         };
 
         //Button
-        this->m_pButtonMapping[EButton::EditorPlaceBrick] =
+        this->m_pButtonMapping[Input::EButton::EditorPlaceBrick] =
         {
-            EGamepadButton::Pad_A,
+            Input::EGamepadButton::Pad_A,
             {
-                EKeyboardButton::Enter,
-                EKeyboardButton::Enter,
-                EKeyboardButton::Enter,
-                EKeyboardButton::Enter
+                Input::EKeyboardButton::Enter,
+                Input::EKeyboardButton::Enter,
+                Input::EKeyboardButton::Enter,
+                Input::EKeyboardButton::Enter
             }
         };
-        this->m_pButtonMapping[EButton::EditorTogglePlacementSide] =
+        this->m_pButtonMapping[Input::EButton::EditorTogglePlacementSide] =
         {
-            EGamepadButton::Pad_B,
+            Input::EGamepadButton::Pad_B,
             {
-                EKeyboardButton::Space,
-                EKeyboardButton::Space,
-                EKeyboardButton::Space,
-                EKeyboardButton::Space
+                Input::EKeyboardButton::Space,
+                Input::EKeyboardButton::Space,
+                Input::EKeyboardButton::Space,
+                Input::EKeyboardButton::Space
             }
         };
-        this->m_pButtonMapping[EButton::EditorUndo] =
+        this->m_pButtonMapping[Input::EButton::EditorUndo] =
         {
-            EGamepadButton::Pad_X,
+            Input::EGamepadButton::Pad_X,
             {
-                EKeyboardButton::CtrlZ,
-                EKeyboardButton::CtrlZ,
-                EKeyboardButton::CtrlZ,
-                EKeyboardButton::CtrlZ
+                Input::EKeyboardButton::CtrlZ,
+                Input::EKeyboardButton::CtrlZ,
+                Input::EKeyboardButton::CtrlZ,
+                Input::EKeyboardButton::CtrlZ
             }
         };
-        this->m_pButtonMapping[EButton::EditorRedo] =
+        this->m_pButtonMapping[Input::EButton::EditorRedo] =
         {
-            EGamepadButton::Pad_Y,
+            Input::EGamepadButton::Pad_Y,
             {
-                EKeyboardButton::CtrlY,
-                EKeyboardButton::CtrlY,
-                EKeyboardButton::CtrlY,
-                EKeyboardButton::CtrlY
+                Input::EKeyboardButton::CtrlY,
+                Input::EKeyboardButton::CtrlY,
+                Input::EKeyboardButton::CtrlY,
+                Input::EKeyboardButton::CtrlY
             }
         };
-        this->m_pButtonMapping[EButton::EditorRotateBrickRight] =
+        this->m_pButtonMapping[Input::EButton::EditorRotateBrickRight] =
         {
-            EGamepadButton::Right_Shoulder,
+            Input::EGamepadButton::Right_Shoulder,
             {
-                EKeyboardButton::E,
-                EKeyboardButton::E,
-                EKeyboardButton::E,
-                EKeyboardButton::E
+                Input::EKeyboardButton::E,
+                Input::EKeyboardButton::E,
+                Input::EKeyboardButton::E,
+                Input::EKeyboardButton::E
             }
         };
-        this->m_pButtonMapping[EButton::EditorRotateBrickLeft] =
+        this->m_pButtonMapping[Input::EButton::EditorRotateBrickLeft] =
         {
-            EGamepadButton::Left_Shoulder,
+            Input::EGamepadButton::Left_Shoulder,
             {
-                EKeyboardButton::Q,
-                EKeyboardButton::Q,
-                EKeyboardButton::Q,
-                EKeyboardButton::Q
+                Input::EKeyboardButton::Q,
+                Input::EKeyboardButton::Q,
+                Input::EKeyboardButton::Q,
+                Input::EKeyboardButton::Q
             }
         };
-        this->m_pButtonMapping[EButton::EditorResetShip] =
+        this->m_pButtonMapping[Input::EButton::EditorResetShip] =
         {
-            EGamepadButton::Pad_Start,
+            Input::EGamepadButton::Pad_Start,
             {
-                EKeyboardButton::Delete,
-                EKeyboardButton::Delete,
-                EKeyboardButton::Delete,
-                EKeyboardButton::Delete
+                Input::EKeyboardButton::Delete,
+                Input::EKeyboardButton::Delete,
+                Input::EKeyboardButton::Delete,
+                Input::EKeyboardButton::Delete
             }
         };
-        this->m_pButtonMapping[EButton::EditorSaveShip] =
+        this->m_pButtonMapping[Input::EButton::EditorSaveShip] =
         {
-            EGamepadButton::Pad_Back,
+            Input::EGamepadButton::Pad_Back,
             {
-                EKeyboardButton::CtrlS,
-                EKeyboardButton::CtrlS,
-                EKeyboardButton::CtrlS,
-                EKeyboardButton::CtrlS
+                Input::EKeyboardButton::CtrlS,
+                Input::EKeyboardButton::CtrlS,
+                Input::EKeyboardButton::CtrlS,
+                Input::EKeyboardButton::CtrlS
             }
         };
-        this->m_pButtonMapping[EButton::EditorToggleNavigateCategories] =
+        this->m_pButtonMapping[Input::EButton::EditorToggleNavigateCategories] =
         {
-            EGamepadButton::Right_Thumb,
+            Input::EGamepadButton::Right_Thumb,
             {
-                EKeyboardButton::X,
-                EKeyboardButton::X,
-                EKeyboardButton::X,
-                EKeyboardButton::X
+                Input::EKeyboardButton::X,
+                Input::EKeyboardButton::X,
+                Input::EKeyboardButton::X,
+                Input::EKeyboardButton::X
             }
         };
-        this->m_pButtonMapping[EButton::Exit] =
+        this->m_pButtonMapping[Input::EButton::Exit] =
         {
-            EGamepadButton::Pad_Back,
+            Input::EGamepadButton::Pad_Back,
             {
-                EKeyboardButton::Escape,
-                EKeyboardButton::Escape,
-                EKeyboardButton::Escape,
-                EKeyboardButton::Escape
+                Input::EKeyboardButton::Escape,
+                Input::EKeyboardButton::Escape,
+                Input::EKeyboardButton::Escape,
+                Input::EKeyboardButton::Escape
             }
         };
     }
 
     // **************************************************************************
     // **************************************************************************
-    PuRe_Vector2F CInputManager::Direction(EDirection::Type a_Direction, int a_PlayerIndex)
+    PuRe_Vector2F CInputManager::Direction(Input::EDirection::Type a_Direction, int a_PlayerIndex)
     {
-        SDirectionMapping& mapping = this->m_pDirectionMapping[a_Direction];
+        Input::SDirectionMapping& mapping = this->m_pDirectionMapping[a_Direction];
         return this->GetGamepadDirection(mapping.Gamepad, a_PlayerIndex) + this->GetKeyboardDirection(mapping.Keyboard[a_PlayerIndex]);
     }
 
     // **************************************************************************
     // **************************************************************************
-    float CInputManager::Axis(EAxis::Type a_Axis, int a_PlayerIndex)
+    float CInputManager::Axis(Input::EAxis::Type a_Axis, int a_PlayerIndex)
     {
-        SAxisMapping& mapping = this->m_pAxisMapping[a_Axis];
+        Input::SAxisMapping& mapping = this->m_pAxisMapping[a_Axis];
         return this->GetGamepadAxis(mapping.Gamepad, a_PlayerIndex) + this->GetKeyboardAxis(mapping.Keyboard[a_PlayerIndex]);
     }
 
     // **************************************************************************
     // **************************************************************************
-    bool CInputManager::ButtonPressed(EButton::Type a_Button, int a_PlayerIndex)
+    bool CInputManager::ButtonPressed(Input::EButton::Type a_Button, int a_PlayerIndex)
     {
-        SButtonMapping& mapping = this->m_pButtonMapping[a_Button];
+        Input::SButtonMapping& mapping = this->m_pButtonMapping[a_Button];
         return this->GetGamepadButtonPressed(mapping.Gamepad, a_PlayerIndex) + this->GetKeyboardButtonPressed(mapping.Keyboard[a_PlayerIndex]);
     }
 
     // **************************************************************************
     // **************************************************************************
-    bool CInputManager::ButtonIsPressed(EButton::Type a_Button, int a_PlayerIndex)
+    bool CInputManager::ButtonIsPressed(Input::EButton::Type a_Button, int a_PlayerIndex)
     {
-        SButtonMapping& mapping = this->m_pButtonMapping[a_Button];
+        Input::SButtonMapping& mapping = this->m_pButtonMapping[a_Button];
         return this->GetGamepadButtonIsPressed(mapping.Gamepad, a_PlayerIndex) + this->GetKeyboardButtonIsPressed(mapping.Keyboard[a_PlayerIndex]);
     }
 
     // **************************************************************************
     // **************************************************************************
-    PuRe_Vector2F CInputManager::GetKeyboardDirection(EKeyboardDirection::Type a_Direction)
+    PuRe_Vector2F CInputManager::GetKeyboardDirection(Input::EKeyboardDirection::Type a_Direction)
     {
         switch (a_Direction)
         {
-        case SpacebrickArena::CInputManager::EKeyboardDirection::ArrowKeys:
+        case Input::EKeyboardDirection::ArrowKeys:
             return this->CalcKeyboardDirectionFromKeys(this->m_pInput->Up, this->m_pInput->Down, this->m_pInput->Right, this->m_pInput->Left);
-        case SpacebrickArena::CInputManager::EKeyboardDirection::WSAD:
+        case Input::EKeyboardDirection::WSAD:
             return this->CalcKeyboardDirectionFromKeys(this->m_pInput->W, this->m_pInput->S, this->m_pInput->D, this->m_pInput->A);
-        case SpacebrickArena::CInputManager::EKeyboardDirection::IKJL:
+        case Input::EKeyboardDirection::IKJL:
             return this->CalcKeyboardDirectionFromKeys(this->m_pInput->I, this->m_pInput->K, this->m_pInput->L, this->m_pInput->J);
-        case SpacebrickArena::CInputManager::EKeyboardDirection::Numpad:
+        case Input::EKeyboardDirection::Numpad:
             return this->CalcKeyboardDirectionFromKeys(this->m_pInput->Eight, this->m_pInput->Five, this->m_pInput->Six, this->m_pInput->Four);
-        case SpacebrickArena::CInputManager::EKeyboardDirection::Mouse:
+        case Input::EKeyboardDirection::Mouse:
             return this->m_pInput->GetRelativeMousePosition();
         }
     }
 
     // **************************************************************************
     // **************************************************************************
-    PuRe_Vector2F CInputManager::GetGamepadDirection(EGamepadDirection::Type a_Direction, int a_Index)
+    PuRe_Vector2F CInputManager::GetGamepadDirection(Input::EGamepadDirection::Type a_Direction, int a_Index)
     {
         switch (a_Direction)
         {
-        case SpacebrickArena::CInputManager::EGamepadDirection::LeftThumb:
+        case Input::EGamepadDirection::LeftThumb:
             return this->m_pInput->GetGamepadLeftThumb(a_Index);
-        case SpacebrickArena::CInputManager::EGamepadDirection::RightThumb:
+        case Input::EGamepadDirection::RightThumb:
             return this->m_pInput->GetGamepadRightThumb(a_Index);
-        case SpacebrickArena::CInputManager::EGamepadDirection::DPad:
+        case Input::EGamepadDirection::DPad:
             return this->CalcGamepadDirectionFromButtons(this->m_pInput->DPAD_Up, this->m_pInput->DPAD_Down, this->m_pInput->DPAD_Right, this->m_pInput->DPAD_Left, a_Index);
-        case SpacebrickArena::CInputManager::EGamepadDirection::Buttons:
+        case Input::EGamepadDirection::Buttons:
             return this->CalcGamepadDirectionFromButtons(this->m_pInput->Pad_Y, this->m_pInput->Pad_A, this->m_pInput->Pad_B, this->m_pInput->Pad_X, a_Index);
         }
     }
 
     // **************************************************************************
     // **************************************************************************
-    float CInputManager::GetKeyboardAxis(EKeyboardAxis::Type a_Axis)
+    float CInputManager::GetKeyboardAxis(Input::EKeyboardAxis::Type a_Axis)
     {
         switch (a_Axis)
         {
-        case SpacebrickArena::CInputManager::EKeyboardAxis::WS:
+        case Input::EKeyboardAxis::WS:
             return this->CalcKeyboardAxisFromKeys(this->m_pInput->W, this->m_pInput->S);
-        case SpacebrickArena::CInputManager::EKeyboardAxis::AD:
+        case Input::EKeyboardAxis::AD:
             return this->CalcKeyboardAxisFromKeys(this->m_pInput->D, this->m_pInput->A);
-        case SpacebrickArena::CInputManager::EKeyboardAxis::RF:
+        case Input::EKeyboardAxis::RF:
             return this->CalcKeyboardAxisFromKeys(this->m_pInput->R, this->m_pInput->F);
-        case SpacebrickArena::CInputManager::EKeyboardAxis::QE:
+        case Input::EKeyboardAxis::QE:
             return this->CalcKeyboardAxisFromKeys(this->m_pInput->E, this->m_pInput->Q);
-        case SpacebrickArena::CInputManager::EKeyboardAxis::ArrowUD:
+        case Input::EKeyboardAxis::ArrowUD:
             return this->CalcKeyboardAxisFromKeys(this->m_pInput->Up, this->m_pInput->Down);
-        case SpacebrickArena::CInputManager::EKeyboardAxis::ArrowLR:
+        case Input::EKeyboardAxis::ArrowLR:
             return this->CalcKeyboardAxisFromKeys(this->m_pInput->Right, this->m_pInput->Left);
-        case SpacebrickArena::CInputManager::EKeyboardAxis::MouseX:
+        case Input::EKeyboardAxis::MouseX:
             return this->m_pInput->GetRelativeMousePosition().X;
-        case SpacebrickArena::CInputManager::EKeyboardAxis::MouseY:
+        case Input::EKeyboardAxis::MouseY:
             return this->m_pInput->GetRelativeMousePosition().Y;
-        case SpacebrickArena::CInputManager::EKeyboardAxis::MouseScroll:
+        case Input::EKeyboardAxis::MouseScroll:
             return this->m_pInput->GetMouseScroll();
         }
     }
 
     // **************************************************************************
     // **************************************************************************
-    float CInputManager::GetGamepadAxis(EGamepadAxis::Type a_Axis, int a_Index)
+    float CInputManager::GetGamepadAxis(Input::EGamepadAxis::Type a_Axis, int a_Index)
     {
         switch (a_Axis)
         {
-        case SpacebrickArena::CInputManager::EGamepadAxis::LeftTrigger:
+        case Input::EGamepadAxis::LeftTrigger:
             return this->m_pInput->GetGamepadLeftTrigger(a_Index);
-        case SpacebrickArena::CInputManager::EGamepadAxis::RightTrigger:
+        case Input::EGamepadAxis::RightTrigger:
             return this->m_pInput->GetGamepadRightTrigger(a_Index);
-        case SpacebrickArena::CInputManager::EGamepadAxis::BothTrigger:
+        case Input::EGamepadAxis::BothTrigger:
             return this->m_pInput->GetGamepadRightTrigger(a_Index) - this->m_pInput->GetGamepadLeftTrigger(a_Index);
-        case SpacebrickArena::CInputManager::EGamepadAxis::LeftThumbX:
+        case Input::EGamepadAxis::LeftThumbX:
             return this->m_pInput->GetGamepadLeftThumb(a_Index).X;
-        case SpacebrickArena::CInputManager::EGamepadAxis::LeftThumbY:
+        case Input::EGamepadAxis::LeftThumbY:
             return this->m_pInput->GetGamepadLeftThumb(a_Index).Y;
-        case SpacebrickArena::CInputManager::EGamepadAxis::RightThumbX:
+        case Input::EGamepadAxis::RightThumbX:
             return this->m_pInput->GetGamepadRightThumb(a_Index).X;
-        case SpacebrickArena::CInputManager::EGamepadAxis::RightThumbY:
+        case Input::EGamepadAxis::RightThumbY:
             return this->m_pInput->GetGamepadRightThumb(a_Index).Y;
-        case SpacebrickArena::CInputManager::EGamepadAxis::DPadX:
+        case Input::EGamepadAxis::DPadX:
             return this->CalcGamepadAxisFromButtons(this->m_pInput->DPAD_Right, this->m_pInput->DPAD_Left, a_Index);
-        case SpacebrickArena::CInputManager::EGamepadAxis::DPadY:
+        case Input::EGamepadAxis::DPadY:
             return this->CalcGamepadAxisFromButtons(this->m_pInput->DPAD_Up, this->m_pInput->DPAD_Down, a_Index);
         }
     }
 
     // **************************************************************************
     // **************************************************************************
-    bool CInputManager::GetKeyboardButtonPressed(EKeyboardButton::Type a_Button)
+    bool CInputManager::GetKeyboardButtonPressed(Input::EKeyboardButton::Type a_Button)
     {
-        if (a_Button <= EKeyboardButton::PURE_LAST)
+        if (a_Button <= Input::EKeyboardButton::PURE_LAST)
         {
             return this->m_pInput->KeyPressed((PuRe_IInput::EKeys)a_Button);
         }
         switch (a_Button)
         {
-        case SpacebrickArena::CInputManager::EKeyboardButton::Delete:
+        case Input::EKeyboardButton::Delete:
             return this->m_pInput->KeyPressed(this->m_pInput->Backspace);
-        case SpacebrickArena::CInputManager::EKeyboardButton::CtrlZ:
+        case Input::EKeyboardButton::CtrlZ:
             return this->CalcKeyboardKeyPressedWithHoldKey(this->m_pInput->Ctrl, this->m_pInput->Z);
-        case SpacebrickArena::CInputManager::EKeyboardButton::CtrlY:
+        case Input::EKeyboardButton::CtrlY:
             return this->CalcKeyboardKeyPressedWithHoldKey(this->m_pInput->Ctrl, this->m_pInput->Y);
-        case SpacebrickArena::CInputManager::EKeyboardButton::CtrlS:
+        case Input::EKeyboardButton::CtrlS:
             return this->CalcKeyboardKeyPressedWithHoldKey(this->m_pInput->Ctrl, this->m_pInput->S);
-        case SpacebrickArena::CInputManager::EKeyboardButton::MouseLeft:
+        case Input::EKeyboardButton::MouseLeft:
             return this->m_pInput->MousePressed(this->m_pInput->LeftClick);
-        case SpacebrickArena::CInputManager::EKeyboardButton::MouseMiddle:
+        case Input::EKeyboardButton::MouseMiddle:
             return this->m_pInput->MousePressed(this->m_pInput->MiddleClick);
-        case SpacebrickArena::CInputManager::EKeyboardButton::MouseRight:
+        case Input::EKeyboardButton::MouseRight:
             return this->m_pInput->MousePressed(this->m_pInput->RightClick);
         }
     }
 
     // **************************************************************************
     // **************************************************************************
-    bool CInputManager::GetGamepadButtonPressed(EGamepadButton::Type a_Button, int a_Index)
+    bool CInputManager::GetGamepadButtonPressed(Input::EGamepadButton::Type a_Button, int a_Index)
     {
-        if (a_Button <= EGamepadButton::PURE_LAST)
+        if (a_Button <= Input::EGamepadButton::PURE_LAST)
         {
             return this->m_pInput->GamepadPressed((PuRe_IInput::EGamepad)a_Button, a_Index);
         }
@@ -344,36 +344,36 @@ namespace SpacebrickArena
 
     // **************************************************************************
     // **************************************************************************
-    bool CInputManager::GetKeyboardButtonIsPressed(EKeyboardButton::Type a_Button)
+    bool CInputManager::GetKeyboardButtonIsPressed(Input::EKeyboardButton::Type a_Button)
     {
-        if (a_Button <= EKeyboardButton::PURE_LAST)
+        if (a_Button <= Input::EKeyboardButton::PURE_LAST)
         {
             return this->m_pInput->KeyIsPressed((PuRe_IInput::EKeys)a_Button);
         }
         switch (a_Button)
         {
-        case SpacebrickArena::CInputManager::EKeyboardButton::Delete:
+        case Input::EKeyboardButton::Delete:
             return this->m_pInput->KeyIsPressed(this->m_pInput->Backspace);
-        case SpacebrickArena::CInputManager::EKeyboardButton::CtrlZ:
+        case Input::EKeyboardButton::CtrlZ:
             return this->CalcKeyboardKeyIsPressedWithHoldKey(this->m_pInput->Ctrl, this->m_pInput->Z);
-        case SpacebrickArena::CInputManager::EKeyboardButton::CtrlY:
+        case Input::EKeyboardButton::CtrlY:
             return this->CalcKeyboardKeyIsPressedWithHoldKey(this->m_pInput->Ctrl, this->m_pInput->Y);
-        case SpacebrickArena::CInputManager::EKeyboardButton::CtrlS:
+        case Input::EKeyboardButton::CtrlS:
             return this->CalcKeyboardKeyIsPressedWithHoldKey(this->m_pInput->Ctrl, this->m_pInput->S);
-        case SpacebrickArena::CInputManager::EKeyboardButton::MouseLeft:
+        case Input::EKeyboardButton::MouseLeft:
             return this->m_pInput->MouseIsPressed(this->m_pInput->LeftClick);
-        case SpacebrickArena::CInputManager::EKeyboardButton::MouseMiddle:
+        case Input::EKeyboardButton::MouseMiddle:
             return this->m_pInput->MouseIsPressed(this->m_pInput->MiddleClick);
-        case SpacebrickArena::CInputManager::EKeyboardButton::MouseRight:
+        case Input::EKeyboardButton::MouseRight:
             return this->m_pInput->MouseIsPressed(this->m_pInput->RightClick);
         }
     }
 
     // **************************************************************************
     // **************************************************************************
-    bool CInputManager::GetGamepadButtonIsPressed(EGamepadButton::Type a_Button, int a_Index)
+    bool CInputManager::GetGamepadButtonIsPressed(Input::EGamepadButton::Type a_Button, int a_Index)
     {
-        if (a_Button <= EGamepadButton::PURE_LAST)
+        if (a_Button <= Input::EGamepadButton::PURE_LAST)
         {
             return this->m_pInput->GamepadIsPressed((PuRe_IInput::EGamepad)a_Button, a_Index);
         }

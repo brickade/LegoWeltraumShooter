@@ -143,6 +143,7 @@
     <ClInclude Include="include\Editor_BrickSupervisor.h" />
     <ClInclude Include="include\Editor_Assistant.h" />
     <ClInclude Include="include\InputManager.h" />
+    <ClInclude Include="include\InputManagerTypes.h" />
     <ClInclude Include="include\Space.h" />
     <ClInclude Include="include\Editor_Camera.h" />
     <ClInclude Include="include\GameCamera.h" />

@@ -100,7 +100,7 @@ namespace sba
 
     // **************************************************************************
     // **************************************************************************
-    EDirection::Type CNavigation::DirectionFromInputVector(PuRe_Vector2F a_InputVector) const
+    CNavigation::EDirection::Type CNavigation::DirectionFromInputVector(PuRe_Vector2F a_InputVector) const
     {
         EDirection::Type state = EDirection::None;
         if (a_InputVector.Length() < this->m_InputThreshold)

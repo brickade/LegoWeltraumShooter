@@ -10,7 +10,7 @@ namespace sba
     {
         this->BrickManager = new TheBrick::CBrickManager();
         this->World = new ong::World();
-        this->InputManager = new SpacebrickArena::CInputManager();
+        this->InputManager = new sba::CInputManager();
     }
 
     // **************************************************************************
