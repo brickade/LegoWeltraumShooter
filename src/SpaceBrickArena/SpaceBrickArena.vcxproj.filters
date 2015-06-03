@@ -61,6 +61,9 @@
     <ClInclude Include="include\Editor_BrickCategory.h">
       <Filter>Quelldateien\Editor</Filter>
     </ClInclude>
+    <ClInclude Include="include\InputManager.h">
+      <Filter>Quelldateien</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -110,6 +113,9 @@
     </ClCompile>
     <ClCompile Include="Editor_BrickCategory.cpp">
       <Filter>Quelldateien\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="InputManager.cpp">
+      <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

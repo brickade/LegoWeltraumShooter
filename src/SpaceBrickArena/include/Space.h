@@ -15,6 +15,7 @@
 #include <Onager/World.h>
 
 #include <TheBrick/BrickManager.h>
+#include "InputManager.h"
 
 namespace sba
 {
@@ -26,6 +27,7 @@ namespace sba
         TheBrick::CBrickManager* BrickManager;
         ong::World* World;
         PuRe_Renderer* Renderer;
+        SpacebrickArena::CInputManager* InputManager;
 
     private:
         static Space* g_pInstance;
@@ -36,7 +38,7 @@ namespace sba
         float m_PhysicsFramerate = 60.0f;
     
     public:
-        void Initialize(PuRe_IGraphics& a_pGraphics, PuRe_SoundPlayer& a_pSoundPlayer);
+        void Initialize(PuRe_IGraphics& a_pGraphics, PuRe_IInput& a_pInput, PuRe_SoundPlayer& a_pSoundPlayer);
         void UpdatePhysics(PuRe_Timer* a_pTimer);
 
     private:
