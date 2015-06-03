@@ -9,6 +9,10 @@
 #include <PuReEngine/IInput.h>
 #include <unordered_map>
 
+namespace TheBrick{
+    class CSerializer;
+}
+
 namespace sba
 {
     class CInputManager
@@ -23,10 +27,31 @@ namespace sba
         Input::SButtonMapping m_pButtonMapping[Input::EButton::LAST];
 
     public:
+        Input::SDirectionMapping* GetDirectionMapping()
+        {
+            return this->m_pDirectionMapping;
+        }
+
+        Input::SAxisMapping* GetAxisMapping()
+        {
+            return this->m_pAxisMapping;
+        }
+
+        Input::SButtonMapping* GetButtonMapping()
+        {
+            return this->m_pButtonMapping;
+        }
+
+    public:
         CInputManager();
         ~CInputManager();
 
         void Initialize(PuRe_IInput* a_pInput);
+        void Reset();
+        void Load(const char*a_pFile);
+        void Save(const char* a_pFile);
+        void Deserialize(TheBrick::CSerializer& a_pSerializer);
+        void Serialize(TheBrick::CSerializer& a_pSerializer);
 
         PuRe_Vector2F Direction(Input::EDirection::Type a_Direction, int a_PlayerIndex);
 

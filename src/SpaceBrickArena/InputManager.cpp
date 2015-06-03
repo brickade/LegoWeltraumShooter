@@ -1,17 +1,21 @@
 #include "include/InputManager.h"
 
+#include <TheBrick/Serializer.h>
+
 namespace sba
 {
     // **************************************************************************
     // **************************************************************************
     CInputManager::CInputManager()
     {
+
     }
 
     // **************************************************************************
     // **************************************************************************
     CInputManager::~CInputManager()
     {
+
     }
 
     // **************************************************************************
@@ -19,8 +23,16 @@ namespace sba
     void CInputManager::Initialize(PuRe_IInput* a_pInput)
     {
         this->m_pInput = a_pInput;
+        //this->Load("input.data");
+        this->Reset();
+    }
 
+    // **************************************************************************
+    // **************************************************************************
+    void CInputManager::Reset()
+    {
         //Direction
+        memset(&this->m_pDirectionMapping, 0, sizeof(this->m_pDirectionMapping));
         this->m_pDirectionMapping[Input::EDirection::EditorCameraRotate] =
         {
             Input::EGamepadDirection::RightThumb,
@@ -53,6 +65,7 @@ namespace sba
         };
 
         //Axis
+        memset(&this->m_pAxisMapping, 0, sizeof(this->m_pAxisMapping));
         this->m_pAxisMapping[Input::EAxis::EditorCameraZoom] =
         {
             Input::EGamepadAxis::BothTrigger,
@@ -75,6 +88,7 @@ namespace sba
         };
 
         //Button
+        memset(&this->m_pButtonMapping, 0, sizeof(this->m_pButtonMapping));
         this->m_pButtonMapping[Input::EButton::EditorPlaceBrick] =
         {
             Input::EGamepadButton::Pad_A,
@@ -175,6 +189,51 @@ namespace sba
                 Input::EKeyboardButton::Escape
             }
         };
+    }
+
+    // **************************************************************************
+    // **************************************************************************
+    void CInputManager::Load(const char*a_pFile)
+    {
+        TheBrick::CSerializer* serializer = new TheBrick::CSerializer();
+        serializer->OpenRead(a_pFile);
+        this->Deserialize(*serializer);
+        serializer->Close();
+    }
+
+    // **************************************************************************
+    // **************************************************************************
+    void CInputManager::Save(const char* a_pFile)
+    {
+        TheBrick::CSerializer* serializer = new TheBrick::CSerializer();
+        serializer->OpenWrite(a_pFile);
+        this->Serialize(*serializer);
+        serializer->Close();
+    }
+
+
+    // **************************************************************************
+    // **************************************************************************
+    void CInputManager::Deserialize(TheBrick::CSerializer& a_pSerializer)
+    {
+        //m_pDirectionMapping
+        a_pSerializer.Read(this->m_pDirectionMapping, sizeof(this->m_pDirectionMapping));
+        //m_pAxisMapping
+        a_pSerializer.Read(this->m_pAxisMapping, sizeof(this->m_pAxisMapping));
+        //m_pButtonMapping
+        a_pSerializer.Read(this->m_pButtonMapping, sizeof(this->m_pButtonMapping));
+    }
+
+    // **************************************************************************
+    // **************************************************************************
+    void CInputManager::Serialize(TheBrick::CSerializer& a_pSerializer)
+    {
+        //m_pDirectionMapping
+        a_pSerializer.Write(this->m_pDirectionMapping, sizeof(this->m_pDirectionMapping));
+        //m_pAxisMapping
+        a_pSerializer.Write(this->m_pAxisMapping, sizeof(this->m_pAxisMapping));
+        //m_pButtonMapping
+        a_pSerializer.Write(this->m_pButtonMapping, sizeof(this->m_pButtonMapping));
     }
 
     // **************************************************************************
