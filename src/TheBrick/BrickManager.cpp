@@ -116,7 +116,7 @@ namespace TheBrick
     // **************************************************************************
     int CBrickManager::GetCategoryCount()
     {
-        return ceil(this->m_bricks.max_size() / 100.0f);
+        return (int)ceil(this->m_bricks.max_size() / 100.0f);
     }
 
     // **************************************************************************

@@ -22,8 +22,9 @@ namespace Game
     void CGameCamera::Initialize()
     {
         this->SetFoV(45.0f);
-        this->m_ZOffset = 20.0f;
+        this->m_ZOffset = 40.0f;
         this->setNearFar(PuRe_Vector2F(0.1f, 1000.0f));
+        this->m_Rotation = PuRe_QuaternionF();
     }
 
     void CGameCamera::Update(int a_CID, TheBrick::CSpaceship* a_pPlayer, PuRe_IInput* a_pInput, PuRe_Timer* a_pTimer)
@@ -57,10 +58,10 @@ namespace Game
         //this->Move(CameraMove);
 
         this->m_ZOffset += a_pInput->GetMouseScroll();
-        if (this->m_ZOffset < 20.0f)
-            this->m_ZOffset = 20.0f;
-        else if (this->m_ZOffset > 50.0f)
-            this->m_ZOffset = 50.0f;
+        if (this->m_ZOffset < 10.0f)
+            this->m_ZOffset = 10.0f;
+        else if (this->m_ZOffset > 60.0f)
+            this->m_ZOffset = 60.0f;
 
         this->SetPosition(TheBrick::OngToPuRe(a_pPlayer->m_pBody->getWorldCenter()));
 
@@ -115,8 +116,16 @@ namespace Game
         if (invert)
             Cam.Y = -Cam.Y;
 
-        if (Cam.Length() > 0.5f)
-            this->Rotate(cameraLook.Y + Cam.Y, cameraLook.X + Cam.X, cameraLook.Z);
+        PuRe_QuaternionF quat = TheBrick::OngToPuRe(a_pPlayer->m_pBody->getOrientation());
+        if (this->m_Rotation != quat)
+        {
+            PuRe_QuaternionF diff = quat - this->m_Rotation;
+            this->m_Rotation.X += diff.X / 100.0f;
+            this->m_Rotation.Y += diff.Y / 100.0f;
+            this->m_Rotation.Z += diff.Z / 100.0f;
+            this->m_Rotation.W += diff.W / 100.0f;
+            this->SetRotation(this->m_Rotation);
+        }
 
         this->Move(PuRe_Vector3F(0.0f, 0.0f, -this->m_ZOffset));
     }

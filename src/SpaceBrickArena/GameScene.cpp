@@ -12,7 +12,7 @@ namespace Game
 
     void CGameScene::StartGame()
     {
-        for (int i = 0; i < this->m_Players.size(); i++)
+        for (unsigned int i = 0; i < this->m_Players.size(); i++)
         {
             TheBrick::CSerializer serializer;
             serializer.OpenRead("../data/ships/banana.ship");
@@ -47,7 +47,7 @@ namespace Game
                 if (Packet->Head.Type == 0)
                 {
                     int ID = 0; // 0 is Host
-                    for (int i = 0; i < this->m_Players.size(); i++)
+                    for (unsigned int i = 0; i < this->m_Players.size(); i++)
                     {
                         if (ID == this->m_Players[i]->ID)
                         {
@@ -68,7 +68,7 @@ namespace Game
 
                     //Send to JOINER all existing players
                     lPacket.Head.Type = 3;
-                    for (int i = 0; i < this->m_Players.size(); i++)
+                    for (unsigned int i = 0; i < this->m_Players.size(); i++)
                     {
                         lPacket.Who = this->m_Players[i]->ID;
                         this->m_pNetwork->Send((char*)&lPacket, sizeof(LeftPacket), sender);
@@ -84,7 +84,7 @@ namespace Game
                 {
                     LeftPacket* lPacket = (LeftPacket*)Packet;
 
-                    for (int i = 0; i < this->m_Players.size(); i++)
+                    for (unsigned int i = 0; i < this->m_Players.size(); i++)
                     {
                         if (this->m_Players[i]->ID == lPacket->Who)
                         {
@@ -96,7 +96,7 @@ namespace Game
                     //Send to everyone else that one left
                     if (this->m_pNetwork->m_Host)
                     {
-                        for (int i = 0; i < this->m_Players.size(); i++)
+                        for (unsigned int i = 0; i < this->m_Players.size(); i++)
                         {
                             this->m_pNetwork->Send((char*)lPacket, sizeof(LeftPacket), this->m_Players[i]->NetworkInformation);
                         }
@@ -127,7 +127,7 @@ namespace Game
                 else if (Packet->Head.Type == 5)
                 {
                     InputBasePacket* IPacket = (InputBasePacket*)Packet;
-                    for (int i = 0; i < this->m_Players.size(); i++)
+                    for (unsigned int i = 0; i < this->m_Players.size(); i++)
                     {
                         if (this->m_Players[i]->ID == IPacket->Who)
                         {
@@ -236,10 +236,7 @@ namespace Game
     bool CGameScene::Update(PuRe_IGraphics* a_pGraphics, PuRe_IWindow* a_pWindow, PuRe_IInput* a_pInput, PuRe_Timer* a_pTimer, PuRe_SoundPlayer* a_pSoundPlayer)
     {
         //Handle ESC Button
-        if (a_pInput->KeyPressed(a_pInput->ESC)
-            || a_pInput->GamepadPressed(a_pInput->Pad_Back, this->m_playerIdx)
-            || a_pInput->KeyPressed(a_pInput->F1)
-            || a_pInput->GamepadPressed(a_pInput->Pad_Start, this->m_playerIdx))
+        if (a_pInput->KeyPressed(a_pInput->ESC))
         {
             return true;
         }
@@ -348,7 +345,7 @@ namespace Game
 
             //player->HandleInput(a_pInput, a_pTimer->GetElapsedSeconds(), this->m_Bullets, BrickBozz::Instance()->BrickManager);
 
-            for (int i = 0; i<this->m_Players.size();i++)
+            for (unsigned int i = 0; i<this->m_Players.size(); i++)
             {
                 TheBrick::CSpaceship* player = this->m_Players[i]->Ship;
                 player->HandleInput(i, a_pInput, a_pTimer->GetElapsedSeconds(), this->m_Bullets, sba::Space::Instance()->BrickManager);
@@ -413,7 +410,7 @@ namespace Game
                 //Send to everyone that
                 HeadPacket Packet;
                 Packet.Type = 4;
-                for (int i = 1; i < this->m_Players.size(); i++)
+                for (unsigned int i = 1; i < this->m_Players.size(); i++)
                 {
                     this->m_pNetwork->Send((char*)&Packet, sizeof(HeadPacket), this->m_Players[i]->NetworkInformation);
                 }
@@ -565,7 +562,7 @@ namespace Game
         lPacket.Who = this->m_ID;
         this->m_pNetwork->SendHost((char*)&lPacket, sizeof(LeftPacket));
         //Clear Memory
-        for (int i = 0; i < this->m_Players.size(); i++)
+        for (unsigned int i = 0; i < this->m_Players.size(); i++)
         {
             SAFE_DELETE(this->m_Players[i]->Ship);
             SAFE_DELETE(this->m_Players[i]);

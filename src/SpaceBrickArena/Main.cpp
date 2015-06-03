@@ -21,10 +21,10 @@ int PURE_MAIN
     description.Window.Height = 720;
     description.Window.X = 100;
     description.Window.Y = 200;
-    description.Window.DisplaySetting = PuRe_DisplaySetting::FullscreenWindowed;
-    description.Window.ShowCursor = false;
+    description.Window.DisplaySetting = PuRe_DisplaySetting::Windowed;
+    description.Window.ShowCursor = true;
     description.Window.CursorInWindow = false;
-    description.Window.LockCursor = true;
+    description.Window.LockCursor = false;
     PuRe_Application* papplication = new PuRe_Application(pplatform, description);
     sba::CMainScene scene(papplication);
 
