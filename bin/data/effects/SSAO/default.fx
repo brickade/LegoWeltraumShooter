@@ -1,6 +1,7 @@
 #define KERNEL_SIZE 16
 
 matrix InvertViewProjection;
+matrix CamView;
 float2 NoiseScale;
 float2 Resolution;
 float g_sample_rad = 0.1;
@@ -76,8 +77,8 @@ float2 getRandom(float2 uv)
 
 float doAmbientOcclusion(in float2 tcoord,in float2 uv, in float3 p, in float3 cnorm)
 {
-	float3 diff = getPosition(tcoord + uv) - p;
-	float3 v = normalize(diff);
+    float3 diff = getPosition(tcoord + uv) - p;
+    float3 v = normalize(diff);
     float d = length(diff)*g_scale;
 
     return max(0.0, dot(cnorm, v) - g_bias)*(1.0 / (1.0 + d))*g_intensity;
@@ -126,8 +127,9 @@ PixelShaderOutput PS_MAIN(VertexShaderOutput input)
   float3 n = getNormal(uv);
   float2 rand = getRandom(uv);
 
+  float4 viewpos = mul(float4(p,1),CamView);
   float ao = 0.0f;
-  float rad = g_sample_rad/p.z;
+  float rad = g_sample_rad/viewpos.z;
 
   for (int j = 0; j < KERNEL_SIZE; ++j)
   {

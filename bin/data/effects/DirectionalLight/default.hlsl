@@ -1,8 +1,12 @@
 cbuffer MatrixBuffer
 {
+    matrix InvertViewProjection;
     float3 LightDirection;
     float4 LightColor;
     float2 Resolution;
+    float3 CameraPosition;
+    float specularIntensity = 1.0f;
+    float specularPower = 200;
 };
 tbuffer textureBuffer
 {
@@ -45,6 +49,26 @@ float2 CalcTexCoord(float4 Position)
     return Position.xy / Resolution;
 }
 
+float4 CalcPosition(float Depth,float2 UV)
+{
+        float4 worldpos;
+  	worldpos.x = UV.x * 2.0f -1.0f;
+  	worldpos.y = (1.0f-UV.y) * 2.0f -1.0f;
+        worldpos.z = Depth;
+        worldpos.w = 1.0;
+  	worldpos = mul(worldpos,InvertViewProjection);
+  	worldpos /= worldpos.w;
+	return worldpos;
+} 
+
+float CalcSpecular(float3 lightVector,float4 pos,float4 norm)
+{ 
+	float3 reflectionfloattor = normalize(reflect(-lightVector,norm.xyz));
+	float3 directionToCamera = normalize(CameraPosition - pos.xyz);
+	float cosAngle = max(0.0,dot(directionToCamera,reflectionfloattor));
+ 	return specularIntensity * pow(cosAngle,specularPower);
+}
+
 VertexShaderOutput VS_MAIN(VertexShaderInput input)
 {
     VertexShaderOutput Output = (VertexShaderOutput)0;
@@ -70,12 +94,18 @@ PixelShaderOutput PS_MAIN(VertexShaderOutput input)
     float4 norm = (NormalMap.Sample(SampleType, UV) *2 )-1;
     if(norm.a < 0.1)
      discard;
-    
-    float Factor = dot(norm.xyz,-LightDirection);
+    float4 depth = DepthMap.Sample(SampleType,UV);
+    float4 pos = CalcPosition(depth.r,UV);
 
-    float4 lights = float4(LightColor.rgb*Factor, LightColor.a);
+    float3 lightVector = -normalize(LightDirection);
+    float Factor = max(0,dot(norm.xyz,lightVector));
+    float3 diffuseLight = Factor*LightColor.rgb;
+
+    float specularLight = 0.0;
+    if(Factor > 0.0)
+        specularLight = CalcSpecular(lightVector,pos,norm);
     
-    output.color = lights;
+    output.color = float4(diffuseLight,specularLight);
 
     return output;
 }

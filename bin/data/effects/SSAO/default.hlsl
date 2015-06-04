@@ -1,6 +1,7 @@
 #define KERNEL_SIZE 16
 cbuffer MatrixBuffer
 {
+	matrix CamView;
 	matrix InvertViewProjection;
 	float2 NoiseScale;
 	float2 Resolution;
@@ -127,8 +128,9 @@ PixelShaderOutput PS_MAIN(VertexShaderOutput input)
   float3 n = getNormal(uv);
   float2 rand = getRandom(uv);
 
+  float4 viewpos = mul(float4(p,1),CamView);
   float ao = 0.0f;
-  float rad = g_sample_rad/p.z;
+  float rad = g_sample_rad/viewpos.z;
 
   for (int j = 0; j < KERNEL_SIZE; ++j)
   {

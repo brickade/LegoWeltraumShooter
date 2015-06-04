@@ -37,11 +37,10 @@ void main()
          	ssao += texture(SSAOMap, TexCoord + offset).r;
       		}
    	}
- 
    	ssao = ssao / float(BlurSize * BlurSize);
-
-
-        blend = vec4((blend.xyz*(light.xyz+ambient))*ssao,blend.a);
+ 	
+	vec3 color = (blend.xyz * (ambient+light.xyz)+light.a) * ssao;
+	blend = vec4(color,blend.a);
         if(blend.a < 0.1)
          discard;
 

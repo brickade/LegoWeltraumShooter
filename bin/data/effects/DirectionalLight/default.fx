@@ -1,6 +1,10 @@
+matrix InvertViewProjection;
 float3 LightDirection;
 float4 LightColor;
 float2 Resolution;
+float3 CameraPosition;
+float specularIntensity = 1.0f;
+float specularPower = 200;
 
 Texture2D NormalMap;
 Texture2D DepthMap;
@@ -37,6 +41,26 @@ float2 CalcTexCoord(float4 Position)
     return Position.xy / Resolution;
 }
 
+float4 CalcPosition(float Depth,float2 UV)
+{
+        float4 worldpos;
+  	worldpos.x = UV.x * 2.0f -1.0f;
+  	worldpos.y = (1.0f-UV.y) * 2.0f -1.0f;
+        worldpos.z = Depth;
+        worldpos.w = 1.0;
+  	worldpos = mul(worldpos,InvertViewProjection);
+  	worldpos /= worldpos.w;
+	return worldpos;
+} 
+
+float CalcSpecular(float3 lightVector,float4 pos,float4 norm)
+{ 
+	float3 reflectionfloattor = normalize(reflect(-lightVector,norm.xyz));
+	float3 directionToCamera = normalize(CameraPosition - pos.xyz);
+	float cosAngle = max(0.0,dot(directionToCamera,reflectionfloattor));
+ 	return specularIntensity * pow(cosAngle,specularPower);
+}
+
 VertexShaderOutput VS_MAIN(VertexShaderInput input)
 {
   VertexShaderOutput Output = (VertexShaderOutput)0;
@@ -58,16 +82,17 @@ PixelShaderOutput PS_MAIN(VertexShaderOutput input)
 {
   PixelShaderOutput output;
 
-  float2 UV = CalcTexCoord(input.Position);
-  float4 norm = (NormalMap.Sample(TextureSampler, UV) *2 )-1;
+ float2 UV = CalcTexCoord(input.Position);
+    float4 norm = (NormalMap.Sample(TextureSampler, UV) *2 )-1;
     if(norm.a < 0.1)
      discard;
+    float4 depth = DepthMap.Sample(TextureSampler,UV);
+    float4 pos = CalcPosition(depth.r,UV);
 
-  float Factor = max(dot(norm.xyz,-LightDirection),0.0);
-
-  float4 lights = float4(LightColor.rgb*Factor,LightColor.a);
-
-  output.color = lights;
+    float3 lightVector = -normalize(LightDirection);
+    float Factor = max(0,dot(norm.xyz,lightVector));
+    float3 diffuseLight = Factor*LightColor.rgb;
+    output.color = float4(diffuseLight,1);
   return output;
 }
 

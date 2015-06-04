@@ -3,26 +3,56 @@
 uniform sampler2D NormalMap;
 uniform sampler2D DepthMap;
 
+uniform mat4 InvertViewProjection;
+
 uniform vec3 LightDirection;
 uniform vec4 LightColor;
 uniform vec2 Resolution;
+uniform vec3 CameraPosition;
+
+uniform float specularIntensity =  1.0f;
+uniform float specularPower = 200;
 
 vec2 CalcTexCoord()
 {
    return gl_FragCoord.xy / Resolution;
 }
 
+vec4 CalcPosition(float Depth,vec2 UV)
+{
+        vec4 worldpos;
+  	worldpos.x = UV.x * 2.0f -1.0f;
+  	worldpos.y = UV.y * 2.0f -1.0f;
+        worldpos.z = Depth * 2.0f - 1.0f;
+        worldpos.w = 1.0;
+        worldpos = InvertViewProjection * worldpos;
+  	worldpos /= worldpos.w;
+	return worldpos;
+} 
+
+float CalcSpecular(vec3 lightVector,vec4 pos,vec4 norm)
+{ 
+	vec3 reflectionVector = normalize(reflect(-lightVector,norm.xyz));
+	vec3 directionToCamera = normalize(CameraPosition - pos.xyz);
+	float cosAngle = max(0.0,dot(directionToCamera,reflectionVector));
+ 	return specularIntensity * pow(cosAngle,specularPower);
+}
+
 
 void main()
 {
-	vec4 norm = (texture2D( NormalMap, CalcTexCoord())*2)-1;
-    	if(norm.a < 0.1)
-     		discard;
-        
+	vec2 TexCoord = CalcTexCoord();
+	vec4 norm = (texture2D( NormalMap, TexCoord )*2)-1;
+	vec4 depth = texture2D( DepthMap, TexCoord );
+        vec4 pos = CalcPosition(depth.r,TexCoord);
 
-        float Factor = dot(norm.xyz,-LightDirection);
-
-        vec4 lights = vec4(LightColor.rgb*Factor,LightColor.a);
-
-	gl_FragColor = lights;
+	vec3 lightVector = -normalize(LightDirection);
+        float Factor = max(0,dot(norm.xyz,lightVector));
+	vec3 diffuseLight = Factor*LightColor.rgb;
+	
+	float specularLight = 0.0;
+	if(Factor > 0.0)
+ 		specularLight = CalcSpecular(lightVector,pos,norm);
+	
+	gl_FragColor = vec4(diffuseLight,specularLight);
 }

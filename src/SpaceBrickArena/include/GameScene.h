@@ -71,7 +71,7 @@ namespace Game
         ///
         /// @param graphics The graphics interface.
         ///
-        void Initialize(PuRe_IGraphics* a_pGraphics, PuRe_IWindow* a_pWindow, PuRe_SoundPlayer* a_pSoundPlayer);
+        void Initialize(PuRe_Application* a_pApplicationr);
 
         /// @brief Updates the scene.
         ///
@@ -82,13 +82,13 @@ namespace Game
         ///
         /// @returns if it is still running or not
         ///
-        bool Update(PuRe_IGraphics* a_pGraphics, PuRe_IWindow* a_pWindow, PuRe_IInput* a_pInput, PuRe_Timer* a_pTimer, PuRe_SoundPlayer* a_pSoundPlayer);
+        bool Update(PuRe_Application* a_pApplication);
 
         /// @brief Renders the scene.
         ///
         /// @param graphics The graphics interface.
         ///
-        void Render(PuRe_IGraphics* a_pGraphics);
+        void Render(PuRe_Application* a_pApplication);
 
         /// @brief Exists the scene.
         ///

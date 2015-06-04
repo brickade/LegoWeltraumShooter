@@ -177,24 +177,24 @@ namespace Game
 
     // **************************************************************************
     // **************************************************************************
-    void CGameScene::Initialize(PuRe_IGraphics* a_pGraphics, PuRe_IWindow* a_pWindow, PuRe_SoundPlayer* a_pSoundPlayer)
+    void CGameScene::Initialize(PuRe_Application* a_pApplication)
     {
-        PuRe_GraphicsDescription gdesc = a_pGraphics->GetDescription();
+        PuRe_GraphicsDescription gdesc = a_pApplication->GetGraphics()->GetDescription();
 
         //Camera
         PuRe_Vector2F size = PuRe_Vector2F((float)gdesc.ResolutionWidth/2, (float)gdesc.ResolutionHeight);
-        //this->m_pMaterial = a_pGraphics->LoadMaterial("../data/effects/GameEffects/default/default"); //Kann weg
-        this->m_pFontMaterial = a_pGraphics->LoadMaterial("../data/effects/font/default");
-        this->m_pUIMaterial = a_pGraphics->LoadMaterial("../data/effects/UI/default");
-        this->m_pPostMaterial = a_pGraphics->LoadMaterial("../data/effects/Post/default");
-        this->m_pSkyMaterial = a_pGraphics->LoadMaterial("../data/effects/skybox/default");
-        this->m_pPointLightMaterial = a_pGraphics->LoadMaterial("../data/effects/PointLight/default");
-        this->m_pDirectionalLightMaterial = a_pGraphics->LoadMaterial("../data/effects/DirectionalLight/default");
-        this->m_pSkyBox = new PuRe_SkyBox(a_pGraphics, "../data/textures/cube/");
-        this->m_pPointLight = new PuRe_PointLight(a_pGraphics);
-        this->m_pDirectionalLight = new PuRe_DirectionalLight(a_pGraphics);
-        this->m_pMinimap = new CMinimap(a_pGraphics);
-        this->m_pFont = new PuRe_Font(a_pGraphics, "../data/textures/font.png");
+        //this->m_pMaterial = a_pApplication->GetGraphics()->LoadMaterial("../data/effects/GameEffects/default/default"); //Kann weg
+        this->m_pFontMaterial = a_pApplication->GetGraphics()->LoadMaterial("../data/effects/font/default");
+        this->m_pUIMaterial = a_pApplication->GetGraphics()->LoadMaterial("../data/effects/UI/default");
+        this->m_pPostMaterial = a_pApplication->GetGraphics()->LoadMaterial("../data/effects/Post/default");
+        this->m_pSkyMaterial = a_pApplication->GetGraphics()->LoadMaterial("../data/effects/skybox/default");
+        this->m_pPointLightMaterial = a_pApplication->GetGraphics()->LoadMaterial("../data/effects/PointLight/default");
+        this->m_pDirectionalLightMaterial = a_pApplication->GetGraphics()->LoadMaterial("../data/effects/DirectionalLight/default");
+        this->m_pSkyBox = new PuRe_SkyBox(a_pApplication->GetGraphics(), "../data/textures/cube/");
+        this->m_pPointLight = new PuRe_PointLight(a_pApplication->GetGraphics());
+        this->m_pDirectionalLight = new PuRe_DirectionalLight(a_pApplication->GetGraphics());
+        this->m_pMinimap = new CMinimap(a_pApplication->GetGraphics());
+        this->m_pFont = new PuRe_Font(a_pApplication->GetGraphics(), "../data/textures/font.png");
         this->m_pNetwork = new CNetworkHandler();
 
         this->gameStart = false;
@@ -228,17 +228,17 @@ namespace Game
 
     // **************************************************************************
     // **************************************************************************
-    bool CGameScene::Update(PuRe_IGraphics* a_pGraphics, PuRe_IWindow* a_pWindow, PuRe_IInput* a_pInput, PuRe_Timer* a_pTimer, PuRe_SoundPlayer* a_pSoundPlayer)
+    bool CGameScene::Update(PuRe_Application* a_pApplication)
     {
         //Handle ESC Button
-        if (a_pInput->KeyPressed(a_pInput->ESC))
+        if (a_pApplication->GetInput()->KeyPressed(a_pApplication->GetInput()->ESC))
         {
             return true;
         }
 
-        sba::Space::Instance()->UpdatePhysics(a_pTimer);
+        sba::Space::Instance()->UpdatePhysics(a_pApplication->GetTimer());
 
-        //this->physicsTimer += a_pTimer->GetElapsedSeconds();
+        //this->physicsTimer += a_pApplication->GetTimer()->GetElapsedSeconds();
         //float constval = 1.0f / 60.0f;
         //while (this->physicsTimer > constval)
         //{
@@ -247,14 +247,14 @@ namespace Game
         //}
 
 
-        if (a_pInput->KeyPressed(a_pInput->Left))
+        if (a_pApplication->GetInput()->KeyPressed(a_pApplication->GetInput()->Left))
         {
             this->m_TextureID--;
             if (this->m_TextureID < 0)
                 this->m_TextureID = 4;
         }
 
-        else if (a_pInput->KeyPressed(a_pInput->Right))
+        else if (a_pApplication->GetInput()->KeyPressed(a_pApplication->GetInput()->Right))
         {
             this->m_TextureID++;
             if (this->m_TextureID > 4)
@@ -263,7 +263,7 @@ namespace Game
         if (this->gameStart)
         {
 
-            /*if (a_pInput->GamepadPressed(a_pInput->Pad_A,0))
+            /*if (a_pApplication->GetInput()->GamepadPressed(a_pApplication->GetInput()->Pad_A,0))
             {
                 InputBasePacket IPacket;
                 IPacket.Head.Type = 5;
@@ -281,7 +281,7 @@ namespace Game
                 }
             }
 
-            PuRe_Vector2F Move = a_pInput->GetGamepadLeftThumb(0);
+            PuRe_Vector2F Move = a_pApplication->GetInput()->GetGamepadLeftThumb(0);
             if (Move.Length() > 0.5f)
             {
                 MovePacket MPacket;
@@ -299,7 +299,7 @@ namespace Game
                     this->m_pNetwork->SendHost((char*)&MPacket, sizeof(MovePacket));
             }
 
-            float Thrust = a_pInput->GetGamepadRightTrigger(0);
+            float Thrust = a_pApplication->GetInput()->GetGamepadRightTrigger(0);
             if (Thrust > 0.2f)
             {
                 ThrustPacket TPacket;
@@ -317,9 +317,9 @@ namespace Game
                     this->m_pNetwork->SendHost((char*)&TPacket, sizeof(ThrustPacket));
             }
             float Spin = 0.0f;
-            if (a_pInput->GamepadIsPressed(a_pInput->Left_Shoulder, 0))
+            if (a_pApplication->GetInput()->GamepadIsPressed(a_pApplication->GetInput()->Left_Shoulder, 0))
                 Spin -= 1.0f;
-            else if (a_pInput->GamepadIsPressed(a_pInput->Right_Shoulder, 0))
+            else if (a_pApplication->GetInput()->GamepadIsPressed(a_pApplication->GetInput()->Right_Shoulder, 0))
                 Spin += 1.0f;
             if (Spin > 0.2f||Spin < -0.2f)
             {
@@ -338,18 +338,18 @@ namespace Game
                     this->m_pNetwork->SendHost((char*)&TPacket, sizeof(ThrustPacket));
             }*/
 
-            //player->HandleInput(a_pInput, a_pTimer->GetElapsedSeconds(), this->m_Bullets, BrickBozz::Instance()->BrickManager);
+            //player->HandleInput(a_pApplication->GetInput(), a_pApplication->GetTimer()->GetElapsedSeconds(), this->m_Bullets, BrickBozz::Instance()->BrickManager);
 
             for (unsigned int i = 0; i<this->m_Players.size(); i++)
             {
                 TheBrick::CSpaceship* player = this->m_Players[i]->Ship;
-                player->HandleInput(i, a_pInput, a_pTimer->GetElapsedSeconds(), this->m_Bullets, sba::Space::Instance()->BrickManager);
+                player->HandleInput(i, a_pApplication->GetInput(), a_pApplication->GetTimer()->GetElapsedSeconds(), this->m_Bullets, sba::Space::Instance()->BrickManager);
                 PuRe_Vector3F playerpos = TheBrick::OngToPuRe(player->m_pBody->getTransform().p);
 
                 player->m_pBody->setPosition(TheBrick::PuReToOng(playerpos));
-                player->Update(a_pTimer->GetElapsedSeconds());
+                player->Update(a_pApplication->GetTimer()->GetElapsedSeconds());
 
-                this->m_Cameras[i]->Update(i,this->m_Players[i]->Ship, a_pInput, a_pTimer);
+                this->m_Cameras[i]->Update(i,this->m_Players[i]->Ship, a_pApplication->GetInput(), a_pApplication->GetTimer());
             }
         }
         else
@@ -358,7 +358,7 @@ namespace Game
             //Check last network state
             int networkState = this->m_pNetwork->GetState();
 
-            this->m_pNetwork->Update(a_pInput); //Update Network State
+            this->m_pNetwork->Update(a_pApplication->GetInput()); //Update Network State
 
             //If he connected
             if (networkState != 3 && this->m_pNetwork->GetState() == 3)
@@ -381,7 +381,7 @@ namespace Game
                 receiveThread.detach();
             }
 
-            if (a_pInput->KeyPressed(a_pInput->F3) && networkState == 3 && this->m_pNetwork->m_Host)
+            if (a_pApplication->GetInput()->KeyPressed(a_pApplication->GetInput()->F3) && networkState == 3 && this->m_pNetwork->m_Host)
             {
                 //Send to everyone that
                 HeadPacket Packet;
@@ -396,7 +396,7 @@ namespace Game
 
         for (unsigned int i = 0; i < this->m_Bullets.size(); i++)
         {
-            this->m_Bullets[i]->Update(a_pTimer->GetElapsedSeconds());
+            this->m_Bullets[i]->Update(a_pApplication->GetTimer()->GetElapsedSeconds());
 
             if (this->m_Bullets[i]->m_lifeTime > 5.0f)
             {
@@ -413,10 +413,10 @@ namespace Game
 
     // **************************************************************************
     // **************************************************************************
-    void CGameScene::Render(PuRe_IGraphics* a_pGraphics)
+    void CGameScene::Render(PuRe_Application* a_pApplication)
     {
         PuRe_Color clear = PuRe_Color(0.0f, 0.4f, 1.0f);
-        PuRe_GraphicsDescription gdesc = a_pGraphics->GetDescription();
+        PuRe_GraphicsDescription gdesc = a_pApplication->GetGraphics()->GetDescription();
 
         PuRe_Renderer* renderer = sba::Space::Instance()->Renderer;
         renderer->Begin(PuRe_Color(0.1f, 0.5f, 0.1f));
@@ -446,9 +446,9 @@ namespace Game
                 this->m_pMinimap->DrawPlayer(renderer, this->m_pUIMaterial, TheBrick::OngToPuRe(this->m_Players[i]->Ship->m_pBody->getWorldCenter()), this->m_MapBoundaries, rotation);
             }*/
             //for (unsigned int i = 0; i < this->m_Bullets.size(); i++)
-            //    this->m_Bullets[i]->Draw(a_pGraphics, this->m_pCamera);
+            //    this->m_Bullets[i]->Draw(a_pApplication->GetGraphics(), this->m_pCamera);
             //for (unsigned int i = 0; i < this->m_Asteroids.size(); i++)
-            //    this->m_Asteroids[i]->Draw(a_pGraphics, this->m_pCamera);
+            //    this->m_Asteroids[i]->Draw(a_pApplication->GetGraphics(), this->m_pCamera);
         }
         ////////////////////////////////////////////////////
 
@@ -464,34 +464,34 @@ namespace Game
         //if (this->gameStart)
         //{
   /*          for (int i = 0; i < this->m_Players.size(); i++)
-                this->m_Players[i]->Ship->Draw(a_pGraphics, this->m_Cameras[0]);*/
+                this->m_Players[i]->Ship->Draw(a_pApplication->GetGraphics(), this->m_Cameras[0]);*/
         //}
 
         //////////////////// POST SCREEN ////////////////////////////////
-        renderer->Set((float)this->m_TextureID, "m_TextureID");
+        renderer->Set((float)this->m_TextureID, "textureID");
         renderer->Set(PuRe_Vector3F(0.1f, 0.1f, 0.1f), "ambient");
         PuRe_Vector3F size = PuRe_Vector3F(0.0f, 0.0f, 0.0f);
         renderer->Render(this->m_Cameras[0], this->m_pPostMaterial, size);
-        size.X += a_pGraphics->GetDescription().ResolutionWidth / 2;
+        size.X += a_pApplication->GetGraphics()->GetDescription().ResolutionWidth / 2;
         renderer->Render(this->m_Cameras[1], this->m_pPostMaterial, size);
         renderer->End();
         ////////////////////////////////////////////////////
 
-        /*a_pGraphics->Clear(clear);
+        /*a_pApplication->GetGraphics()->Clear(clear);
 
         PuRe_BoundingBox Screen;
         Screen.m_Position = PuRe_Vector2F(0.0f, 0.0f);
         Screen.m_Size = PuRe_Vector2F((float)gdesc.ResolutionWidth, (float)gdesc.ResolutionHeight);
-        a_pGraphics->Begin(Screen);
+        a_pApplication->GetGraphics()->Begin(Screen);
         this->m_pSkyBox->Draw(this->m_pCamera, this->m_pSkyMaterial);
         if (this->gameStart)
         {
-        this->m_pPlayerShip->Draw(a_pGraphics, this->m_pCamera);
+        this->m_pPlayerShip->Draw(a_pApplication->GetGraphics(), this->m_pCamera);
         for (unsigned int i = 0; i < this->m_Asteroids.size(); i++)
-        this->m_Asteroids[i]->Draw(a_pGraphics, this->m_pCamera);
+        this->m_Asteroids[i]->Draw(a_pApplication->GetGraphics(), this->m_pCamera);
         }
         for (unsigned int i = 0; i < this->m_Bullets.size(); i++)
-        this->m_Bullets[i]->Draw(a_pGraphics, this->m_pCamera);
+        this->m_Bullets[i]->Draw(a_pApplication->GetGraphics(), this->m_pCamera);
 
         PuRe_Vector3F minipos = PuRe_Vector3F(Screen.m_Size.X - 150.0f, Screen.m_Size.Y - 150.0f, 128.0f);
 
@@ -499,11 +499,11 @@ namespace Game
         rot *= PuRe_DegToRad;
         PuRe_MatrixF rotation = PuRe_QuaternionF(rot).GetMatrix();
 
-        this->m_pMinimap->Draw(a_pGraphics, this->m_pUICamera, this->m_pUIMaterial, minipos, rotation);
+        this->m_pMinimap->Draw(a_pApplication->GetGraphics(), this->m_pUICamera, this->m_pUIMaterial, minipos, rotation);
         if (this->gameStart)
         {
         PuRe_Vector3F playerpos = TheBrick::OngToPuRe(this->m_pPlayerShip->m_pBody->getTransform().p);
-        this->m_pMinimap->DrawPlayer(a_pGraphics, this->m_pUICamera, this->m_pUIMaterial, playerpos, this->m_MapBoundaries, rotation);
+        this->m_pMinimap->DrawPlayer(a_pApplication->GetGraphics(), this->m_pUICamera, this->m_pUIMaterial, playerpos, this->m_MapBoundaries, rotation);
         }
 
         int nstate = this->m_pNetwork->GetState();
@@ -515,7 +515,7 @@ namespace Game
         this->m_pFont->Draw(this->m_pUICamera, this->m_pFontMaterial, ("Port: " + this->m_pNetwork->m_Port).c_str(), PuRe_Vector3F(10.0f, gdesc.ResolutionHeight - 32.0f, 0.0f), PuRe_Vector3F(32.0f, 32.0f, 0.0f), PuRe_MatrixF::Identity(), 32.0f);
 
 
-        a_pGraphics->End();*/
+        a_pApplication->GetGraphics()->End();*/
 
 
         /*   this->m_pRenderer->Draw(this->m_pModel, PuRe_Primitive::Triangles, this->m_pMaterial, PuRe_Vector3F(0.0f,-1.0f,15.0f),PuRe_Vector3F(),PuRe_Vector3F(),PuRe_Vector3F(10.0f,10.0f,10.0f));

@@ -5,9 +5,11 @@ cbuffer MatrixBuffer
 	float3 LightPos;
 	float4 LightColor;
 	float2 Resolution;
-	float AttenuationConst;
-	float AttenuationLin;
-	float AttenuationExp;
+	float3 CameraPosition;
+    float LightRadius = 5.0f;
+	float LightIntensity = 10.0f;
+	float specularIntensity = 1.0f;
+	float specularPower = 255;
 };
 tbuffer textureBuffer
 {
@@ -44,22 +46,24 @@ float2 CalcTexCoord(float4 Position)
     return Position.xy / Resolution;
 }
 
-
-float4 CalcPointLight(float3 WorldPosition,float3 LightPosition, float3 Normal)
+float4 CalcPosition(float Depth,float2 UV)
 {
-    float3 LightDirection = WorldPosition - LightPosition;
-    float Distance = length(LightDirection);
-    LightDirection = normalize(LightDirection);
+        float4 worldpos;
+  	worldpos.x = UV.x * 2.0f -1.0f;
+  	worldpos.y = (1.0f-UV.y) * 2.0f -1.0f;
+        worldpos.z = Depth;
+        worldpos.w = 1.0;
+  	worldpos = mul(worldpos,InvertViewProjection);
+  	worldpos /= worldpos.w;
+	return worldpos;
+} 
 
-    float DiffuseFactor = dot(Normal, -LightDirection);
-
-    float4 Color = LightColor * DiffuseFactor;
-    float Attenuation = AttenuationConst +
-                        AttenuationLin * Distance +
-                        AttenuationExp * Distance * Distance;
-
-
-    return Color / Attenuation;
+float CalcSpecular(float3 lightVector,float4 pos,float4 norm)
+{ 
+	float3 reflectionfloattor = normalize(reflect(-lightVector,norm.xyz));
+	float3 directionToCamera = normalize(CameraPosition - pos.xyz);
+	float cosAngle = max(0.0,dot(directionToCamera,reflectionfloattor));
+ 	return specularIntensity * pow(cosAngle,specularPower);
 }
 
 VertexShaderOutput VS_MAIN(VertexShaderInput input)
@@ -88,26 +92,21 @@ PixelShaderOutput PS_MAIN(VertexShaderOutput input)
 
   float4 norm = (NormalMap.Sample(TextureSampler, TexCoord)*2)-1;
   float4 depth = DepthMap.Sample(TextureSampler, TexCoord);
+  float4 pos = CalcPosition(depth.r,TexCoord);
 
+  float3 lightVector = LightPos - pos.xyz;
+  float attenuation = clamp(1.0f - length(lightVector)/LightRadius,0.0,1.0); 
+  //normalize light vector
+  lightVector = normalize(lightVector); 
 
-  float4 worldpos;
+  float Factor = max(0,dot(norm.xyz,lightVector));
+  float3 diffuseLight = Factor * LightColor.rgb;
 
-  worldpos.x = TexCoord.x * 2.0f -1.0f;
+  float specularLight = 0.0;
+  if(Factor > 0.0)
+    specularLight = CalcSpecular(lightVector,pos,norm);
 
-  worldpos.y = (1.0f-TexCoord.y) * 2.0f -1.0f;
-
-  worldpos.z = depth.r;
-
-  worldpos.w = 1.0f;
-
-
-  worldpos = mul(worldpos,InvertViewProjection);
-
-  worldpos /= worldpos.w;
-
-  float4 lights = CalcPointLight(worldpos.xyz,LightPos,norm.xyz);
-
-  output.color = lights;
+  output.color = attenuation * LightIntensity * float4(diffuseLight,specularLight);
 
   return output;
 }
