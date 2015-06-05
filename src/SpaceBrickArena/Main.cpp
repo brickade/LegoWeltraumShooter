@@ -23,19 +23,19 @@ int PURE_MAIN
 
     userpath += "Options.ini";
     //Create IniFile
-    Game::CIniReader::SetPath(userpath.c_str());
+    sba::CIniReader::SetPath(userpath.c_str());
 
     PuRe_IPlatform* pplatform = PuRe_CreatePlatform();
     PuRe_ApplicationDescription description;
-    description.Graphics.ResolutionWidth = std::stoi(Game::CIniReader::Instance()->GetValue("ResolutionWidth"));
-    description.Graphics.ResolutionHeight = std::stoi(Game::CIniReader::Instance()->GetValue("ResolutionHeight"));
+    description.Graphics.ResolutionWidth = std::stoi(sba::CIniReader::Instance()->GetValue("ResolutionWidth"));
+    description.Graphics.ResolutionHeight = std::stoi(sba::CIniReader::Instance()->GetValue("ResolutionHeight"));
     description.Graphics.Module = PuRe_GraphicsModuleType::OpenGL;
     description.Window.Title = "SpacebrickArena - Development";
-    description.Window.Width = std::stoi(Game::CIniReader::Instance()->GetValue("WindowWidth"));
-    description.Window.Height = std::stoi(Game::CIniReader::Instance()->GetValue("WindowHeight"));
+    description.Window.Width = std::stoi(sba::CIniReader::Instance()->GetValue("WindowWidth"));
+    description.Window.Height = std::stoi(sba::CIniReader::Instance()->GetValue("WindowHeight"));
     description.Window.X = 100;
     description.Window.Y = 200;
-    std::string DisplayMode = Game::CIniReader::Instance()->GetValue("DisplayMode");
+    std::string DisplayMode = sba::CIniReader::Instance()->GetValue("DisplayMode");
     if (DisplayMode == "Windowed")
         description.Window.DisplaySetting = PuRe_DisplaySetting::Windowed;
     else if (DisplayMode == "FullscreenWindowed")
@@ -52,7 +52,7 @@ int PURE_MAIN
 
     SAFE_DELETE(papplication);
     SAFE_DELETE(pplatform);
-    SAFE_DELETE(Game::CIniReader::Instance());
+    SAFE_DELETE(sba::CIniReader::Instance());
     //Print memory leak in output
     //_CrtDumpMemoryLeaks();
 }

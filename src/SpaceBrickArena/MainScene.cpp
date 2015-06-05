@@ -17,12 +17,12 @@ namespace sba
     {
         PuRe_GraphicsDescription gdesc = a_pApplication->GetGraphics()->GetDescription();
 
-        Space::Instance()->Initialize(*a_pApplication->GetGraphics(), *a_pApplication->GetSoundPlayer());
+        Space::Instance()->Initialize(*a_pApplication->GetGraphics(), *a_pApplication->GetInput(), *a_pApplication->GetSoundPlayer());
         Space::Instance()->BrickManager->Load(*a_pApplication->GetGraphics(), *a_pApplication->GetWindow(), *Space::Instance()->World, *Space::Instance()->BrickManager->GetBrickMaterial(), "../data/bricks/");
 
         //Scenes
 #ifdef EDITOR
-        this->m_pEditorScene->Initialize(aa_pApplication);
+        this->m_pEditorScene->Initialize(a_pApplication);
         this->m_pActiveScene = this->m_pEditorScene;
 #else
         this->m_pGameScene->Initialize(a_pApplication);

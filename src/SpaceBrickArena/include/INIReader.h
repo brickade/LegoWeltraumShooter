@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <assert.h>
 
-namespace Game
+namespace sba
 {
     class CIniReader
     {

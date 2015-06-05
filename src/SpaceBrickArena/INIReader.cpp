@@ -1,6 +1,6 @@
 #include "include/INIReader.h"
 
-namespace Game
+namespace sba
 {
     CIniReader* CIniReader::g_pInstance = 0;
 
