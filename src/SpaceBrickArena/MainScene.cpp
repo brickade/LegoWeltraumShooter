@@ -13,41 +13,41 @@ namespace sba
 
     // **************************************************************************
     // **************************************************************************
-    void CMainScene::Initialize(PuRe_IGraphics* a_pGraphics, PuRe_IWindow* a_pWindow, PuRe_SoundPlayer* a_pSoundPlayer)
+    void CMainScene::Initialize(PuRe_Application* a_pApplication)
     {
-        PuRe_GraphicsDescription gdesc = a_pGraphics->GetDescription();
+        PuRe_GraphicsDescription gdesc = a_pApplication->GetGraphics()->GetDescription();
 
-        Space::Instance()->Initialize(*a_pGraphics, *a_pSoundPlayer);
-        Space::Instance()->BrickManager->Load(*a_pGraphics, *a_pWindow, *Space::Instance()->World, *Space::Instance()->BrickManager->GetBrickMaterial(), "../data/bricks/");
+        Space::Instance()->Initialize(*a_pApplication->GetGraphics(), *a_pApplication->GetSoundPlayer());
+        Space::Instance()->BrickManager->Load(*a_pApplication->GetGraphics(), *a_pApplication->GetWindow(), *Space::Instance()->World, *Space::Instance()->BrickManager->GetBrickMaterial(), "../data/bricks/");
 
         //Scenes
 #ifdef EDITOR
-        this->m_pEditorScene->Initialize(a_pGraphics, a_pWindow, a_pSoundPlayer);
+        this->m_pEditorScene->Initialize(aa_pApplication);
         this->m_pActiveScene = this->m_pEditorScene;
 #else
-        this->m_pGameScene->Initialize(a_pGraphics, a_pWindow, a_pSoundPlayer);
+        this->m_pGameScene->Initialize(a_pApplication);
         this->m_pActiveScene = this->m_pGameScene;
 #endif
     }
 
     // **************************************************************************
     // **************************************************************************
-    bool CMainScene::Update(PuRe_IGraphics* a_pGraphics, PuRe_IWindow* a_pWindow, PuRe_IInput* a_pInput, PuRe_Timer* a_pTimer, PuRe_SoundPlayer* a_pSoundPlayer)
+    bool CMainScene::Update(PuRe_Application* a_pApplication)
     {
         //Handle ESC Button
-        if (a_pInput->KeyPressed(a_pInput->ESC))
+        if (a_pApplication->GetInput()->KeyPressed(a_pApplication->GetInput()->ESC))
         {
             return true;
         }
 
         //Drop update after lag to avoid strange camera movement jumps etc
-        if (a_pTimer->GetElapsedMilliseconds() > 200)
+        if (a_pApplication->GetTimer()->GetElapsedMilliseconds() > 200)
         {
             return false;
         }
 
         //Update Active Scene
-        if (!this->m_pActiveScene->Update(a_pGraphics, a_pWindow, a_pInput, a_pTimer, a_pSoundPlayer))
+        if (!this->m_pActiveScene->Update(a_pApplication))
         {
             return false;
         }
@@ -56,9 +56,9 @@ namespace sba
 
     // **************************************************************************
     // **************************************************************************
-    void CMainScene::Render(PuRe_IGraphics* a_pGraphics)
+    void CMainScene::Render(PuRe_Application* a_pApplication)
     {
-        this->m_pActiveScene->Render(a_pGraphics);
+        this->m_pActiveScene->Render(a_pApplication);
     }
 
     // **************************************************************************
