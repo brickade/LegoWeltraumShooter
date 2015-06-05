@@ -13,7 +13,7 @@ int PURE_MAIN
     //_CrtSetBreakAlloc(breakId);
 
     std::string userpath = std::getenv("USERPROFILE");
-    userpath += "\\Documents\\SpaceBrickArena\\";
+    userpath += "\\Documents\\Spacebrick-Arena\\";
     //Create Directory if it doesn't exist
     #ifdef _WIN32
         CreateDirectory(userpath.c_str(), NULL);

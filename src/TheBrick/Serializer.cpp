@@ -20,7 +20,7 @@ namespace TheBrick
     bool CSerializer::OpenRead(const char* a_pFile)
     {
         this->m_pFile = fopen(a_pFile, "rb");
-        if (this->m_pFile == NULL)
+        if (this->m_pFile->_ptr == NULL)
         {
             return false;
         }
@@ -32,7 +32,7 @@ namespace TheBrick
     bool CSerializer::OpenWrite(const char* a_pFile)
     {
         this->m_pFile = fopen(a_pFile, "wb");
-        if (this->m_pFile == NULL)
+        if (this->m_pFile->_ptr == NULL)
         {
             return false;
         }

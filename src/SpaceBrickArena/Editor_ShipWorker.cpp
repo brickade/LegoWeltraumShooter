@@ -30,9 +30,17 @@ namespace Editor
     {
         this->m_pCurrentSpaceship = new TheBrick::CSpaceship(*sba::Space::Instance()->World, ong::vec3(0, 0, 0));
         TheBrick::CSerializer* serializer = new TheBrick::CSerializer();
-        serializer->OpenRead(a_pFile);
-        this->m_pCurrentSpaceship->Deserialize(*serializer, *sba::Space::Instance()->BrickManager, *sba::Space::Instance()->World);
-        serializer->Close();
+        if(serializer->OpenRead(a_pFile))
+        {
+            this->m_pCurrentSpaceship->Deserialize(*serializer, *sba::Space::Instance()->BrickManager, *sba::Space::Instance()->World);
+            serializer->Close();
+        }
+        else
+        {
+            delete serializer;
+            this->ResetShip();
+            this->SaveShipToFile(a_pFile);
+        }
     }
 
     // **************************************************************************
