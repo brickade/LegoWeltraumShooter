@@ -10,6 +10,7 @@ namespace sba
     {
         this->BrickManager = new TheBrick::CBrickManager();
         this->World = new ong::World();
+        this->InputManager = new sba::CInputManager();
     }
 
     // **************************************************************************
@@ -35,7 +36,7 @@ namespace sba
 
     // **************************************************************************
     // **************************************************************************
-    void Space::Initialize(PuRe_IGraphics& a_pGraphics, PuRe_SoundPlayer& a_pSoundPlayer)
+    void Space::Initialize(PuRe_IGraphics& a_pGraphics, PuRe_IInput& a_pInput, PuRe_SoundPlayer& a_pSoundPlayer)
     {
 #ifdef EDITOR
         this->Renderer = new PuRe_Renderer(&a_pGraphics, PuRe_Vector2I(a_pGraphics.GetDescription().ResolutionWidth, a_pGraphics.GetDescription().ResolutionHeight));
@@ -49,6 +50,7 @@ namespace sba
             this->Renderer->SetSSAO(this->m_SSAOMaterial, "../data/textures/ssao.jpg");
         }
         this->BrickManager->Initialize(a_pGraphics, a_pSoundPlayer);
+        this->InputManager->Initialize(&a_pInput);
     }
 
     // **************************************************************************

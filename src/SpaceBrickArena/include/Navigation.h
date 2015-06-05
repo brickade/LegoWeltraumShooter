@@ -7,20 +7,19 @@
 
 namespace sba
 {
-    struct EDirection
-    {
-        enum Type
-        {
-            None,
-            Up,
-            Down,
-            Left,
-            Right,
-        };
-    };
-
     class CNavigation
     {
+        struct EDirection
+        {
+            enum Type
+            {
+                None,
+                Up,
+                Down,
+                Left,
+                Right,
+            };
+        };
     public:
 
     private:

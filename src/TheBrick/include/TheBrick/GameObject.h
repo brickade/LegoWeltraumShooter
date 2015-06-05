@@ -35,7 +35,7 @@ namespace TheBrick
         virtual void Draw(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera);
 
         virtual void Deserialize(CSerializer& a_pSerializer, CBrickManager& a_pBrickManager, ong::World& a_pWorld);
-        void Serialize(CSerializer& a_pSerializer);
+        virtual void Serialize(CSerializer& a_pSerializer);
 
         void AddBrickInstance(CBrickInstance* a_pBrickInstance, ong::World& a_rWorld);
         void RemoveBrickInstance(const CBrickInstance& a_BrickInstance);

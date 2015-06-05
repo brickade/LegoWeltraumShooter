@@ -116,7 +116,7 @@ namespace Game
         if (invert)
             Cam.Y = -Cam.Y;
 
-        PuRe_QuaternionF quat = TheBrick::OngToPuRe(a_pPlayer->m_pBody->getOrientation());
+        /*PuRe_QuaternionF quat = TheBrick::OngToPuRe(a_pPlayer->m_pBody->getOrientation());
         if (this->m_Rotation != quat)
         {
             PuRe_QuaternionF diff = quat - this->m_Rotation;
@@ -125,7 +125,7 @@ namespace Game
             this->m_Rotation.Z += diff.Z / 100.0f;
             this->m_Rotation.W += diff.W / 100.0f;
             this->SetRotation(this->m_Rotation);
-        }
+        }*/
 
         this->Move(PuRe_Vector3F(0.0f, 0.0f, -this->m_ZOffset));
     }

@@ -33,13 +33,12 @@ namespace Editor
         CCamera* m_pCamera;
 
         float m_currentBrickRotation;
-        float m_currentRotation;
         int m_maxBrickDistance;
         PuRe_Vector2F m_currentBrickPosition;
         PuRe_Vector2F m_currentPosition;
         float m_currentHeight;
         PuRe_Color m_currentBrickColor;
-        bool m_canPlaceHere = false;
+        bool m_canPlaceHere = false; 
         float m_nubDockThreshold = 0.01f;
         float m_nubDirThreshold = 0.01f;
 

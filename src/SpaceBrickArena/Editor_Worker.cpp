@@ -10,6 +10,7 @@
 #include "include\Editor_ShipWorker.h"
 
 #include "TheBrick/DebugDraw.h"
+#include "include/Editor_Assistant.h"
 
 namespace Editor
 {
@@ -37,24 +38,15 @@ namespace Editor
         this->m_pCamera->Initialize(PuRe_Vector3F(20, 135, 0), PuRe_Vector3F(-2,0,0));
         this->m_currentPosition = PuRe_Vector2F(0, 0);
         this->m_currentHeight = 0;
-
+        this->m_maxBrickDistance = 15;
+        this->lastInputIsGamepad = false;
+        this->m_pHistory = new CHistory(300, 100);
+        this->m_placeBelow = false;
+        this->m_pCurrentBrickObject = new TheBrick::CGameObject(*sba::Space::Instance()->World, nullptr);
+        this->m_pShipWorker = new CShipWorker();
+        this->m_pShipWorker->LoadShipFromFile("../data/ships/banana.ship"); //Load Ship from file
         /*this->m_pGridMaterial = a_pGraphics.LoadMaterial("../data/effects/editor/grid");
         this->m_pGridBrick = new PuRe_Model(&a_pGraphics, "../data/models/Brick1X1.obj");*/
-
-        this->m_maxBrickDistance = 15;
-
-        this->lastInputIsGamepad = false;
-
-        this->m_pHistory = new CHistory(300, 100);
-
-        this->m_placeBelow = false;
-
-        this->m_pShipWorker = new CShipWorker();
-        //Load Ship from file
-        this->m_pShipWorker->LoadShipFromFile("../data/ships/banana.ship");
-        //this->m_pShipWorker->ResetShip();
-
-        this->m_pCurrentBrickObject = new TheBrick::CGameObject(*sba::Space::Instance()->World, nullptr);
     }
 
     // **************************************************************************
@@ -158,9 +150,6 @@ namespace Editor
             }
             float cosAlpha = cos(alpha * 0.0174532925f);
             float sinAlpha = sin(alpha * 0.0174532925f);
-            /*PuRe_Vector3F tmp = PuRe_Vector3F(forward.X, 0, forward.Y);
-            tmp *= PuRe_QuaternionF(0, alpha, 0);
-            forward = PuRe_Vector2F(tmp.X, tmp.Z);*/
             forward = PuRe_Vector2F(cosAlpha*forward.X - sinAlpha*forward.Y, sinAlpha*forward.X + cosAlpha*forward.Y); //Rotate
             //Align
             //forward.Normalize();
@@ -188,24 +177,23 @@ namespace Editor
         //----------Gamepad
         if (a_pInput.GamepadPressed(a_pInput.Right_Shoulder, this->m_playerIdx))
         {
-            this->m_currentRotation += a_rotationPerClick;
+            this->m_currentBrickRotation += a_rotationPerClick;
         }
         if (a_pInput.GamepadPressed(a_pInput.Left_Shoulder, this->m_playerIdx))
         {
-            this->m_currentRotation -= a_rotationPerClick;
+            this->m_currentBrickRotation -= a_rotationPerClick;
         }
 
         //----------Keyboard
         if (a_pInput.KeyPressed(a_pInput.E))
         {
-            this->m_currentRotation += a_rotationPerClick;
+            this->m_currentBrickRotation += a_rotationPerClick;
         }
         if (a_pInput.KeyPressed(a_pInput.Q))
         {
-            this->m_currentRotation -= a_rotationPerClick;
+            this->m_currentBrickRotation -= a_rotationPerClick;
         }
 
-        this->m_currentBrickRotation = this->m_currentRotation;
         //this->m_currentBrickRotation = this->m_currentBrickRotation - fmod(this->m_currentBrickRotation, 1.57079633f); //Snap Rotation
     }
 
@@ -213,10 +201,12 @@ namespace Editor
     // **************************************************************************
     void CWorker::UpdateHeight(PuRe_IInput& a_pInput)
     {
+        //Update Placement Direction
         if (a_pInput.GamepadPressed(a_pInput.Pad_B, this->m_playerIdx) || a_pInput.KeyPressed(a_pInput.Space))
         {
             this->m_placeBelow = !this->m_placeBelow;
         }
+
         //Set Brick up
         this->m_currentHeight = this->m_maxBrickDistance;
         if (this->m_placeBelow)
@@ -224,60 +214,40 @@ namespace Editor
             this->m_currentHeight *= -1;
         }
         this->ApplyToCurrentBrick();
-        this->m_canPlaceHere = false; //Block placing
+        
+        //Block placing
+        this->m_canPlaceHere = false;
 
         const ong::Transform& brickTransform = ong::transformTransform(this->m_pCurrentBrick->GetTransform(), this->m_pCurrentBrick->GetGameObject()->GetTransform());
-        std::vector<TheBrick::SNub>& nubs = this->m_pCurrentBrick->m_pBrick->GetNubs(); //Get currentBrick Nubs
-        ong::RayQueryResult hitResult;
-        hitResult.t = FLT_MAX;
 
-        ong::vec3 dockingNubDirection = ong::vec3(0, -1, 0);
-        bool dockingNubShouldBeMale = false;
+        //Casting Nub Requirements
+        ong::vec3 nubToCastFromDirection = ong::vec3(0, -1, 0);
+        bool nubToCastFromShouldBeMale = false;
         if (this->m_placeBelow)
         {
-            dockingNubShouldBeMale = true;
-            dockingNubDirection.y *= -1;
+            nubToCastFromShouldBeMale = true;
+            nubToCastFromDirection.y *= -1;
         }
-        ong::Body& shipBody = *this->m_pShipWorker->GetCurrentSpaceShip()->m_pBody;
-        bool hit = false;
-        for (size_t i = 0; i < nubs.size(); i++) //Go through currentBrick Nubs
-        {
-            const ong::vec3 rayDir = TheBrick::PuReToOng(this->m_pCurrentBrick->DirToWorldSpace(nubs[i].Direction)); //Transform nubDirection to WorldSpace
-            if (nubs[i].isMale != dockingNubShouldBeMale || dot(ong::normalize(rayDir), dockingNubDirection) < 0.99f)
-            { //Wrong Direction
-                continue;
-            }
-            const ong::vec3 rayOrigin = TheBrick::PuReToOng(this->m_pCurrentBrick->PosToWorldSpace(nubs[i].Position)); //Transform nubPosition to WorldSpace
 
-            ong::RayQueryResult hs = { 0 }; //Allocate
-            hs.t = FLT_MAX;
-            //--------------------------------------------------------------------------------
-            if (shipBody.queryRay(rayOrigin, rayDir, &hs)) //Cast Ray
-            { //Ray Hit
-                hit = true;
-                //printf("RayPointHeight %i: %i\n", i, (int)(hs.point.y / TheBrick::CBrick::SEGMENT_HEIGHT));
-                if (hs.t < hitResult.t)
-                { //This Hit is nearer to the brick than the saved one
-                    hitResult = hs;
-                }
-            }
-        }
-        if (!hit)
+        //Get RayCastHit
+        ong::RayQueryResult hitResult;
+        if (!CAssistant::GetClosestHitFromBrickInstanceNubs(*this->m_pCurrentBrick, *this->m_pShipWorker->GetCurrentSpaceShip(), nubToCastFromShouldBeMale, nubToCastFromDirection, &hitResult))
         { //Nothing hit
             this->m_currentHeight = 0;
             return;
         }
-        TheBrick::CBrickInstance* brickInstance = reinterpret_cast<TheBrick::CBrickInstance*>(hitResult.collider->getUserData()); //Get hit BrickInstance
-        //Transform hitResult direction to brickInstance BrickSpace
-        ong::vec3 dockingdir = TheBrick::PuReToOng(brickInstance->DirToBrickSpace(TheBrick::OngToPuRe(hitResult.normal)));
-        //Get hitBrick Nub at that position
-        TheBrick::SNub* nub = brickInstance->GetNubAtWorldPos(TheBrick::OngToPuRe(hitResult.point), this->m_nubDockThreshold);
-        assert(nub != nullptr);
-        if (nub->isMale == dockingNubShouldBeMale || dot(ong::normalize(TheBrick::PuReToOng(nub->Direction)), dockingdir) < 0.99f)
-        { //Wrong Direction
+        
+        //Docking Nub Requirements
+        ong::vec3 nubRequestedDirection = -nubToCastFromDirection;
+        bool nubRequestedGenderIsMale = !nubToCastFromShouldBeMale;
+        //Docking test
+        if (!CAssistant::CanDockAtHit(hitResult, nubRequestedGenderIsMale, nubRequestedDirection))
+        { //Can't dock
             return;
         }
-        this->m_canPlaceHere = true; //Enable placing
+
+        //Handle docking test success
+        this->m_canPlaceHere = true;
         float heightOffset = 0;
         if (this->m_placeBelow)
         {
@@ -346,15 +316,15 @@ namespace Editor
         }
         //Gamepad & Mouse
         if (a_pInput.GamepadPressed(a_pInput.Pad_A, this->m_playerIdx) || a_pInput.MousePressed(a_pInput.LeftClick))
-        {
+        { //Place BrickInstance
             this->m_pCurrentBrick->m_Color = this->m_currentBrickColor; //Apply right color
             this->m_pHistory->CutRedos();
             SHistoryStep step;
-            step.BrickInstance = this->m_pShipWorker->AddBrickInstanceToShip(*this->m_pCurrentBrick);;
+            step.BrickInstance = this->m_pShipWorker->AddBrickInstanceToShip(*this->m_pCurrentBrick); //Add to ship
             step.Brick = step.BrickInstance->m_pBrick;
             step.Transform = this->m_pCurrentBrick->GetTransform();
             step.Color = this->m_currentBrickColor;
-            this->m_pHistory->AddStep(step);
+            this->m_pHistory->AddStep(step); //Add History step
         }
     }
 }
