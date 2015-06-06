@@ -48,8 +48,10 @@ namespace Editor
     void CShipWorker::SaveShipToFile(const char* a_pFile)
     {
         TheBrick::CSerializer* serializer = new TheBrick::CSerializer();
-        serializer->OpenWrite(a_pFile);
-        this->m_pCurrentSpaceship->Serialize(*serializer);
+        if(serializer->OpenWrite(a_pFile))
+        {
+            this->m_pCurrentSpaceship->Serialize(*serializer);
+        }
         serializer->Close();
     }
 

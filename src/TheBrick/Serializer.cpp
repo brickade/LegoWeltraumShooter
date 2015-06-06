@@ -1,4 +1,5 @@
 #include "include/TheBrick/Serializer.h"
+
 namespace TheBrick
 {
     // **************************************************************************
@@ -19,7 +20,12 @@ namespace TheBrick
     // **************************************************************************
     bool CSerializer::OpenRead(const char* a_pFile)
     {
+#ifdef _DEBUG
+        errno_t err = fopen_s(&this->m_pFile, a_pFile, "rb");
+        assert(err == 0);
+#else
         this->m_pFile = fopen(a_pFile, "rb");
+#endif
         if (this->m_pFile->_ptr == NULL)
         {
             return false;
@@ -31,7 +37,12 @@ namespace TheBrick
     // **************************************************************************
     bool CSerializer::OpenWrite(const char* a_pFile)
     {
+#ifdef _DEBUG
+        errno_t err = fopen_s(&this->m_pFile, a_pFile, "wb");
+        assert(err == 0);
+#else
         this->m_pFile = fopen(a_pFile, "wb");
+#endif
         if (this->m_pFile->_ptr == NULL)
         {
             return false;
@@ -191,7 +202,7 @@ namespace TheBrick
     {
         this->Write(&a_Data, sizeof(a_Data));
     }
-    
+
     // **************************************************************************
     // **************************************************************************
     void CSerializer::Write(short a_Data)

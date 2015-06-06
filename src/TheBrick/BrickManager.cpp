@@ -80,14 +80,14 @@ namespace TheBrick
     // **************************************************************************
     CBrick& CBrickManager::GetBrick(int a_BrickId)
     {
-        #ifdef DEBUG
+        #ifdef _DEBUG
             try //Bounds checking
             {
-                return this->m_bricks.at(a_BrickId);
+                return *this->m_bricks.at(a_BrickId);
             }
             catch (std::out_of_range)
             {
-                return nullptr;
+                assert(false);
             }
         #else
             return *this->m_bricks[a_BrickId];
@@ -98,14 +98,14 @@ namespace TheBrick
     // **************************************************************************
     CBrick** CBrickManager::GetCategoryStart(int a_CategoryId)
     {
-        #ifdef DEBUG
+#ifdef _DEBUG
             try //Bounds checking
             {
-                return this->m_bricks.at(a_CategoryId * 100);
+                return &this->m_bricks.at(a_CategoryId * 100);
             }
             catch (std::out_of_range)
             {
-                return nullptr;
+                assert(false);
             }
         #else
             return &this->m_bricks[a_CategoryId * 100];
@@ -123,10 +123,10 @@ namespace TheBrick
     // **************************************************************************
     PuRe_IMaterial* CBrickManager::GetBrickMaterial()
     {
-        #ifdef DEBUG
+#ifdef _DEBUG
             if (this->m_pBrickMaterial == nullptr)
             {
-                print("CBrickManager::GetBrickMaterial() was called before initializing the BrickManager!!!");       
+                printf("%s\n", "CBrickManager::GetBrickMaterial() was called before initializing the BrickManager!!!");       
             }
         #endif
         return this->m_pBrickMaterial;
@@ -136,10 +136,10 @@ namespace TheBrick
     // **************************************************************************
     PuRe_IMaterial* CBrickManager::GetBrickUIMaterial()
     {
-        #ifdef DEBUG
+#ifdef _DEBUG
         if (this->m_pBrickUIMaterial == nullptr)
             {
-                print("CBrickManager::GetBrickUIMaterial() was called before initializing the BrickManager!!!");
+                printf("%s\n", "CBrickManager::GetBrickUIMaterial() was called before initializing the BrickManager!!!");
             }
         #endif
         return this->m_pBrickUIMaterial;
