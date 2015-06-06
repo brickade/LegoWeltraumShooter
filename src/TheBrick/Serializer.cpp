@@ -22,11 +22,11 @@ namespace TheBrick
     {
 #ifdef _DEBUG
         errno_t err = fopen_s(&this->m_pFile, a_pFile, "rb");
-        assert(err == 0);
+        //assert(err == 0);
 #else
         this->m_pFile = fopen(a_pFile, "rb");
 #endif
-        if (this->m_pFile->_ptr == NULL)
+        if (this->m_pFile == NULL)
         {
             return false;
         }
@@ -39,11 +39,11 @@ namespace TheBrick
     {
 #ifdef _DEBUG
         errno_t err = fopen_s(&this->m_pFile, a_pFile, "wb");
-        assert(err == 0);
+        //assert(err == 0);
 #else
         this->m_pFile = fopen(a_pFile, "wb");
 #endif
-        if (this->m_pFile->_ptr == NULL)
+        if (this->m_pFile == NULL)
         {
             return false;
         }

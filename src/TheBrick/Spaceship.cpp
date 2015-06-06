@@ -295,8 +295,6 @@ namespace TheBrick
     // **************************************************************************
     void CSpaceship::Serialize(CSerializer& a_pSerializer)
     {
-        //GameObject
-        reinterpret_cast<CGameObject*>(this)->Serialize(a_pSerializer);
-
+        CGameObject::Serialize(a_pSerializer);
     }
 }
