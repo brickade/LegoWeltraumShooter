@@ -89,9 +89,11 @@ namespace sba
                 Enter, Backspace, Space, Ctrl, Alt, Shift, Escape,
                 F1, F2, F3, F4, F5, F6, F7, F8, F9, F10, F11, F12,
                 Left, Up, Right, Down, Period, Comma, Minus,
-                PURE_LAST = Minus,
+                Num_Zero, Num_One, Num_Two, Num_Three, Num_Four, Num_Five, Num_Six, Num_Seven, Num_Eight, Num_Nine,
+                Delete, Insert, PrintScreen,
+                PURE_LAST = PrintScreen,
                 //Own
-                Delete, CtrlZ, CtrlY, CtrlS,
+                CtrlZ, CtrlY, CtrlS,
                 MouseLeft, MouseMiddle, MouseRight,
                 LAST = MouseRight
             };
@@ -134,6 +136,7 @@ namespace sba
                 EditorResetShip,
                 EditorSaveShip,
                 EditorToggleNavigateCategories,
+                EditorCameraRotateActive,
                 Exit,
                 LAST = Exit
             };
@@ -162,5 +165,8 @@ namespace sba
         };
     }
 }
+typedef sba::Input::EDirection sba_Direction;
+typedef sba::Input::EAxis sba_Axis;
+typedef sba::Input::EButton sba_Button;
 
 #endif /* _INPUTMANAGERTYPES_H_ */

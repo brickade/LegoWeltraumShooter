@@ -6,7 +6,6 @@
 #include <TheBrick/Brick.h>
 #include <TheBrick/BrickTimer.h>
 
-#include "Space.h"
 #include "Navigation.h"
 
 namespace Editor
@@ -35,7 +34,7 @@ namespace Editor
         CBrickCategory(int a_Id);
         ~CBrickCategory();
 
-        void Update(PuRe_IGraphics& a_pGraphics, PuRe_IWindow& a_pWindow, PuRe_IInput& a_pInput, PuRe_Timer& a_pTimer, PuRe_SoundPlayer& a_pSoundPlayer, int a_PlayerIdx, float a_RotationSpeed);
+        void Update(PuRe_IGraphics& a_pGraphics, PuRe_IWindow& a_pWindow, PuRe_Timer& a_pTimer, PuRe_SoundPlayer& a_pSoundPlayer, int a_PlayerIdx, float a_RotationSpeed);
         void Render(PuRe_IGraphics& a_pGraphics, PuRe_Camera& a_pCamera);
         void RenderTab(PuRe_IGraphics& a_pGraphics, PuRe_Camera& a_pCamera, float a_TabRotation, bool a_IsSelected);
 

@@ -7,7 +7,6 @@
                                             #define EDITOR
 //####################################################################################################
 //####################################################################################################
-
 // Framework specific includes
 #include <PuReEngine/Core.h>
 #include <PuReEngine/Defines.h>
@@ -15,13 +14,22 @@
 #include <Onager/World.h>
 
 #include <TheBrick/BrickManager.h>
-#include "InputManager.h"#include "INIReader.h"
+#include "InputManager.h"
+#include "INIReader.h"
+
 namespace sba
 {
     class Space
     {
     public:
-        static Space* Instance();
+        static Space* Instance()
+        {
+            if (Space::g_pInstance == nullptr)
+            {
+                Space::g_pInstance = new Space();
+            }
+            return Space::g_pInstance;
+        }
 
         TheBrick::CBrickManager* BrickManager;
         ong::World* World;
@@ -45,5 +53,5 @@ namespace sba
         ~Space();
     };
 }
-
+#define sba_Input sba::Space::Instance()->InputManager
 #endif /* _SPACE_H_ */

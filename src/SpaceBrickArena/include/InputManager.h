@@ -7,7 +7,6 @@
 #include "InputManagerTypes.h"
 
 #include <PuReEngine/IInput.h>
-#include <unordered_map>
 
 namespace TheBrick{
     class CSerializer;
@@ -22,9 +21,13 @@ namespace sba
     private:
         PuRe_IInput* m_pInput;
 
+        static const float DEFAULT_GAMEPAD_THRESHOLD;
+
         Input::SDirectionMapping m_pDirectionMapping[Input::EDirection::LAST];
         Input::SAxisMapping m_pAxisMapping[Input::EAxis::LAST];
         Input::SButtonMapping m_pButtonMapping[Input::EButton::LAST];
+
+        bool m_lastInputWasGamepad;
 
     public:
         Input::SDirectionMapping* GetDirectionMapping()
@@ -42,6 +45,11 @@ namespace sba
             return this->m_pButtonMapping;
         }
 
+        bool LastInputWasGamepad() const
+        {
+            return this->m_lastInputWasGamepad;
+        }
+
     public:
         CInputManager();
         ~CInputManager();
@@ -53,9 +61,9 @@ namespace sba
         void Deserialize(TheBrick::CSerializer& a_pSerializer);
         void Serialize(TheBrick::CSerializer& a_pSerializer);
 
-        PuRe_Vector2F Direction(Input::EDirection::Type a_Direction, int a_PlayerIndex);
+        PuRe_Vector2F Direction(Input::EDirection::Type a_Direction, int a_PlayerIndex, float a_GamepadThreshold = DEFAULT_GAMEPAD_THRESHOLD);
 
-        float Axis(Input::EAxis::Type a_Axis, int a_PlayerIndex);
+        float Axis(Input::EAxis::Type a_Axis, int a_PlayerIndex, float a_GamepadThreshold = DEFAULT_GAMEPAD_THRESHOLD);
 
         bool ButtonPressed(Input::EButton::Type a_Button, int a_PlayerIndex);
         bool ButtonIsPressed(Input::EButton::Type a_Button, int a_PlayerIndex);
@@ -64,10 +72,10 @@ namespace sba
         //Maybe later test whether it is more performant to replace the switch cases with function pointer arrays (the compiler might be already doing this with the switch cases)
 
         PuRe_Vector2F GetKeyboardDirection(Input::EKeyboardDirection::Type a_Direction);
-        PuRe_Vector2F GetGamepadDirection(Input::EGamepadDirection::Type a_Direction, int a_Index);
+        PuRe_Vector2F GetGamepadDirection(Input::EGamepadDirection::Type a_Direction, int a_Index, float a_Threshold = DEFAULT_GAMEPAD_THRESHOLD);
 
         float GetKeyboardAxis(Input::EKeyboardAxis::Type a_Axis);
-        float GetGamepadAxis(Input::EGamepadAxis::Type a_Axis, int a_Index);
+        float GetGamepadAxis(Input::EGamepadAxis::Type a_Axis, int a_Index, float a_Threshold = DEFAULT_GAMEPAD_THRESHOLD);
 
         bool GetKeyboardButtonPressed(Input::EKeyboardButton::Type a_Button);
         bool GetGamepadButtonPressed(Input::EGamepadButton::Type a_Button, int a_Index);
@@ -168,6 +176,61 @@ namespace sba
             }
             return false;
         }
+
+        PuRe_Vector2F CheckLastInputIsGamepad(PuRe_Vector2F a_GamepadInput)
+        {
+            if (a_GamepadInput.Length() > 0.001f)
+            {
+                this->m_lastInputWasGamepad = true;
+            }
+            return a_GamepadInput;
+        }
+
+        PuRe_Vector2F CheckLastInputIsKeyboard(PuRe_Vector2F a_KeyboardInput)
+        {
+            if (a_KeyboardInput.Length() > 0.001f)
+            {
+                this->m_lastInputWasGamepad = false;
+            }
+            return a_KeyboardInput;
+        }
+
+        float CheckLastInputIsGamepad(float a_GamepadInput)
+        {
+            if (a_GamepadInput > 0.0001f)
+            {
+                this->m_lastInputWasGamepad = true;
+            }
+            return a_GamepadInput;
+        }
+
+        float CheckLastInputIsKeyboard(float a_KeyboardInput)
+        {
+            if (a_KeyboardInput > 0.0001f)
+            {
+                this->m_lastInputWasGamepad = false;
+            }
+            return a_KeyboardInput;
+        }
+
+        bool CheckLastInputIsGamepad(bool a_GamepadInput)
+        {
+            if (a_GamepadInput)
+            {
+                this->m_lastInputWasGamepad = true;
+            }
+            return a_GamepadInput;
+        }
+
+        bool CheckLastInputIsKeyboard(bool a_KeyboardInput)
+        {
+            if (a_KeyboardInput)
+            {
+                this->m_lastInputWasGamepad = false;
+            }
+            return a_KeyboardInput;
+        }
+
 
 
     };

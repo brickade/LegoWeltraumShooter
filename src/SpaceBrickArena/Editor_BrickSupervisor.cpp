@@ -1,4 +1,8 @@
 #include "include/Editor_BrickSupervisor.h"
+
+#include "include/Space.h"
+#include "include/InputManager.h"
+
 namespace Editor
 {
     // **************************************************************************
@@ -34,10 +38,10 @@ namespace Editor
 
     // **************************************************************************
     // **************************************************************************
-    void CBrickSupervisor::Update(PuRe_IGraphics& a_pGraphics, PuRe_IWindow& a_pWindow, PuRe_IInput& a_pInput, PuRe_Timer& a_pTimer, PuRe_SoundPlayer& a_pSoundPlayer)
+    void CBrickSupervisor::Update(PuRe_IGraphics& a_pGraphics, PuRe_IWindow& a_pWindow, PuRe_Timer& a_pTimer, PuRe_SoundPlayer& a_pSoundPlayer)
     {
         
-        if (a_pInput.GamepadIsPressed(a_pInput.Right_Thumb, this->m_PlayerIdx) || a_pInput.KeyIsPressed(a_pInput.X))
+        if (sba_Input->ButtonIsPressed(sba_Button::EditorToggleNavigateCategories, this->m_PlayerIdx))
         {
             this->m_NavigateTabs = true;
         }
@@ -48,50 +52,14 @@ namespace Editor
         }
         if (this->m_NavigateTabs)
         {
-            PuRe_Vector2F navInput = PuRe_Vector2F::Zero();
-            //Gamepad
-            if (a_pInput.GamepadIsPressed(a_pInput.DPAD_Right, this->m_PlayerIdx))
-            {
-                navInput.X += 1;
-            }
-            if (a_pInput.GamepadIsPressed(a_pInput.DPAD_Left, this->m_PlayerIdx))
-            {
-                navInput.X -= 1;
-            }
-            if (a_pInput.GamepadIsPressed(a_pInput.DPAD_Up, this->m_PlayerIdx))
-            {
-                navInput.Y += 1;
-            }
-            if (a_pInput.GamepadIsPressed(a_pInput.DPAD_Down, this->m_PlayerIdx))
-            {
-                navInput.Y -= 1;
-            }
-
-            //Keyboard
-            if (a_pInput.KeyPressed(a_pInput.Right))
-            {
-                navInput.X += 1.0f;
-            }
-            if (a_pInput.KeyPressed(a_pInput.Left))
-            {
-                navInput.X -= 1.0f;
-            }
-            if (a_pInput.KeyPressed(a_pInput.Up))
-            {
-                navInput.Y += 1.0f;
-            }
-            if (a_pInput.KeyPressed(a_pInput.Down))
-            {
-                navInput.Y -= 1.0f;
-            }
-            this->m_pNavigation->Update(a_pTimer, navInput);
+            this->m_pNavigation->Update(a_pTimer, sba_Input->Direction(sba_Direction::EditorNavigateCategory, this->m_PlayerIdx));
             this->m_pActiveCategory = this->m_Categories[this->m_pNavigation->GetFocusedElementId()];
             this->m_TabRotation += a_pTimer.GetElapsedSeconds() * this->m_RotationSpeed;
             this->m_TabRotation = fmod(this->m_TabRotation, 6.28318531f);
         }
         else
         {
-            this->m_pActiveCategory->Update(a_pGraphics, a_pWindow, a_pInput, a_pTimer, a_pSoundPlayer, this->m_PlayerIdx, this->m_RotationSpeed);
+            this->m_pActiveCategory->Update(a_pGraphics, a_pWindow, a_pTimer, a_pSoundPlayer, this->m_PlayerIdx, this->m_RotationSpeed);
         }
     }
 
