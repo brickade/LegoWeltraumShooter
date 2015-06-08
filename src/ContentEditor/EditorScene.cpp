@@ -191,17 +191,17 @@ namespace Content
 	}
 
 
-    void CEditorScene::Initialize(PuRe_IGraphics* a_pGraphics,PuRe_IWindow* a_pWindow, PuRe_SoundPlayer* a_pSoundPlayer)
-	{
-
+    void CEditorScene::Initialize(PuRe_Application* a_pApplication)
+    {
+        PuRe_IGraphics* graphics = a_pApplication->GetGraphics();
 		printf("type \"help\" for help\n");
 
-		PuRe_GraphicsDescription gdesc = a_pGraphics->GetDescription();
+        PuRe_GraphicsDescription gdesc = graphics->GetDescription();
 		
-		m_pMaterial = a_pGraphics->LoadMaterial("../data/effects/editor/default");
+        m_pMaterial = graphics->LoadMaterial("../data/effects/editor/default");
 		
 		m_pPostCamera = new PuRe_Camera(PuRe_Vector2F((float)gdesc.ResolutionWidth, (float)gdesc.ResolutionHeight), PuRe_Camera_Orthogonal);
-		m_pPostMaterial = a_pGraphics->LoadMaterial("../data/effects/Post/default");
+        m_pPostMaterial = graphics->LoadMaterial("../data/effects/Post/default");
 
 		m_pCamera = new PuRe_Camera(PuRe_Vector2F(gdesc.ResolutionWidth, gdesc.ResolutionHeight), PuRe_Camera_Perspective);
 		m_pCamera->SetFoV(45.0f);
@@ -253,7 +253,7 @@ namespace Content
 				//new brick from obj
 				if (wcscmp(fileType, L".obj") == 0)
 				{
-					PuRe_Model* pModel = new PuRe_Model(a_pGraphics, fileDir);
+                    PuRe_Model* pModel = new PuRe_Model(graphics, fileDir);
 
 
 					if (pModel != 0)
@@ -276,7 +276,7 @@ namespace Content
 
 					if (m_Serializer.OpenRead(fileDir))
 					{
-						newBrick->Deserialize(m_Serializer, *a_pGraphics, m_World);
+                        newBrick->Deserialize(m_Serializer, *graphics, m_World);
 						m_Serializer.Close();
 
 
@@ -287,7 +287,7 @@ namespace Content
 
 						const char* modelDir = newBrick->GetModelPath();
 
-						PuRe_Model* pModel = new PuRe_Model(a_pGraphics, modelDir);
+                        PuRe_Model* pModel = new PuRe_Model(graphics, modelDir);
 						
 						newBrick->SetModel(pModel);
 						newBrick->SetMaterial(m_pMaterial);
@@ -364,38 +364,40 @@ namespace Content
 	}
 
 
-	bool CEditorScene::Update(PuRe_IGraphics* a_pGraphics, PuRe_IWindow* a_pWindow, PuRe_IInput* a_pInput, PuRe_Timer* a_pTimer, PuRe_SoundPlayer* a_pSoundPlayer)
-	{
-		if (a_pInput->GetCursorLock())
-			a_pInput->UnLockCursor();
+    bool CEditorScene::Update(PuRe_Application* a_pApplication)
+    {
+        PuRe_IInput* input = a_pApplication->GetInput();
+        PuRe_IWindow* window = a_pApplication->GetWindow();
+        if (input->GetCursorLock())
+            input->UnLockCursor();
 
 
-		if (a_pInput->KeyIsPressed(a_pInput->Alt))
+		if (input->KeyIsPressed(input->Alt))
 		{
-			if (a_pInput->MouseIsPressed(a_pInput->LeftClick))
+			if (input->MouseIsPressed(input->LeftClick))
 			{
-				PuRe_Vector3F rot = PuRe_Vector3F(0, 1, 0) *  (a_pInput->GetRelativeMousePosition().X / 4.0f);
+				PuRe_Vector3F rot = PuRe_Vector3F(0, 1, 0) *  (input->GetRelativeMousePosition().X / 4.0f);
 
 				m_pCamera->Rotate(rot.X, rot.Y, rot.Z);
 
-				rot = m_pCamera->GetSide() *  (-a_pInput->GetRelativeMousePosition().Y / 4.0f);
+				rot = m_pCamera->GetSide() *  (-input->GetRelativeMousePosition().Y / 4.0f);
 
 				m_pCamera->Rotate(rot.X, rot.Y, rot.Z);
 			}
-			if (a_pInput->MouseIsPressed(a_pInput->MiddleClick))
+			if (input->MouseIsPressed(input->MiddleClick))
 			{
-				m_pCamera->Move(PuRe_Vector3F(-a_pInput->GetRelativeMousePosition().X / 80.0f, a_pInput->GetRelativeMousePosition().Y / 80.0f, 0.0f));
+				m_pCamera->Move(PuRe_Vector3F(-input->GetRelativeMousePosition().X / 80.0f, input->GetRelativeMousePosition().Y / 80.0f, 0.0f));
 			}
-			if (a_pInput->GetMouseScroll())
+			if (input->GetMouseScroll())
 			{
-				m_pCamera->Move(PuRe_Vector3F(0, 0, a_pInput->GetMouseScroll()));
+				m_pCamera->Move(PuRe_Vector3F(0, 0, input->GetMouseScroll()));
 			}
 		}
 		else
 		{
 			if (m_MouseValid)
 			{
-				if (a_pInput->MousePressed(a_pInput->LeftClick))
+				if (input->MousePressed(input->LeftClick))
 				{
 					switch (m_Mode)
 					{
@@ -421,7 +423,7 @@ namespace Content
 					}
 
 				}
-				else if (a_pInput->MousePressed(a_pInput->RightClick))
+				else if (input->MousePressed(input->RightClick))
 				{
 					switch (m_Mode)
 					{
@@ -444,19 +446,19 @@ namespace Content
 
 
 
-			if (a_pInput->KeyPressed(a_pInput->Q))
+			if (input->KeyPressed(input->Q))
 				m_Mode = Mode::NUB, m_NubPtr.isMale = true;
-			else if (a_pInput->KeyPressed(a_pInput->W))
+			else if (input->KeyPressed(input->W))
 				m_Mode = Mode::NUB, m_NubPtr.isMale = false;
-			else if (a_pInput->KeyPressed(a_pInput->E))
+			else if (input->KeyPressed(input->E))
 				m_Mode = Mode::ORIGIN;
 		}
 
 		// ray cast
-		PuRe_WindowDescription wDescr = a_pWindow->GetDescription();
+		PuRe_WindowDescription wDescr = window->GetDescription();
 		PuRe_Vector3F mousePos;
-		mousePos.X = (2.0f * a_pInput->GetAbsoluteMousePosition().X) / wDescr.Width - 1.0f;
-		mousePos.Y = 1.0f - (2.0f * a_pInput->GetAbsoluteMousePosition().Y) / wDescr.Height;
+		mousePos.X = (2.0f * input->GetAbsoluteMousePosition().X) / wDescr.Width - 1.0f;
+		mousePos.Y = 1.0f - (2.0f * input->GetAbsoluteMousePosition().Y) / wDescr.Height;
 		mousePos.Z = 0.0f;
 
 		PuRe_Vector4F rayV = PuRe_Vector4F(mousePos.X, mousePos.Y, 1.0f, 1.0f) * PuRe_MatrixF::Invert(m_pCamera->GetProjection());
@@ -591,7 +593,7 @@ namespace Content
 			cDescr.shape = shape;
 			cDescr.material = g_pMaterial;
 			cDescr.transform = ong::Transform(ong::vec3(0, 0, 0), ong::Quaternion(ong::vec3(0, 0, 0), 1));
-
+            cDescr.isSensor = false;
 			ong::Collider* pCollider = m_World.createCollider(cDescr);
 
 			m_pBody->addCollider(pCollider);
@@ -622,11 +624,11 @@ namespace Content
 	}
 
 
-	void CEditorScene::Render(PuRe_IGraphics* a_pGraphics)
+    void CEditorScene::Render(PuRe_Application* a_pApplication)
 	{
 		static const PuRe_Vector3F MALE_COLOR = PuRe_Vector3F(0, 0, 1);
 		static const PuRe_Vector3F FEMALE_COLOR = PuRe_Vector3F(1, 0.4, 0.7);
-
+        PuRe_IGraphics* graphics = a_pApplication->GetGraphics();
 
 		auto drawNub = [&](const TheBrick::SNub& nub){
 			ong::Transform t;
@@ -636,7 +638,7 @@ namespace Content
 			PuRe_Vector3F color = nub.isMale ? MALE_COLOR : FEMALE_COLOR;
 
 
-			TheBrick::DrawShape(m_NubShape, t, color, m_pCamera, a_pGraphics);
+            TheBrick::DrawShape(m_NubShape, t, color, m_pCamera, graphics);
 		};
 
 		auto drawPivot = [&](const ong::vec3& pivot)
@@ -645,21 +647,21 @@ namespace Content
 			t.p = pivot;
 			t.q = ong::Quaternion(ong::vec3(0, 0, 0), 1.0f);
 
-			TheBrick::DrawShape(m_OriginShape, t, PuRe_Vector3F(0, 1, 0), m_pCamera, a_pGraphics);
+            TheBrick::DrawShape(m_OriginShape, t, PuRe_Vector3F(0, 1, 0), m_pCamera, graphics);
 		};
 
 		PuRe_Color clear = PuRe_Color(0.1f, 0.1f, 0.1f);
-		PuRe_GraphicsDescription gdesc = a_pGraphics->GetDescription();
+        PuRe_GraphicsDescription gdesc = graphics->GetDescription();
 
 		
 		
 
 
-        a_pGraphics->Clear(clear);
+        graphics->Clear(clear);
         PuRe_BoundingBox box;
         box.m_Position = PuRe_Vector3F();
         box.m_Size = PuRe_Vector3F(gdesc.ResolutionWidth,gdesc.ResolutionHeight,0.0f);
-		a_pGraphics->Begin(box);
+        graphics->Begin(box);
 		
 		// draw brick
 		if (m_pCurrBrick)
@@ -680,9 +682,9 @@ namespace Content
 
 
 		// draw gui stuff
-		TheBrick::DrawShape(m_MousePtr, m_MouseTransform,PuRe_Vector3F(1,1,1), m_pCamera, a_pGraphics);
+        TheBrick::DrawShape(m_MousePtr, m_MouseTransform, PuRe_Vector3F(1, 1, 1), m_pCamera, graphics);
 
-		TheBrick::DrawBody(m_pBody, m_pCamera, a_pGraphics);	
+        TheBrick::DrawBody(m_pBody, m_pCamera, graphics);
 
 		switch (m_Mode)
 		{
@@ -696,7 +698,7 @@ namespace Content
 			break;
 		}
 
-		a_pGraphics->End();
+        graphics->End();
 	}
 
 	void CEditorScene::Exit()

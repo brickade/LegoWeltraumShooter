@@ -22,11 +22,11 @@ namespace Game
             serializer.Close();
         }
         ong::vec3 start(50.0f, 50.0f, 50.0f);
-        for (int i = 0; i < 10; i++)
-        {
-            TheBrick::CAsteroid* asteroid = new TheBrick::CAsteroid(sba::Space::Instance()->BrickManager, *sba::Space::Instance()->World, start + ong::vec3((i % 2)*10.0f, (i % 2) * 10.0f, i*5.0f));
-            this->m_Asteroids.push_back(asteroid);
-        }
+        //for (int i = 0; i < 10; i++)
+        //{
+        //    TheBrick::CAsteroid* asteroid = new TheBrick::CAsteroid(sba::Space::Instance()->BrickManager, *sba::Space::Instance()->World, start + ong::vec3(0, 0, i*5.0f));
+        //    this->m_Asteroids.push_back(asteroid);
+        //}
         this->gameStart = true;
 
     }
@@ -463,8 +463,8 @@ namespace Game
         ////////////////////////////////////////////////////
         //if (this->gameStart)
         //{
-  /*          for (int i = 0; i < this->m_Players.size(); i++)
-                this->m_Players[i]->Ship->Draw(a_pApplication->GetGraphics(), this->m_Cameras[0]);*/
+            //for (int i = 0; i < this->m_Players.size(); i++)
+            //    this->m_Players[i]->Ship->Draw(a_pApplication->GetGraphics(), this->m_Cameras[0]);
         //}
 
         //////////////////// POST SCREEN ////////////////////////////////
