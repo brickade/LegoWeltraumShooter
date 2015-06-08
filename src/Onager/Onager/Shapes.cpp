@@ -900,6 +900,44 @@ namespace ong
 	}
 
 
+	bool overlapMovingSphereSphere(const Sphere* sphereA, const Sphere* sphereB, const vec3& v, float& t0, float& t1)
+	{
+		vec3 s = sphereB->c - sphereA->c;
+		float r = sphereB->r + sphereA->r;
+
+		
+		float c = dot(s, s) - r*r;
+
+		////intial overlap
+		//if (c < 0.0f)
+		//{
+		//	t0 = 0.0f;
+		//	t1 = 0.0f;
+		//	return true;
+		//}
+
+		float a = dot(v, v);
+		//no movement 
+		if (a < FLT_EPSILON) 
+			return false; 
+
+		float b = dot(-v, s);
+		// spheres not moving towards each other
+		if (b >= 0.0f)
+			return false;
+
+		float d = b*b - a*c;
+		// negative root
+		if (d < 0.0f) 
+			return false;
+		float root = sqrt(d);
+
+		t0 = ong_MAX((-b - root) / a, 0.0f);
+		t1 = ong_MIN((-b + root) / a, 1.0f);
+		return true;
+
+	}
+
 
 	void mergeAABBAABB(AABB* a, AABB* b)
 	{

@@ -36,6 +36,7 @@ namespace ong
 		Transform transform;
 		vec3 linearMomentum;
 		vec3 angularMomentum;
+		bool continuousPhysics;
 	};
 
 
@@ -58,7 +59,7 @@ namespace ong
 
 		void calculateMassData();
 
-		void calculateAABB();
+		void calculateAABB(float dt);
 
 		void addCollider(Collider* collider);
 		void removeCollider(Collider* collider);
@@ -67,7 +68,7 @@ namespace ong
 		void setPosition(const vec3& position);
 		void setUserData(void* pUserData);
 
-		void setContinuousPhysics(bool useCCD);
+		
 
 		void applyImpulse(const vec3& impulse);
 		void applyImpulse(const vec3& impulse, const vec3& point);
@@ -85,13 +86,13 @@ namespace ong
 
 		//	--ACCESORS--
 
-		//return 0 if nothing got hit
 		bool queryRay(const vec3& origin, const vec3& dir, RayQueryResult* hit, float tmax = FLT_MAX);
 		bool queryCollider(const Collider* collider);
 		bool queryCollider(Collider* collider, ColliderQueryCallBack callback);
 		bool queryShape(ShapePtr shape, const Transform& transform);
 		bool queryShape(ShapePtr shape, const Transform& transform, ShapeQueryCallBack callback, void* userData);
-
+		
+		AABB getMovingAABB();
 		const AABB& getAABB();
 
 		Collider* getCollider();
@@ -145,6 +146,9 @@ namespace ong
 		void setPrevious(Body* body);
 
 		void setIndex(int idx);
+		void setCpIndex(int idx);
+
+		void setContinuousPhysics(bool useCCD);
 
 		void clearContacts();
 		void addContact(ContactIter* iter);
@@ -159,19 +163,21 @@ namespace ong
 		//	--ACCESSORS--
 
 		int getIndex();
-
+		int getCpIndex();
+		
 	private:
 		enum
 		{
 			DYNAMIC = 0x1,
 			STATIC = 0x2,
 			TYPE = DYNAMIC | STATIC,
-			CCD = 0x3,
+			CP = 0x4,
 		};
 
 		World* m_pWorld;
 
 		int m_index;
+		int m_cpIndex;
 
 		int m_flags;
 
@@ -185,7 +191,9 @@ namespace ong
 		ContactIter* m_pContacts;
 
 		const ProxyID* m_proxyID;
+		
 		AABB m_aabb;
+		AABB m_cpAABB;
 
 		void* m_pUserData;
 
@@ -203,6 +211,12 @@ namespace ong
 	{
 		m_index = idx;
 	}
+
+	inline void Body::setCpIndex(int idx)
+	{
+		m_cpIndex = idx;
+	}
+
 
 	inline void Body::setProxyID(const ProxyID* idx)
 	{
@@ -229,14 +243,20 @@ namespace ong
 	inline void Body::setContinuousPhysics(bool useCCD)
 	{
 		if (useCCD)
-			m_flags |= CCD;
+			m_flags |= CP;
 		else
-			m_flags &= ~CCD;
+			m_flags &= ~CP;
 	}
 
 	inline int Body::getIndex()
 	{
 		return m_index;
+	}
+
+
+	inline int Body::getCpIndex()
+	{
+		return m_cpIndex;
 	}
 
 
@@ -288,7 +308,7 @@ namespace ong
 
 	inline bool Body::getContinuousPhysics() const
 	{
-		return m_flags & CCD;
+		return m_flags & CP;
 	}
 
 	inline int Body::getNumContacts()

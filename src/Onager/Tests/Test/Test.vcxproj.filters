@@ -79,5 +79,8 @@
     <ClInclude Include="FilterTest.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ContinuosTest.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

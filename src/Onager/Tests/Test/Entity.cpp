@@ -50,7 +50,7 @@ void Entity::render(GLuint colorLocation)
 		return;
 	
 	//contacts
-#if 1
+#if 0
 	glUniform3f(colorLocation, 1, 0, 1);
 	glBegin(GL_LINES);
 	if (m_body->getType() == BodyType::Dynamic)
@@ -86,6 +86,12 @@ void Entity::render(GLuint colorLocation)
 	glEnd();
 #endif
 
+
+	//aabb
+#if 1
+	glUniform3f(colorLocation, 1, 1, 1);
+	drawBox(m_body->getAABB().c, m_body->getAABB().e);
+#endif
 
 
 	glPushMatrix();
@@ -164,8 +170,6 @@ void Entity::render(GLuint colorLocation)
 		c = c->getNext();
 	}
 	
-
-
 
 	BVTree* tree = m_body->getBVTree();
 

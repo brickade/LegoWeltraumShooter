@@ -20,6 +20,7 @@ namespace ong
 	{
 
 		m_aabb = {vec3(0, 0, 0), vec3(0,0,0)};
+		m_cpAABB = { vec3(0, 0, 0), vec3(0, 0, 0) };
 
 		m_flags |= descr.type;
 
@@ -27,6 +28,9 @@ namespace ong
 		m_pWorld->m_r[m_index].q = descr.transform.q;
 		m_pWorld->m_p[m_index].l = descr.linearMomentum;
 		m_pWorld->m_p[m_index].a = descr.angularMomentum;
+
+		if (descr.continuousPhysics)
+			m_flags |= CP;
 	}
 
 
@@ -53,8 +57,8 @@ namespace ong
 		{
 			calculateTree();
 		}
-		calculateAABB();
-		m_pWorld->updateProxy(m_proxyID);
+		//calculateAABB();
+		//m_pWorld->updateProxy(m_proxyID);
 	}
 
 	void Body::removeCollider(Collider* collider)
@@ -153,7 +157,7 @@ namespace ong
 
 
 
-	void Body::calculateAABB()
+	void Body::calculateAABB(float dt)
 	{
 		if (m_numCollider > 1)
 			m_aabb = transformAABB(&m_tree->aabb, &getTransform());
@@ -161,6 +165,16 @@ namespace ong
 			m_aabb = transformAABB(&m_pCollider->getAABB(), &getTransform());
 		else
 			m_aabb = { getTransform().p, vec3(0, 0, 0) };
+
+		m_cpAABB = m_aabb;
+
+		if (m_flags & CP)
+		{
+			AABB end = m_cpAABB;
+			end.c += dt*m_pWorld->m_v[m_index].v;
+			mergeAABBAABB(&m_cpAABB, &end);
+		}
+
 	}
 
 	void Body::calculateTree()
@@ -624,6 +638,8 @@ namespace ong
 					transformTransform(a->getCollider()->getTransform(), transformA), transformTransform(b->getCollider()->getTransform(), transformB)));
 			}
 		}
+
+		return false;
 	}
 
 	bool Body::queryCollider(const Collider* collider)
@@ -730,6 +746,11 @@ namespace ong
 	}
 
 
+	AABB Body::getMovingAABB()
+	{
+		return m_cpAABB;
+	}
+
 	const AABB& Body::getAABB()
 	{
 		return m_aabb;
@@ -819,6 +840,7 @@ namespace ong
 		return m_pWorld->m_m[m_index].localInvI;
 		//return m_pWorld->getLocalInvInertia(m_index);
 	}
+
 
 
 

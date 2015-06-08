@@ -3,6 +3,7 @@
 #include "ContactSolver.h"
 #include "QuickHull.h"
 #include "Profiler.h"
+#include "TimeOfImpact.h"
 
 
 namespace ong
@@ -26,47 +27,23 @@ namespace ong
 	}
 
 
+	void advanceCpBody(World* world, Body* body, float t)
+	{
+		int idx = body->getIndex();
+		int cpIdx = body->getCpIndex();
+		world->m_r[idx].p = world->m_cp[cpIdx].p0 + (t - world->m_cp[cpIdx].t) * world->m_cp[cpIdx].v;
+		world->m_cp[cpIdx].t = t;
+		world->m_cp[cpIdx].p0 = world->m_r[idx].p;
+	}
+
+
 	void World::step(float dt)
 	{
 
 		assert(dt != 0.0f);
 
 
-		Body* b = m_pBody;
-		while (b != nullptr)
-		{
-			b->calculateAABB();
-			m_hGrid.updateBody(b->getProxyID());
-			//b->clearContacts();
-			b = b->getNext();
-		}
-
-
-		// broadphase
-		Pair* pairs = new Pair[m_numBodies * m_numBodies];
-		int numPairs = 0;
-		{
-#ifdef _PROFILE
-			//Profiler Profiler("generatePairs");
-#endif
-			numPairs = m_hGrid.generatePairs(pairs);
-		}
-
-		assert(numPairs <= m_numBodies*m_numBodies);
-
-		//narrowphase
-
-		//todo ...
-		//m_contactManager.generateContacts(pairs, numPairs, m_numColliders*m_numColliders);
-
-		{
-#ifdef _PROFILE
-			//Profiler profiler("generatContacts");
-#endif
-			m_contactManager.generateContacts(pairs, numPairs, 3 * numPairs);
-		}
-
-		//integrate
+		//integrate 
 		for (int i = 0; i < m_numBodies; ++i)
 		{
 			mat3x3 q = toRotMat(m_r[i].q);
@@ -80,50 +57,216 @@ namespace ong
 			m_v[i].w = m_m[i].invI* m_p[i].a;
 		}
 
-
-		//resolution	  
+		//initialize continous physics
+		for (int i = 0; i < m_numCpBodies; ++i)
 		{
-#ifdef _PROFILE
-			//Profiler profiler("resolution");
-#endif
-			WorldContext context;
-			context.r = m_r.data();
-			context.v = m_v.data();
-			context.p = m_p.data();
-			context.m = m_m.data();
-
-			int numContacts = 0;
-			Contact** c = m_contactManager.getContacts(&numContacts);
-
-			ContactConstraint* contactConstraints = new ContactConstraint[numContacts];
-			preSolveContacts(&context, c, numContacts, 1.0f / dt, contactConstraints);
-
-			for (int i = 0; i < 16; ++i)
-			{
-				solveContacts(&context, c, numContacts, contactConstraints);
-			}
-
-			for (int i = 0; i < numContacts; ++i)
-			{
-				c[i]->colliderA->callbackPostSolve(c[i]);
-				c[i]->colliderB->callbackPostSolve(c[i]);
-			}
-
-			delete[] contactConstraints;
-
+			m_cp[i].t = 0.0f;
+			m_cp[i].p0 = m_r[m_cp[i].bodyIdx].p;
+			m_cp[i].v = dt * m_v[m_cp[i].bodyIdx].v;
 		}
 
-		for (int i = 0; i < m_numBodies; ++i)
+		Body* b = m_pBody;
+		while (b != nullptr)
 		{
-			m_r[i].p += dt * m_v[i].v;
-
-			vec3 wAxis = dt * m_v[i].w;
-			float wScalar = sqrt(lengthSq(wAxis));
-
-			if (wScalar != 0.0f)
-				m_r[i].q = QuatFromAxisAngle(1.0f / wScalar * wAxis, wScalar) * m_r[i].q;
+			b->calculateAABB(dt);
+			m_hGrid.updateBody(b->getProxyID());
+			b = b->getNext();
 		}
 
+	
+
+
+		// broadphase
+		Pair* pairs = new Pair[m_numBodies * m_numBodies];
+		int numPairs = 0;
+		{
+			numPairs = m_hGrid.generatePairs(pairs);
+		}
+
+		
+
+		assert(numPairs <= m_numBodies*m_numBodies);
+
+
+		//---solve normal contacts---
+		{
+			//narrowphase
+			m_contactManager.generateContacts(pairs, numPairs, 3 * numPairs);
+
+
+
+
+
+			//resolution	  
+			{
+				WorldContext context;
+				context.r = m_r.data();
+				context.v = m_v.data();
+				context.p = m_p.data();
+				context.m = m_m.data();
+
+				int numContacts = 0;
+				Contact** c = m_contactManager.getContacts(&numContacts);
+
+				ContactConstraint* contactConstraints = new ContactConstraint[numContacts];
+				preSolveContacts(&context, c, numContacts, 1.0f / dt, contactConstraints);
+
+				for (int i = 0; i < 16; ++i)
+				{
+					solveContacts(&context, c, numContacts, contactConstraints);
+				}
+
+				for (int i = 0; i < numContacts; ++i)
+				{
+					c[i]->colliderA->callbackPostSolve(c[i]);
+					c[i]->colliderB->callbackPostSolve(c[i]);
+				}
+
+				delete[] contactConstraints;
+
+			}
+
+			for (int i = 0; i < m_numBodies; ++i)
+			{
+				m_r[i].p += dt * m_v[i].v;
+
+				vec3 wAxis = dt * m_v[i].w;
+				float wScalar = sqrt(lengthSq(wAxis));
+
+				if (wScalar != 0.0f)
+					m_r[i].q = QuatFromAxisAngle(1.0f / wScalar * wAxis, wScalar) * m_r[i].q;
+			}
+		}
+
+		//---solve continuous contacts---
+		{
+
+
+
+			// find pairs with continous physics
+			Pair* cPairs = new Pair[numPairs];
+			int numCPairs = 0;
+			for (int i = 0; i < numPairs; ++i)
+			{
+				if (pairs[i].A->getContinuousPhysics() || pairs[i].B->getContinuousPhysics())
+				{
+					cPairs[numCPairs++] = pairs[i];
+				}
+			}
+			
+
+			float t0 = 0.0f;
+			for (;;)
+			{
+				Pair* minPair = nullptr;
+				float minT = 1.0f;
+				for (int i = 0; i < numCPairs; ++i)
+				{
+					float t = getTimeOfImpact(cPairs[i].A, cPairs[i].B, m_cp.data());
+					
+					if (t != 0.0f && t < minT)
+					{
+						minT = t;
+						minPair = &cPairs[i];
+					}
+				}
+
+				if (minPair == nullptr)
+					break;
+
+				//advance body to time of impact
+				if (minPair->A->getContinuousPhysics())
+				{
+					advanceCpBody(this, minPair->A, minT);
+				}
+				if (minPair->B->getContinuousPhysics())
+				{
+					advanceCpBody(this, minPair->B, minT);
+				}
+
+				//update contacts
+				for (int i = 0; i < 2; ++i)
+				{
+					ContactIter* c = ((Body**)minPair)[i]->getContacts();
+					while (c)
+					{
+						// if cp body -> advance
+						if (c->other->getContinuousPhysics() && m_cp[c->other->getCpIndex()].t != minT)
+						{
+							advanceCpBody(this, c->other, minT);
+						}
+
+						m_contactManager.updateContact(c->contact);
+						c = c->next;
+					}
+
+				}
+				m_contactManager.generateContact(minPair);
+
+				// solve contacts
+				//todo non vector
+				std::vector<Contact*> cpContacts;
+				int numContacts;
+				Contact** contacts = m_contactManager.getContacts(&numContacts);
+				// todo get contacts from bodies
+				// find contacts
+				for (int i = 0; i < numContacts; ++i)
+				{
+					if (contacts[i]->colliderA->getBody() == minPair->A || contacts[i]->colliderA->getBody() == minPair->B ||
+						contacts[i]->colliderB->getBody() == minPair->A || contacts[i]->colliderB->getBody() == minPair->B)
+					{
+						cpContacts.push_back(contacts[i]);
+					}
+				}
+
+				WorldContext context;
+				context.r = m_r.data();
+				context.v = m_v.data();
+				context.p = m_p.data();
+				context.m = m_m.data();
+
+				ContactConstraint* contactConstraints = new ContactConstraint[cpContacts.size()];
+				preSolveContacts(&context, cpContacts.data(), cpContacts.size(), 1.0f / (minT - t0), contactConstraints);
+
+				for (int i = 0; i < 16; ++i)
+				{
+					solveContacts(&context, cpContacts.data(), cpContacts.size(), contactConstraints);
+				}
+
+				for (int i = 0; i < cpContacts.size(); ++i)
+				{
+					// collsion callbacks
+					cpContacts[i]->colliderA->callbackPostSolve(cpContacts[i]);
+					cpContacts[i]->colliderB->callbackPostSolve(cpContacts[i]);
+
+					// todo check on bodies not on colliders
+					// update spatial partitioning
+					cpContacts[i]->colliderA->getBody()->calculateAABB(minT - t0);
+					cpContacts[i]->colliderB->getBody()->calculateAABB(minT - t0);
+
+					m_hGrid.updateBody(cpContacts[i]->colliderA->getBody()->getProxyID());
+					m_hGrid.updateBody(cpContacts[i]->colliderB->getBody()->getProxyID());
+				}
+
+				delete[] contactConstraints;
+
+				t0 = minT;
+			}
+
+			if (t0 != 1.0f)
+			{
+				for (int i = 0; i < numCPairs; ++i)
+				{
+					for (int j = 0; j < 2; ++j)
+					{
+						Body* b = ((Body**)cPairs + i)[j];
+						if (b->getContinuousPhysics())
+							advanceCpBody(this, b, 1.0f);
+					}
+				}
+			}
+
+		}
 
 		delete[] pairs;
 	}
@@ -137,6 +280,8 @@ namespace ong
 		m_m.push_back(MassState());
 		m_b.push_back(nullptr);
 
+
+
 		Body* body = m_bodyAllocator.sNew(Body(description, this, idx));
 
 		m_b[idx] = body;
@@ -148,6 +293,12 @@ namespace ong
 		
 		body->setProxyID(proxyID);
 
+		if (description.continuousPhysics)
+		{
+			m_cp.push_back(ContinuousState());
+			m_cp[m_numCpBodies].bodyIdx = idx;
+			body->setCpIndex(m_numCpBodies++);
+		}
 
 		if (m_pBody != nullptr)
 			m_pBody->setPrevious(body);
@@ -162,8 +313,6 @@ namespace ong
 
 	void World::destroyBody(Body* pBody)
 	{
-
-
 
 		int idx = pBody->getIndex();
 
@@ -184,7 +333,13 @@ namespace ong
 		m_m.pop_back();
 		m_b.pop_back();
 
-
+		if (pBody->getContinuousPhysics())
+		{
+			int idx = pBody->getCpIndex();
+			m_cp[idx] = m_cp[--m_numCpBodies];
+			m_b[m_cp[idx].bodyIdx]->setCpIndex(idx);
+			m_cp.pop_back();
+		}
 
 
 		m_contactManager.removeBody(pBody);

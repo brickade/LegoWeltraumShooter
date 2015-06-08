@@ -188,6 +188,8 @@ namespace ong
 	bool overlap(const Sphere* sphereA, const Capsule* capsuleB, const Transform& t1, const Transform& t2);
 	bool overlap(const Sphere* sphereA, const Hull* hullB, const Transform& t1, const Transform& t2);
 	bool overlap(const Capsule* capsuleA, const Hull* hullB, const Transform& t1, const Transform& t2);
+	
+	bool overlapMovingSphereSphere(const Sphere* sphereA, const Sphere* sphereB, const vec3& v, float& t0, float& t1);
 
 	// rays
 	bool intersectRayAABB(const vec3& origin, const vec3& dir, const AABB& aabb, float& tmin, vec3& p);

@@ -49,6 +49,14 @@ namespace ong
 		float invM;
 	};
 
+	struct ContinuousState
+	{
+		int bodyIdx;
+		vec3 p0;
+		vec3 v; // movement in this frame
+		float t;
+	};
+
 	struct WorldContext
 	{
 		PositionState* r;
@@ -124,6 +132,8 @@ namespace ong
 		std::vector<MassState> m_m;
 		std::vector<Body*> m_b;
 
+		std::vector<ContinuousState> m_cp;
+
 
 	private:
 
@@ -131,6 +141,7 @@ namespace ong
 
 		Body* m_pBody;
 		int m_numBodies;
+		int m_numCpBodies;
 		int m_numColliders;
 		vec3 m_gravity;
 

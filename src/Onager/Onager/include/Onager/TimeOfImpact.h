@@ -6,6 +6,8 @@ namespace ong
 {
 
 	class Body;
+	struct ContinuousState;
 
-	float getTimeOfImpact(Body* a, Body* b);
+
+	float getTimeOfImpact(Body* a, Body* b, ContinuousState* cpS);
 }

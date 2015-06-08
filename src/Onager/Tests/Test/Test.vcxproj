@@ -107,6 +107,7 @@
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Draw.h" />
     <ClInclude Include="FilterTest.h" />
+    <ClInclude Include="ContinuosTest.h" />
     <ClInclude Include="HierarchieTest.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="RayMarcherTest.h" />
