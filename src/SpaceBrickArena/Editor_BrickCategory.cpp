@@ -1,4 +1,7 @@
 #include "include/Editor_BrickCategory.h"
+
+#include "include/Space.h"
+
 namespace Editor
 {
     // **************************************************************************
@@ -24,45 +27,9 @@ namespace Editor
 
     // **************************************************************************
     // **************************************************************************
-    void CBrickCategory::Update(PuRe_IGraphics& a_pGraphics, PuRe_IWindow& a_pWindow, PuRe_IInput& a_pInput, PuRe_Timer& a_pTimer, PuRe_SoundPlayer& a_pSoundPlayer, int a_PlayerIdx, float a_RotationSpeed)
+    void CBrickCategory::Update(PuRe_IGraphics& a_pGraphics, PuRe_IWindow& a_pWindow, PuRe_Timer& a_pTimer, PuRe_SoundPlayer& a_pSoundPlayer, int a_PlayerIdx, float a_RotationSpeed)
     {
-        PuRe_Vector2F navInput = PuRe_Vector2F::Zero();
-        //Gamepad
-        if (a_pInput.GamepadIsPressed(a_pInput.DPAD_Right, a_PlayerIdx))
-        {
-            navInput.X += 1;
-        }
-        if (a_pInput.GamepadIsPressed(a_pInput.DPAD_Left, a_PlayerIdx))
-        {
-            navInput.X -= 1;
-        }
-        if (a_pInput.GamepadIsPressed(a_pInput.DPAD_Up, a_PlayerIdx))
-        {
-            navInput.Y += 1;
-        }
-        if (a_pInput.GamepadIsPressed(a_pInput.DPAD_Down, a_PlayerIdx))
-        {
-            navInput.Y -= 1;
-        }
-        //Keyboard
-        if (a_pInput.KeyPressed(a_pInput.Right))
-        {
-            navInput.X += 1.0f;
-        }
-        if (a_pInput.KeyPressed(a_pInput.Left))
-        {
-            navInput.X -= 1.0f;
-        }
-        if (a_pInput.KeyPressed(a_pInput.Up))
-        {
-            navInput.Y += 1.0f;
-        }
-        if (a_pInput.KeyPressed(a_pInput.Down))
-        {
-            navInput.Y -= 1.0f;
-        }
-
-        this->m_pNavigation->Update(a_pTimer, navInput);
+        this->m_pNavigation->Update(a_pTimer, sba_Input->Direction(sba_Direction::EditorNavigateCategory, a_PlayerIdx));
         this->m_Rotation += a_pTimer.GetElapsedSeconds() * a_RotationSpeed;
         this->m_Rotation = fmod(this->m_Rotation, 6.28318531f);
     }

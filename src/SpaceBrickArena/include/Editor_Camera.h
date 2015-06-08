@@ -14,7 +14,6 @@ namespace Editor
 
     private:
         int m_playerIdx;
-        float m_gamepadThreshold;
         float m_MaxDistance;
         float m_MinDistance;
         float m_distance;
@@ -33,7 +32,7 @@ namespace Editor
         ~CCamera();
 
         void Initialize(PuRe_Vector3F a_InitRotation = PuRe_Vector3F(0, 0, 0), PuRe_Vector3F a_PositionOffset = PuRe_Vector3F(5.0f, 5.0f, -10.0f), float a_MinDistance = 10.0f, float a_MaxDistance = 65.0f, float a_InitDistance = 35.0f, float a_FoV = 45.0f);
-        void Update(PuRe_IGraphics* a_pGraphics, PuRe_IWindow* a_pWindow, PuRe_IInput* a_pInput, PuRe_Timer* a_pTimer);
+        void Update(PuRe_IGraphics* a_pGraphics, PuRe_IWindow* a_pWindow, PuRe_Timer* a_pTimer);
     };
 }
 

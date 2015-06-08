@@ -26,17 +26,6 @@ namespace sba
 
     // **************************************************************************
     // **************************************************************************
-    Space* Space::Instance()
-    {
-        if (Space::g_pInstance == nullptr)
-        {
-            Space::g_pInstance = new Space();
-        }
-        return Space::g_pInstance;
-    }
-
-    // **************************************************************************
-    // **************************************************************************
     void Space::Initialize(PuRe_IGraphics& a_pGraphics, PuRe_IInput& a_pInput, PuRe_SoundPlayer& a_pSoundPlayer)
     {
 #ifdef EDITOR

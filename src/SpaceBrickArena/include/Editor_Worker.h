@@ -56,8 +56,6 @@ namespace Editor
         PuRe_IMaterial* m_pGridMaterial;
         PuRe_Model* m_pGridBrick;
 
-        bool lastInputIsGamepad;
-
     public:
         CCamera* GetCamera() const
         {
@@ -74,15 +72,15 @@ namespace Editor
         ~CWorker();
 
         void Initialize(PuRe_IGraphics& a_pGraphics);
-        void Update(PuRe_IGraphics& a_pGraphics, PuRe_IWindow& a_pWindow, PuRe_IInput& a_pInput, PuRe_Timer& a_pTimer, PuRe_SoundPlayer& a_pSoundPlayer, TheBrick::CBrick* a_pCurrentBrick, PuRe_Color& a_rCurrentColor);
+        void Update(PuRe_IGraphics& a_pGraphics, PuRe_IWindow& a_pWindow, PuRe_Timer& a_pTimer, PuRe_SoundPlayer& a_pSoundPlayer, TheBrick::CBrick* a_pCurrentBrick, PuRe_Color& a_rCurrentColor);
         void Render();
 
     private:
-        void UpdateTranslation(PuRe_IInput& a_pInput, PuRe_Vector3F a_cameraLook, float a_speed);
-        void UpdateRotation(PuRe_IInput& a_pInput, float a_rotationPerClick);
-        void UpdateHeight(PuRe_IInput& a_pInput);
+        void UpdateTranslation(PuRe_Vector3F a_cameraLook, float a_speed);
+        void UpdateRotation(float a_rotationPerClick);
+        void UpdateHeight();
         void ApplyToCurrentBrick();
-        void UpdatePlacement(PuRe_IInput& a_pInput);
+        void UpdatePlacement();
     };
 }
 

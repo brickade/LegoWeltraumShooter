@@ -66,8 +66,8 @@ namespace Editor
             this->m_CurrentColor = PuRe_Color((std::rand() / (float)RAND_MAX), (std::rand() / (float)RAND_MAX), (std::rand() / (float)RAND_MAX));
         }
 
-        this->m_pBrickSupervisor->Update(*a_pApplication->GetGraphics(), *a_pApplication->GetWindow(), *a_pApplication->GetInput(), *a_pApplication->GetTimer(), *a_pApplication->GetSoundPlayer());
-        this->m_pWorker->Update(*a_pApplication->GetGraphics(), *a_pApplication->GetWindow(), *a_pApplication->GetInput(), *a_pApplication->GetTimer(), *a_pApplication->GetSoundPlayer(), this->m_pBrickSupervisor->GetSelectedBrick(), this->m_CurrentColor);
+        this->m_pBrickSupervisor->Update(*a_pApplication->GetGraphics(), *a_pApplication->GetWindow(), *a_pApplication->GetTimer(), *a_pApplication->GetSoundPlayer());
+        this->m_pWorker->Update(*a_pApplication->GetGraphics(), *a_pApplication->GetWindow(), *a_pApplication->GetTimer(), *a_pApplication->GetSoundPlayer(), this->m_pBrickSupervisor->GetSelectedBrick(), this->m_CurrentColor);
         sba::Space::Instance()->BrickManager->RebuildRenderInstances(); //Update RenderInstances
         return false;
     }

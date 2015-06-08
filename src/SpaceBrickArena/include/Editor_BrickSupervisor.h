@@ -7,7 +7,6 @@
 #include <cassert>
 
 #include "Editor_BrickCategory.h"
-#include "Space.h"
 
 namespace Editor
 {
@@ -30,7 +29,7 @@ namespace Editor
 
         void Initialize(PuRe_IGraphics& a_pGraphics);
 
-        void Update(PuRe_IGraphics& a_pGraphics, PuRe_IWindow& a_pWindow, PuRe_IInput& a_pInput, PuRe_Timer& a_pTimer, PuRe_SoundPlayer& a_pSoundPlayer);
+        void Update(PuRe_IGraphics& a_pGraphics, PuRe_IWindow& a_pWindow, PuRe_Timer& a_pTimer, PuRe_SoundPlayer& a_pSoundPlayer);
         void Render(PuRe_IGraphics& a_pGraphics);
 
         TheBrick::CBrick* GetSelectedBrick() const;

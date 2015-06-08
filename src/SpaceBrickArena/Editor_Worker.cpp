@@ -39,7 +39,6 @@ namespace Editor
         this->m_currentPosition = PuRe_Vector2F(0, 0);
         this->m_currentHeight = 0;
         this->m_maxBrickDistance = 15;
-        this->lastInputIsGamepad = false;
         this->m_pHistory = new CHistory(300, 100);
         this->m_placeBelow = false;
         this->m_pCurrentBrickObject = new TheBrick::CGameObject(*sba::Space::Instance()->World, nullptr);
@@ -51,7 +50,7 @@ namespace Editor
 
     // **************************************************************************
     // **************************************************************************
-    void CWorker::Update(PuRe_IGraphics& a_pGraphics, PuRe_IWindow& a_pWindow, PuRe_IInput& a_pInput, PuRe_Timer& a_pTimer, PuRe_SoundPlayer& a_pSoundPlayer, TheBrick::CBrick* a_pCurrentBrick, PuRe_Color& a_rCurrentColor)
+    void CWorker::Update(PuRe_IGraphics& a_pGraphics, PuRe_IWindow& a_pWindow, PuRe_Timer& a_pTimer, PuRe_SoundPlayer& a_pSoundPlayer, TheBrick::CBrick* a_pCurrentBrick, PuRe_Color& a_rCurrentColor)
     {
         this->m_currentBrickColor = a_rCurrentColor;
         if (this->m_pCurrentBrick == nullptr || this->m_pCurrentBrick->m_pBrick != a_pCurrentBrick)
@@ -62,21 +61,21 @@ namespace Editor
             }
             this->m_pCurrentBrick = a_pCurrentBrick->CreateInstance(*this->m_pCurrentBrickObject, *sba::Space::Instance()->World); //Create Instance
         }
-        this->m_pCamera->Update(&a_pGraphics, &a_pWindow, &a_pInput, &a_pTimer);
-        this->UpdateTranslation(a_pInput, this->m_pCamera->GetForward(), a_pTimer.GetElapsedSeconds());
-        this->UpdateRotation(a_pInput, 90.0f * 0.0174532925f);
-        this->UpdateHeight(a_pInput);
+        this->m_pCamera->Update(&a_pGraphics, &a_pWindow, &a_pTimer);
+        this->UpdateTranslation(this->m_pCamera->GetForward(), a_pTimer.GetElapsedSeconds());
+        this->UpdateRotation(90.0f * 0.0174532925f);
+        this->UpdateHeight();
         this->ApplyToCurrentBrick();
-        this->UpdatePlacement(a_pInput);
+        this->UpdatePlacement();
 
         //Safe Ship to file
-        if (a_pInput.KeyIsPressed(a_pInput.Ctrl) && a_pInput.KeyPressed(a_pInput.S))
+        if (sba_Input->ButtonPressed(sba_Button::EditorSaveShip, this->m_playerIdx))
         {
             this->m_pShipWorker->SaveShipToFile("../data/ships/banana.ship");
         }
 
         //Reset/Delete Ship
-        if (a_pInput.KeyPressed(a_pInput.Backspace))
+        if (sba_Input->ButtonPressed(sba_Button::EditorResetShip, this->m_playerIdx))
         {
             this->m_pShipWorker->ResetShip();
             this->m_pHistory->Clear();
@@ -100,36 +99,9 @@ namespace Editor
 
     // **************************************************************************
     // **************************************************************************
-    void CWorker::UpdateTranslation(PuRe_IInput& a_pInput, PuRe_Vector3F a_cameraLook, float a_speed)
+    void CWorker::UpdateTranslation(PuRe_Vector3F a_cameraLook, float a_speed)
     {
-        PuRe_Vector2F MoveInput;
-
-        //----------Gamepad
-        float gamepadSpeed = a_speed * 10;
-        PuRe_Vector2F gamepadInput = a_pInput.GetGamepadLeftThumb(this->m_playerIdx);
-        if (gamepadInput.Length() < 0.25f)
-        {
-            gamepadInput = PuRe_Vector2F::Zero();
-        }
-        MoveInput = gamepadInput * gamepadSpeed;
-        if (gamepadInput.Length() > 0)
-        {
-            this->lastInputIsGamepad = true;
-        }
-        else
-        {
-            this->lastInputIsGamepad = false;
-        }
-
-        //----------Mouse
-        if (/*!a_pInput->MouseIsPressed(a_pInput->LeftClick) && */!a_pInput.MouseIsPressed(a_pInput.RightClick))
-        {
-            float mouseSpeed = a_speed * 1.5f;
-            PuRe_Vector2F mouseDelta = a_pInput.GetRelativeMousePosition();
-            mouseDelta.Y *= -1;
-            //Apply
-            MoveInput += mouseDelta * mouseSpeed;
-        }
+        PuRe_Vector2F MoveInput = sba_Input->Direction(sba_Direction::EditorMoveBrick, this->m_playerIdx) * a_speed;
 
         //----------Apply
         //Force Forward in 8 Directions
@@ -141,7 +113,7 @@ namespace Editor
         //Only 4 Directions when using gamepad else stay with 8
         PuRe_Vector2F forwardN = forward;
         forwardN.Normalize();
-        if (this->lastInputIsGamepad && abs(abs(forward.X) - abs(forward.Y)) < 0.1f)
+        if (sba_Input->LastInputWasGamepad() && abs(abs(forward.X) - abs(forward.Y)) < 0.1f)
         {
             float alpha = 45;
             if (PuRe_Vector2F::Dot(forwardN.Side(), forwardRaw) > 0) //Detect right direction
@@ -172,37 +144,25 @@ namespace Editor
 
     // **************************************************************************
     // **************************************************************************
-    void CWorker::UpdateRotation(PuRe_IInput& a_pInput, float a_rotationPerClick)
+    void CWorker::UpdateRotation(float a_rotationPerClick)
     {
-        //----------Gamepad
-        if (a_pInput.GamepadPressed(a_pInput.Right_Shoulder, this->m_playerIdx))
+        if (sba_Input->ButtonPressed(sba_Button::EditorRotateBrickRight, this->m_playerIdx))
         {
             this->m_currentBrickRotation += a_rotationPerClick;
         }
-        if (a_pInput.GamepadPressed(a_pInput.Left_Shoulder, this->m_playerIdx))
+        if (sba_Input->ButtonPressed(sba_Button::EditorRotateBrickLeft, this->m_playerIdx))
         {
             this->m_currentBrickRotation -= a_rotationPerClick;
         }
-
-        //----------Keyboard
-        if (a_pInput.KeyPressed(a_pInput.E))
-        {
-            this->m_currentBrickRotation += a_rotationPerClick;
-        }
-        if (a_pInput.KeyPressed(a_pInput.Q))
-        {
-            this->m_currentBrickRotation -= a_rotationPerClick;
-        }
-
         //this->m_currentBrickRotation = this->m_currentBrickRotation - fmod(this->m_currentBrickRotation, 1.57079633f); //Snap Rotation
     }
 
     // **************************************************************************
     // **************************************************************************
-    void CWorker::UpdateHeight(PuRe_IInput& a_pInput)
+    void CWorker::UpdateHeight()
     {
         //Update Placement Direction
-        if (a_pInput.GamepadPressed(a_pInput.Pad_B, this->m_playerIdx) || a_pInput.KeyPressed(a_pInput.Space))
+        if (sba_Input->ButtonPressed(sba_Button::EditorTogglePlacementSide, this->m_playerIdx))
         {
             this->m_placeBelow = !this->m_placeBelow;
         }
@@ -291,9 +251,10 @@ namespace Editor
 
     // **************************************************************************
     // **************************************************************************
-    void CWorker::UpdatePlacement(PuRe_IInput& a_pInput)
+    void CWorker::UpdatePlacement()
     {
-        if (a_pInput.GamepadPressed(a_pInput.Pad_Y, this->m_playerIdx) || (a_pInput.KeyIsPressed(a_pInput.Ctrl) && a_pInput.KeyPressed(a_pInput.Z)))
+        
+        if (sba_Input->ButtonPressed(sba_Button::EditorUndo, this->m_playerIdx))
         { //Undo
             SHistoryStep* step = this->m_pHistory->Undo();
             if (step != nullptr)
@@ -301,7 +262,7 @@ namespace Editor
                 delete step->BrickInstance;
             }
         }
-        else if (a_pInput.GamepadPressed(a_pInput.Pad_X, this->m_playerIdx) || (a_pInput.KeyIsPressed(a_pInput.Ctrl) && a_pInput.KeyPressed(a_pInput.Y)))
+        else if (sba_Input->ButtonPressed(sba_Button::EditorRedo, this->m_playerIdx))
         { //Redo
             SHistoryStep* step = this->m_pHistory->Redo();
             if (step != nullptr)
@@ -314,8 +275,8 @@ namespace Editor
         {
             return;
         }
-        //Gamepad & Mouse
-        if (a_pInput.GamepadPressed(a_pInput.Pad_A, this->m_playerIdx) || a_pInput.MousePressed(a_pInput.LeftClick))
+
+        if (sba_Input->ButtonPressed(sba_Button::EditorPlaceBrick, this->m_playerIdx))
         { //Place BrickInstance
             this->m_pCurrentBrick->m_Color = this->m_currentBrickColor; //Apply right color
             this->m_pHistory->CutRedos();
