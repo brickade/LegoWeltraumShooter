@@ -14,6 +14,8 @@ namespace Editor
 
     }*/
 
+    // **************************************************************************
+    // **************************************************************************
     bool CAssistant::GetClosestHitFromBrickInstanceNubs(TheBrick::CBrickInstance& a_rBrickInstanceToCastFrom, TheBrick::CGameObject& a_rGameObjectToCastTo, bool a_NubToCastFromGenderIsMale, const ong::vec3& a_rNubToCastFromDirection, ong::RayQueryResult* a_pResult)
     {
         std::vector<TheBrick::SNub>& nubsToCastFrom = a_rBrickInstanceToCastFrom.m_pBrick->GetNubs(); //Get currentBrick Nubs
@@ -45,6 +47,8 @@ namespace Editor
         return hit;
     }
 
+    // **************************************************************************
+    // **************************************************************************
     bool CAssistant::CanDockAtHit(ong::RayQueryResult& a_rHit, bool a_NubRequestedGenderIsMale, const ong::vec3& a_rNubRequestedDirection)
     {
         TheBrick::CBrickInstance* brickInstance = reinterpret_cast<TheBrick::CBrickInstance*>(a_rHit.collider->getUserData()); //Get hit BrickInstance
@@ -58,5 +62,12 @@ namespace Editor
             return false;
         }
         return true;
+    }
+
+    // **************************************************************************
+    // **************************************************************************
+    static ong::vec3 GetMaxCollisionFreeMovementDelta(TheBrick::CBrickInstance& a_rBrickInstanceToTest, TheBrick::CGameObject& a_rGameObjectToTestAgainst, const ong::vec3& a_rBrickInstanceMoveDirection, float a_MoveTestingSteps)
+    {
+        
     }
 }
