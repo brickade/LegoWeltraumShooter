@@ -62,7 +62,7 @@ namespace Editor
             this->m_pCurrentBrick = a_pCurrentBrick->CreateInstance(*this->m_pCurrentBrickObject, *sba::Space::Instance()->World); //Create Instance
         }
         this->m_pCamera->Update(&a_pGraphics, &a_pWindow, &a_pTimer);
-        this->UpdateTranslation(this->m_pCamera->GetForward(), a_pTimer.GetElapsedSeconds());
+        this->UpdateTranslation(this->m_pCamera->GetForward(), a_pTimer.GetElapsedSeconds() * 3.0f);
         this->UpdateRotation(90.0f * 0.0174532925f);
         this->UpdateHeight();
         this->ApplyToCurrentBrick();
@@ -102,6 +102,10 @@ namespace Editor
     void CWorker::UpdateTranslation(PuRe_Vector3F a_cameraLook, float a_speed)
     {
         PuRe_Vector2F MoveInput = sba_Input->Direction(sba_Direction::EditorMoveBrick, this->m_playerIdx) * a_speed;
+        if (a_cameraLook.Y > 0.5f)
+        {
+            MoveInput.Y *= -1;
+        }
 
         //----------Apply
         //Force Forward in 8 Directions
