@@ -142,7 +142,8 @@
     <ClInclude Include="include\Editor_BrickCategory.h" />
     <ClInclude Include="include\Editor_BrickSupervisor.h" />
     <ClInclude Include="include\Editor_Assistant.h" />
-    <ClInclude Include="include\INIReader.h" />    <ClInclude Include="include\InputManager.h" />
+    <ClInclude Include="include\INIReader.h" />
+    <ClInclude Include="include\InputManager.h" />
     <ClInclude Include="include\InputManagerTypes.h" />
     <ClInclude Include="include\Space.h" />
     <ClInclude Include="include\Editor_Camera.h" />
@@ -161,7 +162,9 @@
     <ClCompile Include="Editor_BrickCategory.cpp" />
     <ClCompile Include="Editor_BrickSupervisor.cpp" />
     <ClCompile Include="Editor_Assistant.cpp" />
-    <ClCompile Include="INIReader.cpp" />    <ClCompile Include="InputManager.cpp" />    <ClCompile Include="Space.cpp" />
+    <ClCompile Include="INIReader.cpp" />
+    <ClCompile Include="InputManager.cpp" />
+    <ClCompile Include="Space.cpp" />
     <ClCompile Include="Editor_Camera.cpp" />
     <ClCompile Include="Editor_Worker.cpp" />
     <ClCompile Include="GameCamera.cpp" />

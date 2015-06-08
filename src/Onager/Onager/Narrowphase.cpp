@@ -640,7 +640,7 @@ namespace ong
 			collide(a, b);
 		}
 
-		for (int i = 0; i < m_contacts.size(); ++i)
+		for (unsigned int i = 0; i < m_contacts.size(); ++i)
 		{
 			if (m_contacts[i]->tick != m_tick) //old contact
 			{
@@ -661,7 +661,7 @@ namespace ong
 	{
 		for (ContactIter* c = body->getContacts(); c != 0; c = c->next)
 		{
-			for (int i = 0; i < m_contacts.size(); ++i)
+            for (unsigned int i = 0; i < m_contacts.size(); ++i)
 			{
 				if (m_contacts[i] == c->contact)
 				{

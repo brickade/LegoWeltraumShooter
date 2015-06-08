@@ -41,11 +41,11 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IntDir>TEMP\</IntDir>
-    <OutDir>$(ProjectDir)bin\$(Configuration)\$(PlatformName)</OutDir>
+    <OutDir>$(ProjectDir)bin\$(Configuration)\$(PlatformName)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IntDir>TEMP\</IntDir>
-    <OutDir>$(ProjectDir)bin\$(Configuration)\$(PlatformName)</OutDir>
+    <OutDir>$(ProjectDir)bin\$(Configuration)\$(PlatformName)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

@@ -203,7 +203,7 @@ namespace Content
 		m_pPostCamera = new PuRe_Camera(PuRe_Vector2F((float)gdesc.ResolutionWidth, (float)gdesc.ResolutionHeight), PuRe_Camera_Orthogonal);
         m_pPostMaterial = graphics->LoadMaterial("../data/effects/Post/default");
 
-		m_pCamera = new PuRe_Camera(PuRe_Vector2F(gdesc.ResolutionWidth, gdesc.ResolutionHeight), PuRe_Camera_Perspective);
+        m_pCamera = new PuRe_Camera(PuRe_Vector2F((float)gdesc.ResolutionWidth, (float)gdesc.ResolutionHeight), PuRe_Camera_Perspective);
 		m_pCamera->SetFoV(45.0f);
 		m_pCamera->Update();
 
@@ -492,17 +492,17 @@ namespace Content
 		switch (m_Mode)
 		{
 		case Mode::NUB:
-			m_NubPtr.Position.X = (floor(m_MouseTransform.p.x / w) + 0.5) * w - (rayResult.normal.x * 0.5f*w);
-			m_NubPtr.Position.Y = (floor(m_MouseTransform.p.y / h) + 0.5) * h - (rayResult.normal.y * 0.5f*h);
-			m_NubPtr.Position.Z = (floor(m_MouseTransform.p.z / w) + 0.5) * w - (rayResult.normal.z * 0.5f*w);
+			m_NubPtr.Position.X = (float)(floor(m_MouseTransform.p.x / w) + 0.5) * w - (rayResult.normal.x * 0.5f*w);
+            m_NubPtr.Position.Y = (float)(floor(m_MouseTransform.p.y / h) + 0.5) * h - (rayResult.normal.y * 0.5f*h);
+            m_NubPtr.Position.Z = (float)(floor(m_MouseTransform.p.z / w) + 0.5) * w - (rayResult.normal.z * 0.5f*w);
 
 			m_NubPtr.Direction = TheBrick::OngToPuRe(rayResult.normal);
 
 			break;
 		case Mode::ORIGIN:
-			m_Pivot.x = (floor(m_MouseTransform.p.x / w) + 0.5) * w - (rayResult.normal.x * 0.5f*w);
-			m_Pivot.y = (floor(m_MouseTransform.p.y / h) + 0.5) * h - (rayResult.normal.y * 0.5f*h);
-			m_Pivot.z = (floor(m_MouseTransform.p.z / w) + 0.5) * w - (rayResult.normal.z * 0.5f*w);
+            m_Pivot.x = (float)(floor(m_MouseTransform.p.x / w) + 0.5) * w - (rayResult.normal.x * 0.5f*w);
+            m_Pivot.y = (float)(floor(m_MouseTransform.p.y / h) + 0.5) * h - (rayResult.normal.y * 0.5f*h);
+            m_Pivot.z = (float)(floor(m_MouseTransform.p.z / w) + 0.5) * w - (rayResult.normal.z * 0.5f*w);
 			break;
 		}
 
@@ -608,9 +608,10 @@ namespace Content
 		}
 		case SCommand::TRANSPARENT:
 			if (m_pCurrBrick)
-				m_pCurrBrick->SetIsTransparent(a_C.transparent);
+				m_pCurrBrick->SetIsTransparent(a_C.transparent == 1);
 			return false;
 		}
+        return false;
 	}
 
 	void CEditorScene::UndoCommand(SCommand& a_C)
@@ -627,7 +628,7 @@ namespace Content
     void CEditorScene::Render(PuRe_Application* a_pApplication)
 	{
 		static const PuRe_Vector3F MALE_COLOR = PuRe_Vector3F(0, 0, 1);
-		static const PuRe_Vector3F FEMALE_COLOR = PuRe_Vector3F(1, 0.4, 0.7);
+		static const PuRe_Vector3F FEMALE_COLOR = PuRe_Vector3F(1.0f, 0.4f, 0.7f);
         PuRe_IGraphics* graphics = a_pApplication->GetGraphics();
 
 		auto drawNub = [&](const TheBrick::SNub& nub){
@@ -660,7 +661,7 @@ namespace Content
         graphics->Clear(clear);
         PuRe_BoundingBox box;
         box.m_Position = PuRe_Vector3F();
-        box.m_Size = PuRe_Vector3F(gdesc.ResolutionWidth,gdesc.ResolutionHeight,0.0f);
+        box.m_Size = PuRe_Vector3F((float)gdesc.ResolutionWidth, (float)gdesc.ResolutionHeight, 0.0f);
         graphics->Begin(box);
 		
 		// draw brick

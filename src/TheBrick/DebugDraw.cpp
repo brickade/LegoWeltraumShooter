@@ -47,7 +47,7 @@ namespace TheBrick
 			static const int POINTCOUNT = 32;
 			ong::vec3 up = normalize(c->c2 - c->c1);
 			ong::vec3 l;
-			if (abs(up.x) < abs(up.y) < abs(up.z))
+			if (abs(up.x) < abs(up.y) && abs(up.x) < abs(up.z))
 				l = normalize(cross(ong::vec3(1, 0, 0), up));
 			else if (abs(up.y) < abs(up.z))
 				l = normalize(cross(ong::vec3(0, 1, 0), up));
