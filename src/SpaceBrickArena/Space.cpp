@@ -28,12 +28,13 @@ namespace sba
     // **************************************************************************
     void Space::Initialize(PuRe_IGraphics& a_pGraphics, PuRe_IInput& a_pInput, PuRe_SoundPlayer& a_pSoundPlayer)
     {
+        this->Renderer = new PuRe_Renderer(&a_pGraphics);
 #ifdef EDITOR
-        this->Renderer = new PuRe_Renderer(&a_pGraphics, PuRe_Vector2I(a_pGraphics.GetDescription().ResolutionWidth, a_pGraphics.GetDescription().ResolutionHeight));
+        this->Renderer->AddTarget(PuRe_Vector2I(a_pGraphics.GetDescription().ResolutionWidth, a_pGraphics.GetDescription().ResolutionHeight));
 #else
-        this->Renderer = new PuRe_Renderer(&a_pGraphics, PuRe_Vector2I(a_pGraphics.GetDescription().ResolutionWidth / 2, a_pGraphics.GetDescription().ResolutionHeight));
+        this->Renderer->AddTarget(PuRe_Vector2I(a_pGraphics.GetDescription().ResolutionWidth / 2, a_pGraphics.GetDescription().ResolutionHeight));
 #endif
-        this->Renderer->m_pPostCamera->setNearFar(PuRe_Vector2F(0.01f, 1000.0f));
+        this->Renderer->AddTarget(PuRe_Vector2I(a_pGraphics.GetDescription().ResolutionWidth, a_pGraphics.GetDescription().ResolutionHeight));
         if (CIniReader::Instance()->GetValue("SSAO") == "On")
         {
             this->m_SSAOMaterial = a_pGraphics.LoadMaterial("../data/effects/SSAO/default");

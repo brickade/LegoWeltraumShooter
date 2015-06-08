@@ -27,7 +27,7 @@ namespace Game
     {
         
         this->m_Position = a_Position;
-        a_pRenderer->DrawUI(this->m_pBoxVertexBuffer, this->m_pBoxVertexBuffer->GetSize(), PuRe_Primitive::Linestrip, a_pMaterial, a_Position, a_CamRotation, PuRe_Vector3F(), PuRe_Vector3F(128.0f, 128.0f, 128.0f));
+        a_pRenderer->Draw(1, true, this->m_pBoxVertexBuffer, this->m_pBoxVertexBuffer->GetSize(), PuRe_Primitive::Linestrip, a_pMaterial, a_Position, a_CamRotation, PuRe_Vector3F(), PuRe_Vector3F(128.0f, 128.0f, 128.0f));
         //a_pMaterial->Apply();
         //a_pCamera->Apply(a_pMaterial);
         //a_pMaterial->SetMatrix(PuRe_MatrixF::Scale(PuRe_Vector3F(128.0f, 128.0f, 128.0f)), "Scale");
@@ -55,7 +55,7 @@ namespace Game
 
         a_Position = this->m_Position + a_Position;
 
-        a_pRenderer->DrawUI(this->m_pBoxVertexBuffer, this->m_pBoxVertexBuffer->GetSize(), PuRe_Primitive::Linestrip, a_pMaterial, a_Position, a_CamRotation, PuRe_Vector3F(), PuRe_Vector3F(8.0f, 8.0f, 8.0f));
+        a_pRenderer->Draw(1, false, this->m_pBoxVertexBuffer, this->m_pBoxVertexBuffer->GetSize(), PuRe_Primitive::Linestrip, a_pMaterial, a_Position, a_CamRotation, PuRe_Vector3F(), PuRe_Vector3F(8.0f, 8.0f, 8.0f));
 
         //a_pMaterial->Apply();
         //a_pCamera->Apply(a_pMaterial);

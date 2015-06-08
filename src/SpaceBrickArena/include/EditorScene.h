@@ -26,6 +26,8 @@ namespace Editor
         PuRe_DirectionalLight* m_pDirectionalLight;
         PuRe_IMaterial* m_pPointLightMaterial;
         PuRe_IMaterial* m_pDirectionalLightMaterial;
+
+        PuRe_Camera* m_UICamera;
         
         Editor::CBrickSupervisor* m_pBrickSupervisor;
         Editor::CWorker* m_pWorker;

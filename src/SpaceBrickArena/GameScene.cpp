@@ -423,9 +423,9 @@ namespace Game
 
 
         /////////////  DRAW Light  ///////////////////////
-        renderer->Draw(this->m_pDirectionalLight, this->m_pDirectionalLightMaterial, PuRe_Vector3F(1.0f, 0.0f, 0.0f), PuRe_Color(0.3f, 0.3f, 0.3f));
+        renderer->Draw(0, true, this->m_pDirectionalLight, this->m_pDirectionalLightMaterial, PuRe_Vector3F(1.0f, 0.0f, 0.0f), PuRe_Color(0.3f, 0.3f, 0.3f));
         /////////////  DRAW SKY  ///////////////////////
-        renderer->Draw(this->m_pSkyBox, this->m_pSkyMaterial);
+        renderer->Draw(0, true, this->m_pSkyBox, this->m_pSkyMaterial);
         ////////////////////////////////////////////////////
 
         /////////////  DRAW BRICKS  ///////////////////////
@@ -455,11 +455,11 @@ namespace Game
         //////////////////////  NETWORK UI  /////////////////////////////
         int nstate = this->m_pNetwork->GetState();
         if (nstate == 0)
-            renderer->DrawUI(this->m_pFont, this->m_pFontMaterial, "Press << 0 >> to Host and << 1 >> to Join", PuRe_Vector3F(10.0f, gdesc.ResolutionHeight - 32.0f, 0.0f), PuRe_MatrixF::Identity(), PuRe_Vector3F(32.0f, 32.0f, 32.0f), 32.0f);
+            renderer->Draw(1, false, this->m_pFont, this->m_pFontMaterial, "Press << 0 >> to Host and << 1 >> to Join", PuRe_Vector3F(10.0f, gdesc.ResolutionHeight - 32.0f, 0.0f), PuRe_MatrixF::Identity(), PuRe_Vector3F(32.0f, 32.0f, 32.0f), 32.0f);
         else if (nstate == 1)
-            renderer->DrawUI(this->m_pFont, this->m_pFontMaterial, ("IP: " + this->m_pNetwork->m_IP).c_str(), PuRe_Vector3F(10.0f, gdesc.ResolutionHeight - 32.0f, 0.0f), PuRe_MatrixF::Identity(), PuRe_Vector3F(32.0f, 32.0f, 32.0f), 32.0f);
+            renderer->Draw(1, false, this->m_pFont, this->m_pFontMaterial, ("IP: " + this->m_pNetwork->m_IP).c_str(), PuRe_Vector3F(10.0f, gdesc.ResolutionHeight - 32.0f, 0.0f), PuRe_MatrixF::Identity(), PuRe_Vector3F(32.0f, 32.0f, 32.0f), 32.0f);
         else if (nstate == 2)
-            renderer->DrawUI(this->m_pFont, this->m_pFontMaterial, ("Port: " + this->m_pNetwork->m_Port).c_str(), PuRe_Vector3F(10.0f, gdesc.ResolutionHeight - 32.0f, 0.0f), PuRe_MatrixF::Identity(), PuRe_Vector3F(32.0f, 32.0f, 32.0f), 32.0f);
+            renderer->Draw(1, false, this->m_pFont, this->m_pFontMaterial, ("Port: " + this->m_pNetwork->m_Port).c_str(), PuRe_Vector3F(10.0f, gdesc.ResolutionHeight - 32.0f, 0.0f), PuRe_MatrixF::Identity(), PuRe_Vector3F(32.0f, 32.0f, 32.0f), 32.0f);
         ////////////////////////////////////////////////////
         //if (this->gameStart)
         //{
@@ -468,12 +468,12 @@ namespace Game
         //}
 
         //////////////////// POST SCREEN ////////////////////////////////
-        renderer->Set((float)this->m_TextureID, "textureID");
-        renderer->Set(PuRe_Vector3F(0.1f, 0.1f, 0.1f), "ambient");
+        renderer->Set(0, (float)this->m_TextureID, "textureID");
+        renderer->Set(0, PuRe_Vector3F(0.1f, 0.1f, 0.1f), "ambient");
         PuRe_Vector3F size = PuRe_Vector3F(0.0f, 0.0f, 0.0f);
-        renderer->Render(this->m_Cameras[0], this->m_pPostMaterial, size);
+        //renderer->Render(this->m_Cameras[0], this->m_pPostMaterial, size);
         size.X += a_pApplication->GetGraphics()->GetDescription().ResolutionWidth / 2;
-        renderer->Render(this->m_Cameras[1], this->m_pPostMaterial, size);
+        //renderer->Render(this->m_Cameras[1], this->m_pPostMaterial, size);
         renderer->End();
         ////////////////////////////////////////////////////
 

@@ -102,7 +102,7 @@ namespace TheBrick
         {
             return;
         }
-        a_rRenderer.Draw(this->m_pModel, PuRe_Primitive::Triangles, this->m_pMaterial, this->m_pRenderInstances, this->m_RenderInstancesCount);
+        a_rRenderer.Draw(0, false, this->m_pModel, PuRe_Primitive::Triangles, this->m_pMaterial, this->m_pRenderInstances, this->m_RenderInstancesCount);
     }
 
     // **************************************************************************

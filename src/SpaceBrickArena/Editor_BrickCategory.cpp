@@ -56,7 +56,7 @@ namespace Editor
             float size = this->m_ElementSize / this->m_Bricks[i]->GetPivotOffset().Length();
             size += this->m_ElementSize;
             size *= 0.5f;
-            renderer->DrawUI(this->m_Bricks[i]->GetModel(), PuRe_Primitive::Triangles, sba::Space::Instance()->BrickManager->GetBrickUIMaterial(), pos, rot, PuRe_Vector3F::Zero(), PuRe_Vector3F(size, size, size), color);
+            renderer->Draw(1, false, this->m_Bricks[i]->GetModel(), PuRe_Primitive::Triangles, sba::Space::Instance()->BrickManager->GetBrickUIMaterial(), pos, rot, PuRe_Vector3F::Zero(), PuRe_Vector3F(size, size, size), color);
         }
     }
 
@@ -78,7 +78,7 @@ namespace Editor
         float size = this->m_TabSize / this->m_Bricks[0]->GetPivotOffset().Length();
         size += this->m_TabSize;
         size *= 0.5f;
-        sba::Space::Instance()->Renderer->DrawUI(this->m_Bricks[0]->GetModel(), PuRe_Primitive::Triangles, sba::Space::Instance()->BrickManager->GetBrickUIMaterial(), pos, rot, PuRe_Vector3F::Zero(), PuRe_Vector3F(size, size, size), color);
+        sba::Space::Instance()->Renderer->Draw(1, false, this->m_Bricks[0]->GetModel(), PuRe_Primitive::Triangles, sba::Space::Instance()->BrickManager->GetBrickUIMaterial(), pos, rot, PuRe_Vector3F::Zero(), PuRe_Vector3F(size, size, size), color);
     }
 
     // **************************************************************************
