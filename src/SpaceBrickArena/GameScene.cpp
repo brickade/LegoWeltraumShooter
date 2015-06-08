@@ -471,9 +471,9 @@ namespace Game
         renderer->Set(0, (float)this->m_TextureID, "textureID");
         renderer->Set(0, PuRe_Vector3F(0.1f, 0.1f, 0.1f), "ambient");
         PuRe_Vector3F size = PuRe_Vector3F(0.0f, 0.0f, 0.0f);
-        //renderer->Render(this->m_Cameras[0], this->m_pPostMaterial, size);
+        renderer->Render(0,this->m_Cameras[0], this->m_pPostMaterial, size);
         size.X += a_pApplication->GetGraphics()->GetDescription().ResolutionWidth / 2;
-        //renderer->Render(this->m_Cameras[1], this->m_pPostMaterial, size);
+        renderer->Render(0,this->m_Cameras[1], this->m_pPostMaterial, size);
         renderer->End();
         ////////////////////////////////////////////////////
 
