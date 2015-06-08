@@ -16,7 +16,7 @@ namespace Editor
 
     // **************************************************************************
     // **************************************************************************
-    bool CAssistant::GetClosestHitFromBrickInstanceNubs(TheBrick::CBrickInstance& a_rBrickInstanceToCastFrom, TheBrick::CGameObject& a_rGameObjectToCastTo, bool a_NubToCastFromGenderIsMale, const ong::vec3& a_rNubToCastFromDirection, ong::RayQueryResult* a_pResult)
+    bool CAssistant::GetClosestHitFromBrickInstanceNubs(TheBrick::CBrickInstance& a_rBrickInstanceToCastFrom, TheBrick::CGameObject& a_rGameObjectToCastTo, bool a_NubToCastFromGenderIsMale, const ong::vec3& a_rNubToCastFromDirection, ong::RayQueryResult* a_pResult, ong::vec3* a_pResultRayOrigin)
     {
         std::vector<TheBrick::SNub>& nubsToCastFrom = a_rBrickInstanceToCastFrom.m_pBrick->GetNubs(); //Get currentBrick Nubs
         ong::Body& bodyToCastTo = *a_rGameObjectToCastTo.m_pBody;
@@ -41,6 +41,7 @@ namespace Editor
                 if (hs.t < a_pResult->t)
                 { //This Hit is nearer to the brick than the saved one
                     *a_pResult = hs;
+                    *a_pResultRayOrigin = rayOrigin;
                 }
             }
         }
@@ -56,9 +57,8 @@ namespace Editor
         ong::vec3 dockingdir = TheBrick::PuReToOng(brickInstance->DirToBrickSpace(TheBrick::OngToPuRe(a_rHit.normal)));
         //Get hitBrick Nub at that position
         TheBrick::SNub* nub = brickInstance->GetNubAtWorldPos(TheBrick::OngToPuRe(a_rHit.point), 0.01f);
-        assert(nub != nullptr);
-        if (nub->isMale != a_NubRequestedGenderIsMale || dot(ong::normalize(TheBrick::PuReToOng(nub->Direction)), a_rNubRequestedDirection) < 0.99f)
-        { //Wrong Direction
+        if (nub == nullptr || nub->isMale != a_NubRequestedGenderIsMale || dot(ong::normalize(TheBrick::PuReToOng(nub->Direction)), a_rNubRequestedDirection) < 0.99f)
+        { //No nub or wrong Direction
             return false;
         }
         return true;
@@ -66,8 +66,26 @@ namespace Editor
 
     // **************************************************************************
     // **************************************************************************
-    static ong::vec3 GetMaxCollisionFreeMovementDelta(TheBrick::CBrickInstance& a_rBrickInstanceToTest, TheBrick::CGameObject& a_rGameObjectToTestAgainst, const ong::vec3& a_rBrickInstanceMoveDirection, float a_MoveTestingSteps)
+    bool CAssistant::MovementDeltaIsCollisionFree(TheBrick::CBrickInstance& a_rBrickInstanceToTest, TheBrick::CGameObject& a_rGameObjectToTestAgainst, const ong::vec3& a_rBrickInstanceMoveDeltaToTest, float a_MoveTestingSteps, ong::vec3* a_pMaxCollisionFreeMovementDelta)
     {
-        
+        ong::vec3 start = TheBrick::PuReToOng(a_rBrickInstanceToTest.GetGameObject()->PosToWorldSpace(TheBrick::OngToPuRe(a_rBrickInstanceToTest.GetTransform().p)));
+        ong::vec3 direction = ong::normalize(a_rBrickInstanceMoveDeltaToTest);
+        int maxSteps = (int)round((ong::length(a_rBrickInstanceMoveDeltaToTest) / a_MoveTestingSteps));
+        for (int i = 0; i <= maxSteps; i++)
+        {
+            *a_pMaxCollisionFreeMovementDelta = (i * a_MoveTestingSteps) * direction;
+            ong::Transform transform = a_rBrickInstanceToTest.GetTransform();
+            transform.p = TheBrick::PuReToOng(a_rBrickInstanceToTest.GetGameObject()->PosToObjectSpace(TheBrick::OngToPuRe(start + *a_pMaxCollisionFreeMovementDelta)));
+            a_rBrickInstanceToTest.SetTransform(transform);
+            bool quit = false;
+            for (size_t t = 0; t < a_rBrickInstanceToTest.m_pCollider.size(); t++)
+            {
+                if (a_rGameObjectToTestAgainst.m_pBody->queryCollider(a_rBrickInstanceToTest.m_pCollider[t]))
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }

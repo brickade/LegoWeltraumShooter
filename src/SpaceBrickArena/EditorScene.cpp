@@ -91,7 +91,7 @@ namespace Editor
         this->m_pWorker->Render();
         sba::Space::Instance()->BrickManager->Render(*sba::Space::Instance()->Renderer);
         this->m_pBrickSupervisor->Render(*a_pApplication->GetGraphics());
-        //this->m_pBrickWorker->DrawDebug(a_pApplication->GetGraphics());
+        this->m_pWorker->DrawDebug(a_pApplication->GetGraphics());
         //Post
         renderer->Set(0, (float)this->textureID, "textureID");
         renderer->Set(0, PuRe_Vector3F(0.2f, 0.2f, 0.2f), "ambient");

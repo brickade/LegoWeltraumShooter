@@ -136,4 +136,32 @@ namespace TheBrick
             }
         }
     }
+
+    // **************************************************************************
+    // **************************************************************************
+    PuRe_Vector3F CGameObject::PosToObjectSpace(const PuRe_Vector3F& a_rWorldSpacePosition) const
+    {
+        return OngToPuRe(ong::invTransformVec3(PuReToOng(a_rWorldSpacePosition), this->GetTransform()));
+    }
+
+    // **************************************************************************
+    // **************************************************************************
+    PuRe_Vector3F CGameObject::DirToObjectSpace(const PuRe_Vector3F& a_rWorldSpaceDir) const
+    {
+        return OngToPuRe(ong::rotate(PuReToOng(a_rWorldSpaceDir), ong::conjugate(this->GetTransform().q)));
+    }
+
+    // **************************************************************************
+    // **************************************************************************
+    PuRe_Vector3F CGameObject::PosToWorldSpace(const PuRe_Vector3F& a_rObjectSpacePosition) const
+    {
+        return OngToPuRe(ong::transformVec3(PuReToOng(a_rObjectSpacePosition), this->GetTransform()));
+    }
+
+    // **************************************************************************
+    // **************************************************************************
+    PuRe_Vector3F CGameObject::DirToWorldSpace(const PuRe_Vector3F& a_rObjectSpaceDir) const
+    {
+        return OngToPuRe(ong::rotate(PuReToOng(a_rObjectSpaceDir), this->GetTransform().q));
+    }
 }

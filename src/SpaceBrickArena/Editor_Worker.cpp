@@ -35,7 +35,7 @@ namespace Editor
     {
         PuRe_GraphicsDescription gdesc = a_pGraphics.GetDescription();
         this->m_pCamera = new CCamera(PuRe_Vector2F((float)gdesc.ResolutionWidth, (float)gdesc.ResolutionHeight), PuRe_Camera_Perspective, this->m_playerIdx);
-        this->m_pCamera->Initialize(PuRe_Vector3F(20, 135, 0), PuRe_Vector3F(-2,0,0));
+        this->m_pCamera->Initialize(PuRe_Vector3F(20, 135, 0), PuRe_Vector3F(-2, 0, 0));
         this->m_currentPosition = PuRe_Vector2F(0, 0);
         this->m_currentHeight = 0;
         this->m_maxBrickDistance = 15;
@@ -90,10 +90,10 @@ namespace Editor
         //Grid
         /*for (int x = -this->m_maxBrickDistance; x < this->m_maxBrickDistance; x++)
         {
-            for (int z = -this->m_maxBrickDistance; z < this->m_maxBrickDistance; z++)
-            {
-                renderer->Draw(this->m_pGridBrick, PuRe_Primitive::Triangles, this->m_pGridMaterial, PuRe_Vector3F(x* TheBrick::CBrick::SEGMENT_WIDTH, 0, z* TheBrick::CBrick::SEGMENT_WIDTH), PuRe_MatrixF::Identity(), PuRe_Vector3F(0.0f, 0.0f, 0.0f), PuRe_Vector3F(1.0f, 1.0f, 1.0f), PuRe_Color(0.7f, 0.2f, 0.2f));
-            }
+        for (int z = -this->m_maxBrickDistance; z < this->m_maxBrickDistance; z++)
+        {
+        renderer->Draw(this->m_pGridBrick, PuRe_Primitive::Triangles, this->m_pGridMaterial, PuRe_Vector3F(x* TheBrick::CBrick::SEGMENT_WIDTH, 0, z* TheBrick::CBrick::SEGMENT_WIDTH), PuRe_MatrixF::Identity(), PuRe_Vector3F(0.0f, 0.0f, 0.0f), PuRe_Vector3F(1.0f, 1.0f, 1.0f), PuRe_Color(0.7f, 0.2f, 0.2f));
+        }
         }*/
     }
 
@@ -165,6 +165,17 @@ namespace Editor
     // **************************************************************************
     void CWorker::UpdateHeight()
     {
+        auto SetHeight = [this](float a_YOrigin, float a_YDelta) //Set Brick Height;
+        {
+            float heightOffset = 0;
+            if (this->m_placeBelow)
+            {
+                heightOffset = -TheBrick::CBrick::SEGMENT_HEIGHT * 3;
+            }
+            this->m_currentHeight = a_YOrigin + a_YDelta + heightOffset;
+        };
+
+
         //Update Placement Direction
         if (sba_Input->ButtonPressed(sba_Button::EditorTogglePlacementSide, this->m_playerIdx))
         {
@@ -172,13 +183,13 @@ namespace Editor
         }
 
         //Set Brick up
-        this->m_currentHeight = this->m_maxBrickDistance;
+        this->m_currentHeight = TheBrick::CBrick::SEGMENT_HEIGHT * 20; //this->m_maxBrickDistance;
         if (this->m_placeBelow)
         {
             this->m_currentHeight *= -1;
         }
         this->ApplyToCurrentBrick();
-        
+
         //Block placing
         this->m_canPlaceHere = false;
 
@@ -195,29 +206,35 @@ namespace Editor
 
         //Get RayCastHit
         ong::RayQueryResult hitResult;
-        if (!CAssistant::GetClosestHitFromBrickInstanceNubs(*this->m_pCurrentBrick, *this->m_pShipWorker->GetCurrentSpaceShip(), nubToCastFromShouldBeMale, nubToCastFromDirection, &hitResult))
+        ong::vec3 hitResultRayOrigin;
+        if (!CAssistant::GetClosestHitFromBrickInstanceNubs(*this->m_pCurrentBrick, *this->m_pShipWorker->GetCurrentSpaceShip(), nubToCastFromShouldBeMale, nubToCastFromDirection, &hitResult, &hitResultRayOrigin))
         { //Nothing hit
             this->m_currentHeight = 0;
             return;
         }
-        
+        ong::vec3 hitDelta = hitResult.point - hitResultRayOrigin;
+
         //Docking Nub Requirements
         ong::vec3 nubRequestedDirection = -nubToCastFromDirection;
         bool nubRequestedGenderIsMale = !nubToCastFromShouldBeMale;
         //Docking test
         if (!CAssistant::CanDockAtHit(hitResult, nubRequestedGenderIsMale, nubRequestedDirection))
         { //Can't dock
+            SetHeight(hitResultRayOrigin.y, hitDelta.y);
+            return;
+        }
+
+        //Check for other Collision
+        ong::vec3 maxCollisionFreeDelta = ong::vec3(0, 0, 0);
+        if (CAssistant::MovementDeltaIsCollisionFree(*this->m_pCurrentBrick, *this->m_pShipWorker->GetCurrentSpaceShip(), hitDelta, TheBrick::CBrick::SEGMENT_HEIGHT, &maxCollisionFreeDelta))
+        {
+            this->m_canPlaceHere = true;
+            this->m_currentHeight = hitResultRayOrigin.y + maxCollisionFreeDelta.y;
             return;
         }
 
         //Handle docking test success
-        this->m_canPlaceHere = true;
-        float heightOffset = 0;
-        if (this->m_placeBelow)
-        {
-            heightOffset = -TheBrick::CBrick::SEGMENT_HEIGHT * 3;
-        }
-        this->m_currentHeight = TheBrick::OngToPuRe(hitResult.point).Y + heightOffset; //Set Brick Height;
+        SetHeight(hitResultRayOrigin.y, hitDelta.y);
         //this->m_currentHeight = this->m_currentHeight - fmod(this->m_currentHeight, TheBrick::CBrick::SEGMENT_HEIGHT); //Snap Height
     }
 
@@ -234,7 +251,7 @@ namespace Editor
         transform.q = ong::Quaternion(ong::vec3(0, 0, 0), 1);
         this->m_pCurrentBrick->SetTransform(transform);
         this->m_pCurrentBrick->RotateAroundPivotOffset(PuRe_QuaternionF(0.0f, this->m_currentBrickRotation, 0.0f));
-//#define ALPHAREADY
+        //#define ALPHAREADY
         if (this->m_canPlaceHere)
         {
 #ifdef ALPHAREADY
@@ -250,14 +267,14 @@ namespace Editor
 #else
             this->m_pCurrentBrick->m_Color = PuRe_Color(1, 0, 0, 1);
 #endif
-        }
+    }
     }
 
     // **************************************************************************
     // **************************************************************************
     void CWorker::UpdatePlacement()
     {
-        
+
         if (sba_Input->ButtonPressed(sba_Button::EditorUndo, this->m_playerIdx))
         { //Undo
             SHistoryStep* step = this->m_pHistory->Undo();
