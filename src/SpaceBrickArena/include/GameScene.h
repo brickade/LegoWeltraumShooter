@@ -40,6 +40,7 @@ namespace Game
         std::vector<PlayOut*> m_PlayOutBuffer;
         long long m_PlayOutTime; 
         //used for networking
+        float m_PhysicTime;
         int m_ID;
         int m_ArrayID;
         int m_PhysicFrame;

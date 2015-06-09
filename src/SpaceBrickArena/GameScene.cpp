@@ -42,6 +42,7 @@ namespace Game
             serializer.Close();
         }
         this->gameStart = true;
+        this->m_PhysicTime = 0.0f;
         sba::Space::Instance()->UpdatePhysics(this->m_pApplication->GetTimer());
 
     }
@@ -149,9 +150,9 @@ namespace Game
 
                     //save into playout
                     if (this->m_PlayOutBuffer.size() == 0)
-                        this->m_PlayOutTime = this->m_pApplication->GetTimer()->GetTotalElapsedMilliseconds() + Delay;
+                        this->m_PlayOutTime = this->m_PhysicTime + (Delay / 1000.0f);
                     else
-                        this->m_PlayOutTime += (1 / 60) * 1000;
+                        this->m_PlayOutTime += (1 / 60);
 
                     int bufferSize = sizeof(InputData)*this->m_Players.size();
                     //Create new playout buffer content and add it
@@ -316,9 +317,9 @@ namespace Game
 
                     //save into playout
                     if (this->m_PlayOutBuffer.size() == 0)
-                        this->m_PlayOutTime = this->m_pApplication->GetTimer()->GetTotalElapsedMilliseconds() + Delay;
+                        this->m_PlayOutTime = this->m_PhysicTime + (Delay/1000.0f);
                     else
-                        this->m_PlayOutTime += (1 / 60) * 1000;
+                        this->m_PlayOutTime += (1 / 60);
 
                     //Create new playout buffer content and add it
                     PlayOut* play = new PlayOut();
@@ -349,9 +350,12 @@ namespace Game
                         }
                             
                     }
-                    if (index > -1&&this->m_PlayOutBuffer[index]->time < a_pApplication->GetTimer()->GetTotalElapsedMilliseconds())
+                    this->m_PhysicTime += a_pApplication->GetTimer()->GetElapsedSeconds();
+                    if (index > -1 && this->m_PlayOutBuffer[index]->time < this->m_PhysicTime)
                     {
-                        std::string  replayText = "Frame: " + std::to_string(this->m_PlayOutBuffer[index]->pInputBuffer[0].Frame) + "\n";
+                        std::string  replayText = "Time: " + std::to_string(this->m_PhysicTime) + "\n";
+                        fwrite(replayText.c_str(), sizeof(char), replayText.length(), this->replay);
+                        replayText = "Frame: " + std::to_string(this->m_PlayOutBuffer[index]->pInputBuffer[0].Frame) + "\n";
                         fwrite(replayText.c_str(), sizeof(char), replayText.length(), this->replay);
                         replayText = "ID Shoot Thrust MoveX MoveY Spin\n";
                         fwrite(replayText.c_str(), sizeof(char), replayText.length(), this->replay);
