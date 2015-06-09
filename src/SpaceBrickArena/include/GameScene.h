@@ -17,9 +17,14 @@
 // Declare namespace Game
 namespace Game
 {
+    struct PlayOut
+    {
+        InputData* pInputBuffer; //all inputs
+        long long time; //time when this is played
+    };
     struct Player
     {
-        int ID;
+        unsigned char ID;
         SOCKADDR_IN NetworkInformation;
         TheBrick::CSpaceship* Ship;
     };
@@ -28,15 +33,23 @@ namespace Game
     class CGameScene : public PuRe_IScene
     {
     private:
-        int m_TextureID;
+        FILE* replay;
+        //Host only
+        InputData* m_pInputBuffer;
+        //All players
+        std::vector<PlayOut*> m_PlayOutBuffer;
+        long long m_PlayOutTime; 
         //used for networking
         int m_ID;
         int m_ArrayID;
+        int m_PhysicFrame;
         //multiple players
         std::vector<Player*> m_Players;
         std::vector<CGameCamera*> m_Cameras;
+        PuRe_Camera* m_pUICam;
         //whether we are still in menu or not
         bool gameStart;
+        int m_TextureID;
         CNetworkHandler* m_pNetwork;
 
         PuRe_Font* m_pFont;

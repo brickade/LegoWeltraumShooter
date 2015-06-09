@@ -9,6 +9,18 @@
 // Declare namespace Game
 namespace Game
 {
+    enum { MaxPlayers = 10, Delay = 100 };
+    struct InputData
+    {
+        unsigned int Frame;
+        unsigned char Player;
+        bool Shoot;
+        bool Thrust;
+        unsigned char Spin;
+        unsigned char MoveX;
+        unsigned char MoveY;
+
+    };
     /// @brief HeaderPacket, used to tell which Packet we got
     ///
     struct HeadPacket
@@ -32,29 +44,21 @@ namespace Game
         int Who;
     };
 
-    /// @brief Base Packet for Inputs
+    /// @brief Packet for Inputs
     ///
-    struct InputBasePacket
+    struct InputPacket
     {
         HeadPacket Head;
-        int Who;
-        int Input;
+        InputData Input;
     };
 
-    /// @brief Base Packet for Movement Input
+    /// @brief Packet for all Inputs
     ///
-    struct MovePacket
+    struct InputsPacket
     {
-        InputBasePacket InputBase;
-        PuRe_Vector2F Move;
-    };
-
-    /// @brief Base Packet for Movement Input
-    ///
-    struct ThrustPacket
-    {
-        InputBasePacket InputBase;
-        float Thrust;
+        HeadPacket Head;
+        int Players;
+        InputData Input[MaxPlayers]; //we send 
     };
 
 

@@ -1,0 +1,9024 @@
+Frame: 0
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 3
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 4
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 5
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 6
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 7
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 8
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 9
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 10
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 11
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 12
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 13
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 14
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 15
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 16
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 17
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 18
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 19
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 20
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 21
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 22
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 23
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 24
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 25
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 26
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 27
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 28
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 29
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 30
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 31
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 32
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 33
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 34
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 35
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 36
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 37
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 38
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 39
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 40
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 41
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 42
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 43
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 44
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 45
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 46
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 47
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 48
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 49
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 50
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 51
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 52
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 53
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 54
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 55
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 56
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 57
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 58
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 59
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 60
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 61
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 62
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 63
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 64
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 65
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 66
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 67
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 68
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 69
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 70
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 71
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 72
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 73
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 74
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 75
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 76
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 77
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 78
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 79
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 80
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 81
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 82
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 83
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 84
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 85
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 86
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 87
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 88
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 89
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 90
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 91
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 92
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 93
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 94
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 95
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 96
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 97
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 98
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 99
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 100
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 101
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 102
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 103
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 104
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 105
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 106
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 107
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 108
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 109
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 110
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 111
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 112
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 113
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 114
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 115
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 116
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 117
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 118
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 119
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 120
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 121
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 122
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 123
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 124
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 125
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 126
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 127
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 128
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 129
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 130
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 131
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 132
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 133
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 134
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 135
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 136
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 137
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 138
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 139
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 140
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 141
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 142
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 143
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 144
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 145
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 146
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 147
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 2 0 
+Frame: 148
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 2 0 
+Frame: 149
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 2 0 
+Frame: 150
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 2 0 
+Frame: 151
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 2 0 
+Frame: 152
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 2 0 
+Frame: 153
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 2 0 
+Frame: 154
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 2 0 
+Frame: 155
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 2 0 
+Frame: 156
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 2 0 
+Frame: 157
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 2 0 
+Frame: 158
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 2 0 
+Frame: 159
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 2 0 
+Frame: 160
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 2 0 
+Frame: 161
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 2 0 
+Frame: 162
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 2 0 
+Frame: 163
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 2 0 
+Frame: 164
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 2 0 
+Frame: 165
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 2 0 
+Frame: 166
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 2 0 
+Frame: 167
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 2 0 
+Frame: 168
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 169
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 170
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 171
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 172
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 173
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 174
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 175
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 176
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 177
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 178
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 179
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 180
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 181
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 182
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 183
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 184
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 185
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 186
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 187
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 188
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 189
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 190
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 191
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 192
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 2 2 0 
+Frame: 193
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 2 2 0 
+Frame: 194
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 2 2 0 
+Frame: 195
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 2 2 0 
+Frame: 196
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 2 2 0 
+Frame: 197
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 2 2 0 
+Frame: 198
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 2 2 0 
+Frame: 199
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 2 2 0 
+Frame: 200
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 2 2 0 
+Frame: 201
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 2 0 0 
+Frame: 202
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 203
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 204
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 205
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 206
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 207
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 208
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 209
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 210
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 211
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 212
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 213
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 214
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 215
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 216
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 217
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 218
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 219
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 220
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 221
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 222
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 1 0 
+Frame: 223
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 1 0 
+Frame: 224
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 1 0 
+Frame: 225
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 1 0 
+Frame: 226
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 1 0 
+Frame: 227
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 1 0 
+Frame: 228
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 1 0 
+Frame: 229
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 1 0 
+Frame: 230
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 1 0 
+Frame: 231
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 1 0 
+Frame: 232
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 1 0 
+Frame: 233
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 1 0 
+Frame: 234
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 1 0 
+Frame: 235
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 1 0 
+Frame: 236
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 1 0 
+Frame: 237
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 1 0 
+Frame: 238
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 1 0 
+Frame: 239
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 1 0 
+Frame: 240
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 1 0 
+Frame: 241
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 1 0 
+Frame: 242
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 1 0 
+Frame: 243
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 1 0 
+Frame: 244
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 1 0 
+Frame: 245
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 1 0 
+Frame: 246
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 1 0 
+Frame: 247
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 1 0 
+Frame: 248
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 249
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 250
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 251
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 252
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 253
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 254
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 255
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 256
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 257
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 258
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 259
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 260
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 261
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 262
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 263
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 264
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 265
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 266
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 267
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 268
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 269
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 270
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 271
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 272
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 273
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 274
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 275
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 276
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 277
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 278
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 279
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 280
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 281
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 282
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 283
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 284
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 285
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 286
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 287
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 288
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 289
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 290
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 291
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 292
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 293
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 294
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 295
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 296
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 297
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 298
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 299
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 300
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 301
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 302
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 303
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 304
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 305
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 306
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 307
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 308
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 309
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 310
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 311
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 312
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 313
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 314
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 315
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 316
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 317
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 318
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 319
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 320
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 321
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 322
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 323
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 324
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 325
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 326
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 327
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 328
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 329
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 330
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 331
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 332
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 333
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 334
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 335
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 336
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 337
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 338
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 339
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 340
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 341
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 342
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 343
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 344
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 345
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 346
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 347
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 348
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 349
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 350
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 351
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 352
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 353
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 354
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 355
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 356
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 357
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 358
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 359
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 360
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 361
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 362
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 363
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 364
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 365
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 366
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 367
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 368
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 369
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 370
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 371
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 372
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 373
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 374
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 375
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 376
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 377
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 378
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 379
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 380
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 381
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 382
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 383
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 384
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 385
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 386
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 387
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 388
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 389
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 390
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 391
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 392
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 393
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 394
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 395
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 396
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 397
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 398
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 399
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 400
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 401
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 402
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 403
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 404
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 405
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 406
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 407
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 408
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 409
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 410
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 411
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 412
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 413
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 414
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 415
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 416
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 417
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 418
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 419
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 420
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 421
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 422
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 423
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 424
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 425
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 426
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 427
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 428
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 429
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 1 0 
+Frame: 430
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 1 0 
+Frame: 431
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 1 0 
+Frame: 432
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 1 0 
+Frame: 433
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 1 0 
+Frame: 434
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 1 0 
+Frame: 435
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 1 0 
+Frame: 436
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 1 0 
+Frame: 437
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 1 0 
+Frame: 438
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 1 0 
+Frame: 439
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 1 0 
+Frame: 440
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 1 0 
+Frame: 441
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 442
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 443
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 444
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 445
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 446
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 447
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 448
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 449
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 450
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 451
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 452
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 453
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 454
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 455
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 456
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 457
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 458
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 459
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 460
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 461
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 462
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 463
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 464
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 465
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 466
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 467
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 468
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 469
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 470
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 471
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 2 0 0 
+Frame: 472
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 2 0 0 
+Frame: 473
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 2 0 0 
+Frame: 474
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 2 0 0 
+Frame: 475
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 2 0 0 
+Frame: 476
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 2 0 0 
+Frame: 477
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 2 0 0 
+Frame: 478
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 2 0 0 
+Frame: 479
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 2 0 0 
+Frame: 480
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 2 0 0 
+Frame: 481
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 2 0 0 
+Frame: 482
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 2 0 0 
+Frame: 483
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 2 0 0 
+Frame: 484
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 2 0 0 
+Frame: 485
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 2 0 0 
+Frame: 486
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 2 0 0 
+Frame: 487
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 2 0 0 
+Frame: 488
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 2 0 0 
+Frame: 489
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 2 0 0 
+Frame: 490
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 2 0 0 
+Frame: 491
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 2 0 0 
+Frame: 492
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 2 0 0 
+Frame: 493
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 2 0 0 
+Frame: 494
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 2 0 0 
+Frame: 495
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 2 0 0 
+Frame: 496
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 2 0 0 
+Frame: 497
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 2 0 0 
+Frame: 498
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 2 0 0 
+Frame: 499
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 2 0 0 
+Frame: 500
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 2 0 0 
+Frame: 501
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 2 0 0 
+Frame: 502
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 503
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 504
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 505
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 506
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 507
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 508
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 509
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 510
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 511
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 512
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 513
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 514
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 515
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 516
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 517
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 518
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 519
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 520
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 521
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 522
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 523
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 524
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 525
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 526
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 527
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 528
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 529
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 530
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 531
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 532
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 533
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 534
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 535
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 536
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 537
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 538
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 539
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 540
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 541
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 542
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 543
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 544
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 545
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 546
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 547
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 548
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 549
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 550
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 551
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 552
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 553
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 554
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 555
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 556
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 557
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 558
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 559
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 560
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 561
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 562
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 563
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 564
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 565
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 566
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 567
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 568
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 569
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 570
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 571
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 572
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 573
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 574
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 575
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 576
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 577
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 578
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 579
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 580
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 581
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 582
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 583
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 584
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 585
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 586
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 587
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 588
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 589
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 590
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 591
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 592
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 593
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 594
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 595
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 596
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 597
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 598
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 599
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 600
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 601
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 602
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 603
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 604
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 605
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 606
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 607
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 608
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 609
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 610
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 611
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 612
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 613
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 614
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 615
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 616
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 617
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 618
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 619
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 620
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 621
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 622
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 623
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 624
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 625
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 626
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 627
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 628
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 629
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 630
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 631
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 632
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 633
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 634
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 635
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 636
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 637
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 638
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 639
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 640
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 641
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 642
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 643
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 644
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 645
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 646
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 647
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 648
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 649
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 650
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 651
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 652
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 653
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 654
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 655
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 656
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 657
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 658
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 659
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 660
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 661
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 662
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 663
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 664
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 665
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 666
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 667
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 668
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 669
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 670
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 671
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 672
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 673
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 674
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 675
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 676
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 677
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 678
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 679
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 680
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 681
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 682
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 683
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 684
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 685
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 686
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 687
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 688
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 689
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 690
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 691
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 692
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 693
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 694
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 695
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 696
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 697
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 698
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 699
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 700
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 701
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 702
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 703
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 704
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 705
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 706
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 707
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 708
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 709
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 710
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 711
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 712
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 713
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 714
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 715
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 716
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 717
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 718
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 719
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 720
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 721
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 722
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 723
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 724
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 725
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 726
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 727
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 728
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 729
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 730
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 731
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 732
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 733
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 734
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 735
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 736
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 737
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 738
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 739
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 740
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 741
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 742
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 743
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 744
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 745
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 746
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 747
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 748
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 749
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 750
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 751
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 752
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 753
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 754
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 755
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 756
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 757
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 758
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 759
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 760
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 761
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 762
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 763
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 764
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 765
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 766
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 767
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 768
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 769
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 770
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 771
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 772
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 773
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 774
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 775
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 776
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 777
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 778
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 779
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 780
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 781
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 782
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 783
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 784
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 785
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 786
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 787
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 788
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 789
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 790
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 791
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 792
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 793
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 794
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 795
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 796
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 797
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 798
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 799
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 800
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 801
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 802
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 803
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 804
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 805
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 806
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 807
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 808
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 809
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 810
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 811
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 812
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 813
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 1 0 
+Frame: 814
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 1 0 
+Frame: 815
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 1 0 
+Frame: 816
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 1 0 
+Frame: 817
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 1 0 
+Frame: 818
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 1 0 
+Frame: 819
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 1 0 
+Frame: 820
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 1 0 
+Frame: 821
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 1 0 
+Frame: 822
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 1 0 
+Frame: 823
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 1 0 
+Frame: 824
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 1 0 
+Frame: 825
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 1 0 
+Frame: 826
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 1 0 
+Frame: 827
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 1 0 
+Frame: 828
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 1 0 
+Frame: 829
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 1 0 
+Frame: 830
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 831
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 832
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 833
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 834
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 835
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 836
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 837
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 838
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 839
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 840
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 841
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 842
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 843
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 844
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 845
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 846
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 847
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 848
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 849
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 850
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 851
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 852
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 853
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 854
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 855
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 856
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 857
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 858
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 859
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 860
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 861
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 862
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 863
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 864
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 865
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 866
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 867
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 868
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 869
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 870
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 871
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 872
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 873
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 874
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 875
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 876
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 877
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 878
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 879
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 880
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 881
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 882
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 883
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 884
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 885
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 886
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 887
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 888
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 889
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 890
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 891
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 892
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 893
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 894
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 895
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 896
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 897
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 898
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 899
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 900
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 901
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 902
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 903
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 904
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 905
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 906
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 907
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 908
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 909
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 910
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 911
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 912
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 913
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 914
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 915
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 916
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 917
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 918
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 919
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 920
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 921
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 922
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 923
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 924
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 925
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 926
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 927
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 928
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 929
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 930
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 931
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 932
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 933
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 934
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 935
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 936
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 937
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 938
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 939
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 940
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 941
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 942
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 943
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 944
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 945
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 946
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 947
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 948
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 949
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 950
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 951
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 952
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 953
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 954
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 955
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 956
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 957
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 958
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 959
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 960
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 961
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 962
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 963
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 964
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 965
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 966
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 967
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 968
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 969
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 970
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 971
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 972
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 973
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 974
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 975
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 976
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 977
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 978
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 979
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 980
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 981
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 982
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 983
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 984
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 985
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 986
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 987
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 988
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 989
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 990
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 991
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 992
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 993
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 994
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 995
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 996
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 997
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 998
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 999
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1000
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1001
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1002
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1003
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1004
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1005
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1006
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1007
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1008
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1009
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1010
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1011
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1012
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1013
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1014
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1015
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1016
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1017
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1018
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1019
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1020
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1021
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1022
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1023
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1024
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1025
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1026
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1027
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1028
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1029
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1030
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1031
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1032
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1033
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1034
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1035
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1036
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1037
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1038
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1039
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1040
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1041
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1042
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1043
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1044
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1045
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1046
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1047
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1048
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1049
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1050
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1051
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1052
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1053
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1054
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1055
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1056
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1057
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1058
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1059
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1060
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1061
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1062
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1063
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1064
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1065
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1066
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1067
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 1068
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 1069
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 1070
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 1071
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 1072
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 1073
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 1074
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 1075
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 1076
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 1077
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 1078
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 1079
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 1080
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 1081
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 1082
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 1083
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 1084
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 1085
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 1086
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 1087
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 1088
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 1089
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 1090
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 1091
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1092
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1093
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1094
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1095
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1096
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1097
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1098
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1099
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1100
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1101
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1102
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1103
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1104
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1105
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1106
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1107
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1108
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1109
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1110
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1111
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1112
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1113
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1114
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1115
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1116
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1117
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1118
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1119
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1120
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1121
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1122
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1123
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1124
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1125
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1126
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1127
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1128
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1129
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1130
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1131
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1132
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1133
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1134
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1135
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1136
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1137
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1138
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1139
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1140
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1141
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1142
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1143
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1144
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1145
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1146
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1147
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1148
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1149
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1150
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1151
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1152
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1153
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1154
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1155
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1156
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1157
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1158
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1159
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1160
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1161
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1162
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1163
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1164
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1165
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1166
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1167
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1168
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1169
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1170
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1171
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1172
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1173
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1174
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 1175
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 1176
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 1177
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 1178
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 1179
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 1180
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1181
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1182
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1183
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1184
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1185
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1186
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1187
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1188
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1189
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1190
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1191
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1192
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1193
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1194
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1195
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1196
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1197
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1198
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1199
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1200
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1201
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1202
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1203
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1204
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1205
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1206
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1207
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1208
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1209
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1210
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1211
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1212
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1213
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1214
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1215
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1216
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1217
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1218
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1219
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1220
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1221
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1222
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1223
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1224
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1225
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1226
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1227
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1228
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1229
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1230
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1231
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1232
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1233
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1234
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1235
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1236
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1237
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1238
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1239
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1240
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1241
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1242
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1243
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1244
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1245
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1246
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1247
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1248
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1249
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1250
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1251
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1252
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 2 0 0 
+Frame: 1253
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 2 0 0 
+Frame: 1254
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 2 0 0 
+Frame: 1255
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 2 0 0 
+Frame: 1256
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 2 0 0 
+Frame: 1257
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 2 0 0 
+Frame: 1258
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 2 0 0 
+Frame: 1259
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 2 0 0 
+Frame: 1260
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 2 0 0 
+Frame: 1261
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 2 0 0 
+Frame: 1262
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 2 0 0 
+Frame: 1263
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 2 0 0 
+Frame: 1264
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 2 0 0 
+Frame: 1265
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 2 0 0 
+Frame: 1266
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 2 0 0 
+Frame: 1267
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 2 0 0 
+Frame: 1268
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 2 0 0 
+Frame: 1269
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1270
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1271
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1272
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1273
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1274
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1275
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1276
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1277
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1278
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1279
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1280
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1281
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1282
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1283
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1284
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1285
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1286
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1287
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1288
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1289
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1290
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1291
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1292
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1293
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1294
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1295
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1296
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1297
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 2 0 
+Frame: 1298
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 1299
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 1300
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 1301
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 1302
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 1303
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 1304
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 1305
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 1306
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 1307
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 1308
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 1309
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 1310
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 1311
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 1312
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 1313
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 1314
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 1315
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 2 0 
+Frame: 1316
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1317
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1318
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1319
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1320
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1321
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1322
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1323
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1324
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1325
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1326
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1327
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1328
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1329
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1330
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1331
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1332
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1333
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1334
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1335
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1336
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1337
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1338
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1339
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1340
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1341
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1342
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1343
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1344
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1345
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1346
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1347
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1348
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1349
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1350
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1351
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1352
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1353
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1354
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1355
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1356
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1357
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1358
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1359
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1360
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1361
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1362
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1363
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1364
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1365
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1366
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1367
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1368
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1369
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1370
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1371
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1372
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1373
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1374
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1375
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1376
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1377
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1378
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1379
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1380
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1381
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1382
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1383
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1384
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1385
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1386
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1387
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1388
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1389
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1390
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1391
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1392
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1393
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1394
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1395
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1396
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1397
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1398
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1399
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1400
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1401
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1402
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1403
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1404
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1405
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1406
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1407
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 1 0 0 
+Frame: 1408
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1409
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1410
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1411
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1412
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1413
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1414
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1415
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1416
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1417
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1418
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1419
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1420
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1421
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1422
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1423
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1424
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1425
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1426
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1427
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1428
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1429
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1430
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1431
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1432
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1433
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1434
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1435
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1436
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1437
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1438
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1439
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1440
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1441
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1442
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1443
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1444
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1445
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1446
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1447
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1448
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1449
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1450
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1451
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1452
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1453
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1454
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1455
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1456
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1457
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1458
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1459
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1460
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1461
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1462
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1463
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1464
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1465
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1466
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1467
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1468
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1469
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1470
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1471
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1472
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1473
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1474
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1475
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1476
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1477
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1478
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1479
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1480
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1481
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1482
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1483
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1484
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1485
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1486
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1487
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1488
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1489
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1490
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1491
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1492
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1493
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1494
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1495
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1496
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1497
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1498
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1499
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1500
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1501
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1502
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1503
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1504
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1505
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1506
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1507
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1508
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1509
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1510
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1511
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1512
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1513
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1514
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1515
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1516
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1517
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1518
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1519
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1520
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1521
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1522
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1523
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1524
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1525
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1526
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1527
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1528
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1529
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1530
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1531
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1532
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1533
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1534
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1535
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1536
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1537
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1538
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1539
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1540
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1541
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1542
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1543
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1544
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1545
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1546
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1547
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1548
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1549
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1550
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1551
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1552
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1553
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1554
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1555
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1556
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1557
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1558
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1559
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1560
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1561
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1562
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1563
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1564
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1565
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1566
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1567
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1568
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1569
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1570
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1571
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1572
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1573
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1574
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1575
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1576
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1577
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1578
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1579
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1580
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1581
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1582
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1583
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1584
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1585
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1586
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1587
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1588
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1589
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1590
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1591
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1592
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1593
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1594
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1595
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1596
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1597
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1598
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1599
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1600
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1601
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1602
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1603
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1604
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1605
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1606
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1607
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1608
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1609
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1610
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1611
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1612
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1613
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1614
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1615
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1616
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1617
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1618
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1619
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1620
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1621
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1622
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1623
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1624
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1625
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1626
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1627
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1628
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1629
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1630
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1631
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1632
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1633
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1634
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1635
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1636
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1637
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1638
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1639
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1640
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1641
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1642
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1643
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1644
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1645
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1646
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1647
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1648
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1649
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1650
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1651
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1652
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1653
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1654
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1655
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1656
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1657
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1658
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1659
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1660
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1661
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1662
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1663
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1664
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1665
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1666
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1667
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1668
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1669
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1670
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1671
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1672
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1673
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1674
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1675
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1676
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1677
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1678
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1679
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1680
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1681
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1682
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1683
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1684
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1685
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1686
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1687
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1688
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1689
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1690
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1691
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1692
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1693
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1694
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1695
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1696
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1697
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1698
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1699
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1700
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1701
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1702
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1703
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1704
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1705
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1706
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1707
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1708
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1709
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1710
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1711
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1712
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1713
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1714
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 2 0 
+Frame: 1715
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 2 0 
+Frame: 1716
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 2 0 
+Frame: 1717
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 2 0 
+Frame: 1718
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 2 0 
+Frame: 1719
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 2 0 
+Frame: 1720
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1721
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1722
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1723
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1724
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1725
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1726
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1727
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1728
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1729
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1730
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1731
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1732
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1733
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 0 0 
+Frame: 1734
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1735
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1736
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1737
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1738
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1739
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1740
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1741
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1742
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1743
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1744
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1745
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1746
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1747
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1748
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1749
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1750
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1751
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 2 0 
+Frame: 1752
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 2 0 
+Frame: 1753
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 2 0 
+Frame: 1754
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 2 0 
+Frame: 1755
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 2 0 
+Frame: 1756
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 2 0 
+Frame: 1757
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 2 0 
+Frame: 1758
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 2 0 
+Frame: 1759
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 2 0 
+Frame: 1760
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 2 0 
+Frame: 1761
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 2 0 
+Frame: 1762
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 2 0 
+Frame: 1763
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 2 0 
+Frame: 1764
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 2 0 
+Frame: 1765
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 2 0 
+Frame: 1766
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 2 0 
+Frame: 1767
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 2 0 
+Frame: 1768
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 1 2 0 
+Frame: 1769
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 2 0 
+Frame: 1770
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1771
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1772
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1773
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1774
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1775
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1776
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1777
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1778
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1779
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1780
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1781
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1782
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1783
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1784
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1785
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1786
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1787
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1788
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1789
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1790
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1791
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1792
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1793
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1794
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1795
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1796
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1797
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1798
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1799
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1800
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1801
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1802
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1803
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1804
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1805
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1806
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1807
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1808
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1809
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1810
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1811
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1812
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1813
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1814
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1815
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1816
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1817
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1818
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1819
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1820
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1821
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1822
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1823
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1824
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1825
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1826
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1827
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1828
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1829
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1830
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1831
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1832
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1833
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1834
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1835
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1836
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1837
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1838
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1839
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1840
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1841
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1842
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1843
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1844
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1845
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1846
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1847
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1848
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1849
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1850
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1851
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1852
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1853
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1854
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1855
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1856
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1857
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1858
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1859
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1860
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1861
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1862
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1863
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1864
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1865
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1866
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1867
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1868
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1869
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1870
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1871
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1872
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1873
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1874
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1875
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1876
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1877
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1878
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1879
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1880
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1881
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1882
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1883
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1884
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1885
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1886
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1887
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1888
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1889
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1890
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1891
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1892
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1893
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1894
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1895
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1896
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1897
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1898
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1899
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1900
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1901
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1902
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1903
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1904
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1905
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1906
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1907
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1908
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1909
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1910
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1911
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1912
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1913
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1914
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1915
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1916
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1917
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1918
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1919
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1920
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1921
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 1922
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1923
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1924
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1925
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1926
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1927
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1928
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1929
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1930
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1931
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1932
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1933
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1934
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1935
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1936
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1937
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1938
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1939
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1940
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1941
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1942
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1943
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1944
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1945
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1946
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1947
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1948
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1949
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1950
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1951
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1952
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1953
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1954
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1955
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1956
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1957
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1958
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1959
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1960
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1961
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1962
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1963
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1964
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1965
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1966
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1967
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1968
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1969
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1970
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1971
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1972
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1973
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1974
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1975
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1976
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1977
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1978
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1979
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1980
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1981
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1982
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1983
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1984
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1985
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1986
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1987
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1988
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1989
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1990
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1991
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1992
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1993
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1994
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1995
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1996
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1997
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1998
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 1999
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 2000
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 2001
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 2002
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 2003
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 2004
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 2005
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 2006
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 2007
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 2008
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 2009
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 2010
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 2011
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 2012
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 2013
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 2014
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 2015
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 2016
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 2017
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 2018
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 2019
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 2020
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 2021
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 2022
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 2023
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 2024
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 2025
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 2026
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 2027
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 1 0 0 0 
+Frame: 2028
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2029
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2030
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2031
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2032
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2033
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2034
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2035
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2036
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2037
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2038
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2039
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2040
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2041
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2042
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2043
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2044
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2045
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2046
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2047
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2048
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2049
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2050
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2051
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2052
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2053
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2054
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2055
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2056
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2057
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2058
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2059
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2060
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2061
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2062
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2063
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2064
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2065
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2066
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2067
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2068
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2069
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2070
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2071
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2072
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2073
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2074
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2075
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2076
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2077
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2078
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2079
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2080
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2081
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2082
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2083
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2084
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2085
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2086
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2087
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2088
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2089
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2090
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2091
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2092
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2093
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2094
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2095
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2096
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2097
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2098
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2099
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2100
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2101
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2102
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2103
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2104
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2105
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2106
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2107
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2108
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2109
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2110
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2111
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2112
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2113
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2114
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2115
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2116
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2117
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2118
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2119
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2120
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2121
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2122
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2123
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2124
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2125
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2126
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2127
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2128
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2129
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2130
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2131
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2132
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2133
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2134
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2135
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2136
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2137
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2138
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2139
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2140
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2141
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2142
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2143
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2144
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2145
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2146
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2147
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2148
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2149
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2150
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2151
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2152
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2153
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2154
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2155
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2156
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2157
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2158
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2159
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2160
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2161
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2162
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2163
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2164
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2165
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2166
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2167
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2168
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2169
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2170
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2171
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2172
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2173
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2174
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2175
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2176
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2177
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2178
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2179
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2180
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2181
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2182
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2183
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2184
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2185
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2186
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2187
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2188
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2189
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2190
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2191
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2192
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2193
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2194
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2195
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2196
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2197
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2198
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2199
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2200
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2201
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2202
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2203
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2204
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2205
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2206
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2207
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2208
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2209
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2210
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2211
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2212
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2213
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2214
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2215
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2216
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2217
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2218
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2219
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2220
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2221
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2222
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2223
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2224
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2225
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2226
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2227
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2228
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2229
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2230
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2231
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2232
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2233
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2234
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2235
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2236
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2237
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2238
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2239
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2240
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2241
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2242
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2243
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2244
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2245
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2246
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2247
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2248
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2249
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2250
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2251
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2252
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2253
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2254
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 
+Frame: 2255
+ID Shoot Thrust MoveX MoveY Spin
+0 0 0 0 0 0 
+1 0 0 0 0 0 

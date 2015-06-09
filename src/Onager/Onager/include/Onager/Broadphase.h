@@ -29,7 +29,7 @@ namespace ong
 	class HGrid
 	{
 	public:
-		static const int MAX_LEVELS = 20;
+		static const int MAX_LEVELS = 100;
 		static const int NUM_BUCKETS = 1024; //todo test for good number
 		static const float MIN_CELL_SIZE;
 		static const float CELL_TO_CELL_RATIO;
