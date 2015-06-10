@@ -661,19 +661,22 @@ namespace ong
 		m_tick++;
 		collide(pair->A, pair->B);
 		
+		// update contacts
 		for (int i = 0; i < m_contacts.size(); ++i)
 		{
 			if ((m_contacts[i]->colliderA->getBody() == pair->A && m_contacts[i]->colliderB->getBody() == pair->B) ||
-				(m_contacts[i]->colliderB->getBody() == pair->A && m_contacts[i]->colliderA->getBody() == pair->B) &&
-				m_contacts[i]->tick != m_tick)
+				(m_contacts[i]->colliderB->getBody() == pair->A && m_contacts[i]->colliderA->getBody() == pair->B))
 			{
-				removeContact(i);
-				--i;
-			}
-			else
-			{
-				m_contacts[i]->colliderA->callbackPreSolve(m_contacts[i]);
-				m_contacts[i]->colliderB->callbackPreSolve(m_contacts[i]);
+				if (m_contacts[i]->tick != m_tick)
+				{
+					removeContact(i);
+					--i;
+				}
+				else
+				{
+					m_contacts[i]->colliderA->callbackPreSolve(m_contacts[i]);
+					m_contacts[i]->colliderB->callbackPreSolve(m_contacts[i]);
+				}
 			}
 		}
 

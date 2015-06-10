@@ -8,7 +8,7 @@ namespace ong
 {
 
 	//todo maybe use different end condition
-	float getTimeOfImpact(Body* a, Body* b, ContinuousState* cpS)
+	float getTimeOfImpact(Body* a, Body* b, ContinuousState* cpS, float tmin)
 	{
 		static const float MIN_INTERVAL = 0;
 
@@ -22,7 +22,7 @@ namespace ong
 		//  time of impact
 		//
 
-		float t0 = 0.0f;
+		float t0 = tmin;
 		float t1 = 1.0f;
 		
 		
@@ -38,12 +38,11 @@ namespace ong
 		vec3 v = vec3(0,0,0);
 
 		if (a->getContinuousPhysics())
-			v += cpS[a->getCpIndex()].v;
+			v += cpS[a->getCpIndex()].p1 - cpS[a->getCpIndex()].p0;
 		if (b->getContinuousPhysics())
-			v -= cpS[b->getCpIndex()].v;
+			v -= cpS[b->getCpIndex()].p1 - cpS[b->getCpIndex()].p0;
 		
 		float absV = length(v);
-
 
 		//broad		
 		{
@@ -54,11 +53,6 @@ namespace ong
 				//no collision 
 				return 1.0f;
 			}
-			//if (t0 == 0.0f)
-			//{ 
-			//	t0 = 0.0f;
-			//	t1 = 1.0f;
-			//}
 		}
 
 		//narrow
@@ -67,6 +61,7 @@ namespace ong
 		while (numHits < MAX_HITS)
 		{
 			float t = 0.5f *(t0 + t1);
+
 			if (overlap(a, b, Transform(t*v, Quaternion(vec3(0, 0, 0), 1))))
 			{
 				++numHits;

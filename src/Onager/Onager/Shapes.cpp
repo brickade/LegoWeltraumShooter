@@ -932,8 +932,8 @@ namespace ong
 			return false;
 		float root = sqrt(d);
 
-		t0 = ong_MAX((-b - root) / a, 0.0f);
-		t1 = ong_MIN((-b + root) / a, 1.0f);
+		t0 = ong_MAX((-b - root) / a, t0);
+		t1 = ong_MIN((-b + root) / a, t1);
 		return true;
 
 	}

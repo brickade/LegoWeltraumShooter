@@ -170,8 +170,10 @@ namespace ong
 
 		if (m_flags & CP)
 		{
+			m_cpAABB.c = m_pWorld->m_cp[m_cpIndex].p0;
 			AABB end = m_cpAABB;
-			end.c += dt*m_pWorld->m_v[m_index].v;
+			//end.c += dt*m_pWorld->m_v[m_index].v;
+			end.c = m_pWorld->m_cp[m_cpIndex].p1;
 			mergeAABBAABB(&m_cpAABB, &end);
 		}
 
@@ -635,7 +637,7 @@ namespace ong
 			if (overlap(a->getCollider()->getAABB(), b->getCollider()->getAABB(), t.p, rot))
 			{
 				return (overlap(a->getCollider()->getShape(), b->getCollider()->getShape(),
-					transformTransform(a->getCollider()->getTransform(), transformA), transformTransform(b->getCollider()->getTransform(), transformB)));
+					transformTransform(a->getCollider()->getTransform(), ta), transformTransform(b->getCollider()->getTransform(), tb)));
 			}
 		}
 

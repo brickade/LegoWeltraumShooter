@@ -9,5 +9,5 @@ namespace ong
 	struct ContinuousState;
 
 
-	float getTimeOfImpact(Body* a, Body* b, ContinuousState* cpS);
+	float getTimeOfImpact(Body* a, Body* b, ContinuousState* cpS, float tmin);
 }

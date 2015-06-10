@@ -591,7 +591,6 @@ namespace Content
 			cDescr.shape = shape;
 			cDescr.material = g_pMaterial;
 			cDescr.transform = ong::Transform(ong::vec3(0, 0, 0), ong::Quaternion(ong::vec3(0, 0, 0), 1));
-
 			ong::Collider* pCollider = m_World.createCollider(cDescr);
 
 			m_pBody->addCollider(pCollider);

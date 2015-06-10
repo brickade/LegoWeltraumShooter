@@ -31,9 +31,10 @@ namespace ong
 	{
 		int idx = body->getIndex();
 		int cpIdx = body->getCpIndex();
-		world->m_r[idx].p = world->m_cp[cpIdx].p0 + (t - world->m_cp[cpIdx].t) * world->m_cp[cpIdx].v;
+		// (p1-p0) / (t1-t0) * (t2-t)
+		world->m_cp[cpIdx].p0 += (t - world->m_cp[cpIdx].t) / (1.0f - world->m_cp[cpIdx].t) * (world->m_cp[cpIdx].p1 - world->m_cp[cpIdx].p0);
 		world->m_cp[cpIdx].t = t;
-		world->m_cp[cpIdx].p0 = world->m_r[idx].p;
+		world->m_r[idx].p = world->m_cp[cpIdx].p0;
 	}
 
 
@@ -62,7 +63,7 @@ namespace ong
 		{
 			m_cp[i].t = 0.0f;
 			m_cp[i].p0 = m_r[m_cp[i].bodyIdx].p;
-			m_cp[i].v = dt * m_v[m_cp[i].bodyIdx].v;
+			m_cp[i].p1 = m_cp[i].p0 + dt * m_v[m_cp[i].bodyIdx].v;
 		}
 
 		Body* b = m_pBody;
@@ -141,8 +142,6 @@ namespace ong
 		//---solve continuous contacts---
 		{
 
-
-
 			// find pairs with continous physics
 			Pair* cPairs = new Pair[numPairs];
 			int numCPairs = 0;
@@ -150,6 +149,15 @@ namespace ong
 			{
 				if (pairs[i].A->getContinuousPhysics() || pairs[i].B->getContinuousPhysics())
 				{
+					if (pairs[i].A->getContinuousPhysics())
+					{
+						advanceCpBody(this, pairs[i].A, 0.0f);
+					}
+					if (pairs[i].B->getContinuousPhysics())
+					{
+						advanceCpBody(this, pairs[i].B, 0.0f);
+					}
+
 					cPairs[numCPairs++] = pairs[i];
 				}
 			}
@@ -162,9 +170,9 @@ namespace ong
 				float minT = 1.0f;
 				for (int i = 0; i < numCPairs; ++i)
 				{
-					float t = getTimeOfImpact(cPairs[i].A, cPairs[i].B, m_cp.data());
+					float t = getTimeOfImpact(cPairs[i].A, cPairs[i].B, m_cp.data(), t0);
 					
-					if (t != 0.0f && t < minT)
+					if (t != t0 && t < minT)
 					{
 						minT = t;
 						minPair = &cPairs[i];
@@ -228,7 +236,7 @@ namespace ong
 				ContactConstraint* contactConstraints = new ContactConstraint[cpContacts.size()];
 				preSolveContacts(&context, cpContacts.data(), cpContacts.size(), 1.0f / (minT - t0), contactConstraints);
 
-				for (int i = 0; i < 16; ++i)
+				for (int i = 0; i < 8; ++i)
 				{
 					solveContacts(&context, cpContacts.data(), cpContacts.size(), contactConstraints);
 				}
@@ -241,8 +249,17 @@ namespace ong
 
 					// todo check on bodies not on colliders
 					// update spatial partitioning
-					cpContacts[i]->colliderA->getBody()->calculateAABB(minT - t0);
-					cpContacts[i]->colliderB->getBody()->calculateAABB(minT - t0);
+					Body* ba = cpContacts[i]->colliderA->getBody();
+					Body* bb = cpContacts[i]->colliderB->getBody();
+
+					ba->calculateAABB(minT - t0);
+					bb->calculateAABB(minT - t0);
+
+					// update cp
+					if (ba->getContinuousPhysics())
+						m_cp[ba->getCpIndex()].p1 = m_cp[ba->getCpIndex()].p0 + (1.0f - m_cp[ba->getCpIndex()].t)*dt * m_v[ba->getIndex()].v;
+					if (bb->getContinuousPhysics())
+						m_cp[bb->getCpIndex()].p1 = m_cp[ba->getCpIndex()].p0 + (1.0f - m_cp[ba->getCpIndex()].t)*dt * m_v[bb->getIndex()].v;
 
 					m_hGrid.updateBody(cpContacts[i]->colliderA->getBody()->getProxyID());
 					m_hGrid.updateBody(cpContacts[i]->colliderB->getBody()->getProxyID());

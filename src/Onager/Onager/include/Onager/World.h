@@ -53,7 +53,7 @@ namespace ong
 	{
 		int bodyIdx;
 		vec3 p0;
-		vec3 v; // movement in this frame
+		vec3 p1; // movement in this frame
 		float t;
 	};
 
