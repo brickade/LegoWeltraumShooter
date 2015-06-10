@@ -9,6 +9,7 @@
 
 #include <math.h>
 #include <algorithm>
+#include <mutex>
 
 #include "GameCamera.h"
 #include "Minimap.h"
@@ -17,10 +18,11 @@
 // Declare namespace Game
 namespace Game
 {
-    struct PlayOut
+    enum { BufferSize = 32 };
+    struct PlayOutBuffer
     {
-        InputData* pInputBuffer; //all inputs
-        long long time; //time when this is played
+        int Frame;
+        InputData Inputs[MaxPlayers]; //frame saved in here
     };
     struct Player
     {
@@ -33,12 +35,13 @@ namespace Game
     class CGameScene : public PuRe_IScene
     {
     private:
+        std::mutex m_Mutex;
         FILE* replay;
-        //Host only
-        InputData* m_pInputBuffer;
+        //host only
+        int m_numReceived[BufferSize];
+        int m_send[BufferSize];
         //All players
-        std::vector<PlayOut*> m_PlayOutBuffer;
-        long long m_PlayOutTime; 
+        PlayOutBuffer m_buffer[BufferSize];
         //used for networking
         float m_PhysicTime;
         int m_ID;

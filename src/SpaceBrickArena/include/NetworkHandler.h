@@ -9,10 +9,9 @@
 // Declare namespace Game
 namespace Game
 {
-    enum { MaxPlayers = 10, Delay = 100 };
+    enum { MaxPlayers = 10, Delay = 10 };
     struct InputData
     {
-        unsigned int Frame;
         unsigned char Player;
         bool Shoot;
         bool Thrust;
@@ -49,6 +48,7 @@ namespace Game
     struct InputPacket
     {
         HeadPacket Head;
+        int Frame;
         InputData Input;
     };
 
@@ -58,6 +58,7 @@ namespace Game
     {
         HeadPacket Head;
         int Players;
+        int Frame;
         InputData Input[MaxPlayers]; //we send 
     };
 

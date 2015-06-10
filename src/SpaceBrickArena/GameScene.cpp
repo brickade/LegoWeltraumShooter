@@ -11,14 +11,41 @@ namespace Game
 
     void CGameScene::StartGame()
     {
+        this->m_PhysicTime = 0.0f;
+        this->m_PhysicFrame = 0;
         if (this->m_pNetwork->m_Host)
         {
-            this->m_pInputBuffer = new InputData[this->m_Players.size()];
-            memset(this->m_pInputBuffer, 0, sizeof(InputData)*this->m_Players.size());
+            for (int i = 0; i < BufferSize; ++i)
+            {
+                m_buffer[i].Frame = i;
+                memset(m_buffer[i].Inputs, 0, sizeof(InputData) * MaxPlayers);
+                m_send[i] = 0;
+                m_numReceived[i] = 0;
+            }
             this->replay = fopen("replayHost.txt", "w");
+            //send 6 frames from self, because server is also a player
+            for (int i = 0; i < Delay; i++)
+            {
+                memset(&m_buffer[i - m_PhysicFrame].Inputs[0], 0, sizeof(InputData));
+                m_numReceived[i - m_PhysicFrame]++;
+            }
+
         }
         else
         {
+            memset(m_buffer, -1, sizeof(PlayOutBuffer) * BufferSize);
+            //send first 6 frames
+            InputPacket package;
+            memset(&package, 0, sizeof(InputPacket));
+            package.Head.Type = 5;
+            package.Input.Player = this->m_ID;
+
+            for (int i = 0; i < Delay; ++i)
+            {
+                package.Frame = i;
+                this->m_pNetwork->SendHost((char*)&package, sizeof(InputPacket));
+            }
+
             this->replay = fopen("replayClient.txt", "w");
         }
         for (unsigned int i = 0; i < this->m_Players.size(); i++)
@@ -42,8 +69,7 @@ namespace Game
             serializer.Close();
         }
         this->gameStart = true;
-        this->m_PhysicTime = 0.0f;
-        sba::Space::Instance()->UpdatePhysics(this->m_pApplication->GetTimer());
+        sba::Space::Instance()->BrickManager->RebuildRenderInstances(); //Update RenderInstances
 
     }
 
@@ -142,71 +168,67 @@ namespace Game
                 else if (Packet->Head.Type == 5)
                 {
                     InputPacket* IPacket = (InputPacket*)Packet;
-                    this->m_pInputBuffer[IPacket->Input.Player] = IPacket->Input;
+                    m_Mutex.lock();
+                    m_buffer[IPacket->Frame - m_PhysicFrame].Inputs[IPacket->Input.Player] = IPacket->Input;
+                    m_numReceived[IPacket->Frame - m_PhysicFrame]++;
+                    printf("received tick %d from player %d\n", IPacket->Frame, IPacket->Input.Player);
+                    m_Mutex.unlock();
                 }
                 else if (Packet->Head.Type == 6)
                 {
                     InputsPacket* IPacket = (InputsPacket*)Packet;
-
-                    //save into playout
-                    if (this->m_PlayOutBuffer.size() == 0)
-                        this->m_PlayOutTime = this->m_PhysicTime + (Delay / 1000.0f);
-                    else
-                        this->m_PlayOutTime += (1 / 60);
-
-                    int bufferSize = sizeof(InputData)*this->m_Players.size();
-                    //Create new playout buffer content and add it
-                    PlayOut* play = new PlayOut();
-                    play->pInputBuffer = new InputData[this->m_Players.size()];
-                    memcpy(play->pInputBuffer, IPacket->Input, bufferSize);
-                    play->time = this->m_PlayOutTime;
-                    this->m_PlayOutBuffer.push_back(play);
+                    m_Mutex.lock();
+                    PlayOutBuffer* buffer = &this->m_buffer[IPacket->Frame - this->m_PhysicFrame];
+                    buffer->Frame = IPacket->Frame;
+                    memcpy(buffer->Inputs, IPacket->Input, sizeof(InputData)*IPacket->Players);
+                    printf("received tick %d\n", IPacket->Frame);
+                    m_Mutex.unlock();
                 }
 
-                    //for (unsigned int i = 0; i < this->m_Players.size(); i++)
-                    //{
-                    //    if (this->m_Players[i]->ID == IPacket->Who)
-                    //    {
-                    //        if (IPacket->Input == 0)
-                    //        {
-                    //            this->m_Players[i]->Ship->Shoot(this->m_Bullets, sba::Space::Instance()->BrickManager);
-                    //        }
-                    //        else if (IPacket->Input == 1)
-                    //        {
-                    //            MovePacket* MPacket = (MovePacket*)Packet;
-                    //            this->m_Players[i]->Ship->Move(MPacket->Move);
-                    //        }
-                    //        else if (IPacket->Input == 2)
-                    //        {
-                    //            ThrustPacket* TPacket = (ThrustPacket*)Packet;
-                    //            this->m_Players[i]->Ship->Thrust(TPacket->Thrust);
-                    //        }
-                    //        else if (IPacket->Input == 3)
-                    //        {
-                    //            ThrustPacket* TPacket = (ThrustPacket*)Packet;
-                    //            this->m_Players[i]->Ship->Spin(TPacket->Thrust);
-                    //        }
-                    //    }
-                    //    //send to everyone that someone shot if HOST
-                    //    if (this->m_pNetwork->m_Host&&i != 0)
-                    //    {
-                    //        if (IPacket->Input == 0)
-                    //        {
-                    //            this->m_pNetwork->Send((char*)IPacket, sizeof(InputBasePacket), this->m_Players[i]->NetworkInformation);
-                    //        }
-                    //        else if (IPacket->Input == 1)
-                    //        {
-                    //            MovePacket* MPacket = (MovePacket*)Packet;
-                    //            this->m_pNetwork->Send((char*)MPacket, sizeof(MovePacket), this->m_Players[i]->NetworkInformation);
-                    //        }
-                    //        else if (IPacket->Input == 2 || IPacket->Input == 3)
-                    //        {
-                    //            ThrustPacket* TPacket = (ThrustPacket*)Packet;
-                    //            this->m_pNetwork->Send((char*)TPacket, sizeof(ThrustPacket), this->m_Players[i]->NetworkInformation);
-                    //        }
-                    //    }
+                //for (unsigned int i = 0; i < this->m_Players.size(); i++)
+                //{
+                //    if (this->m_Players[i]->ID == IPacket->Who)
+                //    {
+                //        if (IPacket->Input == 0)
+                //        {
+                //            this->m_Players[i]->Ship->Shoot(this->m_Bullets, sba::Space::Instance()->BrickManager);
+                //        }
+                //        else if (IPacket->Input == 1)
+                //        {
+                //            MovePacket* MPacket = (MovePacket*)Packet;
+                //            this->m_Players[i]->Ship->Move(MPacket->Move);
+                //        }
+                //        else if (IPacket->Input == 2)
+                //        {
+                //            ThrustPacket* TPacket = (ThrustPacket*)Packet;
+                //            this->m_Players[i]->Ship->Thrust(TPacket->Thrust);
+                //        }
+                //        else if (IPacket->Input == 3)
+                //        {
+                //            ThrustPacket* TPacket = (ThrustPacket*)Packet;
+                //            this->m_Players[i]->Ship->Spin(TPacket->Thrust);
+                //        }
+                //    }
+                //    //send to everyone that someone shot if HOST
+                //    if (this->m_pNetwork->m_Host&&i != 0)
+                //    {
+                //        if (IPacket->Input == 0)
+                //        {
+                //            this->m_pNetwork->Send((char*)IPacket, sizeof(InputBasePacket), this->m_Players[i]->NetworkInformation);
+                //        }
+                //        else if (IPacket->Input == 1)
+                //        {
+                //            MovePacket* MPacket = (MovePacket*)Packet;
+                //            this->m_pNetwork->Send((char*)MPacket, sizeof(MovePacket), this->m_Players[i]->NetworkInformation);
+                //        }
+                //        else if (IPacket->Input == 2 || IPacket->Input == 3)
+                //        {
+                //            ThrustPacket* TPacket = (ThrustPacket*)Packet;
+                //            this->m_pNetwork->Send((char*)TPacket, sizeof(ThrustPacket), this->m_Players[i]->NetworkInformation);
+                //        }
+                //    }
 
-                    //}
+                //}
                 //}
             }
         }
@@ -294,250 +316,174 @@ namespace Game
         }
         if (this->gameStart)
         {
+            m_Mutex.lock();
             if (this->m_pNetwork->m_Host)
             {
-                bool allSend = true;
-                for (unsigned int i = 1; i < this->m_Players.size(); i++)
+                for (int i = 0; i < BufferSize; ++i)
                 {
-                    if (this->m_pInputBuffer[i].Player == 0)
-                        allSend = false;
+                    InputsPacket packet;
+                    //if all player send something
+                    if (!m_send[i] && m_numReceived[i] >= this->m_Players.size())
+                    {
+                        packet.Head.Type = 6;
+                        packet.Frame = m_buffer[i].Frame;
+                        packet.Players = this->m_Players.size();
+                        memcpy(packet.Input, m_buffer[i].Inputs, sizeof(InputData)*this->m_Players.size());
+                        //send tick with input
+                        printf("send tick %d\n", m_buffer[i].Frame);
+                        for (int j = 1; j < this->m_Players.size(); ++j)
+                        {
+                            this->m_pNetwork->Send((char*)&packet, sizeof(InputsPacket), this->m_Players[j]->NetworkInformation);
+                        }
+                        m_send[i] = 1;
+                    }
                 }
-                if (allSend)
+            }
+
+
+
+            m_PhysicTime += this->m_pApplication->GetTimer()->GetElapsedSeconds();
+            bool inputExists = true;
+            while (m_PhysicTime >= 1.0f / 60.0f && inputExists)
+            {
+                if (this->m_pNetwork->m_Host)
                 {
-                    int bufferSize = sizeof(InputData)*this->m_Players.size();
-                    InputsPacket inputs;
-                    inputs.Head.Type = 6;
-                    inputs.Players = this->m_Players.size();
-                    memcpy(inputs.Input, this->m_pInputBuffer, bufferSize);
-                    //Server received Data from all Clients
+                    inputExists = m_send[0] == 1;
+                }
+                else
+                    inputExists = m_buffer[0].Frame == this->m_PhysicFrame;
+                if (inputExists)
+                {
+                    InputPacket ipacket;
+                    memset(&ipacket, 0, sizeof(InputPacket));
+                    ipacket.Head.Type = 5;
+                    ipacket.Frame = this->m_PhysicFrame + Delay;
+                    ipacket.Input.Player = this->m_ID;
+                    if (a_pApplication->GetInput()->GamepadPressed(a_pApplication->GetInput()->Pad_A, 0))
+                        ipacket.Input.Shoot = true;
+
+                    PuRe_Vector2F Move = a_pApplication->GetInput()->GetGamepadLeftThumb(0);
+                    if (Move.X > 0.5f)
+                        ipacket.Input.MoveX = 1;
+                    else if (Move.X < -0.5f)
+                        ipacket.Input.MoveX = 2;
+                    if (Move.Y > 0.5f)
+                        ipacket.Input.MoveY = 1;
+                    else if (Move.Y < -0.5f)
+                        ipacket.Input.MoveY = 2;
+
+                    float Thrust = a_pApplication->GetInput()->GetGamepadRightTrigger(0);
+                    if (Thrust > 0.2f)
+                        ipacket.Input.Thrust = true;
+
+                    if (a_pApplication->GetInput()->GamepadIsPressed(a_pApplication->GetInput()->Left_Shoulder, 0))
+                        ipacket.Input.Spin = 2;
+                    else if (a_pApplication->GetInput()->GamepadIsPressed(a_pApplication->GetInput()->Right_Shoulder, 0))
+                        ipacket.Input.Spin = 1;
+
+                    if (!this->m_pNetwork->m_Host)
+                    {
+                        printf("send package %d\n", ipacket.Frame);
+                        this->m_pNetwork->SendHost((char*)&ipacket, sizeof(InputPacket));
+                    }
+                    else
+                    {
+                        printf("Handle own Input %d\n", ipacket.Frame);
+                        m_buffer[ipacket.Frame - m_PhysicFrame].Inputs[0] = ipacket.Input;
+                        m_numReceived[ipacket.Frame - m_PhysicFrame]++;
+                    }
+
+                    //Now handle input
+
+                    PlayOutBuffer* buffer = &this->m_buffer[0];
+                    std::string  replayText = "Time: " + std::to_string(this->m_PhysicTime) + "\n";
+                    fwrite(replayText.c_str(), sizeof(char), replayText.length(), this->replay);
+                    replayText = "Frame: " + std::to_string(buffer->Frame) + "\n";
+                    fwrite(replayText.c_str(), sizeof(char), replayText.length(), this->replay);
+                    replayText = "ID Shoot Thrust MoveX MoveY Spin\n";
+                    fwrite(replayText.c_str(), sizeof(char), replayText.length(), this->replay);
+
+                    InputData* input;
                     for (unsigned int i = 0; i < this->m_Players.size(); i++)
                     {
-                        this->m_pNetwork->Send((char*)&inputs, sizeof(InputsPacket), this->m_Players[i]->NetworkInformation);
-                    }
-
-                    //save into playout
-                    if (this->m_PlayOutBuffer.size() == 0)
-                        this->m_PlayOutTime = this->m_PhysicTime + (Delay/1000.0f);
-                    else
-                        this->m_PlayOutTime += (1 / 60);
-
-                    //Create new playout buffer content and add it
-                    PlayOut* play = new PlayOut();
-                    play->pInputBuffer = new InputData[this->m_Players.size()];
-                    memcpy(play->pInputBuffer, this->m_pInputBuffer, bufferSize);
-                    play->time = this->m_PlayOutTime;
-                    this->m_PlayOutBuffer.push_back(play);
-
-                    //clear input Buffer
-                    memset(this->m_pInputBuffer, 0, bufferSize);
-
-                }
-            }
-
-
-            bool physicRun = true;
-            while (physicRun)
-            {
-                if (this->m_PlayOutBuffer.size() > 0)
-                {
-                    int index = -1;
-                    for (unsigned int i = 0; i < this->m_PlayOutBuffer.size(); i++)
-                    {
-                        if (this->m_PlayOutBuffer[i]->pInputBuffer[0].Frame == this->m_PhysicFrame)
+                        unsigned int id = buffer->Inputs[i].Player;
+                        for (unsigned int j = 0; j < this->m_Players.size(); j++)
                         {
-                            index = i;
-                            break;
-                        }
-                            
-                    }
-                    this->m_PhysicTime += a_pApplication->GetTimer()->GetElapsedSeconds();
-                    if (index > -1 && this->m_PlayOutBuffer[index]->time < this->m_PhysicTime)
-                    {
-                        std::string  replayText = "Time: " + std::to_string(this->m_PhysicTime) + "\n";
-                        fwrite(replayText.c_str(), sizeof(char), replayText.length(), this->replay);
-                        replayText = "Frame: " + std::to_string(this->m_PlayOutBuffer[index]->pInputBuffer[0].Frame) + "\n";
-                        fwrite(replayText.c_str(), sizeof(char), replayText.length(), this->replay);
-                        replayText = "ID Shoot Thrust MoveX MoveY Spin\n";
-                        fwrite(replayText.c_str(), sizeof(char), replayText.length(), this->replay);
-                        
-                        for (unsigned int i = 0; i < this->m_Players.size(); i++)
-                        {
-                            unsigned int id = this->m_PlayOutBuffer[index]->pInputBuffer[i].Player;
-                            for (unsigned int j = 0; j < this->m_Players.size(); j++)
+                            if (this->m_Players[j]->ID == id)
                             {
-                                if (this->m_Players[j]->ID == id)
+                                input = &buffer->Inputs[i];
+                                replayText = std::to_string(id) += " ";
+
+                                TheBrick::CSpaceship* ship = this->m_Players[j]->Ship;
+                                if (input->Shoot)
                                 {
-                                    replayText = std::to_string(id) += " ";
-
-                                    TheBrick::CSpaceship* ship = this->m_Players[j]->Ship;
-                                    if (this->m_PlayOutBuffer[index]->pInputBuffer[i].Shoot)
-                                    {
-                                        ship->Shoot(this->m_Bullets, sba::Space::Instance()->BrickManager);
-                                        replayText += "1 ";
-                                    }
-                                    else
-                                        replayText += "0 ";
-
-                                    if (this->m_PlayOutBuffer[index]->pInputBuffer[i].Thrust)
-                                    {
-                                        printf("ID: %i THRUST\n",id);
-                                        ship->Thrust(1.0f);
-                                        replayText += "1 ";
-                                    }
-                                    else
-                                        replayText += "0 ";
-
-                                    PuRe_Vector2F Move = PuRe_Vector2F(0.0f, 0.0f);
-                                    if (this->m_PlayOutBuffer[index]->pInputBuffer[i].MoveX == 1)
-                                        Move.X = 1.0f;
-                                    else if (this->m_PlayOutBuffer[index]->pInputBuffer[i].MoveX == 2)
-                                        Move.X = -1.0f;
-                                    if (this->m_PlayOutBuffer[index]->pInputBuffer[i].MoveY == 1)
-                                        Move.Y = 1.0f;
-                                    else if (this->m_PlayOutBuffer[index]->pInputBuffer[i].MoveY == 2)
-                                        Move.Y = -1.0f;
-                                    if (Move.Length() > 0.2f)
-                                        ship->Move(Move);
-
-                                    replayText += std::to_string(this->m_PlayOutBuffer[index]->pInputBuffer[i].MoveX) + " ";
-                                    replayText += std::to_string(this->m_PlayOutBuffer[index]->pInputBuffer[i].MoveY) + " ";
-
-                                    if (this->m_PlayOutBuffer[index]->pInputBuffer[i].Spin == 1)
-                                        this->m_Players[j]->Ship->Spin(1.0f);
-                                    else if (this->m_PlayOutBuffer[index]->pInputBuffer[i].Spin == 2)
-                                        this->m_Players[j]->Ship->Spin(-1.0f);
-
-                                    replayText += std::to_string(this->m_PlayOutBuffer[index]->pInputBuffer[i].Spin) + " ";
-
-                                    ship->Update(a_pApplication->GetTimer()->GetElapsedSeconds());
-
-                                    replayText += "\n";
-                                    fwrite(replayText.c_str(), sizeof(char), replayText.length(), this->replay);
-                                    break;
+                                    ship->Shoot(this->m_Bullets, sba::Space::Instance()->BrickManager);
+                                    replayText += "1 ";
                                 }
+                                else
+                                    replayText += "0 ";
+
+                                if (input->Thrust)
+                                {
+                                    ship->Thrust(1.0f);
+                                    replayText += "1 ";
+                                }
+                                else
+                                    replayText += "0 ";
+
+                                PuRe_Vector2F Move = PuRe_Vector2F(0.0f, 0.0f);
+                                if (input->MoveX == 1)
+                                    Move.X = 1.0f;
+                                else if (input->MoveX == 2)
+                                    Move.X = -1.0f;
+                                if (input->MoveY == 1)
+                                    Move.Y = 1.0f;
+                                else if (input->MoveY == 2)
+                                    Move.Y = -1.0f;
+                                if (Move.Length() > 0.2f)
+                                    ship->Move(Move);
+
+                                replayText += std::to_string(input->MoveX) + " ";
+                                replayText += std::to_string(input->MoveY) + " ";
+
+                                if (input->Spin == 1)
+                                    this->m_Players[j]->Ship->Spin(1.0f);
+                                else if (input->Spin == 2)
+                                    this->m_Players[j]->Ship->Spin(-1.0f);
+
+                                replayText += std::to_string(input->Spin) + " ";
+
+                                ship->Update(1/60.0f);
+
+                                replayText += "\n";
+                                fwrite(replayText.c_str(), sizeof(char), replayText.length(), this->replay);
+                                break;
                             }
-
                         }
-                        sba::Space::Instance()->World->step(1 / 60.0f);
-                        //sba::Space::Instance()->UpdatePhysics(a_pApplication->GetTimer());
-                        sba::Space::Instance()->BrickManager->RebuildRenderInstances(); //Update RenderInstances
-                        printf("Physic: %i\n",this->m_PhysicFrame);
-                        this->m_PhysicFrame++;
                     }
-                    else
-                        physicRun = false;
-                }
-                else
-                    physicRun = false;
-            }
 
+                    memcpy(m_buffer, m_buffer + 1, sizeof(PlayOutBuffer) * BufferSize-1);
+                    if (this->m_pNetwork->m_Host)
+                    {
+                        memcpy(m_numReceived, m_numReceived + 1, sizeof(int) * BufferSize - 1);
+                        memcpy(m_send, m_send + 1, sizeof(int) * BufferSize - 1);
+                        m_numReceived[BufferSize - 1] = 0;
+                        m_send[BufferSize - 1] = 0;
+                        m_buffer[BufferSize - 1].Frame = this->m_PhysicFrame + BufferSize;
+                    }
 
-            InputPacket ipacket;
-            memset(&ipacket, 0, sizeof(InputPacket));
-            ipacket.Head.Type = 5;
-            ipacket.Input.Frame = this->m_PhysicFrame;
-            ipacket.Input.Player = this->m_ID;
-            if (a_pApplication->GetInput()->GamepadPressed(a_pApplication->GetInput()->Pad_A, 0))
-            {
-                ipacket.Input.Shoot = true;
-                //InputBasePacket IPacket;
-                //IPacket.Head.Type = 5;
-                //IPacket.Input = 0;
-                //IPacket.Who = this->m_ID;
-                //if (this->m_pNetwork->m_Host)
-                //{
-                //    this->m_Players[this->m_ArrayID]->Ship->Shoot(this->m_Bullets, sba::Space::Instance()->BrickManager);
-                //    for (unsigned int i = 1; i < this->m_Players.size(); i++)
-                //        this->m_pNetwork->Send((char*)&IPacket, sizeof(InputBasePacket), this->m_Players[i]->NetworkInformation);
-                //}
-                //else
-                //{
-                //    this->m_pNetwork->SendHost((char*)&IPacket, sizeof(InputBasePacket));
-                //}
-            }
+                    sba::Space::Instance()->World->step(1 / 60.0f);
+                    this->m_PhysicTime -= 1.0f / 60.0f;
+                    printf("Physic: %i\n", this->m_PhysicFrame);
+                    this->m_PhysicFrame++;
+                    assert(this->m_PhysicFrame != 2147483647);
+                    sba::Space::Instance()->BrickManager->RebuildRenderInstances(); //Update RenderInstances
+                } //if input exists
 
-            PuRe_Vector2F Move = a_pApplication->GetInput()->GetGamepadLeftThumb(0);
-            if (Move.X > 0.5f)
-                ipacket.Input.MoveX = 1;
-            else if (Move.X < -0.5f)
-                ipacket.Input.MoveX = 2;
-            if (Move.Y > 0.5f)
-                ipacket.Input.MoveY = 1;
-            else if (Move.Y < -0.5f)
-                ipacket.Input.MoveY = 2;
-       /*     if (Move.Length() > 0.5f)
-            {
-                MovePacket MPacket;
-                MPacket.InputBase.Head.Type = 5;
-                MPacket.InputBase.Input = 1;
-                MPacket.InputBase.Who = this->m_ID;
-                MPacket.Move = Move;
-                if (this->m_pNetwork->m_Host)
-                {
-                    this->m_Players[this->m_ArrayID]->Ship->Move(Move);
-                    for (unsigned int i = 1; i < this->m_Players.size(); i++)
-                        this->m_pNetwork->Send((char*)&MPacket, sizeof(MovePacket), this->m_Players[i]->NetworkInformation);
-                }
-                else
-                    this->m_pNetwork->SendHost((char*)&MPacket, sizeof(MovePacket));
-            }*/
+            } //while physic run
 
-            float Thrust = a_pApplication->GetInput()->GetGamepadRightTrigger(0);
-            if (Thrust > 0.2f)
-            {
-                ipacket.Input.Thrust = true;
-                //ThrustPacket TPacket;
-                //TPacket.InputBase.Head.Type = 5;
-                //TPacket.InputBase.Input = 2;
-                //TPacket.InputBase.Who = this->m_ID;
-                //TPacket.Thrust = Thrust;
-                //if (this->m_pNetwork->m_Host)
-                //{
-                //    this->m_Players[this->m_ArrayID]->Ship->Thrust(Thrust);
-                //    for (unsigned int i = 1; i < this->m_Players.size(); i++)
-                //        this->m_pNetwork->Send((char*)&TPacket, sizeof(ThrustPacket), this->m_Players[i]->NetworkInformation);
-                //}
-                //else
-                //    this->m_pNetwork->SendHost((char*)&TPacket, sizeof(ThrustPacket));
-            }
+            m_Mutex.unlock();
 
-            //float Spin = 0.0f;
-            if (a_pApplication->GetInput()->GamepadIsPressed(a_pApplication->GetInput()->Left_Shoulder, 0))
-                ipacket.Input.Spin = 2;
-            else if (a_pApplication->GetInput()->GamepadIsPressed(a_pApplication->GetInput()->Right_Shoulder, 0))
-                ipacket.Input.Spin = 1;
-           /* if (Spin > 0.2f || Spin < -0.2f)
-            {
-                ThrustPacket TPacket;
-                TPacket.InputBase.Head.Type = 5;
-                TPacket.InputBase.Input = 3;
-                TPacket.InputBase.Who = this->m_ID;
-                TPacket.Thrust = Spin;
-                if (this->m_pNetwork->m_Host)
-                {
-                    this->m_Players[this->m_ArrayID]->Ship->Spin(Spin);
-                    for (unsigned int i = 1; i < this->m_Players.size(); i++)
-                        this->m_pNetwork->Send((char*)&TPacket, sizeof(ThrustPacket), this->m_Players[i]->NetworkInformation);
-                }
-                else
-                    this->m_pNetwork->SendHost((char*)&TPacket, sizeof(ThrustPacket));
-            }*/
-            if (!this->m_pNetwork->m_Host)
-            {
-                this->m_pNetwork->SendHost((char*)&ipacket, sizeof(InputPacket));
-            }
-            else
-            {
-                this->m_pInputBuffer[0] = ipacket.Input;
-            }
-            //for (unsigned int i = 0; i < this->m_Players.size(); i++)
-            //{
-            //    TheBrick::CSpaceship* player = this->m_Players[i]->Ship;
-            //    //player->HandleInput(i, a_pApplication->GetInput(), a_pApplication->GetTimer()->GetElapsedSeconds(), this->m_Bullets, sba::Space::Instance()->BrickManager);
-
-            //    //this->m_Cameras[i]->Update(i,this->m_Players[i]->Ship, a_pApplication->GetInput(), a_pApplication->GetTimer());
-            //    player->Update(a_pApplication->GetTimer()->GetElapsedSeconds());
-            //}
             this->m_Cameras[0]->Update(0, this->m_Players[this->m_ArrayID]->Ship, a_pApplication->GetInput(), a_pApplication->GetTimer());
         }
         else
@@ -666,13 +612,6 @@ namespace Game
     void CGameScene::Exit()
     {
         fclose(this->replay);
-        for (unsigned int i = 0; i < this->m_PlayOutBuffer.size(); i++)
-        {
-            SAFE_DELETE_ARRAY(this->m_PlayOutBuffer[i]->pInputBuffer);
-            SAFE_DELETE(this->m_PlayOutBuffer[i]);
-        }
-        this->m_PlayOutBuffer.clear();
-        SAFE_DELETE_ARRAY(this->m_pInputBuffer);
         //Send to Host that we left
         LeftPacket lPacket;
         lPacket.Head.Type = 1;
