@@ -53,7 +53,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(SolutionDir)\..\onager\include\;$(SolutionDir)\middleware\SDL\include\;$(SolutionDir)\middleware\glew-1.12.0\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
@@ -61,7 +61,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)\middleware\SDL\lib\x86\;$(SolutionDir)\middleware\glew-1.12.0\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2.lib;glew32.lib;OpenGL32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;glew32.lib;OpenGL32.lib;glu32.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -86,10 +86,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ClientTest.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="HierarchieTest.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Networktest.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="ServerTest.cpp" />
     <ClCompile Include="StressTest.cpp" />
     <ClCompile Include="test.cpp" />
   </ItemGroup>
@@ -105,12 +108,15 @@
     <ClInclude Include="Bomb.h" />
     <ClInclude Include="BrickTest.h" />
     <ClInclude Include="Bullet.h" />
+    <ClInclude Include="ClientTest.h" />
     <ClInclude Include="Draw.h" />
     <ClInclude Include="FilterTest.h" />
     <ClInclude Include="HierarchieTest.h" />
+    <ClInclude Include="NetworkTest.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="RayMarcherTest.h" />
     <ClInclude Include="restitutionTest.h" />
+    <ClInclude Include="ServerTest.h" />
     <ClInclude Include="StressTest.h" />
     <ClInclude Include="test.h" />
     <ClInclude Include="Entity.h" />

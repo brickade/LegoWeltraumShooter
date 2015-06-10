@@ -4,6 +4,8 @@
 #include "StressTest.h"
 #include "RayMarcherTest.h"
 #include "FilterTest.h"
+#include "ServerTest.h"
+#include "ClientTest.h"
 #include "myMath.h"
 
 #undef main
@@ -11,7 +13,7 @@
 int main()
 {
 
-	Test* test = new Test();
+	Test* test = new ClientTest();
 	test->init();
 
 	test->run();

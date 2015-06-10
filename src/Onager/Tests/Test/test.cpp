@@ -566,6 +566,15 @@ void Test::init()
 
 
 
+void Test::stepPhysics(float physicsTimer)
+{
+	while (physicsTimer >= 1.0f / 60.0f)
+	{
+		m_world->step(1.0f / 60.0f);
+		physicsTimer -= 1.0f / 60.0f;
+	}
+}
+
 
 
 void Test::run()
@@ -666,11 +675,7 @@ void Test::run()
 		else
 		{
 			physics += dt;
-			while (physics >= 1.0f / 60.0f)
-			{
-				m_world->step(1.0f / 60.0f);
-				physics -= 1.0f / 60.0f;
-			}
+			stepPhysics(physics);
 
 		}
 		

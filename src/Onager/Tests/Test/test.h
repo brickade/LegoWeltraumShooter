@@ -20,6 +20,7 @@ public:
 
 	virtual void update(float dt) {};
 	virtual void render() {};
+	virtual void stepPhysics(float physicsTimer);
 
 protected:
 	World* m_world;
