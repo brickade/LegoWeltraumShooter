@@ -11,6 +11,7 @@ namespace sba
     class CIniReader
     {
     private:
+        std::string m_Path;
         std::unordered_map<std::string, std::string> m_Table;
         static CIniReader* g_pInstance;
     public:
@@ -21,6 +22,8 @@ namespace sba
         ~CIniReader();
     public:
         std::string GetValue(std::string a_Key);
+        void AddValue(std::string a_Key,std::string a_Value);
+        void Save();
     };
 }
 

@@ -29,6 +29,7 @@ namespace sba
     // **************************************************************************
     CIniReader::CIniReader(const char* a_pFile)
     {
+        this->m_Path = a_pFile;
         FILE* pFile;
         long size = 0;
         char* buffer = nullptr;
@@ -113,6 +114,28 @@ namespace sba
     std::string CIniReader::GetValue(std::string a_Key)
     {
         return this->m_Table[a_Key];
+    }
+
+    // **************************************************************************
+    // **************************************************************************
+    void CIniReader::AddValue(std::string a_Key, std::string a_Value)
+    {
+        this->m_Table[a_Key] = a_Value;
+    }
+
+    // **************************************************************************
+    // **************************************************************************
+    void CIniReader::Save()
+    {
+        FILE* pFile;
+        auto error = fopen_s(&pFile, this->m_Path.c_str(), "w"); //always writes at the end, created if it does not exist
+        std::string write;
+        for (auto it = this->m_Table.begin(); it != this->m_Table.end(); ++it)
+        {
+            write = it->first + "=" + it->second + "\r\n";
+            fwrite(write.c_str(), sizeof(char), write.length(), pFile);
+        }
+        fclose(pFile);
     }
 
 }

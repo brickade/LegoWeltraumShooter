@@ -18,6 +18,10 @@
 // Declare namespace Game
 namespace Game
 {
+
+    //#define NETWORKGAME
+    #define Skybox
+
     enum { BufferSize = 32 };
     struct PlayOutBuffer
     {
@@ -36,10 +40,9 @@ namespace Game
     {
     private:
         std::mutex m_Mutex;
-        FILE* replay;
         //host only
-        int m_numReceived[BufferSize];
-        int m_send[BufferSize];
+        unsigned int m_numReceived[BufferSize];
+        bool m_send[BufferSize];
         //All players
         PlayOutBuffer m_buffer[BufferSize];
         //used for networking
@@ -78,6 +81,21 @@ namespace Game
         ///
         CGameScene(PuRe_Application* a_pApplication, int a_playerIdx);
     public:
+        /// @brief Handle Input Data
+        ///
+        InputData HandleInput(int a_PlayerIdx);
+        /// @brief Process Input Data
+        ///
+        void ProcessInput(TheBrick::CSpaceship* a_Ship,InputData* a_Input,float a_DeltaTime);
+        /// @brief Handle Local Data
+        ///
+        void HandleLocal();
+        /// @brief Handle Network Data
+        ///
+        void HandleNetwork();
+        /// @brief Function to handle  before the Game started
+        ///
+        void GameSetup();
         /// @brief Start the Game
         ///
         void StartGame();

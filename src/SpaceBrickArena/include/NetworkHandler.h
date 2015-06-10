@@ -5,11 +5,17 @@
 #include <PuReEngine/Core.h>
 #include <PuReEngine/Defines.h>
 #include <TheBrick/TheBrick.h>
+#include "include/INIReader.h"
 
 // Declare namespace Game
 namespace Game
 {
     enum { MaxPlayers = 10, Delay = 10 };
+
+    enum Packet {Join,Left,IAm,CJoin,Start,STick,CTick};
+
+    /// @brief Struct which handles the Input one Player does
+    ///
     struct InputData
     {
         unsigned char Player;
@@ -24,7 +30,7 @@ namespace Game
     ///
     struct HeadPacket
     {
-        int Type;
+        Packet Type;
     };
 
     /// @brief Packet used when Data is received, this checks the Header

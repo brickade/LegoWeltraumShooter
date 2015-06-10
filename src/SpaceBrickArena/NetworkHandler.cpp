@@ -20,10 +20,15 @@ namespace Game
     void CNetworkHandler::Connect()
     {
         this->m_pSocket = new PuRe_Socket(this->m_IP.c_str(), std::stoi(this->m_Port), this->m_Host);
-        //send that we are connecting to him
-        HeadPacket h;
-        h.Type = 0;
-        this->Send((char*)&h, sizeof(HeadPacket), this->m_pSocket->GetAddress());
+        sba::CIniReader::Instance()->AddValue("IP", this->m_IP);
+        sba::CIniReader::Instance()->AddValue("Port", this->m_Port);
+        if (!this->m_Host)
+        {
+            //send that we are connecting to him
+            HeadPacket h;
+            h.Type = Packet::Join;
+            this->Send((char*)&h, sizeof(HeadPacket), this->m_pSocket->GetAddress());
+        }
     }
 
 
@@ -71,10 +76,13 @@ namespace Game
             {
                 this->m_Host = true;
                 this->m_IP = "127.0.0.1";
+                this->m_Port = sba::CIniReader::Instance()->GetValue("Port");
                 this->m_NetworkState = 2;
             }
             if (a_pInput->KeyPressed(a_pInput->One))
             {
+                this->m_IP = sba::CIniReader::Instance()->GetValue("IP");
+                this->m_Port = sba::CIniReader::Instance()->GetValue("Port");
                 this->m_Host = false;
                 this->m_NetworkState = 1;
             }
@@ -87,25 +95,25 @@ namespace Game
             else if (this->m_NetworkState == 2)
                 text = &this->m_Port;
 
-            if (a_pInput->KeyPressed(a_pInput->Zero))
+            if (a_pInput->KeyPressed(a_pInput->Zero)||a_pInput->KeyPressed(a_pInput->Num_Zero))
                 *text += "0";
-            if (a_pInput->KeyPressed(a_pInput->One))
+            if (a_pInput->KeyPressed(a_pInput->One) || a_pInput->KeyPressed(a_pInput->Num_One))
                 *text += "1";
-            if (a_pInput->KeyPressed(a_pInput->Two))
+            if (a_pInput->KeyPressed(a_pInput->Two) || a_pInput->KeyPressed(a_pInput->Num_Two))
                 *text += "2";
-            if (a_pInput->KeyPressed(a_pInput->Three))
+            if (a_pInput->KeyPressed(a_pInput->Three) || a_pInput->KeyPressed(a_pInput->Num_Three))
                 *text += "3";
-            if (a_pInput->KeyPressed(a_pInput->Four))
+            if (a_pInput->KeyPressed(a_pInput->Four) || a_pInput->KeyPressed(a_pInput->Num_Four))
                 *text += "4";
-            if (a_pInput->KeyPressed(a_pInput->Five))
+            if (a_pInput->KeyPressed(a_pInput->Five) || a_pInput->KeyPressed(a_pInput->Num_Five))
                 *text += "5";
-            if (a_pInput->KeyPressed(a_pInput->Six))
+            if (a_pInput->KeyPressed(a_pInput->Six) || a_pInput->KeyPressed(a_pInput->Num_Six))
                 *text += "6";
-            if (a_pInput->KeyPressed(a_pInput->Seven))
+            if (a_pInput->KeyPressed(a_pInput->Seven) || a_pInput->KeyPressed(a_pInput->Num_Seven))
                 *text += "7";
-            if (a_pInput->KeyPressed(a_pInput->Eight))
+            if (a_pInput->KeyPressed(a_pInput->Eight) || a_pInput->KeyPressed(a_pInput->Num_Eight))
                 *text += "8";
-            if (a_pInput->KeyPressed(a_pInput->Nine))
+            if (a_pInput->KeyPressed(a_pInput->Nine) || a_pInput->KeyPressed(a_pInput->Num_Nine))
                 *text += "9";
             if (a_pInput->KeyPressed(a_pInput->Backspace) && text->length() != 0)
                 *text = text->substr(0, text->length() - 1);
