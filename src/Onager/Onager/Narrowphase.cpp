@@ -186,7 +186,7 @@ namespace ong
 
 			if (dist < 0.0f)
 			{
-				manifold->normal = rotate(p - c, tb->q);
+				manifold->normal = rotate(normalize(p - c), tb->q);
 				manifold->numPoints = 1;
 				manifold->points[0].position = transformVec3(p, *tb);
 				manifold->points[0].penetration = dist;

@@ -27,7 +27,7 @@ public:
 
 
 		ColliderDescription cDescr;
-		cDescr.material = m_world->createMaterial({ 1.0, 1.0, 1.0 });
+		cDescr.material = m_world->createMaterial({ 1.0, 1.0, 0.0 });
 		cDescr.transform.p = vec3(0, 0, 0);
 		cDescr.transform.q = Quaternion(vec3(0, 0, 0), 1);
 		cDescr.isSensor = false;
@@ -52,8 +52,8 @@ public:
 		m_entities.push_back(new Entity(body, vec3(0, 1, 0)));
 
 		bDescr.type = BodyType::Dynamic;
-		bDescr.linearMomentum = vec3(500.0f, 0.0f, 500.0f);
-		bDescr.transform.p = vec3(0.0f, 0.0f, -8.0f);
+		bDescr.linearMomentum = vec3(000.0f, 0.0f, 5.0f);
+		bDescr.transform.p = vec3(-0.25f, 0.0f, -8.0f);
 		bDescr.continuousPhysics = true;
 
 		body = m_world->createBody(bDescr);
@@ -61,6 +61,15 @@ public:
 		body->addCollider(m_world->createCollider(cDescr));
 		m_entities.push_back(new Entity(body, vec3(1, 0, 0)));
 
+		bDescr.linearMomentum = vec3(000.0f, 0.0f, -5.0f);
+		bDescr.transform.p = vec3(0.25f, 0.0f, 8.0f);
+		body = m_world->createBody(bDescr);
+		cDescr.shape = sphere;
+		body->addCollider(m_world->createCollider(cDescr));
+		m_entities.push_back(new Entity(body, vec3(0, 0, 1)));
+
+		m_eye.p = vec3(0, 40, 0);
+		m_eye.q = QuatFromAxisAngle(vec3(1, 0, 0), 0.5f*ong_PI);
 	}
 
 private:

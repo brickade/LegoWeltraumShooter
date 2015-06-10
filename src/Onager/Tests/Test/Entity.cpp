@@ -88,7 +88,7 @@ void Entity::render(GLuint colorLocation)
 
 
 	//aabb
-#if 1
+#if 0
 	glUniform3f(colorLocation, 1, 1, 1);
 	drawBox(m_body->getAABB().c, m_body->getAABB().e);
 #endif
@@ -238,8 +238,24 @@ void Entity::render(GLuint colorLocation)
 		}
 	}
 
+
 	glPopMatrix();
 	
+	//continuouslines
+#if 1
+	if (m_body->getContinuousPhysics())
+	{
+
+		glUniform3f(colorLocation, 1, 0, 1);
+		glBegin(GL_LINE_STRIP);
+		for (auto& p : m_body->CP_POINTS)
+		{
+			glVertex3f(p.x, p.y, p.z);
+		}
+		glEnd();
+	}
+#endif
+
 }
 
 struct ARGS

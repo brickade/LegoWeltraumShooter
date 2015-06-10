@@ -479,10 +479,23 @@ namespace ong
 		}
 	}
 
+	vec3 closestPointOnShape(const vec3& p, ShapePtr shape)
+	{
+		switch (shape.getType())
+		{
+		case ShapeType::HULL:
+			return closestPointOnHull(p, shape);
+		case ShapeType::SPHERE:
+			return closestPointOnSphere(p, shape);
+		case ShapeType::CAPSULE:
+			return closestPointOnCapsule(p, shape);
+		default:
+			return p;
+		}
+	}
+
 	vec3 closestPointOnHull(const vec3& p, const Hull* hull)
 	{
-
-
 		Simplex simplex;
 
 		//starting point
@@ -536,6 +549,19 @@ namespace ong
 
 
 		return p;
+	}
+
+
+
+	vec3 closestPointOnSphere(const vec3& p, const Sphere* sphere)
+	{
+		return sphere->c + sphere->r * normalize(p - sphere->c);
+	}
+
+	vec3 closestPointOnCapsule(const vec3& p, const Capsule* capsule)
+	{
+		vec3 c = closestPtPointSegment(p, capsule->c1, capsule->c2);
+		return c + capsule->r * (p - c);
 	}
 
 

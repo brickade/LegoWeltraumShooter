@@ -87,6 +87,7 @@ void Player::shoot()
 		bodyDescr.transform.q = m_body->getOrientation();;
 		bodyDescr.linearMomentum = rotate(vec3(0.0f, 0.0f, 300.0f), m_body->getOrientation());
 		bodyDescr.angularMomentum = vec3(0.0f, 0.0f, 0.0f);
+		bodyDescr.continuousPhysics = false;
 
 		Body* body = m_body->getWorld()->createBody(bodyDescr);
 		body->addCollider(collider);
@@ -136,6 +137,7 @@ void Player::bomb()
 		bodyDescr.transform.q = m_body->getOrientation();;
 		bodyDescr.linearMomentum = rotate(vec3(0.0f, 0.0f, 1000.0f), m_body->getOrientation());
 		bodyDescr.angularMomentum = vec3(0.0f, 0.0f, 0.0f);
+		bodyDescr.continuousPhysics = false;
 
 		Body* body = m_body->getWorld()->createBody(bodyDescr);
 		body->addCollider(collider);

@@ -10,7 +10,6 @@ namespace ong
 {
 
 
-
 	World::World(const vec3& gravity)
 		: m_gravity(gravity),
 		m_bodyAllocator(BodyAllocator(32)),
@@ -35,6 +34,9 @@ namespace ong
 		world->m_cp[cpIdx].p0 += (t - world->m_cp[cpIdx].t) / (1.0f - world->m_cp[cpIdx].t) * (world->m_cp[cpIdx].p1 - world->m_cp[cpIdx].p0);
 		world->m_cp[cpIdx].t = t;
 		world->m_r[idx].p = world->m_cp[cpIdx].p0;
+
+		//DEBUG
+		body->CP_POINTS.push_back(world->m_cp[cpIdx].p0);
 	}
 
 
@@ -69,9 +71,13 @@ namespace ong
 		Body* b = m_pBody;
 		while (b != nullptr)
 		{
-			b->calculateAABB(dt);
+			b->calculateAABB();
 			m_hGrid.updateBody(b->getProxyID());
 			b = b->getNext();
+
+			//DEBUG
+			b->CP_POINTS.clear();
+
 		}
 
 	
@@ -142,6 +148,7 @@ namespace ong
 		//---solve continuous contacts---
 		{
 
+
 			// find pairs with continous physics
 			Pair* cPairs = new Pair[numPairs];
 			int numCPairs = 0;
@@ -151,10 +158,14 @@ namespace ong
 				{
 					if (pairs[i].A->getContinuousPhysics())
 					{
+
+
 						advanceCpBody(this, pairs[i].A, 0.0f);
+
 					}
 					if (pairs[i].B->getContinuousPhysics())
 					{
+
 						advanceCpBody(this, pairs[i].B, 0.0f);
 					}
 
@@ -164,7 +175,7 @@ namespace ong
 			
 
 			float t0 = 0.0f;
-			for (;;)
+			for (;numCPairs > 0;)
 			{
 				Pair* minPair = nullptr;
 				float minT = 1.0f;
@@ -172,7 +183,7 @@ namespace ong
 				{
 					float t = getTimeOfImpact(cPairs[i].A, cPairs[i].B, m_cp.data(), t0);
 					
-					if (t != t0 && t < minT)
+					if (t != t0 && t < minT && t < 0.99f)
 					{
 						minT = t;
 						minPair = &cPairs[i];
@@ -182,12 +193,14 @@ namespace ong
 				if (minPair == nullptr)
 					break;
 
+
+
 				//advance body to time of impact
-				if (minPair->A->getContinuousPhysics())
+				if (minPair->A->getContinuousPhysics() && m_cp[minPair->A->getCpIndex()].t != minT)
 				{
 					advanceCpBody(this, minPair->A, minT);
 				}
-				if (minPair->B->getContinuousPhysics())
+				if (minPair->B->getContinuousPhysics() && m_cp[minPair->B->getCpIndex()].t != minT)
 				{
 					advanceCpBody(this, minPair->B, minT);
 				}
@@ -252,22 +265,41 @@ namespace ong
 					Body* ba = cpContacts[i]->colliderA->getBody();
 					Body* bb = cpContacts[i]->colliderB->getBody();
 
-					ba->calculateAABB(minT - t0);
-					bb->calculateAABB(minT - t0);
-
 					// update cp
 					if (ba->getContinuousPhysics())
+					{
 						m_cp[ba->getCpIndex()].p1 = m_cp[ba->getCpIndex()].p0 + (1.0f - m_cp[ba->getCpIndex()].t)*dt * m_v[ba->getIndex()].v;
+						ba->calculateAABB();
+						m_hGrid.updateBody(cpContacts[i]->colliderA->getBody()->getProxyID());
+					}
 					if (bb->getContinuousPhysics())
+					{
 						m_cp[bb->getCpIndex()].p1 = m_cp[ba->getCpIndex()].p0 + (1.0f - m_cp[ba->getCpIndex()].t)*dt * m_v[bb->getIndex()].v;
+						bb->calculateAABB();
+						m_hGrid.updateBody(cpContacts[i]->colliderB->getBody()->getProxyID());
+					}
+						
 
-					m_hGrid.updateBody(cpContacts[i]->colliderA->getBody()->getProxyID());
-					m_hGrid.updateBody(cpContacts[i]->colliderB->getBody()->getProxyID());
+
 				}
 
 				delete[] contactConstraints;
-
+				
 				t0 = minT;
+				//broadphase
+				numPairs = m_hGrid.generatePairs(pairs);
+				numCPairs = 0;
+				for (int i = 0; i < numPairs; ++i)
+				{	
+					if (pairs[i].A->getContinuousPhysics() && m_cp[pairs[i].A->getCpIndex()].t != t0)
+						advanceCpBody(this, pairs[i].A, t0);
+					if (pairs[i].B->getContinuousPhysics() && m_cp[pairs[i].B->getCpIndex()].t != t0)
+						advanceCpBody(this, pairs[i].B, t0);
+
+					cPairs[numCPairs++] = pairs[i];
+				}
+
+
 			}
 
 			if (t0 != 1.0f)
@@ -277,10 +309,11 @@ namespace ong
 					for (int j = 0; j < 2; ++j)
 					{
 						Body* b = ((Body**)cPairs + i)[j];
-						if (b->getContinuousPhysics())
+						if (b->getContinuousPhysics() && m_cp[b->getCpIndex()].t != 1.0f)
 							advanceCpBody(this, b, 1.0f);
 					}
 				}
+
 			}
 
 		}

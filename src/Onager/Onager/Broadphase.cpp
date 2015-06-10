@@ -256,6 +256,7 @@ namespace ong
 	}
 
 
+
 	void HGrid::removeFromBucket(const ProxyID* id)
 	{
 		if (m_objectBucket[id->bucket].size() > 1)

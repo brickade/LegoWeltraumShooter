@@ -6,6 +6,8 @@
 namespace ong
 {
 
+	//DEBUG
+	std::vector<vec3> Body::CP_POINTS;
 
 	Body::Body(const BodyDescription& descr, World* pWorld, int idx)
 		: m_pWorld(pWorld),
@@ -157,7 +159,7 @@ namespace ong
 
 
 
-	void Body::calculateAABB(float dt)
+	void Body::calculateAABB()
 	{
 		if (m_numCollider > 1)
 			m_aabb = transformAABB(&m_tree->aabb, &getTransform());
@@ -166,17 +168,16 @@ namespace ong
 		else
 			m_aabb = { getTransform().p, vec3(0, 0, 0) };
 
-		m_cpAABB = m_aabb;
-
 		if (m_flags & CP)
 		{
-			m_cpAABB.c = m_pWorld->m_cp[m_cpIndex].p0;
-			AABB end = m_cpAABB;
-			//end.c += dt*m_pWorld->m_v[m_index].v;
-			end.c = m_pWorld->m_cp[m_cpIndex].p1;
-			mergeAABBAABB(&m_cpAABB, &end);
+			m_cpAABB.c = m_pWorld->m_cp[m_cpIndex].p1;
+			m_cpAABB.e = m_aabb.e;
+			mergeAABBAABB(&m_cpAABB, &m_aabb);
 		}
-
+		else
+		{
+			m_cpAABB = m_aabb;
+		}
 	}
 
 	void Body::calculateTree()
@@ -747,6 +748,76 @@ namespace ong
 		return true;
 	}
 
+	vec3 Body::closestPoint(const vec3& p) const
+	{
+		
+		if (m_numCollider == 1)
+		{
+			Transform t = transformTransform(m_pCollider->getTransform(), getTransform());
+			vec3 _p = invTransformVec3(p, t);
+			_p = closestPointOnShape(p, m_pCollider->getShape());
+			_p = transformVec3(_p, t);
+			return _p;
+		}
+		else if (m_numCollider > 1)
+		{
+			// query tree with sphere
+			// find closest point on collidern and reduce
+			// sphere radius until closest point is found
+
+			vec3 minP = p;
+			float minDist = FLT_MAX;
+
+			Sphere s;
+			s.c = p;
+			// todo better estimate
+			s.r = 0.5f*length(p - m_aabb.c);
+			std::stack<BVTree*> stack;
+				
+			BVTree* n = m_tree;
+
+			while (true)
+			{
+				if (!(overlap(&s, &n->aabb)))
+				{
+					if (stack.empty())
+						return minP;
+					n = stack.top();
+					stack.pop();
+				}
+				if (n->type == NodeType::LEAF)
+				{
+					Transform t = transformTransform(m_pCollider->getTransform(), getTransform());
+					vec3 _p = invTransformVec3(p, t);
+					_p = closestPointOnShape(p, m_pCollider->getShape());
+					_p = transformVec3(_p, t);
+					
+					float dist = lengthSq(p - _p);
+					if (dist < minDist)
+					{
+						minDist = dist;
+						minP = _p;
+						s.r = sqrt(dist);
+					}
+				}
+				else
+				{
+					stack.push(m_tree + n->right);
+					n = m_tree + n->left;
+					continue;
+				}
+
+				if (stack.empty())
+					return minP;
+				n = stack.top();
+				stack.pop();
+			}
+		}
+		else
+		{
+			return p;
+		}
+	}
 
 	AABB Body::getMovingAABB()
 	{

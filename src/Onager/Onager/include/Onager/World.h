@@ -84,6 +84,8 @@ namespace ong
 	class World
 	{
 	public:
+
+
 		World(const vec3& gravity = vec3(0.0f, 0.0f, 0.0f));
 
 		//simulation step, dt should be constant

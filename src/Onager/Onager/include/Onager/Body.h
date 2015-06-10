@@ -8,6 +8,8 @@
 
 #include <float.h>
 
+//DEBUG
+#include <vector>
 
 namespace ong
 {
@@ -55,11 +57,15 @@ namespace ong
 	{
 	public:
 
+
+		//DEBUG
+		static std::vector<vec3> CP_POINTS;
+
 		//	--MANIPULATORS--
 
 		void calculateMassData();
 
-		void calculateAABB(float dt);
+		void calculateAABB();
 
 		void addCollider(Collider* collider);
 		void removeCollider(Collider* collider);
@@ -92,6 +98,8 @@ namespace ong
 		bool queryShape(ShapePtr shape, const Transform& transform);
 		bool queryShape(ShapePtr shape, const Transform& transform, ShapeQueryCallBack callback, void* userData);
 		
+		vec3 closestPoint(const vec3& p) const;
+
 		AABB getMovingAABB();
 		const AABB& getAABB();
 

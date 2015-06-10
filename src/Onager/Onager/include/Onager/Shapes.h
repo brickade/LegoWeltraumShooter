@@ -165,12 +165,15 @@ namespace ong
 	// hull
 	vec3 getHullSupport(const vec3& dir, const Hull* hull, int* idx = 0);
 	vec3 getSegmentSupport(const vec3& dir, const vec3& a, const vec3& b, int* idx = 0);
-	vec3 closestPointOnHull(const vec3& p, const Hull* hull);
 
 	// return the squared distance between points
 	float closestPtSegmentHull(const vec3& a, const vec3& b, const Hull* hull, vec3& cSegment, vec3& cHull);
 
-	
+	//closest point
+	vec3 closestPointOnShape(const vec3& p, ShapePtr shape);
+	vec3 closestPointOnHull(const vec3& p, const Hull* hull);
+	vec3 closestPointOnSphere(const vec3& p, const Sphere* sphere);
+	vec3 closestPointOnCapsule(const vec3& p, const Capsule* capsule);
 
 	// broad
 	bool overlap(Sphere* sphere, AABB* aabb);
@@ -180,7 +183,7 @@ namespace ong
 	bool overlap(const AABB& a, const AABB& b, const vec3& t, const mat3x3& rot);
 
 	// narrow
-	// todo with matrix maybe not...
+	// todo with matrix, but maybe not...
 	bool overlap(const ShapePtr shapeA, const ShapePtr shapeB, const Transform& ta, const Transform& tb);
 	bool overlap(const Hull* hullA, const Hull* hullB, const Transform& t1, const Transform& t2);
 	bool overlap(const Sphere* sphereA, const Sphere* sphereB, const Transform& t1, const Transform& t2);

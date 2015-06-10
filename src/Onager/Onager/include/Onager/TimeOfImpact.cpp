@@ -10,8 +10,6 @@ namespace ong
 	//todo maybe use different end condition
 	float getTimeOfImpact(Body* a, Body* b, ContinuousState* cpS, float tmin)
 	{
-		static const float MIN_INTERVAL = 0;
-
 		//  
 		//	first test moving bounding spheres to get approximate
 		//	start and end  points
@@ -22,7 +20,7 @@ namespace ong
 		//  time of impact
 		//
 
-		float t0 = tmin;
+		float t0 = 0;
 		float t1 = 1.0f;
 		
 		
@@ -32,33 +30,49 @@ namespace ong
 		vec3 cb = b->getAABB().c;
 
 
-		//Transform ta = a->getTransform();
-		//Transform tb = b->getTransform();
+		Transform ta = a->getTransform();
+		Transform tb = b->getTransform();
 
 		vec3 v = vec3(0,0,0);
 
 		if (a->getContinuousPhysics())
+		{
+			assert(cpS[a->getCpIndex()].t == tmin);
 			v += cpS[a->getCpIndex()].p1 - cpS[a->getCpIndex()].p0;
+		}
 		if (b->getContinuousPhysics())
+		{
+			assert(cpS[b->getCpIndex()].t == tmin);
 			v -= cpS[b->getCpIndex()].p1 - cpS[b->getCpIndex()].p0;
+		}
 		
+
 		float absV = length(v);
+
+		// check for inital overlap
+		if (overlap(a, b, Transform(vec3(0,0,0), Quaternion(vec3(0, 0, 0), 1))))
+		{
+			return tmin;
+		}
 
 		//broad		
 		{
 			Sphere a = { ca, ra };
 			Sphere b = { cb, rb };
-			if (!overlapMovingSphereSphere(&a, &b, v, t0, t1) || t0 > 1.0f)
-			{
-				//no collision 
-				return 1.0f;
-			}
+			overlapMovingSphereSphere(&a, &b, v, t0, t1);
+
+			if (t0 > 1.0f)//no collision
+				return false;
+
 		}
 
 		//narrow
+
+
 		int numHits = 0;
 		static const int MAX_HITS = 3;
-		while (numHits < MAX_HITS)
+		static const float MIN_INTERVAL = 0.01f;
+		while (numHits < MAX_HITS && (t1 -t0) > MIN_INTERVAL)
 		{
 			float t = 0.5f *(t0 + t1);
 
@@ -69,7 +83,8 @@ namespace ong
 			}
 			else
 			{
-				if (dot(cb - (ca + t*v), v) > 0)
+				vec3 pa = ca + t*v;
+				if (dot(b->closestPoint(pa) - pa, v) > 0)
 				{
 					t0 = t;
 				}
@@ -80,6 +95,10 @@ namespace ong
 
 			}
 		}
+
+
+		//scale to timeline
+		t1 = t1 * (1.0f - tmin) + tmin;
 
 		return t1;
 	}
