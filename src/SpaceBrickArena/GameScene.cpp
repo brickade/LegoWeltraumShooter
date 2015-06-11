@@ -437,10 +437,13 @@ namespace Game
         this->m_pSkyMaterial = a_pApplication->GetGraphics()->LoadMaterial("../data/effects/skybox/default");
         this->m_pPointLightMaterial = a_pApplication->GetGraphics()->LoadMaterial("../data/effects/PointLight/default");
         this->m_pDirectionalLightMaterial = a_pApplication->GetGraphics()->LoadMaterial("../data/effects/DirectionalLight/default");
+        this->m_pParticleMaterial = a_pApplication->GetGraphics()->LoadMaterial("../data/effects/particles/default");
         this->m_pPointLight = new PuRe_PointLight(a_pApplication->GetGraphics());
         this->m_pDirectionalLight = new PuRe_DirectionalLight(a_pApplication->GetGraphics());
         this->m_pMinimap = new CMinimap(a_pApplication->GetGraphics());
         this->m_pFont = new PuRe_Font(a_pApplication->GetGraphics(), "../data/textures/font.png");
+        this->m_pEmitter = new PuRe_ParticleEmitter(PuRe_Vector3F(), PuRe_QuaternionF());
+        this->m_pParticleSprite = new PuRe_Sprite(a_pApplication->GetGraphics(),"../data/textures/dust.png");
         this->m_pUICam = new PuRe_Camera(size, PuRe_CameraProjection::Orthogonal);
         CGameCamera* Cam = new CGameCamera(size, PuRe_Camera_Perspective);
         Cam->Initialize();
@@ -502,7 +505,35 @@ namespace Game
                 this->HandleNetwork();
             else
                 this->HandleLocal();
-            this->m_Cameras[0]->Update(0, this->m_Players[this->m_ArrayID]->Ship, a_pApplication->GetInput(), a_pApplication->GetTimer());
+
+            TheBrick::CSpaceship* playerShip = this->m_Players[this->m_ArrayID]->Ship;
+            this->m_Cameras[0]->Update(0, playerShip, a_pApplication->GetInput(), a_pApplication->GetTimer());
+            PuRe_QuaternionF rotation = this->m_Cameras[0]->GetQuaternion();
+            if (this->m_pEmitter->GetAmount() < 200)
+            {
+                for (int i = 0; i<10; i++)
+                {
+                    PuRe_Vector3F pos = PuRe_Vector3F(0.0f, 0.0f, 0.0f);
+                    pos.X = ((std::rand() % 100) / 10.0f) - 5.0f;
+                    pos.Y = ((std::rand() % 100) / 10.0f) - 5.0f;
+                    pos.Z = (std::rand() % 100) / 10.0f;
+                    PuRe_Vector3F size = PuRe_Vector3F(0.05f, 0.05f, 0.05f);
+                    float rsize = (std::rand() % 10) / 10.0f;
+                    size.X *= rsize;
+                    size.Y *= rsize;
+                    size.Z *= rsize;
+                    PuRe_Vector3F velocity = PuRe_Vector3F(0.0f, 0.0f, 0.0f);
+                    PuRe_Color color;
+                    color.R = (std::rand() % 255) / 255.0f;
+                    color.G = (std::rand() % 255) / 255.0f;
+                    color.B = (std::rand() % 255) / 255.0f;
+                    this->m_pEmitter->Spawn(0.5f, pos, size, velocity, rotation, color);
+                }
+            }
+            if (TheBrick::OngToPuRe(playerShip->m_pBody->getAngularVelocity()).Length() > 0.1f || TheBrick::OngToPuRe(playerShip->m_pBody->getLinearVelocity()).Length() > 0.1f)
+                this->m_pEmitter->Update(a_pApplication->GetTimer()->GetElapsedSeconds());
+            this->m_pEmitter->m_Position = this->m_Cameras[0]->GetPosition();
+            this->m_pEmitter->m_Rotation = rotation;
         }
         else
             this->GameSetup();
@@ -545,6 +576,10 @@ namespace Game
 
         /////////////  DRAW BRICKS  ///////////////////////
         sba::Space::Instance()->BrickManager->Render(*sba::Space::Instance()->Renderer);
+        ////////////////////////////////////////////////////
+
+        /////////////  DRAW Particles  ///////////////////////
+        renderer->Draw(0,true,this->m_pEmitter,this->m_pParticleMaterial,this->m_pParticleSprite);
         ////////////////////////////////////////////////////
 
         //////////////////////  NETWORK UI  /////////////////////////////
@@ -590,7 +625,10 @@ namespace Game
             SAFE_DELETE(this->m_Players[i]);
         }
         this->m_Players.clear();
+        SAFE_DELETE(this->m_pParticleSprite);
+        SAFE_DELETE(this->m_pEmitter);
         // DELETE MATERIALS
+        SAFE_DELETE(this->m_pParticleMaterial);
         SAFE_DELETE(this->m_pDirectionalLightMaterial);
         SAFE_DELETE(this->m_pPointLightMaterial);
         SAFE_DELETE(this->m_pFontMaterial);

@@ -42,9 +42,9 @@ int PURE_MAIN
         description.Window.DisplaySetting = PuRe_DisplaySetting::FullscreenWindowed;
     else
         description.Window.DisplaySetting = PuRe_DisplaySetting::Fullscreen;
-    description.Window.ShowCursor = false;
+    description.Window.ShowCursor = true;
     description.Window.CursorInWindow = false;
-    description.Window.LockCursor = true;
+    description.Window.LockCursor = false;
     PuRe_Application* papplication = new PuRe_Application(pplatform, description);
     sba::CMainScene scene(papplication);
 

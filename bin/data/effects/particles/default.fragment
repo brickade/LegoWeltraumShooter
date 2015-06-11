@@ -1,0 +1,20 @@
+#version 330 core
+
+in vec2 UV;
+in vec3 Color;
+in vec3 Normal;
+in vec3 Position;
+
+uniform sampler2D Diffuse;
+
+
+void main()
+{
+
+	vec4 blend = texture2D( Diffuse, vec2(UV.x,UV.y) );
+         if(blend.a < 0.9)
+		discard;
+
+	gl_FragData[0] = blend;
+	gl_FragData[1] = (vec4(-1,0,0,0)+1)/2;
+}

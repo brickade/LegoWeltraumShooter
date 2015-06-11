@@ -120,13 +120,13 @@ namespace Game
         if (this->m_Rotation != quat)
         {
             PuRe_QuaternionF diff = quat - this->m_Rotation;
-            this->m_Rotation.X += diff.X / 100.0f;
-            this->m_Rotation.Y += diff.Y / 100.0f;
-            this->m_Rotation.Z += diff.Z / 100.0f;
-            this->m_Rotation.W += diff.W / 100.0f;
+            this->m_Rotation.X += diff.X / 15.0f;
+            this->m_Rotation.Y += diff.Y / 15.0f;
+            this->m_Rotation.Z += diff.Z / 15.0f;
+            this->m_Rotation.W += diff.W / 15.0f;
             this->SetRotation(this->m_Rotation);
         }
 
-        this->Move(PuRe_Vector3F(0.0f, 0.0f, -this->m_ZOffset));
+        this->Move(PuRe_Vector3F(0.0f, 10.0f, -this->m_ZOffset));
     }
 }

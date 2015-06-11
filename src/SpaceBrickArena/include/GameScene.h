@@ -45,6 +45,7 @@ namespace Game
         bool m_send[BufferSize];
         //All players
         PlayOutBuffer m_buffer[BufferSize];
+        InputPacket m_inputs[Delay];
         //used for networking
         float m_PhysicTime;
         int m_ID;
@@ -69,7 +70,10 @@ namespace Game
         PuRe_IMaterial* m_pPostMaterial;
         PuRe_IMaterial* m_pPointLightMaterial;
         PuRe_IMaterial* m_pDirectionalLightMaterial;
+        PuRe_IMaterial* m_pParticleMaterial;
         CMinimap* m_pMinimap;
+        PuRe_ParticleEmitter* m_pEmitter;
+        PuRe_Sprite* m_pParticleSprite;
 
         std::vector<TheBrick::CBullet*> m_Bullets;
         std::vector<TheBrick::CAsteroid*> m_Asteroids;

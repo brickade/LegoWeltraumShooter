@@ -1,11 +1,11 @@
 cbuffer MatrixBuffer
 {
-	matrix InvertProjection;
-    matrix InvertViewModel;
+	matrix View;
+	matrix Projection;
 };
 tbuffer textureBuffer
 {
-	TextureCube Diffuse;
+	Texture2D Diffuse;
 };
 
 SamplerState TextureSampler;
@@ -17,34 +17,42 @@ struct VertexShaderInput
   float2 UV       : TEXCOORD0;
   float3 Color    : COLOR0;
   float3 Normal   : NORMAL;
-  float4 Offset   : MATRIX0;
+  row_major matrix Offset   : MATRIX;
 };
 
 struct VertexShaderOutput
 {
-  float4 Position : SV_POSITION;
-  float3 UV       : TEXCOORD0;
+  float4 PositionOut : SV_POSITION;
+  float4 Position : POSITION0;
+  float2 UV       : TEXCOORD0;
+  float3 Color    : COLOR0;
+  float3 Normal   : NORMAL;
 };
 
 struct PixelShaderOutput
 {
   float4 colorMap: SV_TARGET0;
+  float4 normalMap: SV_TARGET1;
 };
 
 VertexShaderOutput VS_MAIN(VertexShaderInput input)
 {
   VertexShaderOutput Output = (VertexShaderOutput)0;
+  
+  float4 pos = float4(input.Position.xyz,1);
 
-  float3x3 IMV =(float3x3)InvertViewModel;
-  float4x4 IP = InvertProjection;
+  float4x4 Model = input.Offset;
 
-  float4 Pos = float4(input.Position,1);
+  float4x4 MVP = mul(mul(Model,View),Projection);
 
-  float3 unprojected = (mul(Pos,IP)).xyz;
+  Output.Position = mul(pos,MVP);
+  Output.PositionOut = mul(pos,MVP);
 
-  Output.Position = Pos;
+  Output.UV = input.UV;
 
-  Output.UV = mul(unprojected, IMV);
+  Output.Color = input.Color;
+
+  Output.Normal = normalize(mul(input.Normal,(float3x3)Model));
   
   return Output;
 }
@@ -54,7 +62,10 @@ PixelShaderOutput PS_MAIN(VertexShaderOutput input) : SV_TARGET
   PixelShaderOutput output;
 
   float4 blend = Diffuse.Sample(TextureSampler, input.UV);
+  if(blend.a < 0.9)
+	discard;
   output.colorMap = blend;
+  output.normalMap = float4(input.Normal,1);
 
 
   return output;
