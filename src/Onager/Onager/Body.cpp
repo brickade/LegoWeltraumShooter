@@ -514,11 +514,11 @@ namespace ong
 
 	bool Body::queryCollider(const Collider* collider)
 	{
-		Transform tCollider = collider->getTransform();
+		Transform tCollider = Transform(vec3(0, 0, 0), Quaternion(vec3(0, 0, 0), 1));
 
 		if (collider->getBody())
 		{
-			tCollider = transformTransform(tCollider, collider->getBody()->getTransform());
+			tCollider = collider->getBody()->getTransform();
 		}
 
 		Transform t = invTransformTransform(tCollider, getTransform());
@@ -541,11 +541,11 @@ namespace ong
 
 	bool Body::queryCollider(Collider* collider, ColliderQueryCallBack callback)
 	{
-		Transform tCollider = collider->getTransform();
+		Transform tCollider = Transform(vec3(0,0,0), Quaternion(vec3(0,0,0), 1));
 
 		if (collider->getBody())
 		{
-			tCollider = transformTransform(tCollider, collider->getBody()->getTransform());
+			tCollider = collider->getBody()->getTransform();
 		}
 
 		Transform t = invTransformTransform(tCollider, getTransform());
