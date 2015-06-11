@@ -2,7 +2,6 @@
 
 #include <algorithm>
 #include "TheBrick/BrickInstance.h"
-#include "TheBrick/Brick.h"
 #include "TheBrick/Spaceship.h"
 #include "include/Space.h"
 #include "include/Editor_History.h"
@@ -37,6 +36,7 @@ namespace Editor
         this->m_pCamera = new CCamera(PuRe_Vector2F((float)gdesc.ResolutionWidth, (float)gdesc.ResolutionHeight), PuRe_Camera_Perspective, this->m_playerIdx);
         this->m_pCamera->Initialize(PuRe_Vector3F(20, 135, 0), PuRe_Vector3F(-2, 0, 0));
         this->m_currentPosition = PuRe_Vector2F(0, 0);
+        this->m_currentBrickPosition = PuRe_Vector2I(0, 0);
         this->m_currentHeight = 0;
         this->m_maxBrickDistance = 15;
         this->m_pHistory = new CHistory(300, 100);
@@ -63,7 +63,7 @@ namespace Editor
         }
         this->m_pCamera->Update(&a_pGraphics, &a_pWindow, &a_pTimer);
         this->UpdateTranslation(this->m_pCamera->GetForward(), a_pTimer.GetElapsedSeconds() * 3.0f);
-        this->UpdateRotation(90.0f * 0.0174532925f);
+        this->UpdateRotation();
         this->UpdateHeight();
         this->ApplyToCurrentBrick();
         this->UpdatePlacement();
@@ -139,43 +139,29 @@ namespace Editor
         this->m_currentPosition.X = PuRe_clamp(this->m_currentPosition.X, -this->m_maxBrickDistance, this->m_maxBrickDistance);
         this->m_currentPosition.Y = PuRe_clamp(this->m_currentPosition.Y, -this->m_maxBrickDistance, this->m_maxBrickDistance);
 
-        this->m_currentBrickPosition = this->m_currentPosition;
-
-        //Snap to grid
-        this->m_currentBrickPosition.X = this->m_currentBrickPosition.X - fmod(this->m_currentBrickPosition.X, TheBrick::CBrick::SEGMENT_WIDTH);
-        this->m_currentBrickPosition.Y = this->m_currentBrickPosition.Y - fmod(this->m_currentBrickPosition.Y, TheBrick::CBrick::SEGMENT_WIDTH);
+        this->m_currentBrickPosition = PuRe_Vector2I(round(this->m_currentPosition.X), round(this->m_currentPosition.Y)); //Snap to grid
     }
 
     // **************************************************************************
     // **************************************************************************
-    void CWorker::UpdateRotation(float a_rotationPerClick)
+    void CWorker::UpdateRotation()
     {
         if (sba_Input->ButtonPressed(sba_Button::EditorRotateBrickRight, this->m_playerIdx))
         {
-            this->m_currentBrickRotation += a_rotationPerClick;
+            this->m_currentBrickRotation++;
         }
         if (sba_Input->ButtonPressed(sba_Button::EditorRotateBrickLeft, this->m_playerIdx))
         {
-            this->m_currentBrickRotation -= a_rotationPerClick;
+            this->m_currentBrickRotation--;
         }
-        //this->m_currentBrickRotation = this->m_currentBrickRotation - fmod(this->m_currentBrickRotation, 1.57079633f); //Snap Rotation
+        this->m_currentBrickRotation += 4; //Avoid negative numbers
+        this->m_currentBrickRotation = this->m_currentBrickRotation % 4; //Snap Rotation
     }
 
     // **************************************************************************
     // **************************************************************************
     void CWorker::UpdateHeight()
     {
-        auto SetHeight = [this](float a_YOrigin, float a_YDelta) //Set Brick Height;
-        {
-            float heightOffset = 0;
-            if (this->m_placeBelow)
-            {
-                heightOffset = -TheBrick::CBrick::SEGMENT_HEIGHT * 3;
-            }
-            this->m_currentHeight = a_YOrigin + a_YDelta + heightOffset;
-        };
-
-
         //Update Placement Direction
         if (sba_Input->ButtonPressed(sba_Button::EditorTogglePlacementSide, this->m_playerIdx))
         {
@@ -183,7 +169,7 @@ namespace Editor
         }
 
         //Set Brick up
-        this->m_currentHeight = TheBrick::CBrick::SEGMENT_HEIGHT * 20; //this->m_maxBrickDistance;
+        this->m_currentHeight = this->m_maxBrickDistance;
         if (this->m_placeBelow)
         {
             this->m_currentHeight *= -1;
@@ -229,18 +215,16 @@ namespace Editor
                 if (CAssistant::MovementDeltaIsCollisionFree(*this->m_pCurrentBrick, *this->m_pShipWorker->GetCurrentSpaceShip(), hitDelta, TheBrick::CBrick::SEGMENT_HEIGHT, &maxCollisionFreeDelta))
                 { //CollisionFree
                     this->m_canPlaceHere = true;
-                    this->m_currentHeight = hitResultRayOrigins[i].y + maxCollisionFreeDelta.y;
+                    this->m_currentHeight = round((hitResultRayOrigins[i].y + maxCollisionFreeDelta.y + (brickTransform.p.y - hitResultRayOrigins[i].y)) / TheBrick::CBrick::SEGMENT_HEIGHT);
                     return;
                 }
                 //Handle docking test success but not collision free
-                SetHeight(hitResultRayOrigins[i].y, hitDelta.y);
+                this->m_currentHeight = round((hitResultRayOrigins[i].y + maxCollisionFreeDelta.y + (brickTransform.p.y - hitResultRayOrigins[i].y)) / TheBrick::CBrick::SEGMENT_HEIGHT);
                 return;
             }
         }
         //Can't dock
-        SetHeight(hitResultRayOrigins[0].y, (hitResults[0].point - hitResultRayOrigins[0]).y);
-        
-        //this->m_currentHeight = this->m_currentHeight - fmod(this->m_currentHeight, TheBrick::CBrick::SEGMENT_HEIGHT); //Snap Height
+        this->m_currentHeight = round((hitResults[0].point.y + (brickTransform.p.y - hitResultRayOrigins[0].y)) / TheBrick::CBrick::SEGMENT_HEIGHT);
     }
 
     // **************************************************************************
@@ -252,10 +236,10 @@ namespace Editor
             return;
         }
         ong::Transform transform = this->m_pCurrentBrick->GetTransform();
-        transform.p = ong::vec3(this->m_currentBrickPosition.X, this->m_currentHeight, this->m_currentBrickPosition.Y);
+        transform.p = ong::vec3(this->m_currentBrickPosition.X * TheBrick::CBrick::SEGMENT_WIDTH, this->m_currentHeight * TheBrick::CBrick::SEGMENT_HEIGHT, this->m_currentBrickPosition.Y * TheBrick::CBrick::SEGMENT_WIDTH);
         transform.q = ong::Quaternion(ong::vec3(0, 0, 0), 1);
         this->m_pCurrentBrick->SetTransform(transform);
-        this->m_pCurrentBrick->RotateAroundPivotOffset(PuRe_QuaternionF(0.0f, this->m_currentBrickRotation, 0.0f));
+        this->m_pCurrentBrick->RotateAroundPivotOffset(PuRe_QuaternionF(0.0f, this->m_currentBrickRotation * 90.0f * 0.0174532925f, 0.0f));
         //#define ALPHAREADY
         if (this->m_canPlaceHere)
         {

@@ -90,6 +90,11 @@ namespace Editor
             {
                 if (a_rGameObjectToTestAgainst.m_pBody->queryCollider(a_rBrickInstanceToTest.m_pCollider[t]))
                 {
+                    if (i > 0)
+                    {
+                        i--;
+                    }
+                    *a_pMaxCollisionFreeMovementDelta = (i * a_MoveTestingSteps) * direction;
                     return false;
                 }
             }
