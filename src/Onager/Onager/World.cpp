@@ -37,6 +37,7 @@ namespace ong
 
 		//DEBUG
 		body->CP_POINTS.push_back(world->m_cp[cpIdx].p0);
+		printf("advance body %d to %f\n", body->getIndex(), t);
 	}
 
 
@@ -71,12 +72,13 @@ namespace ong
 		Body* b = m_pBody;
 		while (b != nullptr)
 		{
+			//DEBUG
+			b->CP_POINTS.clear();
+
+
 			b->calculateAABB();
 			m_hGrid.updateBody(b->getProxyID());
 			b = b->getNext();
-
-			//DEBUG
-			b->CP_POINTS.clear();
 
 		}
 
@@ -183,7 +185,7 @@ namespace ong
 				{
 					float t = getTimeOfImpact(cPairs[i].A, cPairs[i].B, m_cp.data(), t0);
 					
-					if (t != t0 && t < minT && t < 0.99f)
+					if (t < minT)
 					{
 						minT = t;
 						minPair = &cPairs[i];
@@ -193,6 +195,8 @@ namespace ong
 				if (minPair == nullptr)
 					break;
 
+				//DEBUG
+				printf("minT:	%f\n", minT);
 
 
 				//advance body to time of impact
@@ -274,7 +278,7 @@ namespace ong
 					}
 					if (bb->getContinuousPhysics())
 					{
-						m_cp[bb->getCpIndex()].p1 = m_cp[ba->getCpIndex()].p0 + (1.0f - m_cp[ba->getCpIndex()].t)*dt * m_v[bb->getIndex()].v;
+						m_cp[bb->getCpIndex()].p1 = m_cp[bb->getCpIndex()].p0 + (1.0f - m_cp[bb->getCpIndex()].t)*dt * m_v[bb->getIndex()].v;
 						bb->calculateAABB();
 						m_hGrid.updateBody(cpContacts[i]->colliderB->getBody()->getProxyID());
 					}
@@ -299,7 +303,7 @@ namespace ong
 					cPairs[numCPairs++] = pairs[i];
 				}
 
-
+				
 			}
 
 			if (t0 != 1.0f)

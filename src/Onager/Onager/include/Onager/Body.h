@@ -59,7 +59,7 @@ namespace ong
 
 
 		//DEBUG
-		static std::vector<vec3> CP_POINTS;
+		std::vector<vec3> CP_POINTS;
 
 		//	--MANIPULATORS--
 

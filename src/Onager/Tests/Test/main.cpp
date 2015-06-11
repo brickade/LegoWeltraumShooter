@@ -12,7 +12,7 @@
 int main()
 {
 
-	Test* test = new ContinuousTest();
+	Test* test = new HierarchieTest();
 	test->init();
 
 	test->run();

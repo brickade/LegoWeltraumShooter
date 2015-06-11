@@ -52,7 +52,7 @@ public:
 		m_entities.push_back(new Entity(body, vec3(0, 1, 0)));
 
 		bDescr.type = BodyType::Dynamic;
-		bDescr.linearMomentum = vec3(000.0f, 0.0f, 5.0f);
+		bDescr.linearMomentum = vec3(000.0f, 0.0f, 500.0f);
 		bDescr.transform.p = vec3(-0.25f, 0.0f, -8.0f);
 		bDescr.continuousPhysics = true;
 
@@ -61,7 +61,7 @@ public:
 		body->addCollider(m_world->createCollider(cDescr));
 		m_entities.push_back(new Entity(body, vec3(1, 0, 0)));
 
-		bDescr.linearMomentum = vec3(000.0f, 0.0f, -5.0f);
+		bDescr.linearMomentum = vec3(000.0f, 0.0f, -500.0f);
 		bDescr.transform.p = vec3(0.25f, 0.0f, 8.0f);
 		body = m_world->createBody(bDescr);
 		cDescr.shape = sphere;

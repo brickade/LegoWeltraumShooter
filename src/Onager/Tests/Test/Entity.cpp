@@ -246,7 +246,7 @@ void Entity::render(GLuint colorLocation)
 	if (m_body->getContinuousPhysics())
 	{
 
-		glUniform3f(colorLocation, 1, 0, 1);
+		glUniform3f(colorLocation, m_color.x, m_color.y, m_color.z);
 		glBegin(GL_LINE_STRIP);
 		for (auto& p : m_body->CP_POINTS)
 		{

@@ -254,7 +254,7 @@ void HierarchieTest::update(float dt)
 
 		dir = normalize(rotate(dir, m_eye.q));
 
-		RayQueryResult result;
+		RayQueryResult result = { 0 };
 		m_body->queryRay(m_eye.p, dir, &result);
 		Collider* c = result.collider;
 		if (c)

@@ -6,9 +6,6 @@
 namespace ong
 {
 
-	//DEBUG
-	std::vector<vec3> Body::CP_POINTS;
-
 	Body::Body(const BodyDescription& descr, World* pWorld, int idx)
 		: m_pWorld(pWorld),
 		m_index(idx),
