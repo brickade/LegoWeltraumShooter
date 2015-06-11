@@ -205,36 +205,41 @@ namespace Editor
         }
 
         //Get RayCastHit
-        ong::RayQueryResult hitResult;
-        ong::vec3 hitResultRayOrigin;
-        if (!CAssistant::GetClosestHitFromBrickInstanceNubs(*this->m_pCurrentBrick, *this->m_pShipWorker->GetCurrentSpaceShip(), nubToCastFromShouldBeMale, nubToCastFromDirection, &hitResult, &hitResultRayOrigin))
+        std::vector<ong::RayQueryResult> hitResults;
+        std::vector<ong::vec3> hitResultRayOrigins;
+        if (!CAssistant::GetClosestHitsFromBrickInstanceNubs(*this->m_pCurrentBrick, *this->m_pShipWorker->GetCurrentSpaceShip(), nubToCastFromShouldBeMale, nubToCastFromDirection, &hitResults, &hitResultRayOrigins))
         { //Nothing hit
             this->m_currentHeight = 0;
             return;
         }
-        ong::vec3 hitDelta = hitResult.point - hitResultRayOrigin;
+        assert(hitResults.size() == hitResultRayOrigins.size());
 
         //Docking Nub Requirements
         ong::vec3 nubRequestedDirection = -nubToCastFromDirection;
         bool nubRequestedGenderIsMale = !nubToCastFromShouldBeMale;
-        //Docking test
-        if (!CAssistant::CanDockAtHit(hitResult, nubRequestedGenderIsMale, nubRequestedDirection))
-        { //Can't dock
-            SetHeight(hitResultRayOrigin.y, hitDelta.y);
-            return;
-        }
-
-        //Check for other Collision
-        ong::vec3 maxCollisionFreeDelta = ong::vec3(0, 0, 0);
-        if (CAssistant::MovementDeltaIsCollisionFree(*this->m_pCurrentBrick, *this->m_pShipWorker->GetCurrentSpaceShip(), hitDelta, TheBrick::CBrick::SEGMENT_HEIGHT, &maxCollisionFreeDelta))
+        for (size_t i = 0; i < hitResults.size(); i++)
         {
-            this->m_canPlaceHere = true;
-            this->m_currentHeight = hitResultRayOrigin.y + maxCollisionFreeDelta.y;
-            return;
-        }
+            ong::vec3 hitDelta = hitResults[i].point - hitResultRayOrigins[i];
 
-        //Handle docking test success
-        SetHeight(hitResultRayOrigin.y, hitDelta.y);
+            //Docking test
+            if (CAssistant::CanDockAtHit(hitResults[i], nubRequestedGenderIsMale, nubRequestedDirection))
+            {
+                //Check for other Collision
+                ong::vec3 maxCollisionFreeDelta = ong::vec3(0, 0, 0);
+                if (CAssistant::MovementDeltaIsCollisionFree(*this->m_pCurrentBrick, *this->m_pShipWorker->GetCurrentSpaceShip(), hitDelta, TheBrick::CBrick::SEGMENT_HEIGHT, &maxCollisionFreeDelta))
+                { //CollisionFree
+                    this->m_canPlaceHere = true;
+                    this->m_currentHeight = hitResultRayOrigins[i].y + maxCollisionFreeDelta.y;
+                    return;
+                }
+                //Handle docking test success but not collision free
+                SetHeight(hitResultRayOrigins[i].y, hitDelta.y);
+                return;
+            }
+        }
+        //Can't dock
+        SetHeight(hitResultRayOrigins[0].y, (hitResults[0].point - hitResultRayOrigins[0]).y);
+        
         //this->m_currentHeight = this->m_currentHeight - fmod(this->m_currentHeight, TheBrick::CBrick::SEGMENT_HEIGHT); //Snap Height
     }
 

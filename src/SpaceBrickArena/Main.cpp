@@ -33,7 +33,7 @@ int PURE_MAIN
     description.Window.Title = "SpacebrickArena - Development";
     description.Window.Width = std::stoi(sba::CIniReader::Instance()->GetValue("WindowWidth"));
     description.Window.Height = std::stoi(sba::CIniReader::Instance()->GetValue("WindowHeight"));
-    description.Window.X = 100;
+    description.Window.X = 1920;
     description.Window.Y = 200;
     std::string DisplayMode = sba::CIniReader::Instance()->GetValue("DisplayMode");
     if (DisplayMode == "Windowed")

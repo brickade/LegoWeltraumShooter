@@ -16,11 +16,11 @@ namespace Editor
 
     // **************************************************************************
     // **************************************************************************
-    bool CAssistant::GetClosestHitFromBrickInstanceNubs(TheBrick::CBrickInstance& a_rBrickInstanceToCastFrom, TheBrick::CGameObject& a_rGameObjectToCastTo, bool a_NubToCastFromGenderIsMale, const ong::vec3& a_rNubToCastFromDirection, ong::RayQueryResult* a_pResult, ong::vec3* a_pResultRayOrigin)
+    bool CAssistant::GetClosestHitsFromBrickInstanceNubs(TheBrick::CBrickInstance& a_rBrickInstanceToCastFrom, TheBrick::CGameObject& a_rGameObjectToCastTo, bool a_NubToCastFromGenderIsMale, const ong::vec3& a_rNubToCastFromDirection, std::vector<ong::RayQueryResult>* a_pResults, std::vector<ong::vec3>* a_pResultRayOrigins)
     {
         std::vector<TheBrick::SNub>& nubsToCastFrom = a_rBrickInstanceToCastFrom.m_pBrick->GetNubs(); //Get currentBrick Nubs
         ong::Body& bodyToCastTo = *a_rGameObjectToCastTo.m_pBody;
-        a_pResult->t = FLT_MAX;
+        float currentMinDistance = FLT_MAX;
         bool hit = false;
         for (size_t i = 0; i < nubsToCastFrom.size(); i++) //Go through currentBrick Nubs
         {
@@ -37,11 +37,19 @@ namespace Editor
             if (bodyToCastTo.queryRay(rayOrigin, rayDir, &hs)) //Cast Ray
             { //Ray Hit
                 hit = true;
-                //printf("RayPointHeight %i: %i\n", i, (int)(hs.point.y / TheBrick::CBrick::SEGMENT_HEIGHT));
-                if (hs.t < a_pResult->t)
-                { //This Hit is nearer to the brick than the saved one
-                    *a_pResult = hs;
-                    *a_pResultRayOrigin = rayOrigin;
+                if (fabs(hs.t - currentMinDistance) < FLT_EPSILON)
+                { //This Hit is as near to the brick as the others
+                    a_pResults->push_back(hs);
+                    a_pResultRayOrigins->push_back(rayOrigin);
+                    continue;
+                }
+                if (hs.t < currentMinDistance)
+                { //This Hit is nearer to the brick than the others
+                    a_pResults->clear();
+                    a_pResultRayOrigins->clear();
+                    currentMinDistance = hs.t;
+                    a_pResults->push_back(hs);
+                    a_pResultRayOrigins->push_back(rayOrigin);
                 }
             }
         }
