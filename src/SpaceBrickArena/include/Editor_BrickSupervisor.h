@@ -18,7 +18,7 @@ namespace Editor
         int m_CategoriesCount;
         CBrickCategory* m_pActiveCategory;
         sba::CNavigation* m_pNavigation;
-        PuRe_Camera* m_pCamera;
+
         bool m_NavigateTabs = false;
         float m_RotationSpeed = 1;
         float m_TabRotation = 0.4f;

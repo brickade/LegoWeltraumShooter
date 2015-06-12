@@ -36,7 +36,7 @@ namespace Editor
 
     // **************************************************************************
     // **************************************************************************
-    void CBrickCategory::Render(PuRe_IGraphics& a_pGraphics, PuRe_Camera& a_pCamera)
+    void CBrickCategory::Render(PuRe_IGraphics& a_pGraphics)
     {
         PuRe_Renderer* renderer = sba::Space::Instance()->Renderer;
         for (int i = 0; i <= this->m_pNavigation->GetLastElementId(); i++)
@@ -62,7 +62,7 @@ namespace Editor
 
     // **************************************************************************
     // **************************************************************************
-    void CBrickCategory::RenderTab(PuRe_IGraphics& a_pGraphics, PuRe_Camera& a_pCamera, float a_TabRotation, bool a_IsSelected)
+    void CBrickCategory::RenderTab(PuRe_IGraphics& a_pGraphics, float a_TabRotation, bool a_IsSelected)
     {
         PuRe_Vector3F pos = PuRe_Vector3F(this->m_TabStart + this->m_TabStep * this->m_Id, 0);
         pos.Y = a_pGraphics.GetDescription().ResolutionHeight - pos.Y; //Invert Y

@@ -7,7 +7,7 @@ namespace Editor
     CEditorScene::CEditorScene(PuRe_Application* a_pApplication, int a_playerIdx)
     {
         this->m_pApplication = a_pApplication;
-        this->m_playerIdx = a_playerIdx;
+        this->m_PlayerIdx = a_playerIdx;
     }
 
     // **************************************************************************
@@ -24,17 +24,20 @@ namespace Editor
         this->m_pDirectionalLight = new PuRe_DirectionalLight(a_pApplication->GetGraphics());
 
         this->m_UICamera = new PuRe_Camera(PuRe_Vector2F(a_pApplication->GetGraphics()->GetDescription().ResolutionWidth, a_pApplication->GetGraphics()->GetDescription().ResolutionHeight), PuRe_CameraProjection::Orthogonal);
+        this->m_UICamera->setNearFar(PuRe_Vector2F(0.1f, 1000));
 
         this->m_pSkyBox = new PuRe_SkyBox(a_pApplication->GetGraphics(), "../data/textures/cube/");
 
         this->textureID = 0;
 
-        this->m_pBrickSupervisor = new Editor::CBrickSupervisor(this->m_playerIdx);
+        this->m_pBrickSupervisor = new Editor::CBrickSupervisor(this->m_PlayerIdx);
         this->m_pBrickSupervisor->Initialize(*a_pApplication->GetGraphics());
 
-        this->m_pWorker = new Editor::CWorker(this->m_playerIdx);
+        this->m_pWorker = new Editor::CWorker(this->m_PlayerIdx);
         this->m_pWorker->Initialize(*a_pApplication->GetGraphics());
-        this->m_CurrentColor = PuRe_Color(0.5f, 0.6f, 1.0f);
+
+        this->m_pColorFields = new Editor::CColorFields(this->m_PlayerIdx);
+        this->m_pColorFields->Initialize(*a_pApplication->GetGraphics());
     }
 
     // **************************************************************************
@@ -43,9 +46,9 @@ namespace Editor
     {
         //Handle ESC Button
         if (a_pApplication->GetInput()->KeyPressed(a_pApplication->GetInput()->ESC)
-            || a_pApplication->GetInput()->GamepadPressed(a_pApplication->GetInput()->Pad_Back, this->m_playerIdx)
+            || a_pApplication->GetInput()->GamepadPressed(a_pApplication->GetInput()->Pad_Back, this->m_PlayerIdx)
             || a_pApplication->GetInput()->KeyPressed(a_pApplication->GetInput()->F1)
-            || a_pApplication->GetInput()->GamepadPressed(a_pApplication->GetInput()->Pad_Start, this->m_playerIdx))
+            || a_pApplication->GetInput()->GamepadPressed(a_pApplication->GetInput()->Pad_Start, this->m_PlayerIdx))
         {
             return true;
         }
@@ -63,13 +66,9 @@ namespace Editor
                 this->textureID = 0;
         }
 
-        if (a_pApplication->GetInput()->KeyPressed(a_pApplication->GetInput()->C))
-        {
-            this->m_CurrentColor = PuRe_Color((std::rand() / (float)RAND_MAX), (std::rand() / (float)RAND_MAX), (std::rand() / (float)RAND_MAX));
-        }
-
         this->m_pBrickSupervisor->Update(*a_pApplication->GetGraphics(), *a_pApplication->GetWindow(), *a_pApplication->GetTimer(), *a_pApplication->GetSoundPlayer());
-        this->m_pWorker->Update(*a_pApplication->GetGraphics(), *a_pApplication->GetWindow(), *a_pApplication->GetTimer(), *a_pApplication->GetSoundPlayer(), this->m_pBrickSupervisor->GetSelectedBrick(), this->m_CurrentColor);
+        this->m_pColorFields->Update(*a_pApplication->GetGraphics(), *a_pApplication->GetWindow(), *a_pApplication->GetTimer(), *a_pApplication->GetSoundPlayer());
+        this->m_pWorker->Update(*a_pApplication->GetGraphics(), *a_pApplication->GetWindow(), *a_pApplication->GetTimer(), *a_pApplication->GetSoundPlayer(), this->m_pBrickSupervisor->GetSelectedBrick(), this->m_pColorFields->GetCurrentColor());
         sba::Space::Instance()->BrickManager->RebuildRenderInstances(); //Update RenderInstances
         return false;
     }
@@ -91,6 +90,7 @@ namespace Editor
         this->m_pWorker->Render();
         sba::Space::Instance()->BrickManager->Render(*sba::Space::Instance()->Renderer);
         this->m_pBrickSupervisor->Render(*a_pApplication->GetGraphics());
+        this->m_pColorFields->Render(*a_pApplication->GetGraphics());
         this->m_pWorker->DrawDebug(a_pApplication->GetGraphics());
         //Post
         renderer->Set(0, (float)this->textureID, "textureID");

@@ -10,13 +10,14 @@
 
 #include "Editor_Worker.h"
 #include "Editor_BrickSupervisor.h"
+#include "Editor_ColorFields.h"
 
 namespace Editor
 {
     class CEditorScene : public PuRe_IScene
     {
     private:
-        int m_playerIdx;
+        int m_PlayerIdx;
 
         PuRe_SkyBox* m_pSkyBox;
         int textureID;
@@ -31,8 +32,7 @@ namespace Editor
         
         Editor::CBrickSupervisor* m_pBrickSupervisor;
         Editor::CWorker* m_pWorker;
-
-        PuRe_Color m_CurrentColor;
+        Editor::CColorFields* m_pColorFields;
 
         /// @brief Position for the MouseClick
         ///

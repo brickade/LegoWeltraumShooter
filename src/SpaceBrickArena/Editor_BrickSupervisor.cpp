@@ -16,16 +16,12 @@ namespace Editor
     // **************************************************************************
     CBrickSupervisor::~CBrickSupervisor()
     {
-        SAFE_DELETE(this->m_pCamera);
     }
 
     // **************************************************************************
     // **************************************************************************
     void CBrickSupervisor::Initialize(PuRe_IGraphics& a_pGraphics)
     {
-        PuRe_GraphicsDescription gdesc = a_pGraphics.GetDescription();
-        this->m_pCamera = new PuRe_Camera(PuRe_Vector2F((float)gdesc.ResolutionWidth, (float)gdesc.ResolutionHeight), PuRe_Camera_Orthogonal);
-        this->m_pCamera->setNearFar(PuRe_Vector2F(0.1f, 1000));
         this->m_CategoriesCount = sba::Space::Instance()->BrickManager->GetCategoryCount();
         assert(this->m_Categories.max_size() >= this->m_CategoriesCount);
         for (int i = 0; i < this->m_CategoriesCount; i++)
@@ -74,9 +70,9 @@ namespace Editor
             {
                 selected = true;
             }
-            this->m_Categories[i]->RenderTab(a_pGraphics, *this->m_pCamera, this->m_TabRotation, selected);
+            this->m_Categories[i]->RenderTab(a_pGraphics, this->m_TabRotation, selected);
         }
-        this->m_pActiveCategory->Render(a_pGraphics, *this->m_pCamera);
+        this->m_pActiveCategory->Render(a_pGraphics);
     }
 
     // **************************************************************************

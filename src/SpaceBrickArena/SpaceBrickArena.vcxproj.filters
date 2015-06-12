@@ -60,14 +60,20 @@
     </ClInclude>
     <ClInclude Include="include\Editor_BrickCategory.h">
       <Filter>Quelldateien\Editor</Filter>
-    </ClInclude>    <ClInclude Include="include\INIReader.h">
+    </ClInclude>
+    <ClInclude Include="include\INIReader.h">
       <Filter>Quelldateien</Filter>
-    </ClInclude>    <ClInclude Include="include\InputManager.h">
+    </ClInclude>
+    <ClInclude Include="include\InputManager.h">
       <Filter>Quelldateien</Filter>
     </ClInclude>
     <ClInclude Include="include\InputManagerTypes.h">
       <Filter>Quelldateien</Filter>
-    </ClInclude>  </ItemGroup>
+    </ClInclude>
+    <ClInclude Include="include\Editor_ColorFields.h">
+      <Filter>Quelldateien\Editor</Filter>
+    </ClInclude>
+  </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
       <Filter>Quelldateien</Filter>
@@ -116,9 +122,15 @@
     </ClCompile>
     <ClCompile Include="Editor_BrickCategory.cpp">
       <Filter>Quelldateien\Editor</Filter>
-    </ClCompile>    <ClCompile Include="INIReader.cpp">
+    </ClCompile>
+    <ClCompile Include="INIReader.cpp">
       <Filter>Quelldateien</Filter>
-    </ClCompile>    <ClCompile Include="InputManager.cpp">
+    </ClCompile>
+    <ClCompile Include="InputManager.cpp">
       <Filter>Quelldateien</Filter>
-    </ClCompile>  </ItemGroup>
+    </ClCompile>
+    <ClCompile Include="Editor_ColorFields.cpp">
+      <Filter>Quelldateien\Editor</Filter>
+    </ClCompile>
+  </ItemGroup>
 </Project>
