@@ -58,6 +58,7 @@
       <Filter>Utilities</Filter>
     </ClCompile>
     <ClCompile Include="UIElementFader.cpp">
+      <Filter>Utilities</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -120,6 +121,7 @@
       <Filter>Utilities</Filter>
     </ClInclude>
     <ClInclude Include="include\UIElementFader.h">
+      <Filter>Utilities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
