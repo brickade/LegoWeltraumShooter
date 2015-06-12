@@ -169,8 +169,6 @@
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="MenuScene.cpp" />
     <ClCompile Include="Editor_ColorFields.cpp" />
-    <ClCompile Include="INIReader.cpp" />
-    <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="Space.cpp" />
     <ClCompile Include="Editor_Camera.cpp" />
     <ClCompile Include="Editor_Worker.cpp" />
