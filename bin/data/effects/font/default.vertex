@@ -14,9 +14,10 @@ uniform mat4 Translation;
 
 uniform vec2 UVPosition;
 uniform vec2 UVSize;
+uniform vec4 Color;
 
 out vec2 UV;
-out vec3 Color;
+out vec4 OColor;
 
 void main()
 {
@@ -28,7 +29,7 @@ void main()
 	vec2 NUV = vec2((vertexUV.x*UVSize.x)+UVPosition.x,(vertexUV.y*UVSize.y)+UVPosition.y);
 	UV = NUV;
 
-	Color = vertexColor;
+	OColor = Color;
 
 }
 

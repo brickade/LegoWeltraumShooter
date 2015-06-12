@@ -35,6 +35,16 @@ namespace sba
     {
         //Direction
         memset(&this->m_pDirectionMapping, 0, sizeof(this->m_pDirectionMapping));
+        this->m_pDirectionMapping[Input::EDirection::MenuMove] =
+        {
+            Input::EGamepadDirection::LeftThumb,
+            {
+                Input::EKeyboardDirection::ArrowKeys,
+                Input::EKeyboardDirection::WSAD,
+                Input::EKeyboardDirection::WSAD,
+                Input::EKeyboardDirection::WSAD
+            }
+        };
         this->m_pDirectionMapping[Input::EDirection::EditorCameraRotate] =
         {
             Input::EGamepadDirection::RightThumb,

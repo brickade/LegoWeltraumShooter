@@ -8,6 +8,7 @@
 
 #include "EditorScene.h"
 #include "GameScene.h"
+#include "MenuScene.h"
 
 // Declare namespace Game
 namespace sba
@@ -17,7 +18,9 @@ namespace sba
     class CMainScene : public PuRe_IScene
     {
     private:
+        int m_PlayerIdx;
         Editor::CEditorScene* m_pEditorScene;
+        Menu::CMenuScene* m_pMenuScene;
         Game::CGameScene* m_pGameScene;
         PuRe_IScene* m_pActiveScene;
         /// @brief Engine's Application

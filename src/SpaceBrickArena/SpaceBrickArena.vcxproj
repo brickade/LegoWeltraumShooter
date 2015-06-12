@@ -145,6 +145,7 @@
     <ClInclude Include="include\INIReader.h" />
     <ClInclude Include="include\InputManager.h" />
     <ClInclude Include="include\InputManagerTypes.h" />
+    <ClInclude Include="include\MenuScene.h" />
     <ClInclude Include="include\Space.h" />
     <ClInclude Include="include\Editor_Camera.h" />
     <ClInclude Include="include\GameCamera.h" />
@@ -164,6 +165,7 @@
     <ClCompile Include="Editor_Assistant.cpp" />
     <ClCompile Include="INIReader.cpp" />
     <ClCompile Include="InputManager.cpp" />
+    <ClCompile Include="MenuScene.cpp" />
     <ClCompile Include="Space.cpp" />
     <ClCompile Include="Editor_Camera.cpp" />
     <ClCompile Include="Editor_Worker.cpp" />

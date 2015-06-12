@@ -3,11 +3,14 @@ namespace sba
 {   
     CMainScene::CMainScene(PuRe_Application* a_pApplication)
     {
+        this->m_PlayerIdx = -1;
         this->m_pApplication = a_pApplication;
 #ifdef EDITOR
-        this->m_pEditorScene = new Editor::CEditorScene(a_pApplication, 0);
+        this->m_pEditorScene = new Editor::CEditorScene(a_pApplication, this->m_PlayerIdx);
+#elif defined(MENU)
+        this->m_pMenuScene = new Menu::CMenuScene(a_pApplication,&this->m_PlayerIdx);
 #else
-        this->m_pGameScene = new Game::CGameScene(a_pApplication, 0);
+        this->m_pGameScene = new Game::CGameScene(a_pApplication, this->m_PlayerIdx);
 #endif
     }
 
@@ -24,6 +27,9 @@ namespace sba
 #ifdef EDITOR
         this->m_pEditorScene->Initialize(a_pApplication);
         this->m_pActiveScene = this->m_pEditorScene;
+#elif defined(MENU)
+        this->m_pMenuScene->Initialize(a_pApplication);
+        this->m_pActiveScene = this->m_pMenuScene;
 #else
         this->m_pGameScene->Initialize(a_pApplication);
         this->m_pActiveScene = this->m_pGameScene;
@@ -68,6 +74,9 @@ namespace sba
 #ifdef EDITOR
         this->m_pEditorScene->Exit();
         SAFE_DELETE(this->m_pEditorScene);
+#elif defined(MENU)
+        this->m_pMenuScene->Exit();
+        SAFE_DELETE(this->m_pMenuScene);
 #else
         this->m_pGameScene->Exit();
         SAFE_DELETE(this->m_pGameScene);

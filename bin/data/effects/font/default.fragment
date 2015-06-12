@@ -1,18 +1,19 @@
 #version 330 core
 
 in vec2 UV;
-in vec3 Color;
+in vec4 OColor;
 
 uniform sampler2D Diffuse;
+
 
 
 void main()
 {
 
 	vec4 blend = texture2D( Diffuse, vec2(UV.x,UV.y) );
-
+	blend = blend*OColor;
 	if(blend.a < 0.1)
 		discard;
 
-	gl_FragColor = texture2D( Diffuse, vec2(UV.x,UV.y) );
+	gl_FragColor = blend;
 }
