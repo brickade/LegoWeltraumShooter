@@ -158,6 +158,7 @@
     <ClInclude Include="include\Navigation.h" />
     <ClInclude Include="include\NetworkHandler.h" />
     <ClInclude Include="include\Editor_ShipWorker.h" />
+    <ClInclude Include="include\UIElementFader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Editor_BrickCategory.cpp" />
@@ -179,6 +180,7 @@
     <ClCompile Include="Navigation.cpp" />
     <ClCompile Include="NetworkHandler.cpp" />
     <ClCompile Include="Editor_ShipWorker.cpp" />
+    <ClCompile Include="UIElementFader.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

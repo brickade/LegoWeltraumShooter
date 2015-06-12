@@ -61,7 +61,7 @@ namespace Editor
 
     // **************************************************************************
     // **************************************************************************
-    void CBrickSupervisor::Render(PuRe_IGraphics& a_pGraphics)
+    void CBrickSupervisor::Render(PuRe_IGraphics& a_pGraphics, float a_Visibility)
     {
         for (int i = 0; i < this->m_CategoriesCount; i++)
         {
@@ -70,9 +70,9 @@ namespace Editor
             {
                 selected = true;
             }
-            this->m_Categories[i]->RenderTab(a_pGraphics, this->m_TabRotation, selected);
+            this->m_Categories[i]->RenderTab(a_pGraphics, this->m_TabRotation, selected, a_Visibility);
         }
-        this->m_pActiveCategory->Render(a_pGraphics);
+        this->m_pActiveCategory->Render(a_pGraphics, a_Visibility);
     }
 
     // **************************************************************************

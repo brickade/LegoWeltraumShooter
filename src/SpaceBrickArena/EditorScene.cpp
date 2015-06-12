@@ -38,6 +38,9 @@ namespace Editor
 
         this->m_pColorFields = new Editor::CColorFields(this->m_PlayerIdx);
         this->m_pColorFields->Initialize(*a_pApplication->GetGraphics());
+
+        this->m_pBrickSupervisorFader = new sba::CUIElementFader(sba_Button::EditorFadeSupervisor, this->m_PlayerIdx);
+        this->m_pColorFieldsFader = new sba::CUIElementFader(sba_Button::EditorFadeColors, this->m_PlayerIdx);
     }
 
     // **************************************************************************
@@ -66,6 +69,8 @@ namespace Editor
                 this->textureID = 0;
         }
 
+        this->m_pBrickSupervisorFader->Update(*a_pApplication->GetTimer());
+        this->m_pColorFieldsFader->Update(*a_pApplication->GetTimer());
         this->m_pBrickSupervisor->Update(*a_pApplication->GetGraphics(), *a_pApplication->GetWindow(), *a_pApplication->GetTimer(), *a_pApplication->GetSoundPlayer());
         this->m_pColorFields->Update(*a_pApplication->GetGraphics(), *a_pApplication->GetWindow(), *a_pApplication->GetTimer(), *a_pApplication->GetSoundPlayer());
         this->m_pWorker->Update(*a_pApplication->GetGraphics(), *a_pApplication->GetWindow(), *a_pApplication->GetTimer(), *a_pApplication->GetSoundPlayer(), this->m_pBrickSupervisor->GetSelectedBrick(), this->m_pColorFields->GetCurrentColor());
@@ -89,9 +94,9 @@ namespace Editor
         //Bricks
         this->m_pWorker->Render();
         sba::Space::Instance()->BrickManager->Render(*sba::Space::Instance()->Renderer);
-        this->m_pBrickSupervisor->Render(*a_pApplication->GetGraphics());
-        this->m_pColorFields->Render(*a_pApplication->GetGraphics());
-        this->m_pWorker->DrawDebug(a_pApplication->GetGraphics());
+        this->m_pBrickSupervisor->Render(*a_pApplication->GetGraphics(), this->m_pBrickSupervisorFader->GetVisibility());
+        this->m_pColorFields->Render(*a_pApplication->GetGraphics(), this->m_pBrickSupervisorFader->GetVisibility());
+        //this->m_pWorker->DrawDebug(a_pApplication->GetGraphics());
         //Post
         renderer->Set(0, (float)this->textureID, "textureID");
         renderer->Set(0, PuRe_Vector3F(0.2f, 0.2f, 0.2f), "ambient");

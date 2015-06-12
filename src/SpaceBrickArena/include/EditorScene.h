@@ -11,6 +11,7 @@
 #include "Editor_Worker.h"
 #include "Editor_BrickSupervisor.h"
 #include "Editor_ColorFields.h"
+#include "UIElementFader.h"
 
 namespace Editor
 {
@@ -33,6 +34,8 @@ namespace Editor
         Editor::CBrickSupervisor* m_pBrickSupervisor;
         Editor::CWorker* m_pWorker;
         Editor::CColorFields* m_pColorFields;
+        sba::CUIElementFader* m_pBrickSupervisorFader;
+        sba::CUIElementFader* m_pColorFieldsFader;
 
         /// @brief Position for the MouseClick
         ///

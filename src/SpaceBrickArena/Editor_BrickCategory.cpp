@@ -36,7 +36,7 @@ namespace Editor
 
     // **************************************************************************
     // **************************************************************************
-    void CBrickCategory::Render(PuRe_IGraphics& a_pGraphics)
+    void CBrickCategory::Render(PuRe_IGraphics& a_pGraphics, float a_Visibility)
     {
         PuRe_Renderer* renderer = sba::Space::Instance()->Renderer;
         for (int i = 0; i <= this->m_pNavigation->GetLastElementId(); i++)
@@ -44,6 +44,7 @@ namespace Editor
             PuRe_Vector2F listPos = PuRe_Vector2F(i % this->m_pNavigation->GetElementsCountPerLine(), floor(i / this->m_pNavigation->GetElementsCountPerLine()));
             PuRe_Vector3F pos = PuRe_Vector3F(this->m_ListStart + this->m_ListStep * listPos, 0);
             pos.Y = a_pGraphics.GetDescription().ResolutionHeight - pos.Y; //Invert Y
+            pos.X -= (1.0f - a_Visibility) * (this->m_pNavigation->GetElementsCountPerLine() * this->m_ListStep.X + this->m_ListStart.X);
 
             PuRe_MatrixF rot = PuRe_MatrixF::Translation(-this->m_Bricks[i]->GetPivotOffset() * this->m_ElementSize) * PuRe_MatrixF::RotationAxis(PuRe_Vector3F(0, 1, 0), this->m_Rotation) * PuRe_MatrixF::Rotation(-this->m_Pitch, 0, 0);
             
@@ -62,10 +63,11 @@ namespace Editor
 
     // **************************************************************************
     // **************************************************************************
-    void CBrickCategory::RenderTab(PuRe_IGraphics& a_pGraphics, float a_TabRotation, bool a_IsSelected)
+    void CBrickCategory::RenderTab(PuRe_IGraphics& a_pGraphics, float a_TabRotation, bool a_IsSelected, float a_Visibility)
     {
         PuRe_Vector3F pos = PuRe_Vector3F(this->m_TabStart + this->m_TabStep * this->m_Id, 0);
         pos.Y = a_pGraphics.GetDescription().ResolutionHeight - pos.Y; //Invert Y
+        pos.X -= (1.0f - a_Visibility) * (this->m_pNavigation->GetElementsCountPerLine() * this->m_ListStep.X + this->m_ListStart.X);
 
         PuRe_MatrixF rot = PuRe_MatrixF::Translation(-this->m_Bricks[0]->GetPivotOffset() * this->m_TabSize) * PuRe_MatrixF::RotationAxis(PuRe_Vector3F(0, 1, 0), a_TabRotation) * PuRe_MatrixF::Rotation(-this->m_Pitch, 0, 0);
         

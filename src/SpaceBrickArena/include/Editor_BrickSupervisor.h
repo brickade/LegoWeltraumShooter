@@ -30,7 +30,7 @@ namespace Editor
         void Initialize(PuRe_IGraphics& a_pGraphics);
 
         void Update(PuRe_IGraphics& a_pGraphics, PuRe_IWindow& a_pWindow, PuRe_Timer& a_pTimer, PuRe_SoundPlayer& a_pSoundPlayer);
-        void Render(PuRe_IGraphics& a_pGraphics);
+        void Render(PuRe_IGraphics& a_pGraphics, float a_Visibility);
 
         TheBrick::CBrick* GetSelectedBrick() const;
     };

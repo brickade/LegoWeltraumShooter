@@ -121,7 +121,7 @@ namespace Editor
         this->Add(0.9921568627f, 0.9176470588f, 0.5490196078f);
         this->Add(0.4901960784f, 0.7333333333f, 0.8666666667f);
         this->Add(0.2039215686f, 0.168627451f, 0.4588235294f);
-        this->m_pNavigation = new sba::CNavigation(20, this->m_Colors.size() - 1);
+        this->m_pNavigation = new sba::CNavigation(19, this->m_Colors.size() - 1);
     }
 
     // **************************************************************************
@@ -133,21 +133,21 @@ namespace Editor
 
     // **************************************************************************
     // **************************************************************************
-    void CColorFields::Render(PuRe_IGraphics& a_pGraphics)
+    void CColorFields::Render(PuRe_IGraphics& a_pGraphics, float a_Visibility)
     {
         PuRe_Renderer* renderer = sba::Space::Instance()->Renderer;
         for (int i = 0; i <= this->m_pNavigation->GetLastElementId(); i++)
         {
             PuRe_Vector2F listPos = PuRe_Vector2F(i % this->m_pNavigation->GetElementsCountPerLine(), floor(i / this->m_pNavigation->GetElementsCountPerLine()));
             PuRe_Vector3F pos = PuRe_Vector3F(this->m_ListStart + this->m_ListStep * listPos, 0);
-            pos.Y = a_pGraphics.GetDescription().ResolutionHeight - pos.Y; //Invert Y
+            pos.Y -= (1.0f - a_Visibility) * this->m_ListStart.Y - this->m_ListStep.Y;
 
             float size = this->m_ElementSize;
             if (this->m_pNavigation->GetFocusedElementId() == i)
             {
-                size *= 1.3f;
+                size *= 1.4f;
             }
-            renderer->Draw(1, false, this->m_pQuad->GetBuffer(), this->m_pQuad->GetBuffer()->GetSize(), PuRe_Primitive::Triangles, sba::Space::Instance()->BrickManager->GetBrickUIMaterial(), pos, PuRe_MatrixF::Identity(), PuRe_Vector3F::Zero(), PuRe_Vector3F(size, size, size), this->m_Colors[i]);
+            renderer->Draw(1, false, this->m_pQuad->GetBuffer(), this->m_pQuad->GetBuffer()->GetSize(), PuRe_Primitive::Trianglestrip, sba::Space::Instance()->BrickManager->GetBrickUIMaterial(), pos, PuRe_MatrixF::Identity(), PuRe_Vector3F::Zero(), PuRe_Vector3F(size, size, size), this->m_Colors[i]);
         }
     }
 

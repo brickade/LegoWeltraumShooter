@@ -31,9 +31,9 @@ namespace Editor
 
         PuRe_Quad* m_pQuad;
 
-        float m_ElementSize = 30;
-        PuRe_Vector2F m_ListStart = PuRe_Vector2F(100, 750);
-        PuRe_Vector2F m_ListStep = PuRe_Vector2F(80, 80);
+        float m_ElementSize = 20;
+        PuRe_Vector2F m_ListStart = PuRe_Vector2F(100, 300);
+        PuRe_Vector2F m_ListStep = PuRe_Vector2F(60, -60);
 
     public:
         CColorFields(int a_PlayerIdx);
@@ -41,7 +41,7 @@ namespace Editor
 
         void Initialize(PuRe_IGraphics& a_pGraphics);
         void Update(PuRe_IGraphics& a_pGraphics, PuRe_IWindow& a_pWindow, PuRe_Timer& a_pTimer, PuRe_SoundPlayer& a_pSoundPlayer);
-        void Render(PuRe_IGraphics& a_pGraphics);
+        void Render(PuRe_IGraphics& a_pGraphics, float a_Visibility);
 
         PuRe_Color& GetCurrentColor();
 

@@ -137,6 +137,8 @@ namespace sba
                 EditorSaveShip,
                 EditorToggleNavigateCategories,
                 EditorCameraRotateActive,
+                EditorFadeSupervisor,
+                EditorFadeColors,
                 Exit,
                 LAST = Exit
             };
