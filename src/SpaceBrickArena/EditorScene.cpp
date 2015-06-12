@@ -69,10 +69,25 @@ namespace Editor
                 this->textureID = 0;
         }
 
-        this->m_pBrickSupervisorFader->Update(*a_pApplication->GetTimer());
-        this->m_pColorFieldsFader->Update(*a_pApplication->GetTimer());
-        this->m_pBrickSupervisor->Update(*a_pApplication->GetGraphics(), *a_pApplication->GetWindow(), *a_pApplication->GetTimer(), *a_pApplication->GetSoundPlayer());
-        this->m_pColorFields->Update(*a_pApplication->GetGraphics(), *a_pApplication->GetWindow(), *a_pApplication->GetTimer(), *a_pApplication->GetSoundPlayer());
+        if (this->m_pBrickSupervisorFader->Update(*a_pApplication->GetTimer()))
+        {
+            this->m_pColorFieldsFader->Hide();
+        }
+        if (this->m_pColorFieldsFader->Update(*a_pApplication->GetTimer()))
+        {
+            this->m_pBrickSupervisorFader->Hide();
+        }
+        if (!sba_Input->ButtonIsPressed(sba_Button::EditorFadeHold, this->m_PlayerIdx) && !sba_Input->ButtonIsPressed(sba_Button::EditorUndoRedoHold, this->m_PlayerIdx))
+        {
+            if (this->m_pBrickSupervisorFader->IsVisible())
+            {
+                this->m_pBrickSupervisor->Update(*a_pApplication->GetGraphics(), *a_pApplication->GetWindow(), *a_pApplication->GetTimer(), *a_pApplication->GetSoundPlayer());
+            }
+            if (this->m_pColorFieldsFader->IsVisible())
+            {
+                this->m_pColorFields->Update(*a_pApplication->GetGraphics(), *a_pApplication->GetWindow(), *a_pApplication->GetTimer(), *a_pApplication->GetSoundPlayer());
+            }
+        }
         this->m_pWorker->Update(*a_pApplication->GetGraphics(), *a_pApplication->GetWindow(), *a_pApplication->GetTimer(), *a_pApplication->GetSoundPlayer(), this->m_pBrickSupervisor->GetSelectedBrick(), this->m_pColorFields->GetCurrentColor());
         sba::Space::Instance()->BrickManager->RebuildRenderInstances(); //Update RenderInstances
         return false;
@@ -95,7 +110,7 @@ namespace Editor
         this->m_pWorker->Render();
         sba::Space::Instance()->BrickManager->Render(*sba::Space::Instance()->Renderer);
         this->m_pBrickSupervisor->Render(*a_pApplication->GetGraphics(), this->m_pBrickSupervisorFader->GetVisibility());
-        this->m_pColorFields->Render(*a_pApplication->GetGraphics(), this->m_pBrickSupervisorFader->GetVisibility());
+        this->m_pColorFields->Render(*a_pApplication->GetGraphics(), this->m_pColorFieldsFader->GetVisibility());
         //this->m_pWorker->DrawDebug(a_pApplication->GetGraphics());
         //Post
         renderer->Set(0, (float)this->textureID, "textureID");

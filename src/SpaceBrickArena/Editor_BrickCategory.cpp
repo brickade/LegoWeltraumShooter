@@ -29,7 +29,7 @@ namespace Editor
     // **************************************************************************
     void CBrickCategory::Update(PuRe_IGraphics& a_pGraphics, PuRe_IWindow& a_pWindow, PuRe_Timer& a_pTimer, PuRe_SoundPlayer& a_pSoundPlayer, int a_PlayerIdx, float a_RotationSpeed)
     {
-        this->m_pNavigation->Update(a_pTimer, sba_Input->Direction(sba_Direction::EditorNavigateCategory, a_PlayerIdx));
+        this->m_pNavigation->Update(a_pTimer, sba_Input->Direction(sba_Direction::EditorChooseElement, a_PlayerIdx));
         this->m_Rotation += a_pTimer.GetElapsedSeconds() * a_RotationSpeed;
         this->m_Rotation = fmod(this->m_Rotation, 6.28318531f);
     }

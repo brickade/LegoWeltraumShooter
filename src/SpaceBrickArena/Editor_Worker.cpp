@@ -264,7 +264,7 @@ namespace Editor
     void CWorker::UpdatePlacement()
     {
 
-        if (sba_Input->ButtonPressed(sba_Button::EditorUndo, this->m_playerIdx))
+        if (sba_Input->ButtonIsPressed(sba_Button::EditorUndoRedoHold, this->m_playerIdx) && sba_Input->ButtonPressed(sba_Button::EditorUndo, this->m_playerIdx))
         { //Undo
             SHistoryStep* step = this->m_pHistory->Undo();
             if (step != nullptr)
@@ -272,7 +272,7 @@ namespace Editor
                 delete step->BrickInstance;
             }
         }
-        else if (sba_Input->ButtonPressed(sba_Button::EditorRedo, this->m_playerIdx))
+        else if (sba_Input->ButtonIsPressed(sba_Button::EditorUndoRedoHold, this->m_playerIdx) && sba_Input->ButtonPressed(sba_Button::EditorRedo, this->m_playerIdx))
         { //Redo
             SHistoryStep* step = this->m_pHistory->Redo();
             if (step != nullptr)

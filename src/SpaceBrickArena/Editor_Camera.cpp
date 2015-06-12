@@ -32,8 +32,8 @@ namespace Editor
 
     void CCamera::Update(PuRe_IGraphics* a_pGraphics, PuRe_IWindow* a_pWindow, PuRe_Timer* a_pTimer)
     {   
-        float speed = a_pTimer->GetElapsedSeconds() * 50;
-        float zoomSpeed = speed * 1;
+        float speed = a_pTimer->GetElapsedSeconds() * 100;
+        float zoomSpeed = speed * 0.5f;
 
         //Rotation
         PuRe_Vector2F MoveInput = sba_Input->Direction(sba_Direction::EditorCameraRotate, this->m_playerIdx) * speed * -1.0f;

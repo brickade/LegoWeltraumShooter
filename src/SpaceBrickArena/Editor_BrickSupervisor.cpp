@@ -48,7 +48,7 @@ namespace Editor
         }
         if (this->m_NavigateTabs)
         {
-            this->m_pNavigation->Update(a_pTimer, sba_Input->Direction(sba_Direction::EditorNavigateCategory, this->m_PlayerIdx));
+            this->m_pNavigation->Update(a_pTimer, sba_Input->Direction(sba_Direction::EditorChooseElement, this->m_PlayerIdx));
             this->m_pActiveCategory = this->m_Categories[this->m_pNavigation->GetFocusedElementId()];
             this->m_TabRotation += a_pTimer.GetElapsedSeconds() * this->m_RotationSpeed;
             this->m_TabRotation = fmod(this->m_TabRotation, 6.28318531f);

@@ -53,10 +53,10 @@ namespace sba
         }
 
     public:
-        CUIElementFader(sba_Button::Type a_ToggleButton, int a_PlayerIdx, bool a_InitVisible = false, float a_FadingSpeed = 1.0f);
+        CUIElementFader(sba_Button::Type a_ToggleButton, int a_PlayerIdx, bool a_InitVisible = false, float a_FadingSpeed = 3.0f);
         ~CUIElementFader();
 
-        void Update(PuRe_Timer& a_rTimer);
+        bool Update(PuRe_Timer& a_rTimer);
     };
 }
 

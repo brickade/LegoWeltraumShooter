@@ -22,14 +22,22 @@ namespace sba
 
     // **************************************************************************
     // **************************************************************************
-    void CUIElementFader::Update(PuRe_Timer& a_rTimer)
+    bool CUIElementFader::Update(PuRe_Timer& a_rTimer)
     {
+        bool stateChanged = false;
+        if (sba_Input->ButtonIsPressed(sba_Button::EditorFadeHold, this->m_PlayerIdx) && sba_Input->ButtonPressed(this->m_ToggleButton, this->m_PlayerIdx))
+        {
+            this->Toggle();
+            stateChanged = true;
+        }
+
         float speed = a_rTimer.GetElapsedSeconds() * this->m_FadingSpeed;
         if (!this->m_Visible)
         {
             speed *= -1;
         }
-        this->m_Value += speed * (0.5f - abs(this->m_Value - 0.5f));
+        this->m_Value += speed * (1.0f - abs(this->m_Value - 0.5f));
         this->m_Value = PuRe_clamp(this->m_Value, 0, 1);
+        return stateChanged;
     }
 }

@@ -93,7 +93,7 @@ namespace sba
                 Delete, Insert, PrintScreen,
                 PURE_LAST = PrintScreen,
                 //Own
-                CtrlZ, CtrlY, CtrlS,
+                CtrlS,
                 MouseLeft, MouseMiddle, MouseRight,
                 LAST = MouseRight
             };
@@ -108,8 +108,8 @@ namespace sba
             {
                 EditorCameraRotate,
                 EditorMoveBrick,
-                EditorNavigateCategory,
-                LAST = EditorNavigateCategory
+                EditorChooseElement,
+                LAST = EditorChooseElement
             };
         };
 
@@ -129,6 +129,7 @@ namespace sba
             {
                 EditorPlaceBrick,
                 EditorTogglePlacementSide,
+                EditorUndoRedoHold,
                 EditorUndo,
                 EditorRedo,
                 EditorRotateBrickRight,
@@ -137,6 +138,7 @@ namespace sba
                 EditorSaveShip,
                 EditorToggleNavigateCategories,
                 EditorCameraRotateActive,
+                EditorFadeHold,
                 EditorFadeSupervisor,
                 EditorFadeColors,
                 Exit,
