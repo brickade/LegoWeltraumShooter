@@ -51,7 +51,7 @@ namespace Menu
         }
         else
         {
-            this->m_pNavigation->Update(timer, sba_Input->Direction(sba_Direction::EditorMoveBrick, *this->m_pPlayerIdx));
+            this->m_pNavigation->Update(timer, sba_Input->Direction(sba_Direction::MenuMove, *this->m_pPlayerIdx));
         }
 
 

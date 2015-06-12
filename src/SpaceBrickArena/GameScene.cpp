@@ -51,7 +51,7 @@ namespace Game
     void CGameScene::ProcessInput(TheBrick::CSpaceship* a_Ship, InputData* a_Input, float a_DeltaTime)
     {
         if (a_Input->Shoot)
-            a_Ship->Shoot(this->m_Bullets, sba::Space::Instance()->BrickManager);
+            a_Ship->Shoot(this->m_Bullets, sba_BrickManager);
 
         if (a_Input->Thrust)
             a_Ship->Thrust(1.0f);
@@ -186,7 +186,7 @@ namespace Game
                 printf("Physic: %i\n", this->m_PhysicFrame);
                 this->m_PhysicFrame++;
                 assert(this->m_PhysicFrame != 2147483647);
-                sba::Space::Instance()->BrickManager->RebuildRenderInstances(); //Update RenderInstances
+                sba_BrickManager->RebuildRenderInstances(); //Update RenderInstances
             } //if input exists
 
         } //while physic run
@@ -289,8 +289,6 @@ namespace Game
             serializer.OpenRead("../data/ships/banana.ship");
             ong::vec3 pos = ong::vec3(10.0f, 10.0f, 10.0f);
             pos.x += this->m_Players[i]->ID*10.0f;
-            this->m_Players[i]->Ship = new TheBrick::CSpaceship(*sba::Space::Instance()->World, pos);
-            this->m_Players[i]->Ship->Deserialize(serializer, *sba::Space::Instance()->BrickManager, *sba::Space::Instance()->World);
             this->m_Players[i]->Ship = new TheBrick::CSpaceship(*sba_World, pos);
             this->m_Players[i]->Ship->Deserialize(serializer, *sba_BrickManager, *sba_World);
             serializer.Close();
@@ -298,15 +296,15 @@ namespace Game
         ong::vec3 start(50.0f, 50.0f, 50.0f);
         for (int i = 0; i < 10; i++)
         {
-            TheBrick::CAsteroid* asteroid = new TheBrick::CAsteroid(sba::Space::Instance()->BrickManager, *sba::Space::Instance()->World, start + ong::vec3((i % 4)*10.0f, ((i * 5) % 2)*2.0f, i*5.0f));
+            TheBrick::CAsteroid* asteroid = new TheBrick::CAsteroid(sba_BrickManager, *sba_World, start + ong::vec3((i % 4)*10.0f, ((i * 5) % 2)*2.0f, i*5.0f));
             TheBrick::CSerializer serializer;
             serializer.OpenRead("../data/ships/asteroid.object");
-            asteroid->Deserialize(serializer, *sba::Space::Instance()->BrickManager, *sba::Space::Instance()->World);
+            asteroid->Deserialize(serializer, *sba_BrickManager, *sba_World);
             this->m_Asteroids.push_back(asteroid);
             serializer.Close();
         }
         this->gameStart = true;
-        sba::Space::Instance()->BrickManager->RebuildRenderInstances(); //Update RenderInstances
+        sba_BrickManager->RebuildRenderInstances(); //Update RenderInstances
 
     }
 
@@ -564,21 +562,20 @@ namespace Game
         PuRe_Color clear = PuRe_Color(0.0f, 0.4f, 1.0f);
         PuRe_GraphicsDescription gdesc = a_pApplication->GetGraphics()->GetDescription();
 
-        PuRe_Renderer* renderer = sba::Space::Instance()->Renderer;
         PuRe_Renderer* renderer = sba_Renderer;
         renderer->Begin(PuRe_Color(0.1f, 0.5f, 0.1f));
 
 
         /////////////  DRAW Light  ///////////////////////
         renderer->Draw(0, true, this->m_pDirectionalLight, this->m_pDirectionalLightMaterial, PuRe_Vector3F(1.0f, 0.0f, 0.0f), PuRe_Color(0.3f, 0.3f, 0.3f));
-        /////////////  DRAW SKY  ///////////////////////
+        /////////////  DRAW SKY  /////////////////////// 
         #ifdef Skybox
             renderer->Draw(0, true, this->m_pSkyBox, this->m_pSkyMaterial);
         #endif
         ////////////////////////////////////////////////////
 
         /////////////  DRAW BRICKS  ///////////////////////
-        sba::Space::Instance()->BrickManager->Render(*sba::Space::Instance()->Renderer);
+        sba_BrickManager->Render(*sba::Space::Instance()->Renderer);
         sba_BrickManager->Render(*sba_Renderer);
         ////////////////////////////////////////////////////
 

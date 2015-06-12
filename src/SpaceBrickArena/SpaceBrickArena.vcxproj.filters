@@ -1,152 +1,142 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Quelldateien">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Quelldateien\Scenes">
-      <UniqueIdentifier>{3070d823-a28c-4bb6-8f96-7344464be172}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Quelldateien\Editor">
-      <UniqueIdentifier>{670c7989-75d1-4193-a2ea-271af48eb75f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Quelldateien\Game">
-      <UniqueIdentifier>{043a9645-0c32-438d-9f7a-2c9bbc1edcb3}</UniqueIdentifier>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="include\EditorScene.h">
-      <Filter>Quelldateien\Scenes</Filter>
-    </ClInclude>
-    <ClInclude Include="include\GameScene.h">
-      <Filter>Quelldateien\Scenes</Filter>
-    </ClInclude>
-    <ClInclude Include="include\MainScene.h">
-      <Filter>Quelldateien\Scenes</Filter>
-    </ClInclude>
-    <ClInclude Include="include\GameCamera.h">
-      <Filter>Quelldateien\Game</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Minimap.h">
-      <Filter>Quelldateien\Game</Filter>
-    </ClInclude>
-    <ClInclude Include="include\NetworkHandler.h">
-      <Filter>Quelldateien\Game</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Navigation.h">
-      <Filter>Quelldateien</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Space.h">
-      <Filter>Quelldateien</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Editor_Assistant.h">
-      <Filter>Quelldateien\Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Editor_History.h">
-      <Filter>Quelldateien\Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Editor_Worker.h">
-      <Filter>Quelldateien\Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Editor_ShipWorker.h">
-      <Filter>Quelldateien\Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Editor_Camera.h">
-      <Filter>Quelldateien\Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Editor_BrickSupervisor.h">
-      <Filter>Quelldateien\Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Editor_BrickCategory.h">
-      <Filter>Quelldateien\Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="include\INIReader.h">
-      <Filter>Quelldateien</Filter>
-    </ClInclude>
-    <ClInclude Include="include\InputManager.h">
-      <Filter>Quelldateien</Filter>
-    </ClInclude>
-    <ClInclude Include="include\InputManagerTypes.h">
-      <Filter>Quelldateien</Filter>
-    </ClInclude>
-    <ClInclude Include="include\MenuScene.h">
-      <Filter>Quelldateien\Scenes</Filter>
-    <ClInclude Include="include\Editor_ColorFields.h">
-      <Filter>Quelldateien\Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="include\UIElementFader.h">
-      <Filter>Quelldateien</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Main.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="EditorScene.cpp">
-      <Filter>Quelldateien\Scenes</Filter>
-    </ClCompile>
-    <ClCompile Include="GameScene.cpp">
-      <Filter>Quelldateien\Scenes</Filter>
-    </ClCompile>
-    <ClCompile Include="MainScene.cpp">
-      <Filter>Quelldateien\Scenes</Filter>
-    </ClCompile>
-    <ClCompile Include="Navigation.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Minimap.cpp">
-      <Filter>Quelldateien\Game</Filter>
-    </ClCompile>
-    <ClCompile Include="NetworkHandler.cpp">
-      <Filter>Quelldateien\Game</Filter>
-    </ClCompile>
-    <ClCompile Include="GameCamera.cpp">
-      <Filter>Quelldateien\Game</Filter>
-    </ClCompile>
-    <ClCompile Include="Space.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
+    <ClCompile Include="Space.cpp" />
+    <ClCompile Include="Main.cpp" />
     <ClCompile Include="Editor_Assistant.cpp">
-      <Filter>Quelldateien\Editor</Filter>
-    </ClCompile>
-    <ClCompile Include="Editor_History.cpp">
-      <Filter>Quelldateien\Editor</Filter>
-    </ClCompile>
-    <ClCompile Include="Editor_Worker.cpp">
-      <Filter>Quelldateien\Editor</Filter>
-    </ClCompile>
-    <ClCompile Include="Editor_ShipWorker.cpp">
-      <Filter>Quelldateien\Editor</Filter>
-    </ClCompile>
-    <ClCompile Include="Editor_Camera.cpp">
-      <Filter>Quelldateien\Editor</Filter>
-    </ClCompile>
-    <ClCompile Include="Editor_BrickSupervisor.cpp">
-      <Filter>Quelldateien\Editor</Filter>
+      <Filter>Editor</Filter>
     </ClCompile>
     <ClCompile Include="Editor_BrickCategory.cpp">
-      <Filter>Quelldateien\Editor</Filter>
+      <Filter>Editor</Filter>
     </ClCompile>
-    <ClCompile Include="INIReader.cpp">
-      <Filter>Quelldateien</Filter>
+    <ClCompile Include="Editor_BrickSupervisor.cpp">
+      <Filter>Editor</Filter>
     </ClCompile>
-    <ClCompile Include="InputManager.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="MenuScene.cpp">
-      <Filter>Quelldateien\Scenes</Filter>
-    </ClCompile>
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="InputManager.cpp">
-      <Filter>Quelldateien</Filter>
+    <ClCompile Include="Editor_Camera.cpp">
+      <Filter>Editor</Filter>
     </ClCompile>
     <ClCompile Include="Editor_ColorFields.cpp">
-      <Filter>Quelldateien\Editor</Filter>
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor_History.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor_ShipWorker.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor_Worker.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorScene.cpp">
+      <Filter>Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCamera.cpp">
+      <Filter>Cameras</Filter>
+    </ClCompile>
+    <ClCompile Include="GameScene.cpp">
+      <Filter>Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="INIReader.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="InputManager.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="MainScene.cpp">
+      <Filter>Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="MenuScene.cpp">
+      <Filter>Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Minimap.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Navigation.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkHandler.cpp">
+      <Filter>Utilities</Filter>
     </ClCompile>
     <ClCompile Include="UIElementFader.cpp">
-      <Filter>Quelldateien</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\Space.h" />
+    <ClInclude Include="include\Editor_Assistant.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Editor_BrickCategory.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Editor_BrickSupervisor.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Editor_Camera.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Editor_ColorFields.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Editor_History.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Editor_ShipWorker.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Editor_Worker.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EditorScene.h">
+      <Filter>Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GameCamera.h">
+      <Filter>Cameras</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GameScene.h">
+      <Filter>Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="include\INIReader.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="include\InputManager.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="include\InputManagerTypes.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MainScene.h">
+      <Filter>Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MenuScene.h">
+      <Filter>Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Minimap.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Navigation.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="include\NetworkHandler.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="include\UIElementFader.h">
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Editor">
+      <UniqueIdentifier>{bb35085b-00c3-44aa-8708-42dd8d6ec251}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scenes">
+      <UniqueIdentifier>{f330c854-e2a5-497f-99e9-012ad6975ec4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Cameras">
+      <UniqueIdentifier>{2e3496b8-4fae-4c3e-8d18-628ddb3742e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities">
+      <UniqueIdentifier>{f6a2406e-0639-4a75-8d60-dd7b3863f40d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{739204e8-ed8b-4ac1-a81d-0dfb0cdef65b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>
