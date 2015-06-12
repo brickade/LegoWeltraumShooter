@@ -20,8 +20,8 @@ namespace Game
     void CNetworkHandler::Connect()
     {
         this->m_pSocket = new PuRe_Socket(this->m_IP.c_str(), std::stoi(this->m_Port), this->m_Host);
-        sba::CIniReader::Instance()->AddValue("IP", this->m_IP);
-        sba::CIniReader::Instance()->AddValue("Port", this->m_Port);
+        sba::CIniReader::Instance()->SetValue("IP", this->m_IP);
+        sba::CIniReader::Instance()->SetValue("Port", this->m_Port);
         if (!this->m_Host)
         {
             //send that we are connecting to him

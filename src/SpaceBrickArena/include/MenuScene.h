@@ -8,22 +8,36 @@
 #include "Space.h"
 #include "Navigation.h"
 
+#include "Menu_Main.h"
+#include "Menu_Options.h"
+
 
 // Declare namespace Game
 namespace Menu
 {
+    enum Screen
+    {
+        Main,
+        Options
+    };
     /// @brief MainScene where the game functions are in, inherits from the Scene interface
     ///
     class CMenuScene : public PuRe_IScene
     {
     private:
-        sba::CNavigation* m_pNavigation;
+
+        COptions* m_pOptions;
+
+        CMain* m_pMainMenu;
         /// @brief to display different targets
         ///
         int textureID;
         /// @brief PlayerIndex of the Player who first pressed sth
         ///
         int* m_pPlayerIdx;
+        /// @brief Which Screen is displaxed
+        ///
+        Screen m_Displayed;
         /// @brief Engine's Application
         ///
         PuRe_Application* m_pApplication;
@@ -67,7 +81,7 @@ namespace Menu
         ///
         /// @returns if it is still running or not
         ///
-        bool Update(PuRe_Application* a_pApplication);
+        int Update(PuRe_Application* a_pApplication);
 
         /// @brief Renders the scene.
         ///

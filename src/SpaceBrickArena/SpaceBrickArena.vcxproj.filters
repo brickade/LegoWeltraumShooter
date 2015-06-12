@@ -60,6 +60,12 @@
     <ClCompile Include="UIElementFader.cpp">
       <Filter>Utilities</Filter>
     </ClCompile>
+    <ClCompile Include="Menu_Main.cpp">
+      <Filter>Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Menu_Options.cpp">
+      <Filter>Menu</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Space.h" />
@@ -123,6 +129,12 @@
     <ClInclude Include="include\UIElementFader.h">
       <Filter>Utilities</Filter>
     </ClInclude>
+    <ClInclude Include="include\Menu_Main.h">
+      <Filter>Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Menu_Options.h">
+      <Filter>Menu</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Editor">
@@ -139,6 +151,9 @@
     </Filter>
     <Filter Include="Game">
       <UniqueIdentifier>{739204e8-ed8b-4ac1-a81d-0dfb0cdef65b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Menu">
+      <UniqueIdentifier>{87fb103d-c303-4ce4-aeca-4df476054666}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

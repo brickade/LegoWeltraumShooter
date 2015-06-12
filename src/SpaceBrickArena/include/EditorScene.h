@@ -58,7 +58,7 @@ namespace Editor
         ///
         /// @returns if it is still running or not
         ///
-        bool Update(PuRe_Application* a_pApplication);
+        int Update(PuRe_Application* a_pApplication);
 
         /// @brief Renders the scene.
         ///

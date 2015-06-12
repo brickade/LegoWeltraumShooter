@@ -475,12 +475,12 @@ namespace Game
 
     // **************************************************************************
     // **************************************************************************
-    bool CGameScene::Update(PuRe_Application* a_pApplication)
+    int CGameScene::Update(PuRe_Application* a_pApplication)
     {
         //Handle ESC Button
         if (a_pApplication->GetInput()->KeyPressed(a_pApplication->GetInput()->ESC))
         {
-            return true;
+            return 0;
         }
 
 
@@ -552,7 +552,7 @@ namespace Game
         }
 
 
-        return false;
+        return 1;
     }
 
     // **************************************************************************

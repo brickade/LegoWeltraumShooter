@@ -5,13 +5,7 @@ namespace sba
     {
         this->m_PlayerIdx = -1;
         this->m_pApplication = a_pApplication;
-#ifdef EDITOR
-        this->m_pEditorScene = new Editor::CEditorScene(a_pApplication, this->m_PlayerIdx);
-#elif defined(MENU)
         this->m_pMenuScene = new Menu::CMenuScene(a_pApplication,&this->m_PlayerIdx);
-#else
-        this->m_pGameScene = new Game::CGameScene(a_pApplication, this->m_PlayerIdx);
-#endif
     }
 
     // **************************************************************************
@@ -23,41 +17,61 @@ namespace sba
         Space::Instance()->Initialize(*a_pApplication->GetGraphics(), *a_pApplication->GetInput(), *a_pApplication->GetSoundPlayer(), *a_pApplication);
         sba_BrickManager->Load(*a_pApplication->GetGraphics(), *a_pApplication->GetWindow(), *sba_World, *sba_BrickManager->GetBrickMaterial(), "../data/bricks/");
 
-        //Scenes
-#ifdef EDITOR
-        this->m_pEditorScene->Initialize(a_pApplication);
-        this->m_pActiveScene = this->m_pEditorScene;
-#elif defined(MENU)
         this->m_pMenuScene->Initialize(a_pApplication);
         this->m_pActiveScene = this->m_pMenuScene;
-#else
-        this->m_pGameScene->Initialize(a_pApplication);
-        this->m_pActiveScene = this->m_pGameScene;
-#endif
     }
 
     // **************************************************************************
     // **************************************************************************
-    bool CMainScene::Update(PuRe_Application* a_pApplication)
+    int CMainScene::Update(PuRe_Application* a_pApplication)
     {
         //Handle ESC Button
-        if (a_pApplication->GetInput()->KeyPressed(a_pApplication->GetInput()->ESC))
+        if (!a_pApplication->GetInput()->KeyPressed(a_pApplication->GetInput()->ESC))
         {
-            return true;
-        }
+            //Drop update after lag to avoid strange camera movement jumps etc
+            if (a_pApplication->GetTimer()->GetElapsedMilliseconds() > 200)
+                return 1;
 
-        //Drop update after lag to avoid strange camera movement jumps etc
-        if (a_pApplication->GetTimer()->GetElapsedMilliseconds() > 200)
-        {
-            return false;
-        }
+            //Update Active Scene
+            int update = this->m_pActiveScene->Update(a_pApplication);
+            switch (update)
+            {
+            case 1:
+                return 1;
+                break;
+            case 2: //Game Initialize
+                this->m_pActiveScene->Exit();
+                SAFE_DELETE(this->m_pActiveScene);
 
-        //Update Active Scene
-        if (!this->m_pActiveScene->Update(a_pApplication))
-        {
-            return false;
+                this->m_pGameScene = new Game::CGameScene(a_pApplication, this->m_PlayerIdx);
+                this->m_pGameScene->Initialize(a_pApplication);
+                this->m_pActiveScene = this->m_pGameScene;
+                return 1;
+                break;
+            case 3: //Editor Initialize
+                this->m_pActiveScene->Exit();
+                SAFE_DELETE(this->m_pActiveScene);
+
+                this->m_pEditorScene = new Editor::CEditorScene(a_pApplication, this->m_PlayerIdx);
+                this->m_pEditorScene->Initialize(a_pApplication);
+                this->m_pActiveScene = this->m_pEditorScene;
+                return 1;
+                break;
+            case 4: //Menu Initialize
+                this->m_pActiveScene->Exit();
+                SAFE_DELETE(this->m_pActiveScene);
+
+                this->m_pMenuScene = new Menu::CMenuScene(a_pApplication, &this->m_PlayerIdx);
+                this->m_pMenuScene->Initialize(a_pApplication);
+                this->m_pActiveScene = this->m_pMenuScene;
+                return 1;
+                break;
+            default:
+                return 0;
+                break;
+            }
         }
-        return true;
+        return 0;
     }
 
     // **************************************************************************
@@ -71,15 +85,7 @@ namespace sba
     // **************************************************************************
     void CMainScene::Exit()
     {
-#ifdef EDITOR
-        this->m_pEditorScene->Exit();
-        SAFE_DELETE(this->m_pEditorScene);
-#elif defined(MENU)
-        this->m_pMenuScene->Exit();
-        SAFE_DELETE(this->m_pMenuScene);
-#else
-        this->m_pGameScene->Exit();
-        SAFE_DELETE(this->m_pGameScene);
-#endif
+        this->m_pActiveScene->Exit();
+        SAFE_DELETE(this->m_pActiveScene);
     }
 }

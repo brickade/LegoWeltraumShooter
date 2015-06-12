@@ -147,6 +147,8 @@
     <ClInclude Include="include\InputManager.h" />
     <ClInclude Include="include\InputManagerTypes.h" />
     <ClInclude Include="include\MenuScene.h" />
+    <ClInclude Include="include\Menu_Main.h" />
+    <ClInclude Include="include\Menu_Options.h" />
     <ClInclude Include="include\Space.h" />
     <ClInclude Include="include\Editor_Camera.h" />
     <ClInclude Include="include\GameCamera.h" />
@@ -169,6 +171,8 @@
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="MenuScene.cpp" />
     <ClCompile Include="Editor_ColorFields.cpp" />
+    <ClCompile Include="Menu_Main.cpp" />
+    <ClCompile Include="Menu_Options.cpp" />
     <ClCompile Include="Space.cpp" />
     <ClCompile Include="Editor_Camera.cpp" />
     <ClCompile Include="Editor_Worker.cpp" />

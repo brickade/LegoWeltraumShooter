@@ -22,7 +22,7 @@ namespace sba
         ~CIniReader();
     public:
         std::string GetValue(std::string a_Key);
-        void AddValue(std::string a_Key,std::string a_Value);
+        void SetValue(std::string a_Key, std::string a_Value);
         void Save();
     };
 }

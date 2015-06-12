@@ -49,15 +49,12 @@ namespace Editor
 
     // **************************************************************************
     // **************************************************************************
-    bool CEditorScene::Update(PuRe_Application* a_pApplication)
+    int CEditorScene::Update(PuRe_Application* a_pApplication)
     {
         //Handle ESC Button
-        if (a_pApplication->GetInput()->KeyPressed(a_pApplication->GetInput()->ESC)
-            || a_pApplication->GetInput()->GamepadPressed(a_pApplication->GetInput()->Pad_Back, this->m_PlayerIdx)
-            || a_pApplication->GetInput()->KeyPressed(a_pApplication->GetInput()->F1)
-            || a_pApplication->GetInput()->GamepadPressed(a_pApplication->GetInput()->Pad_Start, this->m_PlayerIdx))
+        if (a_pApplication->GetInput()->KeyPressed(a_pApplication->GetInput()->ESC))
         {
-            return true;
+            return 0;
         }
 
         if (this->m_pBrickSupervisorFader->Update(*a_pApplication->GetTimer()))
@@ -81,7 +78,7 @@ namespace Editor
         }
         this->m_pWorker->Update(*a_pApplication->GetGraphics(), *a_pApplication->GetWindow(), *a_pApplication->GetTimer(), *a_pApplication->GetSoundPlayer(), this->m_pBrickSupervisor->GetSelectedBrick(), this->m_pColorFields->GetCurrentColor());
         sba_BrickManager->RebuildRenderInstances(); //Update RenderInstances
-        return false;
+        return 1;
     }
 
     // **************************************************************************

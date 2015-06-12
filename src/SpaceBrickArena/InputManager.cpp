@@ -101,11 +101,31 @@ namespace sba
 
         //Button
         memset(&this->m_pButtonMapping, 0, sizeof(this->m_pButtonMapping));
-        this->m_pButtonMapping[Input::EButton::EditorPlaceBrick] =
+        this->m_pButtonMapping[Input::EButton::MenuClick] =
         {
             Input::EGamepadButton::Pad_A,
             {
                 Input::EKeyboardButton::MouseLeft,
+                Input::EKeyboardButton::Enter,
+                Input::EKeyboardButton::Enter,
+                Input::EKeyboardButton::Enter
+            }
+        };
+        this->m_pButtonMapping[Input::EButton::MenuBack] =
+        {
+            Input::EGamepadButton::Pad_B,
+            {
+                Input::EKeyboardButton::Backspace,
+                Input::EKeyboardButton::Backspace,
+                Input::EKeyboardButton::Backspace,
+                Input::EKeyboardButton::Backspace
+            }
+        };
+        this->m_pButtonMapping[Input::EButton::EditorPlaceBrick] =
+        {
+            Input::EGamepadButton::Pad_A,
+            {
+                Input::EKeyboardButton::Space,
                 Input::EKeyboardButton::Enter,
                 Input::EKeyboardButton::Enter,
                 Input::EKeyboardButton::Enter

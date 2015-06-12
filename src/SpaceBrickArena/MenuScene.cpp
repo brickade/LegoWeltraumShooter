@@ -25,24 +25,30 @@ namespace Menu
         this->m_pSceneCamera = new PuRe_Camera(PuRe_Vector2F((float)gdesc.ResolutionWidth, (float)gdesc.ResolutionHeight), PuRe_CameraProjection::Perspective);
         this->m_pUICamera = new PuRe_Camera(PuRe_Vector2F((float)gdesc.ResolutionWidth, (float)gdesc.ResolutionHeight), PuRe_CameraProjection::Orthogonal);
 
-        this->m_pNavigation = new sba::CNavigation(1, 3);
+        this->m_Displayed = Main;
+        this->m_pMainMenu = new CMain();
+        this->m_pOptions = new COptions();
 
     }
 
     // **************************************************************************
     // **************************************************************************
-    bool CMenuScene::Update(PuRe_Application* a_pApplication)
+    int CMenuScene::Update(PuRe_Application* a_pApplication)
     {
         PuRe_IInput* input = a_pApplication->GetInput();
-        PuRe_Timer& timer = *a_pApplication->GetTimer();
+        PuRe_Timer* timer = a_pApplication->GetTimer();
+        PuRe_IGraphics* graphics = a_pApplication->GetGraphics();
+        PuRe_IPlatform* platform = a_pApplication->GetPlatform();
+        PuRe_IWindow* window = a_pApplication->GetWindow();
+
         if (input->KeyPressed(a_pApplication->GetInput()->ESC))
-            return true;
-        
+            return 0;
+
         if (*this->m_pPlayerIdx == -1)
         {
             for (int i = 0; i < 4; i++)
             {
-                if (input->GamepadPressed(input->Pad_A, i))
+                if (sba_Input->ButtonPressed(sba_Button::MenuClick, i))
                 {
                     *this->m_pPlayerIdx = i;
                     break;
@@ -51,7 +57,33 @@ namespace Menu
         }
         else
         {
-            this->m_pNavigation->Update(timer, sba_Input->Direction(sba_Direction::MenuMove, *this->m_pPlayerIdx));
+            int result = 0;
+            switch (this->m_Displayed)
+            {
+            case Main:
+                result = this->m_pMainMenu->Update(timer, *this->m_pPlayerIdx);
+                if (result == 4)
+                    this->m_Displayed = Options;
+                else
+                    return result;
+                break;
+            case Options:
+                result = this->m_pOptions->Update(timer, *this->m_pPlayerIdx);
+                if (result == 0)
+                    this->m_Displayed = Main;
+                if (result == 2)
+                {
+                    //SAFE_DELETE(graphics);
+                    //PuReEngine::Core::SGraphicsDescription gdesc;
+                    //gdesc.Module = PuRe_GraphicsModuleType::OpenGL;
+                    //gdesc.ResolutionWidth = this->m_pOptions->m_Resolutions[this->m_pOptions->m_Resolution][0];
+                    //gdesc.ResolutionHeight = this->m_pOptions->m_Resolutions[this->m_pOptions->m_Resolution][1];
+                    //platform->PlatformCreateGraphics(window, gdesc);
+                }
+                break;
+            default:
+                break;
+            }
         }
 
 
@@ -67,7 +99,7 @@ namespace Menu
             if (this->textureID > 4)
                 this->textureID = 0;
         }
-        return false;
+        return 1;
     }
 
     // **************************************************************************
@@ -75,45 +107,44 @@ namespace Menu
     void CMenuScene::Render(PuRe_Application* a_pApplication)
     {
         PuRe_IGraphics* graphics = a_pApplication->GetGraphics();
+        PuRe_Timer* timer = a_pApplication->GetTimer();
         PuRe_GraphicsDescription gdesc = graphics->GetDescription();
         PuRe_Renderer* renderer = sba::Space::Instance()->Renderer;
 
+        PuRe_Vector2F resolution = PuRe_Vector2F((float)gdesc.ResolutionWidth, (float)gdesc.ResolutionHeight);
 
         renderer->Begin(PuRe_Color(0.1f, 0.4f, 1.0f));
 
         renderer->Draw(0, true, this->m_pSkyBox, this->m_pSkyMaterial);
 
-        PuRe_Vector3F Position;
-        Position.X =  gdesc.ResolutionWidth/2.0f;
-        Position.Y = gdesc.ResolutionHeight/2.0f;
-        Position.X -= 100.0f;
-        Position.Y += 200.0f;
-
-        PuRe_Color color = PuRe_Color();
-
-        if (this->m_pNavigation->GetFocusedElementId() == 0)
-            color = PuRe_Color(1.0f, 0.0f, 0.0f);
+        if (*this->m_pPlayerIdx == -1)
+        {
+            float offset = 36.0f;
+            std::string text = "Press A Button ...";
+            PuRe_Vector3F position;
+            position.X = resolution.X / 2.0f;
+            position.Y = resolution.Y / 2.0f;
+            position.X -= text.length()*offset / 2.0f;
+            PuRe_Color color = PuRe_Color(1.0f, 1.0f, 1.0f);
+            color.A = sin(timer->GetTotalElapsedSeconds()*2.0f) + 1.2f;
+            if (color.A > 1.0f)
+                color.A = 1.0f;
+            renderer->Draw(1, false, this->m_pFont, this->m_pFontMaterial, text, position, PuRe_MatrixF::Identity(), PuRe_Vector3F(offset, offset, 0.0f), offset, color);
+        }
         else
-            color = PuRe_Color(1.0f,1.0f,1.0f);
-        renderer->Draw(1, false, this->m_pFont, this->m_pFontMaterial, "Game", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(36.0f, 36.0f, 0.0f), 32.0f, color);
-        Position.Y -= 64.0f;
-        if (this->m_pNavigation->GetFocusedElementId() == 1)
-            color = PuRe_Color(1.0f, 0.0f, 0.0f);
-        else
-            color = PuRe_Color(1.0f, 1.0f, 1.0f);
-        renderer->Draw(1, false, this->m_pFont, this->m_pFontMaterial, "Editor", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(36.0f, 36.0f, 0.0f), 32.0f, color);
-        Position.Y -= 64.0f;
-        if (this->m_pNavigation->GetFocusedElementId() == 2)
-            color = PuRe_Color(1.0f, 0.0f, 0.0f);
-        else
-            color = PuRe_Color(1.0f, 1.0f, 1.0f);
-        renderer->Draw(1, false, this->m_pFont, this->m_pFontMaterial, "Options", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(36.0f, 36.0f, 0.0f), 32.0f, color);
-        Position.Y -= 64.0f;
-        if (this->m_pNavigation->GetFocusedElementId() == 3)
-            color = PuRe_Color(1.0f, 0.0f, 0.0f);
-        else
-            color = PuRe_Color(1.0f, 1.0f, 1.0f);
-        renderer->Draw(1, false, this->m_pFont, this->m_pFontMaterial, "Quit", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(36.0f, 36.0f, 0.0f), 32.0f, color);
+        {
+            switch (this->m_Displayed)
+            {
+            case Main:
+                this->m_pMainMenu->Render(renderer, this->m_pFont, this->m_pFontMaterial, resolution);
+            break;
+            case Options:
+                this->m_pOptions->Render(renderer, this->m_pFont, this->m_pFontMaterial, resolution);
+            break;
+            default:
+            break;
+            }
+        }
 
         renderer->Render(0, this->m_pSceneCamera, this->m_pPostMaterial);
         renderer->Set(1, PuRe_Vector3F(1.0f, 1.0f, 1.0f), "ambient");
@@ -126,7 +157,8 @@ namespace Menu
     void CMenuScene::Exit()
     {
         /////// CAMERAS ///////
-        SAFE_DELETE(this->m_pNavigation);
+        SAFE_DELETE(this->m_pOptions);
+        SAFE_DELETE(this->m_pMainMenu);
         SAFE_DELETE(this->m_pSceneCamera);
         SAFE_DELETE(this->m_pUICamera);
         /////// OBJECTS ///////

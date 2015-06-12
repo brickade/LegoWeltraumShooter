@@ -118,7 +118,7 @@ namespace sba
 
     // **************************************************************************
     // **************************************************************************
-    void CIniReader::AddValue(std::string a_Key, std::string a_Value)
+    void CIniReader::SetValue(std::string a_Key, std::string a_Value)
     {
         this->m_Table[a_Key] = a_Value;
     }
