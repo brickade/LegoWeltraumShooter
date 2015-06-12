@@ -34,16 +34,16 @@ namespace Editor
     {
         PuRe_GraphicsDescription gdesc = a_pGraphics.GetDescription();
         this->m_pCamera = new CCamera(PuRe_Vector2F((float)gdesc.ResolutionWidth, (float)gdesc.ResolutionHeight), PuRe_Camera_Perspective, this->m_playerIdx);
-        this->m_pCamera->Initialize(PuRe_Vector3F(20, 135, 0), PuRe_Vector3F(-2, 0, 0));
+        this->m_pCamera->Initialize(PuRe_Vector3F(20, 135, 0), PuRe_Vector3F(-1, 0, 0));
         this->m_currentPosition = PuRe_Vector2F(0, 0);
         this->m_currentBrickPosition = PuRe_Vector2I(0, 0);
         this->m_currentHeight = 0;
         this->m_maxBrickDistance = 15;
         this->m_pHistory = new CHistory(300, 100);
         this->m_placeBelow = false;
-        this->m_pCurrentBrickObject = new TheBrick::CGameObject(*sba::Space::Instance()->World, nullptr);
+        this->m_pCurrentBrickObject = new TheBrick::CGameObject(*sba_World, nullptr);
         this->m_pShipWorker = new CShipWorker();
-        this->m_pShipWorker->LoadShipFromFile("../data/ships/banana.ship"); //Load Ship from file
+        this->m_pShipWorker->LoadShipFromFile("../data/ships/Banana.ship"); //Load Ship from file
         /*this->m_pGridMaterial = a_pGraphics.LoadMaterial("../data/effects/editor/grid");
         this->m_pGridBrick = new PuRe_Model(&a_pGraphics, "../data/models/Brick1X1.obj");*/
     }
@@ -59,7 +59,7 @@ namespace Editor
             {
                 SAFE_DELETE(this->m_pCurrentBrick);
             }
-            this->m_pCurrentBrick = a_pCurrentBrick->CreateInstance(*this->m_pCurrentBrickObject, *sba::Space::Instance()->World); //Create Instance
+            this->m_pCurrentBrick = a_pCurrentBrick->CreateInstance(*this->m_pCurrentBrickObject, *sba_World); //Create Instance
         }
         this->m_pCamera->Update(&a_pGraphics, &a_pWindow, &a_pTimer);
         this->UpdateTranslation(this->m_pCamera->GetForward(), a_pTimer.GetElapsedSeconds() * 3.0f);
@@ -86,15 +86,9 @@ namespace Editor
     // **************************************************************************
     void CWorker::Render()
     {
-        PuRe_Renderer* renderer = sba::Space::Instance()->Renderer;
-        //Grid
-        /*for (int x = -this->m_maxBrickDistance; x < this->m_maxBrickDistance; x++)
-        {
-        for (int z = -this->m_maxBrickDistance; z < this->m_maxBrickDistance; z++)
-        {
-        renderer->Draw(this->m_pGridBrick, PuRe_Primitive::Triangles, this->m_pGridMaterial, PuRe_Vector3F(x* TheBrick::CBrick::SEGMENT_WIDTH, 0, z* TheBrick::CBrick::SEGMENT_WIDTH), PuRe_MatrixF::Identity(), PuRe_Vector3F(0.0f, 0.0f, 0.0f), PuRe_Vector3F(1.0f, 1.0f, 1.0f), PuRe_Color(0.7f, 0.2f, 0.2f));
-        }
-        }*/
+        TheBrick::CSpaceship& ship = *this->m_pShipWorker->GetCurrentSpaceShip();
+        sba_Space->RenderFont(std::to_string(ship.m_pBricks.size()) + "/200 Bricks", PuRe_Vector2F(sba_Width - 300.0f, sba_Height - 50.0f), 18);
+        sba_Space->RenderFont("Ship: " + ship.GetName(), PuRe_Vector2F(sba_Width / 2 - 200.0f, sba_Height - 50.0f), 18);
     }
 
     // **************************************************************************
@@ -277,7 +271,7 @@ namespace Editor
             SHistoryStep* step = this->m_pHistory->Redo();
             if (step != nullptr)
             {
-                step->BrickInstance = new TheBrick::CBrickInstance(*step->Brick, *this->m_pShipWorker->GetCurrentSpaceShip(), *sba::Space::Instance()->World, step->Color);
+                step->BrickInstance = new TheBrick::CBrickInstance(*step->Brick, *this->m_pShipWorker->GetCurrentSpaceShip(), *sba_World, step->Color);
                 step->BrickInstance->SetTransform(step->Transform);
             }
         }

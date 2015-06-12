@@ -32,7 +32,7 @@ namespace Editor
         PuRe_Quad* m_pQuad;
 
         float m_ElementSize = 20;
-        PuRe_Vector2F m_ListStart = PuRe_Vector2F(100, 300);
+        PuRe_Vector2F m_ListStart = PuRe_Vector2F(50, 350);
         PuRe_Vector2F m_ListStep = PuRe_Vector2F(60, -60);
 
     public:

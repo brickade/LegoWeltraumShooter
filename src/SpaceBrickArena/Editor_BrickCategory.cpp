@@ -9,7 +9,7 @@ namespace Editor
     CBrickCategory::CBrickCategory(int a_Id)
     {
         this->m_Id = a_Id;
-        this->m_Bricks = sba::Space::Instance()->BrickManager->GetCategoryStart(a_Id);
+        this->m_Bricks = sba_BrickManager->GetCategoryStart(a_Id);
         int lastBrickSubId = -1;
         while (this->m_Bricks[lastBrickSubId + 1] != nullptr)
         {
@@ -38,7 +38,6 @@ namespace Editor
     // **************************************************************************
     void CBrickCategory::Render(PuRe_IGraphics& a_pGraphics, float a_Visibility)
     {
-        PuRe_Renderer* renderer = sba::Space::Instance()->Renderer;
         for (int i = 0; i <= this->m_pNavigation->GetLastElementId(); i++)
         {
             PuRe_Vector2F listPos = PuRe_Vector2F(i % this->m_pNavigation->GetElementsCountPerLine(), floor(i / this->m_pNavigation->GetElementsCountPerLine()));
@@ -57,7 +56,7 @@ namespace Editor
             float size = this->m_ElementSize / this->m_Bricks[i]->GetPivotOffset().Length();
             size += this->m_ElementSize;
             size *= 0.5f;
-            renderer->Draw(1, false, this->m_Bricks[i]->GetModel(), PuRe_Primitive::Triangles, sba::Space::Instance()->BrickManager->GetBrickUIMaterial(), pos, rot, PuRe_Vector3F::Zero(), PuRe_Vector3F(size, size, size), color);
+            sba_Renderer->Draw(1, false, this->m_Bricks[i]->GetModel(), PuRe_Primitive::Triangles, sba_BrickManager->GetBrickUIMaterial(), pos, rot, PuRe_Vector3F::Zero(), PuRe_Vector3F(size, size, size), color);
         }
     }
 
@@ -80,7 +79,7 @@ namespace Editor
         float size = this->m_TabSize / this->m_Bricks[0]->GetPivotOffset().Length();
         size += this->m_TabSize;
         size *= 0.5f;
-        sba::Space::Instance()->Renderer->Draw(1, false, this->m_Bricks[0]->GetModel(), PuRe_Primitive::Triangles, sba::Space::Instance()->BrickManager->GetBrickUIMaterial(), pos, rot, PuRe_Vector3F::Zero(), PuRe_Vector3F(size, size, size), color);
+        sba_Renderer->Draw(1, false, this->m_Bricks[0]->GetModel(), PuRe_Primitive::Triangles, sba_BrickManager->GetBrickUIMaterial(), pos, rot, PuRe_Vector3F::Zero(), PuRe_Vector3F(size, size, size), color);
     }
 
     // **************************************************************************

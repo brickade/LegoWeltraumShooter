@@ -6,7 +6,6 @@ namespace Editor
 {
     CEditorScene::CEditorScene(PuRe_Application* a_pApplication, int a_playerIdx)
     {
-        this->m_pApplication = a_pApplication;
         this->m_PlayerIdx = a_playerIdx;
     }
 
@@ -15,20 +14,25 @@ namespace Editor
     void CEditorScene::Initialize(PuRe_Application* a_pApplication)
     {
         PuRe_GraphicsDescription gdesc = a_pApplication->GetGraphics()->GetDescription();
-        this->m_pPostMaterial = a_pApplication->GetGraphics()->LoadMaterial("../data/effects/Post/default");
+        
+        //Skybox
+        this->m_pSkyBox = new PuRe_SkyBox(a_pApplication->GetGraphics(), "../data/textures/cube/");
         this->m_pSkyBoxMaterial = a_pApplication->GetGraphics()->LoadMaterial("../data/effects/skybox/default");
 
-        this->m_pPointLightMaterial = a_pApplication->GetGraphics()->LoadMaterial("../data/effects/PointLight/default");
-        this->m_pDirectionalLightMaterial = a_pApplication->GetGraphics()->LoadMaterial("../data/effects/DirectionalLight/default");
-        this->m_pPointLight = new PuRe_PointLight(a_pApplication->GetGraphics());
-        this->m_pDirectionalLight = new PuRe_DirectionalLight(a_pApplication->GetGraphics());
+        //PostMaterial
+        this->m_pPostMaterial = a_pApplication->GetGraphics()->LoadMaterial("../data/effects/Post/default");
 
+        //Lights
+        this->m_pPointLight = new PuRe_PointLight(a_pApplication->GetGraphics());
+        this->m_pPointLightMaterial = a_pApplication->GetGraphics()->LoadMaterial("../data/effects/PointLight/default");
+        
+        this->m_pDirectionalLight = new PuRe_DirectionalLight(a_pApplication->GetGraphics());
+        this->m_pDirectionalLightMaterial = a_pApplication->GetGraphics()->LoadMaterial("../data/effects/DirectionalLight/default");
+
+        //UICamera
         this->m_UICamera = new PuRe_Camera(PuRe_Vector2F(a_pApplication->GetGraphics()->GetDescription().ResolutionWidth, a_pApplication->GetGraphics()->GetDescription().ResolutionHeight), PuRe_CameraProjection::Orthogonal);
         this->m_UICamera->setNearFar(PuRe_Vector2F(0.1f, 1000));
 
-        this->m_pSkyBox = new PuRe_SkyBox(a_pApplication->GetGraphics(), "../data/textures/cube/");
-
-        this->textureID = 0;
 
         this->m_pBrickSupervisor = new Editor::CBrickSupervisor(this->m_PlayerIdx);
         this->m_pBrickSupervisor->Initialize(*a_pApplication->GetGraphics());
@@ -56,19 +60,6 @@ namespace Editor
             return true;
         }
 
-        if (a_pApplication->GetInput()->KeyPressed(a_pApplication->GetInput()->Comma))
-        {
-            this->textureID--;
-            if (this->textureID < 0)
-                this->textureID = 3;
-        }
-        else if (a_pApplication->GetInput()->KeyPressed(a_pApplication->GetInput()->Period))
-        {
-            this->textureID++;
-            if (this->textureID > 3)
-                this->textureID = 0;
-        }
-
         if (this->m_pBrickSupervisorFader->Update(*a_pApplication->GetTimer()))
         {
             this->m_pColorFieldsFader->Hide();
@@ -89,7 +80,7 @@ namespace Editor
             }
         }
         this->m_pWorker->Update(*a_pApplication->GetGraphics(), *a_pApplication->GetWindow(), *a_pApplication->GetTimer(), *a_pApplication->GetSoundPlayer(), this->m_pBrickSupervisor->GetSelectedBrick(), this->m_pColorFields->GetCurrentColor());
-        sba::Space::Instance()->BrickManager->RebuildRenderInstances(); //Update RenderInstances
+        sba_BrickManager->RebuildRenderInstances(); //Update RenderInstances
         return false;
     }
 
@@ -97,29 +88,26 @@ namespace Editor
     // **************************************************************************
     void CEditorScene::Render(PuRe_Application* a_pApplication)
     {
-        PuRe_Renderer* renderer = sba::Space::Instance()->Renderer;
-        renderer->Begin(PuRe_Color(0.1f, 0.5f, 0.1f));
+        sba_Renderer->Begin(PuRe_Color(0.1f, 0.5f, 0.1f));
         //Lights
-        renderer->Draw(0, true, this->m_pDirectionalLight, this->m_pDirectionalLightMaterial, PuRe_Vector3F(1.0f, 0.0f, 0.0f), PuRe_Color(0.3f, 0.3f, 0.3f));
-        renderer->Draw(1, false, this->m_pDirectionalLight, this->m_pDirectionalLightMaterial, PuRe_Vector3F(1.0f, 0.0f, 1.0f), PuRe_Color(0.3f, 0.3f, 0.3f));
-        //renderer->Draw(this->m_pPointLight, this->m_pPointLightMaterial, PuRe_Vector3F(0.0f, 5.0f, 0.0f), PuRe_Color(1, 1, 1), 0.1f, 0.01f, 0.01f);
+        sba_Renderer->Draw(0, true, this->m_pDirectionalLight, this->m_pDirectionalLightMaterial, PuRe_Vector3F(1.0f, 0.0f, 0.0f), PuRe_Color(0.3f, 0.3f, 0.3f));
+        sba_Renderer->Draw(1, false, this->m_pDirectionalLight, this->m_pDirectionalLightMaterial, PuRe_Vector3F(1.0f, 0.0f, 1.0f), PuRe_Color(0.3f, 0.3f, 0.3f));
         
         //Skybox
-        renderer->Draw(0, true, this->m_pSkyBox, this->m_pSkyBoxMaterial);
+        sba_Renderer->Draw(0, true, this->m_pSkyBox, this->m_pSkyBoxMaterial);
         //Bricks
         this->m_pWorker->Render();
-        sba::Space::Instance()->BrickManager->Render(*sba::Space::Instance()->Renderer);
+        sba_BrickManager->Render(*sba_Renderer);
         this->m_pBrickSupervisor->Render(*a_pApplication->GetGraphics(), this->m_pBrickSupervisorFader->GetVisibility());
         this->m_pColorFields->Render(*a_pApplication->GetGraphics(), this->m_pColorFieldsFader->GetVisibility());
         //this->m_pWorker->DrawDebug(a_pApplication->GetGraphics());
+
         //Post
-        renderer->Set(0, (float)this->textureID, "textureID");
-        renderer->Set(0, PuRe_Vector3F(0.2f, 0.2f, 0.2f), "ambient");
-        renderer->Set(1, (float)this->textureID, "textureID");
-        renderer->Set(1, PuRe_Vector3F(0.2f, 0.2f, 0.2f), "ambient");
-        renderer->Render(0, this->m_pWorker->GetCamera(), this->m_pPostMaterial);
-        renderer->Render(1, this->m_UICamera, this->m_pPostMaterial);
-        renderer->End();
+        sba_Renderer->Set(0, PuRe_Vector3F(0.2f, 0.2f, 0.2f), "ambient");
+        sba_Renderer->Set(1, PuRe_Vector3F(0.2f, 0.2f, 0.2f), "ambient");
+        sba_Renderer->Render(0, this->m_pWorker->GetCamera(), this->m_pPostMaterial);
+        sba_Renderer->Render(1, this->m_UICamera, this->m_pPostMaterial);
+        sba_Renderer->End();
     }
 
     // **************************************************************************

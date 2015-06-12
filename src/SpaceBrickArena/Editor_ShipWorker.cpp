@@ -28,12 +28,14 @@ namespace Editor
     // **************************************************************************
     void CShipWorker::LoadShipFromFile(const char* a_pFile)
     {
-        this->m_pCurrentSpaceship = new TheBrick::CSpaceship(*sba::Space::Instance()->World, ong::vec3(0, 0, 0));
+        this->m_pCurrentSpaceship = new TheBrick::CSpaceship(*sba_World, ong::vec3(0, 0, 0));
         TheBrick::CSerializer* serializer = new TheBrick::CSerializer();
         if(serializer->OpenRead(a_pFile))
         {
-            this->m_pCurrentSpaceship->Deserialize(*serializer, *sba::Space::Instance()->BrickManager, *sba::Space::Instance()->World);
+            this->m_pCurrentSpaceship->Deserialize(*serializer, *sba_BrickManager, *sba_World);
             serializer->Close();
+            std::string tmp = std::string(a_pFile);
+            this->m_pCurrentSpaceship->SetNameFromFilename(tmp.substr(tmp.find_last_of("/") + 1));
         }
         else
         {
@@ -60,8 +62,8 @@ namespace Editor
     void CShipWorker::ResetShip()
     {
         SAFE_DELETE(this->m_pCurrentSpaceship);
-        this->m_pCurrentSpaceship = new TheBrick::CSpaceship(*sba::Space::Instance()->World, ong::vec3(0, 0, 0));
-        TheBrick::CBrickInstance* brickInstance = sba::Space::Instance()->BrickManager->GetBrick(1).CreateInstance(*this->m_pCurrentSpaceship, *sba::Space::Instance()->World);
+        this->m_pCurrentSpaceship = new TheBrick::CSpaceship(*sba_World, ong::vec3(0, 0, 0));
+        TheBrick::CBrickInstance* brickInstance = sba_BrickManager->GetBrick(1).CreateInstance(*this->m_pCurrentSpaceship, *sba_World);
         brickInstance->SetTransform(ong::Transform(ong::vec3(0, 0, 0), ong::Quaternion(ong::vec3(0, 0, 0), 1)));
         brickInstance->RotateAroundPivotOffset(PuRe_QuaternionF(0.0f, 0.0f, 0.0f));
         brickInstance->m_Color = PuRe_Color(0, 0, 1);
@@ -71,7 +73,7 @@ namespace Editor
     // **************************************************************************
     TheBrick::CBrickInstance* CShipWorker::AddBrickInstanceToShip(const TheBrick::CBrickInstance& a_pTemplate)
     {
-        TheBrick::CBrickInstance* brickInstance = a_pTemplate.m_pBrick->CreateInstance(*this->m_pCurrentSpaceship, *sba::Space::Instance()->World);
+        TheBrick::CBrickInstance* brickInstance = a_pTemplate.m_pBrick->CreateInstance(*this->m_pCurrentSpaceship, *sba_World);
         brickInstance->SetTransform(a_pTemplate.GetTransform());
         brickInstance->m_Color = a_pTemplate.m_Color;
         return brickInstance;

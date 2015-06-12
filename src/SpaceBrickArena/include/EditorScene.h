@@ -21,12 +21,13 @@ namespace Editor
         int m_PlayerIdx;
 
         PuRe_SkyBox* m_pSkyBox;
-        int textureID;
-        PuRe_IMaterial* m_pPostMaterial;
         PuRe_IMaterial* m_pSkyBoxMaterial;
+        
+        PuRe_IMaterial* m_pPostMaterial;
+        
         PuRe_PointLight* m_pPointLight;
-        PuRe_DirectionalLight* m_pDirectionalLight;
         PuRe_IMaterial* m_pPointLightMaterial;
+        PuRe_DirectionalLight* m_pDirectionalLight;
         PuRe_IMaterial* m_pDirectionalLightMaterial;
 
         PuRe_Camera* m_UICamera;
@@ -37,12 +38,6 @@ namespace Editor
         sba::CUIElementFader* m_pBrickSupervisorFader;
         sba::CUIElementFader* m_pColorFieldsFader;
 
-        /// @brief Position for the MouseClick
-        ///
-        PuRe_Vector2F MouseClickPosition;
-        /// @brief Engine's Application
-        ///
-        PuRe_Application* m_pApplication;
     public:
         /// @brief Constructor to Initialize the MainScene
         ///
