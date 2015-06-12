@@ -1,10 +1,7 @@
 cbuffer MatrixBuffer
 {
-	matrix Scale;
-	matrix Rotation;
-	matrix Translation;
-	matrix View;
-	matrix Projection;
+	matrix InvertProjection;
+    matrix InvertViewModel;
 };
 tbuffer textureBuffer
 {
@@ -25,11 +22,8 @@ struct VertexShaderInput
 
 struct VertexShaderOutput
 {
-  float4 PositionOut : SV_POSITION;
-  float4 Position : POSITION0;
+  float4 Position : SV_POSITION;
   float3 UV       : TEXCOORD0;
-  float3 Color    : COLOR0;
-  float3 Normal   : NORMAL;
 };
 
 struct PixelShaderOutput
@@ -40,21 +34,17 @@ struct PixelShaderOutput
 VertexShaderOutput VS_MAIN(VertexShaderInput input)
 {
   VertexShaderOutput Output = (VertexShaderOutput)0;
-  
-  float4 pos = float4(input.Position.xyz,1);
 
-  float4x4 Model = mul(mul(Scale,Rotation),Translation);
+  float3x3 IMV =(float3x3)InvertViewModel;
+  float4x4 IP = InvertProjection;
 
-  float4x4 MVP = mul(mul(Model,View),Projection);
+  float4 Pos = float4(input.Position,1);
 
-  Output.Position = mul(pos,MVP).xyww;
-  Output.PositionOut = mul(pos,MVP);
+  float3 unprojected = (mul(Pos,IP)).xyz;
 
-  Output.UV = input.Position;
+  Output.Position = Pos;
 
-  Output.Color = input.Color;
-
-  Output.Normal = normalize(mul(input.Normal,(float3x3)Model));
+  Output.UV = mul(unprojected, IMV);
   
   return Output;
 }

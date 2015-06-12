@@ -5,33 +5,23 @@
  layout(location = 2) in vec3 vertexColor;
  layout(location = 3) in vec3 vertexNormal;
 
-uniform mat4 Projection;
-uniform mat4 View;
-
-uniform mat4 Scale;
-uniform mat4 Rotation;
-uniform mat4 Translation;
+uniform mat4 InvertProjection;
+uniform mat4 InvertViewModel;
 
 out vec3 UV;
-
-out vec3 Normal;
-out vec4 Position;
 
 void main()
 {
         
-	mat4 Model = Translation * Rotation * Scale;
-	mat4 MVP = Projection * View * Model;
+	mat3 IMV = mat3(InvertViewModel);
+	mat4 IP = InvertProjection;
 
-	vec4 Pos = MVP * vec4(vertexPosition,1);
+	vec4 Pos = vec4(vertexPosition,1);
 
-	gl_Position = Pos.xyww;
+	vec3 unprojected = (IP * Pos).xyz;
+	gl_Position = Pos;
 	
-	UV = vertexPosition;
-
-	Normal = mat3(Model) * vertexNormal;
-
-	Position = vec4(vertexPosition,1);
+	UV = IMV * unprojected;
 
 }
 
