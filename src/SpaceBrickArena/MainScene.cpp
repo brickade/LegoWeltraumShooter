@@ -20,8 +20,8 @@ namespace sba
     {
         PuRe_GraphicsDescription gdesc = a_pApplication->GetGraphics()->GetDescription();
 
-        Space::Instance()->Initialize(*a_pApplication->GetGraphics(), *a_pApplication->GetInput(), *a_pApplication->GetSoundPlayer());
-        Space::Instance()->BrickManager->Load(*a_pApplication->GetGraphics(), *a_pApplication->GetWindow(), *Space::Instance()->World, *Space::Instance()->BrickManager->GetBrickMaterial(), "../data/bricks/");
+        Space::Instance()->Initialize(*a_pApplication->GetGraphics(), *a_pApplication->GetInput(), *a_pApplication->GetSoundPlayer(), *a_pApplication);
+        sba_BrickManager->Load(*a_pApplication->GetGraphics(), *a_pApplication->GetWindow(), *sba_World, *sba_BrickManager->GetBrickMaterial(), "../data/bricks/");
 
         //Scenes
 #ifdef EDITOR

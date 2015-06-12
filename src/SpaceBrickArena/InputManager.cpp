@@ -65,7 +65,7 @@ namespace sba
                 Input::EKeyboardDirection::WSAD
             }
         };
-        this->m_pDirectionMapping[Input::EDirection::EditorNavigateCategory] =
+        this->m_pDirectionMapping[Input::EDirection::EditorChooseElement] =
         {
             Input::EGamepadDirection::DPad,
             {
@@ -121,24 +121,34 @@ namespace sba
                 Input::EKeyboardButton::Space
             }
         };
-        this->m_pButtonMapping[Input::EButton::EditorUndo] =
+        this->m_pButtonMapping[Input::EButton::EditorUndoRedoHold] =
         {
             Input::EGamepadButton::Pad_X,
             {
-                Input::EKeyboardButton::CtrlZ,
-                Input::EKeyboardButton::CtrlZ,
-                Input::EKeyboardButton::CtrlZ,
-                Input::EKeyboardButton::CtrlZ
+                Input::EKeyboardButton::Ctrl,
+                Input::EKeyboardButton::Ctrl,
+                Input::EKeyboardButton::Ctrl,
+                Input::EKeyboardButton::Ctrl
+            }
+        };
+        this->m_pButtonMapping[Input::EButton::EditorUndo] =
+        {
+            Input::EGamepadButton::DPAD_Left,
+            {
+                Input::EKeyboardButton::Z,
+                Input::EKeyboardButton::Z,
+                Input::EKeyboardButton::Z,
+                Input::EKeyboardButton::Z
             }
         };
         this->m_pButtonMapping[Input::EButton::EditorRedo] =
         {
-            Input::EGamepadButton::Pad_Y,
+            Input::EGamepadButton::DPAD_Right,
             {
-                Input::EKeyboardButton::CtrlY,
-                Input::EKeyboardButton::CtrlY,
-                Input::EKeyboardButton::CtrlY,
-                Input::EKeyboardButton::CtrlY
+                Input::EKeyboardButton::Y,
+                Input::EKeyboardButton::Y,
+                Input::EKeyboardButton::Y,
+                Input::EKeyboardButton::Y
             }
         };
         this->m_pButtonMapping[Input::EButton::EditorRotateBrickRight] =
@@ -201,6 +211,37 @@ namespace sba
                 Input::EKeyboardButton::MouseRight
             }
         };
+        this->m_pButtonMapping[Input::EButton::EditorFadeHold] =
+        {
+            Input::EGamepadButton::Pad_Y,
+            {
+                Input::EKeyboardButton::Enter,
+                Input::EKeyboardButton::Enter,
+                Input::EKeyboardButton::Enter,
+                Input::EKeyboardButton::Enter
+            }
+        };
+        this->m_pButtonMapping[Input::EButton::EditorFadeSupervisor] =
+        {
+            Input::EGamepadButton::DPAD_Left,
+            {
+                Input::EKeyboardButton::A,
+                Input::EKeyboardButton::J,
+                Input::EKeyboardButton::Left,
+                Input::EKeyboardButton::Num_Four
+            }
+        };
+        this->m_pButtonMapping[Input::EButton::EditorFadeColors] =
+        {
+            Input::EGamepadButton::DPAD_Down,
+            {
+                Input::EKeyboardButton::S,
+                Input::EKeyboardButton::K,
+                Input::EKeyboardButton::Right,
+                Input::EKeyboardButton::Num_Five
+            }
+        };
+
         this->m_pButtonMapping[Input::EButton::Exit] =
         {
             Input::EGamepadButton::Pad_Back,
@@ -466,12 +507,6 @@ namespace sba
         {
             switch (a_Button)
             {
-            case Input::EKeyboardButton::CtrlZ:
-                result = this->CalcKeyboardKeyPressedWithHoldKey(this->m_pInput->Ctrl, this->m_pInput->Z);
-                break;
-            case Input::EKeyboardButton::CtrlY:
-                result = this->CalcKeyboardKeyPressedWithHoldKey(this->m_pInput->Ctrl, this->m_pInput->Y);
-                break;
             case Input::EKeyboardButton::CtrlS:
                 result = this->CalcKeyboardKeyPressedWithHoldKey(this->m_pInput->Ctrl, this->m_pInput->S);
                 break;
@@ -523,12 +558,6 @@ namespace sba
         {
             switch (a_Button)
             {
-            case Input::EKeyboardButton::CtrlZ:
-                result = this->CalcKeyboardKeyIsPressedWithHoldKey(this->m_pInput->Ctrl, this->m_pInput->Z);
-                break;
-            case Input::EKeyboardButton::CtrlY:
-                result = this->CalcKeyboardKeyIsPressedWithHoldKey(this->m_pInput->Ctrl, this->m_pInput->Y);
-                break;
             case Input::EKeyboardButton::CtrlS:
                 result = this->CalcKeyboardKeyIsPressedWithHoldKey(this->m_pInput->Ctrl, this->m_pInput->S);
                 break;

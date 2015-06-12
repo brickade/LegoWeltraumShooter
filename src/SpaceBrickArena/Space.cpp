@@ -26,7 +26,7 @@ namespace sba
 
     // **************************************************************************
     // **************************************************************************
-    void Space::Initialize(PuRe_IGraphics& a_pGraphics, PuRe_IInput& a_pInput, PuRe_SoundPlayer& a_pSoundPlayer)
+    void Space::Initialize(PuRe_IGraphics& a_pGraphics, PuRe_IInput& a_pInput, PuRe_SoundPlayer& a_pSoundPlayer, PuRe_Application& a_rpApplication)
     {
         this->Renderer = new PuRe_Renderer(&a_pGraphics);
 #ifdef EDITOR
@@ -42,6 +42,10 @@ namespace sba
         }
         this->BrickManager->Initialize(a_pGraphics, a_pSoundPlayer);
         this->InputManager->Initialize(&a_pInput);
+        this->Font = new PuRe_Font(&a_pGraphics, "../data/textures/font.png");
+        this->FontMaterial = a_pGraphics.LoadMaterial("../data/effects/font/default");
+
+        this->Application = &a_rpApplication;
     }
 
     // **************************************************************************
@@ -57,5 +61,12 @@ namespace sba
             } while (a_pTimer->GetTotalElapsedSeconds() - this->m_LastPhysicsUpdate >= 1 / this->m_PhysicsFramerate);
             Space::Instance()->BrickManager->RebuildRenderInstances(); //Update RenderInstances
         }
+    }
+
+    // **************************************************************************
+    // **************************************************************************
+    void Space::RenderFont(std::string a_Text, PuRe_Vector2F a_Position, float a_Size, float a_Width, unsigned int a_RendertargetIndex)
+    {
+        this->Renderer->Draw(a_RendertargetIndex, false, this->Font, this->FontMaterial, a_Text, PuRe_Vector3F(a_Position, 0), PuRe_MatrixF::Identity(), PuRe_Vector3F(a_Size, a_Size, a_Size), a_Size * a_Width);
     }
 }

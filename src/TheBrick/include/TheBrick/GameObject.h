@@ -39,6 +39,11 @@ namespace TheBrick
 
         void AddBrickInstance(CBrickInstance* a_pBrickInstance, ong::World& a_rWorld);
         void RemoveBrickInstance(const CBrickInstance& a_BrickInstance);
+
+        PuRe_Vector3F PosToObjectSpace(const PuRe_Vector3F& a_rWorldSpacePosition) const;
+        PuRe_Vector3F DirToObjectSpace(const PuRe_Vector3F& a_rWorldSpaceDir) const;
+        PuRe_Vector3F PosToWorldSpace(const PuRe_Vector3F& a_rObjectSpacePosition) const;
+        PuRe_Vector3F DirToWorldSpace(const PuRe_Vector3F& a_rObjectSpaceDir) const;
     };
 }
 

@@ -23,9 +23,9 @@ namespace sba
 
         static const float DEFAULT_GAMEPAD_THRESHOLD;
 
-        Input::SDirectionMapping m_pDirectionMapping[Input::EDirection::LAST];
-        Input::SAxisMapping m_pAxisMapping[Input::EAxis::LAST];
-        Input::SButtonMapping m_pButtonMapping[Input::EButton::LAST];
+        Input::SDirectionMapping m_pDirectionMapping[Input::EDirection::LAST + 1];
+        Input::SAxisMapping m_pAxisMapping[Input::EAxis::LAST + 1];
+        Input::SButtonMapping m_pButtonMapping[Input::EButton::LAST + 1];
 
         bool m_lastInputWasGamepad;
 
@@ -88,10 +88,10 @@ namespace sba
         PuRe_Vector2F CalcKeyboardDirectionFromKeys(PuRe_IInput::EKeys a_KeyUp, PuRe_IInput::EKeys a_KeyDown, PuRe_IInput::EKeys a_KeyRight, PuRe_IInput::EKeys a_KeyLeft)
         {
             PuRe_Vector2F result = PuRe_Vector2F::Zero();
-            if (this->m_pInput->KeyPressed(a_KeyUp)) result.Y++;
-            if (this->m_pInput->KeyPressed(a_KeyDown)) result.Y--;
-            if (this->m_pInput->KeyPressed(a_KeyRight)) result.X++;
-            if (this->m_pInput->KeyPressed(a_KeyLeft)) result.X--;
+            if (this->m_pInput->KeyIsPressed(a_KeyUp)) result.Y++;
+            if (this->m_pInput->KeyIsPressed(a_KeyDown)) result.Y--;
+            if (this->m_pInput->KeyIsPressed(a_KeyRight)) result.X++;
+            if (this->m_pInput->KeyIsPressed(a_KeyLeft)) result.X--;
             return result;
         }
 
@@ -109,8 +109,8 @@ namespace sba
         float CalcKeyboardAxisFromKeys(PuRe_IInput::EKeys a_KeyPositive, PuRe_IInput::EKeys a_KeyNegative)
         {
             float result = 0;
-            if (this->m_pInput->KeyPressed(a_KeyPositive)) result++;
-            if (this->m_pInput->KeyPressed(a_KeyNegative)) result--;
+            if (this->m_pInput->KeyIsPressed(a_KeyPositive)) result++;
+            if (this->m_pInput->KeyIsPressed(a_KeyNegative)) result--;
             return result;
         }
 

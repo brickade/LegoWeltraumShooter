@@ -142,6 +142,7 @@
     <ClInclude Include="include\Editor_BrickCategory.h" />
     <ClInclude Include="include\Editor_BrickSupervisor.h" />
     <ClInclude Include="include\Editor_Assistant.h" />
+    <ClInclude Include="include\Editor_ColorFields.h" />
     <ClInclude Include="include\INIReader.h" />
     <ClInclude Include="include\InputManager.h" />
     <ClInclude Include="include\InputManagerTypes.h" />
@@ -158,6 +159,7 @@
     <ClInclude Include="include\Navigation.h" />
     <ClInclude Include="include\NetworkHandler.h" />
     <ClInclude Include="include\Editor_ShipWorker.h" />
+    <ClInclude Include="include\UIElementFader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Editor_BrickCategory.cpp" />
@@ -166,6 +168,9 @@
     <ClCompile Include="INIReader.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="MenuScene.cpp" />
+    <ClCompile Include="Editor_ColorFields.cpp" />
+    <ClCompile Include="INIReader.cpp" />
+    <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="Space.cpp" />
     <ClCompile Include="Editor_Camera.cpp" />
     <ClCompile Include="Editor_Worker.cpp" />
@@ -179,6 +184,7 @@
     <ClCompile Include="Navigation.cpp" />
     <ClCompile Include="NetworkHandler.cpp" />
     <ClCompile Include="Editor_ShipWorker.cpp" />
+    <ClCompile Include="UIElementFader.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

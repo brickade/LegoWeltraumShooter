@@ -13,6 +13,7 @@ namespace TheBrick
         this->m_TargetVec = ong::vec3(0.0f, 0.0f, 0.0f);
         this->m_TargetAng = ong::vec3(0.0f, 0.0f, 0.0f);
         this->m_pBody->setPosition(a_rPosition);
+        this->m_Name = "Banana";
     }
 
     // **************************************************************************

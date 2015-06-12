@@ -291,6 +291,8 @@ namespace Game
             pos.x += this->m_Players[i]->ID*10.0f;
             this->m_Players[i]->Ship = new TheBrick::CSpaceship(*sba::Space::Instance()->World, pos);
             this->m_Players[i]->Ship->Deserialize(serializer, *sba::Space::Instance()->BrickManager, *sba::Space::Instance()->World);
+            this->m_Players[i]->Ship = new TheBrick::CSpaceship(*sba_World, pos);
+            this->m_Players[i]->Ship->Deserialize(serializer, *sba_BrickManager, *sba_World);
             serializer.Close();
         }
         ong::vec3 start(50.0f, 50.0f, 50.0f);
@@ -563,6 +565,7 @@ namespace Game
         PuRe_GraphicsDescription gdesc = a_pApplication->GetGraphics()->GetDescription();
 
         PuRe_Renderer* renderer = sba::Space::Instance()->Renderer;
+        PuRe_Renderer* renderer = sba_Renderer;
         renderer->Begin(PuRe_Color(0.1f, 0.5f, 0.1f));
 
 
@@ -576,6 +579,7 @@ namespace Game
 
         /////////////  DRAW BRICKS  ///////////////////////
         sba::Space::Instance()->BrickManager->Render(*sba::Space::Instance()->Renderer);
+        sba_BrickManager->Render(*sba_Renderer);
         ////////////////////////////////////////////////////
 
         /////////////  DRAW Particles  ///////////////////////

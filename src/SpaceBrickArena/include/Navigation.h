@@ -68,6 +68,11 @@ namespace sba
             this->ClampFocus();
         }
 
+        int GetLineCount() const
+        {
+            return ceil((this->m_LastElement + 1) / this->m_LastElement);
+        }
+
     public:
         CNavigation(int a_ElementsPerLine = 1, int a_LastElement = 0, float a_ScrollingSpeed = 0.3f, float a_ScrollingThreshold = 0.5f, float a_InputThreshold = 0.3f);
         ~CNavigation();

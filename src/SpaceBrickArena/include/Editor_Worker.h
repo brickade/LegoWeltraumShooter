@@ -11,12 +11,13 @@
 #include "Editor_Camera.h"
 #include "Editor_ShipWorker.h"
 
+#include "TheBrick/Brick.h"
+
 namespace TheBrick
 {
     class CGameObject;
     class CBrickInstance;
     class CSpaceship;
-    class CBrick;
 }
 
 namespace Editor
@@ -32,11 +33,11 @@ namespace Editor
     private:
         CCamera* m_pCamera;
 
-        float m_currentBrickRotation;
+        int m_currentBrickRotation;
         int m_maxBrickDistance;
-        PuRe_Vector2F m_currentBrickPosition;
+        PuRe_Vector2I m_currentBrickPosition;
         PuRe_Vector2F m_currentPosition;
-        float m_currentHeight;
+        int m_currentHeight;
         PuRe_Color m_currentBrickColor;
         bool m_canPlaceHere = false; 
         float m_nubDockThreshold = 0.01f;
@@ -67,6 +68,15 @@ namespace Editor
             this->m_pShipWorker->GetCurrentSpaceShip()->Draw(a_pGraphics, this->m_pCamera);
         }
 
+        float GetCurrentBrickRotation()
+        {
+            return this->m_currentBrickRotation * 90.0f;
+        }
+        PuRe_Vector2F GetCurrentBrickPosition()
+        {
+            return PuRe_Vector2F(this->m_currentBrickPosition.X * TheBrick::CBrick::SEGMENT_WIDTH, this->m_currentBrickPosition.Y * TheBrick::CBrick::SEGMENT_WIDTH);
+        }
+
     public:
         CWorker(int a_playerIdx);
         ~CWorker();
@@ -77,7 +87,7 @@ namespace Editor
 
     private:
         void UpdateTranslation(PuRe_Vector3F a_cameraLook, float a_speed);
-        void UpdateRotation(float a_rotationPerClick);
+        void UpdateRotation();
         void UpdateHeight();
         void ApplyToCurrentBrick();
         void UpdatePlacement();

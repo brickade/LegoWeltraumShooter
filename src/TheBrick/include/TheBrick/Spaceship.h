@@ -23,6 +23,24 @@ namespace TheBrick
         ong::vec3 m_TargetVec;
         ong::vec3 m_TargetAng;
 
+        std::string m_Name;
+
+    public:
+        const std::string& GetName() const
+        {
+            return this->m_Name;
+        }
+
+        void SetName(const std::string& a_rName)
+        {
+            this->m_Name = a_rName;
+        }
+
+        void SetNameFromFilename(const std::string& a_rFilename)
+        {
+            this->m_Name = a_rFilename.substr(0, a_rFilename.find("."));
+        }
+
     public:
         CSpaceship(ong::World& a_rWorld,ong::vec3& a_rPosition);
         ~CSpaceship();
