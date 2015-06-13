@@ -949,13 +949,13 @@ namespace ong
 
 		float b = dot(-v, s);
 		// spheres not moving towards each other
-		if (b >= 0.0f)
-			return false;
+		//if (b >= 0.0f)
+		//	return false;
 
 		float d = b*b - a*c;
 		// negative root
-		if (d < 0.0f) 
-			return false;
+		//if (d < 0.0f) 
+		//	return false;
 		float root = sqrt(d);
 
 		t0 = ong_MAX((-b - root) / a, t0);

@@ -20,6 +20,7 @@ namespace ong
 		m_materialAllocator(MaterialAllocator(5)),
 		m_pBody(nullptr),
 		m_numBodies(0),
+		m_numCpBodies(0),
 		m_numColliders(0)
 
 	{
@@ -37,7 +38,7 @@ namespace ong
 
 		//DEBUG
 		body->CP_POINTS.push_back(world->m_cp[cpIdx].p0);
-		printf("advance body %d to %f\n", body->getIndex(), t);
+		//printf("advance body %d to %f\n", body->getIndex(), t);
 	}
 
 
@@ -160,14 +161,10 @@ namespace ong
 				{
 					if (pairs[i].A->getContinuousPhysics())
 					{
-
-
 						advanceCpBody(this, pairs[i].A, 0.0f);
-
 					}
 					if (pairs[i].B->getContinuousPhysics())
 					{
-
 						advanceCpBody(this, pairs[i].B, 0.0f);
 					}
 
@@ -177,57 +174,64 @@ namespace ong
 			
 
 			float t0 = 0.0f;
-			for (;numCPairs > 0;)
+			while(numCPairs > 0)
 			{
-				Pair* minPair = nullptr;
+				Pair** minPairs = new Pair*[numCPairs];
+				int numMinPairs = 0;
 				float minT = 1.0f;
+				// find minimum next impacts
 				for (int i = 0; i < numCPairs; ++i)
 				{
 					float t = getTimeOfImpact(cPairs[i].A, cPairs[i].B, m_cp.data(), t0);
 					
+					if (t <= t0 || t >= 1.0f)
+						continue;
+
 					if (t < minT)
 					{
+						numMinPairs = 1;
 						minT = t;
-						minPair = &cPairs[i];
+						minPairs[0] = &cPairs[i];
+					}
+					else if (t == minT)
+					{
+						minPairs[numMinPairs++] = &cPairs[i];
 					}
 				}
 
-				if (minPair == nullptr)
+				if (numMinPairs == 0)
 					break;
 
-				//DEBUG
-				printf("minT:	%f\n", minT);
-
-
-				//advance body to time of impact
-				if (minPair->A->getContinuousPhysics() && m_cp[minPair->A->getCpIndex()].t != minT)
-				{
-					advanceCpBody(this, minPair->A, minT);
-				}
-				if (minPair->B->getContinuousPhysics() && m_cp[minPair->B->getCpIndex()].t != minT)
-				{
-					advanceCpBody(this, minPair->B, minT);
-				}
-
-				//update contacts
-				for (int i = 0; i < 2; ++i)
-				{
-					ContactIter* c = ((Body**)minPair)[i]->getContacts();
-					while (c)
+				for (int i = 0; i < numMinPairs; ++i)
+				{				//advance body to time of impact
+					if (minPairs[i]->A->getContinuousPhysics() && m_cp[minPairs[i]->A->getCpIndex()].t != minT)
 					{
-						// if cp body -> advance
-						if (c->other->getContinuousPhysics() && m_cp[c->other->getCpIndex()].t != minT)
-						{
-							advanceCpBody(this, c->other, minT);
-						}
-
-						m_contactManager.updateContact(c->contact);
-						c = c->next;
+						advanceCpBody(this, minPairs[i]->A, minT);
+					}
+					if (minPairs[i]->B->getContinuousPhysics() && m_cp[minPairs[i]->B->getCpIndex()].t != minT)
+					{
+						advanceCpBody(this, minPairs[i]->B, minT);
 					}
 
-				}
-				m_contactManager.generateContact(minPair);
+					//update contacts
+					for (int j = 0; j < 2; ++j)
+					{
+						ContactIter* c = ((Body**)minPairs[i])[j]->getContacts();
+						while (c)
+						{
+							// if cp body -> advance
+							if (c->other->getContinuousPhysics() && m_cp[c->other->getCpIndex()].t != minT)
+							{
+								advanceCpBody(this, c->other, minT);
+							}
 
+							m_contactManager.updateContact(c->contact);
+							c = c->next;
+						}
+
+					}
+					m_contactManager.generateContact(minPairs[i]);
+				}
 				// solve contacts
 				//todo non vector
 				std::vector<Contact*> cpContacts;
@@ -237,10 +241,13 @@ namespace ong
 				// find contacts
 				for (int i = 0; i < numContacts; ++i)
 				{
-					if (contacts[i]->colliderA->getBody() == minPair->A || contacts[i]->colliderA->getBody() == minPair->B ||
-						contacts[i]->colliderB->getBody() == minPair->A || contacts[i]->colliderB->getBody() == minPair->B)
+					for (int j = 0; j < numMinPairs; ++j)
 					{
-						cpContacts.push_back(contacts[i]);
+						if (contacts[i]->colliderA->getBody() == minPairs[j]->A || contacts[i]->colliderA->getBody() == minPairs[j]->B ||
+							contacts[i]->colliderB->getBody() == minPairs[j]->A || contacts[i]->colliderB->getBody() == minPairs[j]->B)
+						{
+							cpContacts.push_back(contacts[i]);
+						}
 					}
 				}
 
@@ -286,8 +293,8 @@ namespace ong
 
 
 				}
-
 				delete[] contactConstraints;
+
 				
 				t0 = minT;
 				//broadphase
@@ -295,15 +302,18 @@ namespace ong
 				numCPairs = 0;
 				for (int i = 0; i < numPairs; ++i)
 				{	
-					if (pairs[i].A->getContinuousPhysics() && m_cp[pairs[i].A->getCpIndex()].t != t0)
-						advanceCpBody(this, pairs[i].A, t0);
-					if (pairs[i].B->getContinuousPhysics() && m_cp[pairs[i].B->getCpIndex()].t != t0)
-						advanceCpBody(this, pairs[i].B, t0);
-
-					cPairs[numCPairs++] = pairs[i];
+					if (pairs[i].A->getContinuousPhysics() || pairs[i].B->getContinuousPhysics())
+					{
+						if (pairs[i].A->getContinuousPhysics() && m_cp[pairs[i].A->getCpIndex()].t != t0)
+							advanceCpBody(this, pairs[i].A, t0);
+						if (pairs[i].B->getContinuousPhysics() && m_cp[pairs[i].B->getCpIndex()].t != t0)
+							advanceCpBody(this, pairs[i].B, t0);
+						cPairs[numCPairs++] = pairs[i];
+					}
 				}
 
 				
+				delete[] minPairs;
 			}
 
 			if (t0 != 1.0f)
@@ -368,6 +378,14 @@ namespace ong
 	void World::destroyBody(Body* pBody)
 	{
 
+
+		if (pBody->getContinuousPhysics())
+		{
+			int cpIdx = pBody->getCpIndex();
+			m_cp[cpIdx] = m_cp[--m_numCpBodies];
+			m_b[m_cp[cpIdx].bodyIdx]->setCpIndex(cpIdx);
+		}
+
 		int idx = pBody->getIndex();
 
 		m_numBodies--;
@@ -381,19 +399,18 @@ namespace ong
 
 		m_b[idx]->setIndex(idx);
 
+		if (m_b[idx]->getContinuousPhysics())
+		{
+			m_cp[m_b[idx]->getCpIndex()].bodyIdx = idx;
+		}
+
 		m_r.pop_back();
 		m_v.pop_back();
 		m_p.pop_back();
 		m_m.pop_back();
 		m_b.pop_back();
-
 		if (pBody->getContinuousPhysics())
-		{
-			int idx = pBody->getCpIndex();
-			m_cp[idx] = m_cp[--m_numCpBodies];
-			m_b[m_cp[idx].bodyIdx]->setCpIndex(idx);
 			m_cp.pop_back();
-		}
 
 
 		m_contactManager.removeBody(pBody);

@@ -12,7 +12,7 @@ Player::Player(Body* body, vec3 color, SDL_Window* window, std::vector<Entity*>*
 
 	Material material;
 
-	material.density = 500.0f;
+	material.density = 100.0f;
 	material.restitution = 0.6f;
 	material.friction = 0.1f;
 
@@ -79,15 +79,15 @@ void Player::shoot()
 
 		ColliderCallbacks callbacks;
 		callbacks.postSolve = bulletImpact;
-		collider->setCallbacks(callbacks);
+		//collider->setCallbacks(callbacks);
 
 		BodyDescription bodyDescr;
 		bodyDescr.type = BodyType::Dynamic;
 		bodyDescr.transform.p = transformVec3(cannon, m_body->getTransform());
 		bodyDescr.transform.q = m_body->getOrientation();;
-		bodyDescr.linearMomentum = rotate(vec3(0.0f, 0.0f, 300.0f), m_body->getOrientation());
+		bodyDescr.linearMomentum = rotate(vec3(0.0f, 0.0f, 1500.0f), m_body->getOrientation());
 		bodyDescr.angularMomentum = vec3(0.0f, 0.0f, 0.0f);
-		bodyDescr.continuousPhysics = false;
+		bodyDescr.continuousPhysics = true;
 
 		Body* body = m_body->getWorld()->createBody(bodyDescr);
 		body->addCollider(collider);
@@ -153,10 +153,10 @@ void Player::grab()
 {
 	Transform bodyTransform = m_body->getTransform();
 
-	vec3 rayO = transformVec3(vec3(0, 0, 2.0f), bodyTransform);
+	vec3 rayO = transformVec3(vec3(0, 0, 2.5f), bodyTransform);
 	vec3 rayDir = rotate(vec3(0, 0, 1), bodyTransform.q);
 
-	RayQueryResult result;
+	RayQueryResult result = { 0 };
 	if (m_body->getWorld()->queryRay(rayO, rayDir, &result))
 	{
 		if (result.collider->getBody()->getType() == BodyType::Dynamic)
