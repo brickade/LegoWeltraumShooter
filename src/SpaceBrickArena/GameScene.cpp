@@ -131,8 +131,10 @@ namespace Game
             }
             else
                 inputExists = m_buffer[0].Frame == this->m_PhysicFrame;
+
             if (inputExists)
             {
+                printf("Input exists, do Physik!\n");
                 InputPacket ipacket;
                 memset(&ipacket, 0, sizeof(InputPacket));
                 ipacket.Head.Type = Packet::STick;
@@ -204,6 +206,7 @@ namespace Game
         this->m_pNetwork->Update(this->m_pApplication->GetInput()); //Update Network State
 
         //If he connected
+        this->m_Run = true;
         if (networkState != 3 && this->m_pNetwork->GetState() == 3)
         {
             printf("Connecting!\n");
@@ -214,14 +217,18 @@ namespace Game
                 printf("You are the Host!\n");
                 Player* p = new Player();
                 p->ID = 0;
-                p->NetworkInformation = SOCKADDR_IN();
+                p->NetworkInformation = 0;
                 this->m_ArrayID = this->m_Players.size();
                 this->m_Players.push_back(p);
                 this->m_ID = p->ID;
+                std::thread listenThread(&CGameScene::ListenLoop, this);
+                listenThread.detach();
             }
-            //Start thread to listen
-            std::thread receiveThread(&CGameScene::ReceiveData, this);
-            receiveThread.detach();
+            else
+            {
+                std::thread receiveThread(&CGameScene::ReceiveData, this,this->m_pNetwork->GetSocket());
+                receiveThread.detach();
+            }
         }
 
         if (this->m_pApplication->GetInput()->KeyPressed(this->m_pApplication->GetInput()->F3) && networkState == 3 && this->m_pNetwork->m_Host)
@@ -281,6 +288,7 @@ namespace Game
                     package.Frame = i;
                     this->m_pNetwork->SendHost((char*)&package, sizeof(InputPacket));
                 }
+                printf("Send initial Data!\n");
             }
         }
         for (unsigned int i = 0; i < this->m_Players.size(); i++)
@@ -310,17 +318,17 @@ namespace Game
 
     // **************************************************************************
     // **************************************************************************
-    void CGameScene::ReceiveData()
+    void CGameScene::ListenLoop()
     {
-        char buffer[256];
-        SOCKADDR_IN sender;
-        while (true)
+        while (this->m_Run)
         {
-            if (this->m_pNetwork->Receive(buffer, 256, &sender) != -1)
+            if (this->m_pNetwork->Listen())
             {
-                ReceivePacket* Packet = (ReceivePacket*)buffer;
-                if (Packet->Head.Type == Packet::Join && this->m_Players.size() < MaxPlayers)
+                SOCKADDR_IN* clientData = NULL;
+                if (this->m_Players.size() < MaxPlayers)
                 {
+                    SOCKET s = this->m_pNetwork->Accept();
+                    printf("Client connected!\n");
                     int ID = 0; // 0 is Host
                     for (unsigned int i = 0; i < this->m_Players.size(); i++)
                     {
@@ -332,30 +340,57 @@ namespace Game
                     }
                     Player* p = new Player();
                     p->ID = ID;
-                    p->NetworkInformation = sender;
+                    p->NetworkInformation = s;
                     this->m_Players.push_back(p);
                     printf("User %i joined!\n", ID);
                     //Tell him who he is
                     LeftPacket lPacket;
                     lPacket.Head.Type = Packet::IAm;
                     lPacket.Who = ID;
-                    this->m_pNetwork->Send((char*)&lPacket, sizeof(LeftPacket), sender);
+                    this->m_pNetwork->Send((char*)&lPacket, sizeof(LeftPacket), s);
 
                     //Send to JOINER all existing players
                     lPacket.Head.Type = Packet::CJoin;
                     for (unsigned int i = 0; i < this->m_Players.size(); i++)
                     {
                         lPacket.Who = this->m_Players[i]->ID;
-                        this->m_pNetwork->Send((char*)&lPacket, sizeof(LeftPacket), sender);
+                        printf("Sending to %i Data of player %i\n",ID,lPacket.Who);
+                        this->m_pNetwork->Send((char*)&lPacket, sizeof(LeftPacket), s);
                         //Same call send this player about the JOINER
-                        if (this->m_Players[i]->ID != ID)
+                        if (this->m_Players[i]->ID != ID&&this->m_Players[i]->ID != 0)
                         {
                             lPacket.Who = ID;
                             this->m_pNetwork->Send((char*)&lPacket, sizeof(LeftPacket), this->m_Players[i]->NetworkInformation);
                         }
                     }
+                    std::thread HandleThread(&CGameScene::ReceiveData, this, s);
+                    HandleThread.detach();
                 }
-                else if (Packet->Head.Type == Packet::Left)
+
+            }
+        }
+
+    }
+
+    // **************************************************************************
+    // **************************************************************************
+    void CGameScene::ReceiveData(SOCKET s)
+    {
+        const int bufferSize = 1024;
+        char buffer[bufferSize];
+        SOCKADDR_IN sender;
+        while (this->m_Run)
+        {
+            memset(buffer, 0, bufferSize);
+            long dataLeft = this->m_pNetwork->Receive(buffer, bufferSize, s);
+            if (dataLeft == -1)
+                break;
+            m_Mutex.lock();
+            while (dataLeft > 0)
+            {
+                printf("Data left %d!\n",dataLeft);
+                ReceivePacket* Packet = (ReceivePacket*)buffer;
+                if (Packet->Head.Type == Packet::Left)
                 {
                     LeftPacket* lPacket = (LeftPacket*)Packet;
 
@@ -371,17 +406,25 @@ namespace Game
                     //Send to everyone else that one left
                     if (this->m_pNetwork->m_Host)
                     {
-                        for (unsigned int i = 0; i < this->m_Players.size(); i++)
+                        for (unsigned int i = 1; i < this->m_Players.size(); i++)
                         {
                             this->m_pNetwork->Send((char*)lPacket, sizeof(LeftPacket), this->m_Players[i]->NetworkInformation);
                         }
                     }
+                    //ship left
+                    long packetSize = sizeof(LeftPacket);
+                    dataLeft -= packetSize;
+                    memcpy(buffer, buffer + (int)packetSize, bufferSize-packetSize);
                 }
                 else if (Packet->Head.Type == Packet::IAm)
                 {
                     LeftPacket* LPacket = (LeftPacket*)Packet;
                     this->m_ID = LPacket->Who;
                     printf("I am %i!\n", this->m_ID);
+                    //ship left
+                    long packetSize = sizeof(LeftPacket);
+                    dataLeft -= packetSize;
+                    memcpy(buffer, buffer + (int)packetSize, bufferSize - packetSize);
                 }
                 else if (Packet->Head.Type == Packet::CJoin)
                 {
@@ -390,35 +433,50 @@ namespace Game
                     p->ID = LPacket->Who;
                     if (p->ID == this->m_ID)
                         this->m_ArrayID = this->m_Players.size();
-                    p->NetworkInformation = sender;
+                    p->NetworkInformation = s;
                     this->m_Players.push_back(p);
                     printf("User %i joined!\n", p->ID);
+
+                    //ship left
+                    long packetSize = sizeof(LeftPacket);
+                    dataLeft -= packetSize;
+                    memcpy(buffer, buffer + (int)packetSize, bufferSize - packetSize);
 
                 }
                 else if (Packet->Head.Type == Packet::Start)
                 {
                     this->StartGame();
+                    long packetSize = sizeof(HeadPacket);
+                    dataLeft -= packetSize;
+                    memcpy(buffer, buffer + (int)packetSize, bufferSize - packetSize);
                 }
                 else if (Packet->Head.Type == Packet::STick)
                 {
                     InputPacket* IPacket = (InputPacket*)Packet;
-                    m_Mutex.lock();
                     m_buffer[IPacket->Frame - m_PhysicFrame].Inputs[IPacket->Input.Player] = IPacket->Input;
                     m_numReceived[IPacket->Frame - m_PhysicFrame]++;
                     printf("received tick %d from player %d\n", IPacket->Frame, IPacket->Input.Player);
-                    m_Mutex.unlock();
+                    //ship left
+                    long packetSize = sizeof(InputPacket);
+                    dataLeft -= packetSize;
+                    memcpy(buffer, buffer + (int)packetSize, bufferSize - packetSize);
                 }
                 else if (Packet->Head.Type == Packet::CTick)
                 {
                     InputsPacket* IPacket = (InputsPacket*)Packet;
-                    m_Mutex.lock();
-                    PlayOutBuffer* buffer = &this->m_buffer[IPacket->Frame - this->m_PhysicFrame];
-                    buffer->Frame = IPacket->Frame;
-                    memcpy(buffer->Inputs, IPacket->Input, sizeof(InputData)*IPacket->Players);
+                    PlayOutBuffer* pbuffer = &this->m_buffer[IPacket->Frame - this->m_PhysicFrame];
+                    pbuffer->Frame = IPacket->Frame;
+                    memcpy(pbuffer->Inputs, IPacket->Input, sizeof(InputData)*IPacket->Players);
                     printf("received tick %d\n", IPacket->Frame);
-                    m_Mutex.unlock();
+                    //ship left
+                    long packetSize = sizeof(InputsPacket);
+                    dataLeft -= packetSize;
+                    memcpy(buffer, buffer + (int)packetSize, bufferSize - packetSize);
                 }
+                else
+                    dataLeft -= sizeof(HeadPacket);
             }
+            m_Mutex.unlock();
         }
     }
 
@@ -464,7 +522,7 @@ namespace Game
         #else
             Player* p = new Player();
             p->ID = 0;
-            p->NetworkInformation = SOCKADDR_IN();
+            p->NetworkInformation = 0;
             this->m_ArrayID = this->m_Players.size();
             this->m_Players.push_back(p);
             this->m_ID = p->ID;
@@ -509,6 +567,7 @@ namespace Game
             TheBrick::CSpaceship* playerShip = this->m_Players[this->m_ArrayID]->Ship;
             this->m_Cameras[0]->Update(0, playerShip, a_pApplication->GetInput(), a_pApplication->GetTimer());
             PuRe_QuaternionF rotation = this->m_Cameras[0]->GetQuaternion();
+
             if (this->m_pEmitter->GetAmount() < 200)
             {
                 for (int i = 0; i<10; i++)
@@ -610,6 +669,7 @@ namespace Game
     // **************************************************************************
     void CGameScene::Exit()
     {
+        this->m_Run = false;
         sba::CIniReader::Instance()->Save();
         if (this->m_pNetwork != NULL)
         {

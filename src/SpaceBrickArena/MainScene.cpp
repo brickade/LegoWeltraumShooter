@@ -3,7 +3,7 @@ namespace sba
 {   
     CMainScene::CMainScene(PuRe_Application* a_pApplication)
     {
-        this->m_PlayerIdx = -1;
+        this->m_PlayerIdx = 0;
         this->m_pApplication = a_pApplication;
         this->m_pMenuScene = new Menu::CMenuScene(a_pApplication,&this->m_PlayerIdx);
     }

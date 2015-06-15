@@ -44,48 +44,33 @@ namespace Menu
         if (input->KeyPressed(a_pApplication->GetInput()->ESC))
             return 0;
 
-        if (*this->m_pPlayerIdx == -1)
+        int result = 0;
+        switch (this->m_Displayed)
         {
-            for (int i = 0; i < 4; i++)
+        case Main:
+            result = this->m_pMainMenu->Update(timer, *this->m_pPlayerIdx);
+            if (result == 4)
+                this->m_Displayed = Options;
+            else
+                return result;
+            break;
+        case Options:
+            result = this->m_pOptions->Update(timer, *this->m_pPlayerIdx);
+            if (result == 0)
+                this->m_Displayed = Main;
+            if (result == 2)
             {
-                if (sba_Input->ButtonPressed(sba_Button::MenuClick, i))
-                {
-                    *this->m_pPlayerIdx = i;
-                    break;
-                }
+                //SAFE_DELETE(graphics);
+                //PuReEngine::Core::SGraphicsDescription gdesc;
+                //gdesc.Module = PuRe_GraphicsModuleType::OpenGL;
+                //gdesc.ResolutionWidth = this->m_pOptions->m_Resolutions[this->m_pOptions->m_Resolution][0];
+                //gdesc.ResolutionHeight = this->m_pOptions->m_Resolutions[this->m_pOptions->m_Resolution][1];
+                //platform->PlatformCreateGraphics(window, gdesc);
             }
+            break;
+        default:
+            break;
         }
-        else
-        {
-            int result = 0;
-            switch (this->m_Displayed)
-            {
-            case Main:
-                result = this->m_pMainMenu->Update(timer, *this->m_pPlayerIdx);
-                if (result == 4)
-                    this->m_Displayed = Options;
-                else
-                    return result;
-                break;
-            case Options:
-                result = this->m_pOptions->Update(timer, *this->m_pPlayerIdx);
-                if (result == 0)
-                    this->m_Displayed = Main;
-                if (result == 2)
-                {
-                    //SAFE_DELETE(graphics);
-                    //PuReEngine::Core::SGraphicsDescription gdesc;
-                    //gdesc.Module = PuRe_GraphicsModuleType::OpenGL;
-                    //gdesc.ResolutionWidth = this->m_pOptions->m_Resolutions[this->m_pOptions->m_Resolution][0];
-                    //gdesc.ResolutionHeight = this->m_pOptions->m_Resolutions[this->m_pOptions->m_Resolution][1];
-                    //platform->PlatformCreateGraphics(window, gdesc);
-                }
-                break;
-            default:
-                break;
-            }
-        }
-
 
         if (input->KeyPressed(a_pApplication->GetInput()->Comma))
         {

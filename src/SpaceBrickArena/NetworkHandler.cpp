@@ -19,24 +19,40 @@ namespace Game
     // **************************************************************************
     void CNetworkHandler::Connect()
     {
-        this->m_pSocket = new PuRe_Socket(this->m_IP.c_str(), std::stoi(this->m_Port), this->m_Host);
+        this->m_pSocket = new PuRe_Socket(this->m_IP.c_str(), std::stoi(this->m_Port), this->m_Host,PuRe_Protocol::TCP);
         sba::CIniReader::Instance()->SetValue("IP", this->m_IP);
         sba::CIniReader::Instance()->SetValue("Port", this->m_Port);
-        if (!this->m_Host)
-        {
-            //send that we are connecting to him
-            HeadPacket h;
-            h.Type = Packet::Join;
-            this->Send((char*)&h, sizeof(HeadPacket), this->m_pSocket->GetAddress());
-        }
+    }
+
+    // **************************************************************************
+    // **************************************************************************
+    SOCKET CNetworkHandler::Accept()
+    {
+        return this->m_pSocket->Accept(nullptr);
+    }
+
+    // **************************************************************************
+    // **************************************************************************
+    int CNetworkHandler::GetSocket()
+    {
+        return this->m_pSocket->GetSocket();
+    }
+
+    // **************************************************************************
+    // **************************************************************************
+    bool CNetworkHandler::Listen()
+    {
+        return this->m_pSocket->Listen();
     }
 
 
     // **************************************************************************
     // **************************************************************************
-    long CNetworkHandler::Receive(char* a_pBuffer, int a_Size, SOCKADDR_IN* a_pSender)
+    long CNetworkHandler::Receive(char* a_pBuffer, int a_Size, SOCKET a_pSender)
     {
-        return this->m_pSocket->Receive(a_pBuffer, a_Size, a_pSender);
+        long error = this->m_pSocket->Receive(a_pSender, a_pBuffer, a_Size);
+        printf("Received Data with result %d\n", error);
+        return error;
     }
 
 
@@ -45,16 +61,19 @@ namespace Game
     void CNetworkHandler::SendHost(char* a_pBuffer, int a_Size)
     {
         if (this->m_pSocket != NULL)
-            this->Send(a_pBuffer, a_Size, this->m_pSocket->GetAddress());
+            this->Send(a_pBuffer, a_Size,this->m_pSocket->GetSocket());
     }
 
 
     // **************************************************************************
     // **************************************************************************
-    void CNetworkHandler::Send(char* a_pBuffer, int a_Size, SOCKADDR_IN a_Receiver)
+    void CNetworkHandler::Send(char* a_pBuffer, int a_Size, SOCKET a_Receiver)
     {
         if (this->m_pSocket != NULL)
-            this->m_pSocket->Send(a_Receiver,a_pBuffer,a_Size);
+        {
+            long error = this->m_pSocket->Send(a_Receiver,a_pBuffer,a_Size);
+            printf("Send Data with result %d\n",error);
+        }
     }
 
 

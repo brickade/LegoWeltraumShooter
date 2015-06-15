@@ -82,12 +82,15 @@ namespace Game
         public:
             CNetworkHandler();
             ~CNetworkHandler();
-        public:
+    public:
+        bool Listen();
+        SOCKET Accept();
             void Connect();
             void Update(PuRe_IInput* a_pInput);
             int GetState();
-            long Receive(char* a_pBuffer, int a_Size, SOCKADDR_IN* a_pSender);
-            void Send(char* a_pBuffer, int a_Size, SOCKADDR_IN a_Receiver);
+            int GetSocket();
+            long Receive(char* a_pBuffer, int a_Size, SOCKET a_pSender);
+            void Send(char* a_pBuffer, int a_Size, SOCKET a_Receiver);
             void SendHost(char* a_pBuffer, int a_Size);
     };
 }

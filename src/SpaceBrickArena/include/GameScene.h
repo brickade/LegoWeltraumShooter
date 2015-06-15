@@ -19,8 +19,8 @@
 namespace Game
 {
 
-    //#define NETWORKGAME
-    #define Skybox
+    #define NETWORKGAME
+    //#define Skybox
 
     enum { BufferSize = 32 };
     struct PlayOutBuffer
@@ -31,7 +31,7 @@ namespace Game
     struct Player
     {
         unsigned char ID;
-        SOCKADDR_IN NetworkInformation;
+        SOCKET NetworkInformation;
         TheBrick::CSpaceship* Ship;
     };
     /// @brief MainScene where the game functions are in, inherits from the Scene interface
@@ -39,6 +39,7 @@ namespace Game
     class CGameScene : public PuRe_IScene
     {
     private:
+        bool m_Run;
         std::mutex m_Mutex;
         //host only
         unsigned int m_numReceived[BufferSize];
@@ -103,9 +104,11 @@ namespace Game
         /// @brief Start the Game
         ///
         void StartGame();
+
+        void ListenLoop();
         /// @brief Receives Data which were send via Network.
         ///
-        void ReceiveData();
+        void ReceiveData(SOCKET s);
         /// @brief Initializes the scene.
         ///
         /// @param graphics The graphics interface.
