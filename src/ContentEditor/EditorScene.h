@@ -43,6 +43,14 @@ namespace Content
 		ong::World m_World;
 		ong::Body* m_pBody;
 
+
+		ong::Body* m_pMeshBody;
+		std::vector<ong::Collider*> m_SelectedVertices;
+		bool m_MouseDown;
+		ong::vec3 m_RectStartPos;
+		ong::vec3 m_RectStartDir;
+
+
 		bool m_MouseValid;
 
 		TheBrick::SNub m_NubPtr;
@@ -52,13 +60,15 @@ namespace Content
 		ong::ShapePtr m_MousePtr;
 		ong::ShapePtr m_NubShape;
 		ong::ShapePtr m_OriginShape;
+		ong::ShapePtr m_VertexShape;
 
 		TheBrick::CSerializer m_Serializer;
 
 		enum Mode
 		{
 			NUB,
-			ORIGIN
+			ORIGIN,
+			HULL
 		} m_Mode;
 
 	public:

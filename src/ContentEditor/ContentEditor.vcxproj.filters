@@ -24,12 +24,18 @@
     <ClCompile Include="EditorScene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ParseModel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EditorScene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CommandQueue.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ParseModel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
