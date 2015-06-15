@@ -190,6 +190,7 @@ namespace Editor
         if (!CAssistant::GetClosestHitsFromBrickInstanceNubs(*this->m_pCurrentBrick, *this->m_pShipWorker->GetCurrentSpaceShip(), nubToCastFromShouldBeMale, nubToCastFromDirection, &hitResults, &hitResultRayOrigins))
         { //Nothing hit
             this->m_currentHeight = 0;
+            printf("Nothing hit\n");
             return;
         }
         assert(hitResults.size() == hitResultRayOrigins.size());
@@ -210,14 +211,17 @@ namespace Editor
                 { //CollisionFree
                     this->m_canPlaceHere = true;
                     this->m_currentHeight = round((hitResultRayOrigins[i].y + maxCollisionFreeDelta.y + (brickTransform.p.y - hitResultRayOrigins[i].y)) / TheBrick::CBrick::SEGMENT_HEIGHT);
+                    printf("Collision free: delta(%f, %f, %f)\n", maxCollisionFreeDelta.x, maxCollisionFreeDelta.y, maxCollisionFreeDelta.z);
                     return;
                 }
                 //Handle docking test success but not collision free
                 this->m_currentHeight = round((hitResultRayOrigins[i].y + maxCollisionFreeDelta.y + (brickTransform.p.y - hitResultRayOrigins[i].y)) / TheBrick::CBrick::SEGMENT_HEIGHT);
+                printf("NOT Collision free: delta(%f, %f, %f)\n", maxCollisionFreeDelta.x, maxCollisionFreeDelta.y, maxCollisionFreeDelta.z);
                 return;
             }
         }
         //Can't dock
+        printf("Can't dock\n");
         this->m_currentHeight = round((hitResults[0].point.y + (brickTransform.p.y - hitResultRayOrigins[0].y)) / TheBrick::CBrick::SEGMENT_HEIGHT);
     }
 
