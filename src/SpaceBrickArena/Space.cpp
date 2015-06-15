@@ -29,12 +29,10 @@ namespace sba
     void Space::Initialize(PuRe_IGraphics& a_pGraphics, PuRe_IInput& a_pInput, PuRe_SoundPlayer& a_pSoundPlayer, PuRe_Application& a_rpApplication)
     {
         this->Renderer = new PuRe_Renderer(&a_pGraphics);
-#ifdef EDITOR
-        this->Renderer->AddTarget(PuRe_Vector2I(a_pGraphics.GetDescription().ResolutionWidth, a_pGraphics.GetDescription().ResolutionHeight));
-#else
-        this->Renderer->AddTarget(PuRe_Vector2I(a_pGraphics.GetDescription().ResolutionWidth, a_pGraphics.GetDescription().ResolutionHeight));
-#endif
-        this->Renderer->AddTarget(PuRe_Vector2I(a_pGraphics.GetDescription().ResolutionWidth, a_pGraphics.GetDescription().ResolutionHeight));
+        for (int i = 0; i < 3; i++)
+        {
+            this->Renderer->AddTarget(PuRe_Vector2I(a_pGraphics.GetDescription().ResolutionWidth, a_pGraphics.GetDescription().ResolutionHeight));
+        }
         if (CIniReader::Instance()->GetValue("SSAO") == "On")
         {
             this->m_SSAOMaterial = a_pGraphics.LoadMaterial("../data/effects/SSAO/default");
