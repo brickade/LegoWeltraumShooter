@@ -67,7 +67,7 @@ namespace Content
 		
         void Initialize(PuRe_Application* a_pApplication);
 
-        bool Update(PuRe_Application* a_pApplication);
+        int Update(PuRe_Application* a_pApplication);
 
         void Render(PuRe_Application* a_pApplication);
 

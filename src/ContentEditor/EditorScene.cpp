@@ -364,7 +364,7 @@ namespace Content
 	}
 
 
-    bool CEditorScene::Update(PuRe_Application* a_pApplication)
+    int CEditorScene::Update(PuRe_Application* a_pApplication)
     {
         PuRe_IInput* input = a_pApplication->GetInput();
         PuRe_IWindow* window = a_pApplication->GetWindow();
@@ -517,7 +517,7 @@ namespace Content
 		}
 
 
-		return false;
+		return 1;
 	}
 		
 
