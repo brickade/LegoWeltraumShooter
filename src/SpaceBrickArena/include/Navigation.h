@@ -70,7 +70,7 @@ namespace sba
 
         int GetLineCount() const
         {
-            return ceil((this->m_LastElement + 1) / this->m_LastElement);
+            return (int)ceil((this->m_LastElement + 1) / this->m_LastElement);
         }
 
     public:

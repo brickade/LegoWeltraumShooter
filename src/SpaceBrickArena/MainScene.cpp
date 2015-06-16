@@ -39,16 +39,25 @@ namespace sba
             case 1:
                 return 1;
                 break;
-            case 2: //Game Initialize
+            case 2: //Game Local Initialize
                 this->m_pActiveScene->Exit();
                 SAFE_DELETE(this->m_pActiveScene);
 
-                this->m_pGameScene = new Game::CGameScene(a_pApplication, this->m_PlayerIdx);
+                this->m_pGameScene = new Game::CGameScene(a_pApplication, this->m_PlayerIdx,false);
                 this->m_pGameScene->Initialize(a_pApplication);
                 this->m_pActiveScene = this->m_pGameScene;
                 return 1;
                 break;
-            case 3: //Editor Initialize
+            case 3: //Game Network Initialize
+                this->m_pActiveScene->Exit();
+                SAFE_DELETE(this->m_pActiveScene);
+
+                this->m_pGameScene = new Game::CGameScene(a_pApplication, this->m_PlayerIdx,true);
+                this->m_pGameScene->Initialize(a_pApplication);
+                this->m_pActiveScene = this->m_pGameScene;
+                return 1;
+                break;
+            case 4: //Editor Initialize
                 this->m_pActiveScene->Exit();
                 SAFE_DELETE(this->m_pActiveScene);
 
@@ -57,7 +66,7 @@ namespace sba
                 this->m_pActiveScene = this->m_pEditorScene;
                 return 1;
                 break;
-            case 4: //Menu Initialize
+            case 5: //Menu Initialize
                 this->m_pActiveScene->Exit();
                 SAFE_DELETE(this->m_pActiveScene);
 

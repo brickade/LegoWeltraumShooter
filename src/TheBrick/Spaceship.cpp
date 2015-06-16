@@ -7,13 +7,12 @@ namespace TheBrick
 {
     // **************************************************************************
     // **************************************************************************
-    CSpaceship::CSpaceship(ong::World& a_rWorld, ong::vec3& a_rPosition) : CGameObject(a_rWorld, nullptr)
+    CSpaceship::CSpaceship(ong::World& a_rWorld,std::string a_Name) : CGameObject(a_rWorld, nullptr)
     {
         this->m_pCSVFile = new CCSVParser("../data/player.csv");
         this->m_TargetVec = ong::vec3(0.0f, 0.0f, 0.0f);
         this->m_TargetAng = ong::vec3(0.0f, 0.0f, 0.0f);
-        this->m_pBody->setPosition(a_rPosition);
-        this->m_Name = "Banana";
+        this->m_Name = a_Name;
     }
 
     // **************************************************************************

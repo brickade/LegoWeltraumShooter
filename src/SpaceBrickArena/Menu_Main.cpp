@@ -5,7 +5,7 @@ namespace Menu
 
     CMain::CMain()
     {
-        this->m_pNavigation = new sba::CNavigation(1, 3);
+        this->m_pNavigation = new sba::CNavigation(1, 4);
     }
 
     CMain::~CMain()
@@ -20,14 +20,17 @@ namespace Menu
         {
             switch (this->m_pNavigation->GetFocusedElementId())
             {
-            case 0: //Game
+            case 0: //Local
                 return 2;
                 break;
-            case 1: //Editor
+            case 1: //Multiplayer
                 return 3;
                 break;
-            case 2: //Options
+            case 2: //Editor
                 return 4;
+                break;
+            case 3: //Options
+                return 5;
                 break;
             default:
                 return 0;
@@ -40,8 +43,8 @@ namespace Menu
     void CMain::Render(PuRe_Renderer* a_pRenderer, PuRe_Font* a_pFont, PuRe_IMaterial* a_pFontMaterial, PuRe_Vector2F a_Resolution)
     {
         PuRe_Vector3F Position;
-        Position.X = a_Resolution.X / 2.0f;
-        Position.Y = a_Resolution.Y / 2.0f;
+        Position.X = 1920 / 2.0f;
+        Position.Y = 1080 / 2.0f;
         Position.X -= 100.0f;
         Position.Y += 200.0f;
 
@@ -51,21 +54,27 @@ namespace Menu
             color = PuRe_Color(1.0f, 0.0f, 0.0f);
         else
             color = PuRe_Color(1.0f, 1.0f, 1.0f);
-        a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "Game", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(36.0f, 36.0f, 0.0f), 32.0f, color);
+        a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "Local", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(36.0f, 36.0f, 0.0f), 32.0f, color);
         Position.Y -= 64.0f;
         if (this->m_pNavigation->GetFocusedElementId() == 1)
             color = PuRe_Color(1.0f, 0.0f, 0.0f);
         else
             color = PuRe_Color(1.0f, 1.0f, 1.0f);
-        a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "Editor", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(36.0f, 36.0f, 0.0f), 32.0f, color);
+        a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "Multiplayer", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(36.0f, 36.0f, 0.0f), 32.0f, color);
         Position.Y -= 64.0f;
         if (this->m_pNavigation->GetFocusedElementId() == 2)
             color = PuRe_Color(1.0f, 0.0f, 0.0f);
         else
             color = PuRe_Color(1.0f, 1.0f, 1.0f);
-        a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "Options", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(36.0f, 36.0f, 0.0f), 32.0f, color);
+        a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "Editor", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(36.0f, 36.0f, 0.0f), 32.0f, color);
         Position.Y -= 64.0f;
         if (this->m_pNavigation->GetFocusedElementId() == 3)
+            color = PuRe_Color(1.0f, 0.0f, 0.0f);
+        else
+            color = PuRe_Color(1.0f, 1.0f, 1.0f);
+        a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "Options", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(36.0f, 36.0f, 0.0f), 32.0f, color);
+        Position.Y -= 64.0f;
+        if (this->m_pNavigation->GetFocusedElementId() == 4)
             color = PuRe_Color(1.0f, 0.0f, 0.0f);
         else
             color = PuRe_Color(1.0f, 1.0f, 1.0f);

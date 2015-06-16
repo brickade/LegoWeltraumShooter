@@ -19,9 +19,13 @@ namespace Game
     // **************************************************************************
     void CNetworkHandler::Connect()
     {
-        this->m_pSocket = new PuRe_Socket(this->m_IP.c_str(), std::stoi(this->m_Port), this->m_Host,PuRe_Protocol::TCP);
+        if (this->m_Host)
+            this->m_pSocket = new PuRe_Socket(PuRe_SocketType::Host,PuRe_Protocol::TCP, std::stoi(this->m_Port),this->m_IP.c_str());
+        else
+            this->m_pSocket = new PuRe_Socket(PuRe_SocketType::Client, PuRe_Protocol::TCP, std::stoi(this->m_Port), this->m_IP.c_str());
         sba::CIniReader::Instance()->SetValue("IP", this->m_IP);
         sba::CIniReader::Instance()->SetValue("Port", this->m_Port);
+        sba::CIniReader::Instance()->Save();
     }
 
     // **************************************************************************

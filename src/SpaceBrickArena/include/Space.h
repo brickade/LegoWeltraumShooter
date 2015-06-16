@@ -14,8 +14,10 @@
 #include <Onager/World.h>
 
 #include <TheBrick/BrickManager.h>
+#include <TheBrick/Serializer.h>
 #include "InputManager.h"
 #include "INIReader.h"
+#include "Player.h"
 
 namespace sba
 {
@@ -38,11 +40,12 @@ namespace sba
         sba::CInputManager* InputManager;
         PuRe_Font* Font;
         PuRe_IMaterial* FontMaterial;
+        PuRe_IMaterial* m_SSAOMaterial;
+        PuRe_Sprite* m_pNoiseTexture;
+        std::vector<Player*> m_Players;
 
     private:
         static Space* g_pInstance;
-
-        PuRe_IMaterial* m_SSAOMaterial;
 
         double m_LastPhysicsUpdate;
         float m_PhysicsFramerate = 60.0f;
@@ -53,6 +56,9 @@ namespace sba
 
         void RenderFont(std::string a_Text, PuRe_Vector2F a_Position, float a_Size = 24, float a_Width = 1, unsigned int a_RendertargetIndex = 2);
 
+        void CreatePlayer(int a_Pad, PuRe_IWindow* a_pWindow);
+        void DeletePlayer(int a_Index);
+
     private:
         Space();
         ~Space();
@@ -62,6 +68,8 @@ namespace sba
 #define sba_Application sba::Space::Instance()->Application
 #define sba_Width sba::Space::Instance()->Application->GetGraphics()->GetDescription().ResolutionWidth
 #define sba_Height sba::Space::Instance()->Application->GetGraphics()->GetDescription().ResolutionHeight
+
+#define sba_Players sba::Space::Instance()->m_Players
 
 #define sba_BrickManager sba::Space::Instance()->BrickManager
 #define sba_World sba::Space::Instance()->World

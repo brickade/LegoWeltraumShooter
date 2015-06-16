@@ -19,8 +19,7 @@
 namespace Game
 {
 
-    #define NETWORKGAME
-    //#define Skybox
+    #define Skybox
 
     enum { BufferSize = 32 };
     struct PlayOutBuffer
@@ -28,17 +27,13 @@ namespace Game
         int Frame;
         InputData Inputs[MaxPlayers]; //frame saved in here
     };
-    struct Player
-    {
-        unsigned char ID;
-        SOCKET NetworkInformation;
-        TheBrick::CSpaceship* Ship;
-    };
     /// @brief MainScene where the game functions are in, inherits from the Scene interface
     ///
     class CGameScene : public PuRe_IScene
     {
     private:
+        bool m_Network;
+
         bool m_Run;
         std::mutex m_Mutex;
         //host only
@@ -50,11 +45,9 @@ namespace Game
         //used for networking
         float m_PhysicTime;
         int m_ID;
-        int m_ArrayID;
+        int m_LocalPlayers;
         int m_PhysicFrame;
         //multiple players
-        std::vector<Player*> m_Players;
-        std::vector<CGameCamera*> m_Cameras;
         PuRe_Camera* m_pUICam;
         //whether we are still in menu or not
         bool gameStart;
@@ -73,9 +66,10 @@ namespace Game
         PuRe_IMaterial* m_pDirectionalLightMaterial;
         PuRe_IMaterial* m_pParticleMaterial;
         CMinimap* m_pMinimap;
-        PuRe_ParticleEmitter* m_pEmitter;
         PuRe_Sprite* m_pParticleSprite;
 
+        std::vector<PuRe_ParticleEmitter*> m_Emitters;
+        std::vector<CGameCamera*> m_Cameras;
         std::vector<TheBrick::CBullet*> m_Bullets;
         std::vector<TheBrick::CAsteroid*> m_Asteroids;
         /// @brief Engine's Application
@@ -84,7 +78,7 @@ namespace Game
     public:
         /// @brief Constructor to Initialize the MainScene
         ///
-        CGameScene(PuRe_Application* a_pApplication, int a_playerIdx);
+        CGameScene(PuRe_Application* a_pApplication, int a_playerIdx, bool a_Network);
     public:
         /// @brief Handle Input Data
         ///

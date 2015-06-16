@@ -66,6 +66,9 @@
     <ClCompile Include="Menu_Options.cpp">
       <Filter>Menu</Filter>
     </ClCompile>
+    <ClCompile Include="Menu_Lobby.cpp">
+      <Filter>Menu</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Space.h" />
@@ -135,6 +138,10 @@
     <ClInclude Include="include\Menu_Options.h">
       <Filter>Menu</Filter>
     </ClInclude>
+    <ClInclude Include="include\Menu_Lobby.h">
+      <Filter>Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Player.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Editor">

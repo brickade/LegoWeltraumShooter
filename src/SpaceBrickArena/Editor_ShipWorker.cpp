@@ -27,7 +27,7 @@ namespace Editor
     // **************************************************************************
     void CShipWorker::LoadShipFromFile(const char* a_pFile)
     {
-        this->m_pCurrentSpaceship = new TheBrick::CSpaceship(*sba_World, ong::vec3(0, 0, 0));
+        this->m_pCurrentSpaceship = new TheBrick::CSpaceship(*sba_World, "banana");
         TheBrick::CSerializer* serializer = new TheBrick::CSerializer();
         if(serializer->OpenRead(a_pFile))
         {
@@ -61,7 +61,7 @@ namespace Editor
     void CShipWorker::ResetShip()
     {
         SAFE_DELETE(this->m_pCurrentSpaceship);
-        this->m_pCurrentSpaceship = new TheBrick::CSpaceship(*sba_World, ong::vec3(0, 0, 0));
+        this->m_pCurrentSpaceship = new TheBrick::CSpaceship(*sba_World, "banana");
         TheBrick::CBrickInstance* brickInstance = sba_BrickManager->GetBrick(1).CreateInstance(*this->m_pCurrentSpaceship, *sba_World);
         brickInstance->SetTransform(ong::Transform(ong::vec3(0, 0, 0), ong::Quaternion(ong::vec3(0, 0, 0), 1)));
         brickInstance->RotateAroundPivotOffset(PuRe_QuaternionF(0.0f, 0.0f, 0.0f));

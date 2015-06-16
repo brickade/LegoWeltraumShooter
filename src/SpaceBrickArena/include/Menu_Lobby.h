@@ -1,32 +1,26 @@
-#ifndef _MENU_OPTIONS_H_
-#define _MENU_OPTIONS_H_
+#ifndef _MENU_LOBBY_H_
+#define _MENU_LOBBY_H_
 
 #include <PuReEngine/Core.h>
 #include <PuReEngine/Defines.h>
 
 #include "Navigation.h"
+#include "TheBrick/Serializer.h"
 #include "Space.h"
 
 namespace Menu
 {
-    class COptions
+    class CLobby
     {
     private:
         sba::CNavigation* m_pNavigation;
         int* m_PlayerIdx;
-        bool m_Focus;
-        bool m_Switched;
-        bool m_SSAO;
-        PuRe_DisplaySetting m_DMode;
-    public:
-        int m_Resolution;
-        int m_Resolutions[7][2];
     public:
         /// @brief Constructor
         ///
-        COptions();
+        CLobby();
         /// @brief Destructor
-         ~COptions();
+        ~CLobby();
     public:
         /// @brief Reset the Options
         ///
@@ -38,7 +32,7 @@ namespace Menu
         /// @param Graphics to Change Resolution
         /// @param Index of the player who handles the menu
         ///
-        int Update(PuRe_Renderer* a_pRenderer, PuRe_Timer* a_pTimer, PuRe_IWindow* a_pWindow, PuRe_IGraphics* a_pGraphics, int a_PlayerIdx);
+        int Update(PuRe_Timer* a_pTimer, PuRe_IWindow* a_pWindow, PuRe_IInput* a_pInput, int a_PlayerIdx);
         /// @brief Display the Options
         ///
         /// @param Renderer to use
@@ -46,9 +40,9 @@ namespace Menu
         /// @param Material to display the Font
         /// @param ScreenSize
         ///
-        void Render(PuRe_Renderer* a_pRenderer, PuRe_Font* a_pFont, PuRe_IMaterial* a_pFontMaterial, PuRe_Vector2F a_Resolution);
+        void Render(PuRe_Renderer* a_pRenderer, PuRe_Timer* a_pTimer, PuRe_Font* a_pFont, PuRe_IMaterial* a_pFontMaterial, PuRe_Vector2F a_Resolution);
     };
 }
 
 
-#endif /* _MENU_OPTIONS_H_ */
+#endif /* _MENU_LOBBY_H_ */
