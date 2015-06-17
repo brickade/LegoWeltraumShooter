@@ -53,7 +53,13 @@ namespace Content
 		PuRe_Vector2F m_RectStart;
 		ong::ShapePtr m_Rect;
 		ong::ShapePtr m_TempHull;
-
+		
+		enum CameraType
+		{
+			PERSP,
+			ORTHO
+		} m_CameraType;
+		float m_OrthoZoom;
 
 		bool m_MouseValid;
 
@@ -74,6 +80,8 @@ namespace Content
 			ORIGIN,
 			HULL
 		} m_Mode;
+
+
 
 	public:
 		CEditorScene(PuRe_Application* a_pApplication);

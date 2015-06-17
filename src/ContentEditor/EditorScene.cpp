@@ -18,21 +18,11 @@ namespace Content
 	static const int SELECTED = 1;
 	static const int UNSELECTED = 0;
 
-	static PuRe_MatrixF getProjection(float aspect, float fov, float n, float f)
-	{
-
-		float xScale = 1.0f / tan(fov / 2.0f);
-		float yScale = xScale / aspect;
-
-		return PuRe_MatrixF(
-			yScale, 0.0f, 0.0f, 0.0f,
-			0.0f, xScale, 0.0f, 0.0f,
-			0.0f, 0.0f, f / (n - f), -1.0f,
-			0.0f, 0.0f, (n * f) / (n - f), 0.0f);
-	}
 
 	CEditorScene::CEditorScene(PuRe_Application* a_pApplication)
-		: m_pApplication(a_pApplication)
+		: m_pApplication(a_pApplication),
+		m_CameraType(CameraType::PERSP),
+		m_OrthoZoom(10.0f)
 	{
 	}
 
@@ -414,6 +404,7 @@ namespace Content
 
 
 		PuRe_WindowDescription wDescr = window->GetDescription();
+		PuRe_GraphicsDescription gDescr = a_pApplication->GetGraphics()->GetDescription();
 
 		if (input->KeyIsPressed(input->Alt))
 		{
@@ -439,7 +430,26 @@ namespace Content
 			}
 			if (input->GetMouseScroll())
 			{
-				m_pCamera->Move(PuRe_Vector3F(0, 0, input->GetMouseScroll()));
+				if (m_CameraType == CameraType::PERSP)
+				{
+					m_pCamera->Move(PuRe_Vector3F(0, 0, input->GetMouseScroll()));
+				}
+				else
+				{
+					
+					if (input->GetMouseScroll() < 0)
+					{
+						m_OrthoZoom *= 1.1;
+					}
+					else if ( input->GetMouseScroll() > 0)
+					{
+						m_OrthoZoom *= 0.9;
+					}
+					
+					m_pCamera->SetProjection(PuRe_MatrixF::ProjectionOrthogonalLH(m_OrthoZoom, gDescr.ResolutionHeight / (float)gDescr.ResolutionWidth * m_OrthoZoom, 0.1, 100.0f));
+					m_pCamera->Update();
+					
+				}
 			}
 		}
 		else
@@ -612,16 +622,18 @@ namespace Content
 
 
 
-		PuRe_GraphicsDescription gDescr = a_pApplication->GetGraphics()->GetDescription();
+		
 		//camera
 		if (input->KeyPressed(input->One))
 		{
+			m_CameraType = CameraType::PERSP;
 			m_pCamera->SetProjection(PuRe_MatrixF::ProjectionPerspectiveFovLH(45.0f, gDescr.ResolutionWidth/(float) gDescr.ResolutionHeight, 0.1f, 100.0f));
 			m_pCamera->Update();
 		}
 		else if (input->KeyPressed(input->Two))
 		{
-			m_pCamera->SetProjection(PuRe_MatrixF::ProjectionOrthogonalLH(10.0f, gDescr.ResolutionHeight / (float)gDescr.ResolutionWidth * 10.0f, 0.1, 100.0f));
+			m_CameraType = CameraType::ORTHO;
+			m_pCamera->SetProjection(PuRe_MatrixF::ProjectionOrthogonalLH(m_OrthoZoom, gDescr.ResolutionHeight / (float)gDescr.ResolutionWidth * m_OrthoZoom, 0.1, 100.0f));
 			m_pCamera->SetPosition(PuRe_Vector3F(0, 2, 0));
 			m_pCamera->SetRotation(PuRe_Vector3F(-90, 0, 0));
 			m_pCamera->Update();
@@ -629,14 +641,16 @@ namespace Content
 		}
 		else if (input->KeyPressed(input->Three))
 		{
-			m_pCamera->SetProjection(PuRe_MatrixF::ProjectionOrthogonalLH(10.0f, gDescr.ResolutionHeight / (float)gDescr.ResolutionWidth * 10.0f, 0.1, 100.0f));
+			m_CameraType = CameraType::ORTHO;
+			m_pCamera->SetProjection(PuRe_MatrixF::ProjectionOrthogonalLH(m_OrthoZoom, gDescr.ResolutionHeight / (float)gDescr.ResolutionWidth * m_OrthoZoom, 0.1, 100.0f));
 			m_pCamera->SetPosition(PuRe_Vector3F(0, 0, -2));
 			m_pCamera->SetRotation(PuRe_Vector3F(0, 0, 0));
 			m_pCamera->Update();
 		}
 		else if (input->KeyPressed(input->Four))
 		{
-			m_pCamera->SetProjection(PuRe_MatrixF::ProjectionOrthogonalLH(10.0f, gDescr.ResolutionHeight / (float)gDescr.ResolutionWidth * 10.0f, 0.1, 100.0f));
+			m_CameraType = CameraType::ORTHO;
+			m_pCamera->SetProjection(PuRe_MatrixF::ProjectionOrthogonalLH(m_OrthoZoom, gDescr.ResolutionHeight / (float)gDescr.ResolutionWidth * m_OrthoZoom, 0.1, 100.0f));
 			m_pCamera->SetPosition(PuRe_Vector3F(-2, 0, 0));
 			m_pCamera->SetRotation(PuRe_Vector3F(0, 90, 0));
 			m_pCamera->Update();
