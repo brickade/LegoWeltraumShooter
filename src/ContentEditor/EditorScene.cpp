@@ -18,6 +18,19 @@ namespace Content
 	static const int SELECTED = 1;
 	static const int UNSELECTED = 0;
 
+	static PuRe_MatrixF getProjection(float aspect, float fov, float n, float f)
+	{
+
+		float xScale = 1.0f / tan(fov / 2.0f);
+		float yScale = xScale / aspect;
+
+		return PuRe_MatrixF(
+			yScale, 0.0f, 0.0f, 0.0f,
+			0.0f, xScale, 0.0f, 0.0f,
+			0.0f, 0.0f, f / (n - f), -1.0f,
+			0.0f, 0.0f, (n * f) / (n - f), 0.0f);
+	}
+
 	CEditorScene::CEditorScene(PuRe_Application* a_pApplication)
 		: m_pApplication(a_pApplication)
 	{
@@ -220,7 +233,7 @@ namespace Content
         m_pCamera = new PuRe_Camera(PuRe_Vector2F((float)gdesc.ResolutionWidth, (float)gdesc.ResolutionHeight), PuRe_Camera_Perspective);
 		m_pCamera->SetFoV(45.0f);
 		m_pCamera->Update();
-
+		m_CameraRotation = ong::Quaternion(ong::vec3(0, 0, 0), 1);
 		m_pCurrBrick = 0;
 
 		m_Polling = true;
@@ -400,32 +413,25 @@ namespace Content
             input->UnLockCursor();
 
 
-
-		// ray cast
 		PuRe_WindowDescription wDescr = window->GetDescription();
-		PuRe_Vector3F mousePos;
-		mousePos.X = (2.0f * input->GetAbsoluteMousePosition().X) / wDescr.Width - 1.0f;
-		mousePos.Y = 1.0f - (2.0f * input->GetAbsoluteMousePosition().Y) / wDescr.Height;
-		mousePos.Z = 0.0f;
-
-		PuRe_Vector4F rayV = PuRe_Vector4F(mousePos.X, mousePos.Y, 1.0f, 1.0f) * PuRe_MatrixF::Invert(m_pCamera->GetProjection());
-		PuRe_Vector4F rayW = rayV*PuRe_MatrixF::Invert(m_pCamera->GetView());
-
-		ong::vec3 rayDir = ong::normalize(ong::vec3(rayW.X, rayW.Y, rayW.Z));
-		ong::vec3 rayO = ong::vec3(m_pCamera->GetPosition().X, m_pCamera->GetPosition().Y, m_pCamera->GetPosition().Z);
-
 
 		if (input->KeyIsPressed(input->Alt))
 		{
 			if (input->MouseIsPressed(input->LeftClick))
 			{
-				PuRe_Vector3F rot = PuRe_Vector3F(0, 1, 0) *  (input->GetRelativeMousePosition().X / 4.0f);
+				//PuRe_Vector3F rot = PuRe_Vector3F(0, 1, 0) *  (input->GetRelativeMousePosition().X / 4.0f);
 
-				m_pCamera->Rotate(rot.X, rot.Y, rot.Z);
+				//m_pCamera->Rotate(rot.X, rot.Y, rot.Z);
 
-				rot = m_pCamera->GetSide() *  (-input->GetRelativeMousePosition().Y / 4.0f);
+				//rot = m_pCamera->GetSide() *  (-input->GetRelativeMousePosition().Y / 4.0f);
 
-				m_pCamera->Rotate(rot.X, rot.Y, rot.Z);
+				//m_pCamera->Rotate(rot.X, rot.Y, rot.Z);
+
+
+				m_CameraRotation = ong::QuatFromAxisAngle(ong::vec3(0, 1, 0), input->GetRelativeMousePosition().X / 4.0f * ong_PI / 180.0f) * m_CameraRotation;
+				m_CameraRotation = ong::QuatFromAxisAngle(ong::rotate(ong::vec3(1, 0, 0), m_CameraRotation), input->GetRelativeMousePosition().Y / 4.0f * ong_PI / 180.0f) * m_CameraRotation;
+				
+				m_pCamera->SetRotation(TheBrick::OngToPuRe(m_CameraRotation));
 			}
 			if (input->MouseIsPressed(input->MiddleClick))
 			{
@@ -495,43 +501,101 @@ namespace Content
 				if (input->MousePressed(input->LeftClick))
 				{
 					m_MouseDown = true;
-					m_RectStartPos = rayO;
-					m_RectStartDir = rayDir;
+					m_RectStart = input->GetAbsoluteMousePosition();
 				}
 				else if (m_MouseDown && !input->MouseIsPressed(input->LeftClick))
 				{
 					m_MouseDown = false;
 
+					int mode = 0;
 					// select vertices
-					ong::vec3 box[4];
-					box[0] = m_RectStartPos +  0.1f * m_RectStartDir;
-					box[1] = rayO + 0.1f * rayDir;
-					box[2] = m_RectStartPos + 100.0f * m_RectStartDir;
-					box[3] = rayO + 100.0f * rayDir;
-
-					ong::ShapeDescription shapeDescr;
-					shapeDescr.constructionType = ong::ShapeConstruction::HULL_FROM_POINTS;
-					shapeDescr.hullFromPoints.points = box;
-					shapeDescr.hullFromPoints.numPoints = 4;
-
-
-					for (auto i : m_SelectedVertices)
+					if (input->KeyIsPressed(input->Shift))
 					{
-						i->setUserData((void*)&UNSELECTED);
+						mode = 1;
 					}
-					m_SelectedVertices.clear();
-
-
-					ong::ShapePtr shape = m_World.createShape(shapeDescr);
-					ong::ShapeQueryCallBack callback = [](ong::Collider* other, void* userData)->bool
+					else if (!input->KeyIsPressed(input->Ctrl))
 					{
-						std::vector<ong::Collider*>* selectedVertices = (std::vector<ong::Collider*>*)userData;
-						selectedVertices->push_back(other);
-						other->setUserData((void*)&SELECTED);
-						return false;
-					};
-					m_pMeshBody->queryShape(shape, ong::Transform(ong::vec3(0, 0, 0), ong::Quaternion(ong::vec3(0, 0, 0), 1)), callback, &m_SelectedVertices);
+						for (auto c = m_pMeshBody->getCollider(); c != nullptr; c = c->getNext())
+						{
+							c->setUserData((void*)&UNSELECTED);
+						}
+						m_HullPoints.clear();
+					}
 
+
+					ong::ShapeQueryCallBack callbacks[2]
+					{
+						[](ong::Collider* other, void* userData)->bool // add selection
+					{
+						if (other->getUserData() != &SELECTED)
+						{
+							std::vector<ong::vec3>* hullPoints = (std::vector<ong::vec3>*)userData;
+							hullPoints->push_back(other->getTransform().p);
+							other->setUserData((void*)&SELECTED);
+						}
+						return true;
+					},
+						[](ong::Collider* other, void* userData)->bool // remove selection
+					{
+						if (other->getUserData() == &SELECTED)
+						{
+							std::vector<ong::vec3>* hullPoints = (std::vector<ong::vec3>*)userData;
+							for (int i = 0; i < hullPoints->size(); ++i)
+							{
+								if ((*hullPoints)[i] == other->getTransform().p)
+								{
+									(*hullPoints)[i] = hullPoints->back();
+									hullPoints->pop_back();
+								}
+							}
+							other->setUserData((void*)&UNSELECTED);
+						}
+						return true;
+					}
+					};
+
+
+					m_pMeshBody->queryShape(m_Rect, ong::Transform(ong::vec3(0, 0, 0), ong::Quaternion(ong::vec3(0, 0, 0), 1)), callbacks[mode], &m_HullPoints);
+
+					m_World.destroyShape(m_Rect);
+					m_Rect = ong::ShapePtr();
+
+
+					if (!!m_TempHull)
+						m_World.destroyShape(m_TempHull);
+
+					if (m_HullPoints.size() > 3)
+					{
+
+						ong::ShapeDescription shapeDescr;
+						shapeDescr.constructionType = ong::ShapeConstruction::HULL_FROM_POINTS;
+						shapeDescr.hullFromPoints.points = m_HullPoints.data();
+						shapeDescr.hullFromPoints.numPoints = m_HullPoints.size();
+
+						m_TempHull = m_World.createShape(shapeDescr);
+					}
+					else
+					{
+						m_TempHull = ong::ShapePtr();
+					}
+
+				}
+
+				if (input->KeyPressed(input->Enter))
+				{
+					if (!!m_TempHull)
+					{
+						SCommand c;
+						c.type = SCommand::NEWCOLLIDER;
+						c.shape.type = ong::ShapeType::HULL;
+						c.shape.hull = *m_TempHull.toHull();
+
+						if (ProcessCommand(c))
+							m_OldCommands.push(c);
+
+						m_World.destroyShape(m_TempHull);
+						m_TempHull = ong::ShapePtr();
+					}
 				}
 			}
 
@@ -548,9 +612,116 @@ namespace Content
 
 
 
+		PuRe_GraphicsDescription gDescr = a_pApplication->GetGraphics()->GetDescription();
+		//camera
+		if (input->KeyPressed(input->One))
+		{
+			m_pCamera->SetProjection(PuRe_MatrixF::ProjectionPerspectiveFovLH(45.0f, gDescr.ResolutionWidth/(float) gDescr.ResolutionHeight, 0.1f, 100.0f));
+			m_pCamera->Update();
+		}
+		else if (input->KeyPressed(input->Two))
+		{
+			m_pCamera->SetProjection(PuRe_MatrixF::ProjectionOrthogonalLH(10.0f, gDescr.ResolutionHeight / (float)gDescr.ResolutionWidth * 10.0f, 0.1, 100.0f));
+			m_pCamera->SetPosition(PuRe_Vector3F(0, 2, 0));
+			m_pCamera->SetRotation(PuRe_Vector3F(-90, 0, 0));
+			m_pCamera->Update();
+
+		}
+		else if (input->KeyPressed(input->Three))
+		{
+			m_pCamera->SetProjection(PuRe_MatrixF::ProjectionOrthogonalLH(10.0f, gDescr.ResolutionHeight / (float)gDescr.ResolutionWidth * 10.0f, 0.1, 100.0f));
+			m_pCamera->SetPosition(PuRe_Vector3F(0, 0, -2));
+			m_pCamera->SetRotation(PuRe_Vector3F(0, 0, 0));
+			m_pCamera->Update();
+		}
+		else if (input->KeyPressed(input->Four))
+		{
+			m_pCamera->SetProjection(PuRe_MatrixF::ProjectionOrthogonalLH(10.0f, gDescr.ResolutionHeight / (float)gDescr.ResolutionWidth * 10.0f, 0.1, 100.0f));
+			m_pCamera->SetPosition(PuRe_Vector3F(-2, 0, 0));
+			m_pCamera->SetRotation(PuRe_Vector3F(0, 90, 0));
+			m_pCamera->Update();
+		}
+
+		//selectionRect
+		if (m_Mode == Mode::HULL && m_MouseDown)
+		{
+			PuRe_Vector2F rectStart, rectEnd;
+			rectStart.X = (2.0f*m_RectStart.X) / wDescr.Width - 1.0f;
+			rectStart.Y = 1.0f - (2.0f * m_RectStart.Y) / wDescr.Height;
+
+			rectEnd.X = (2.0f*input->GetAbsoluteMousePosition().X) / wDescr.Width - 1.0f;
+			rectEnd.Y = 1.0f - (2.0f * input->GetAbsoluteMousePosition().Y) / wDescr.Height;
+
+			//rectStart.X = -1.0;
+			//rectStart.Y = 1.0;
+			//rectEnd.X = 1.0;
+			//rectEnd.Y = 1.0;
+
+			if (abs(rectStart.X - rectEnd.X) >= 0.01f && abs(rectStart.Y - rectEnd.Y) >= 0.01f)
+			{
+
+				//PuRe_MatrixF inverseProjView = PuRe_MatrixF::Invert(m_pCamera->GetProjection())*PuRe_MatrixF::Invert(m_pCamera->GetView());
+				PuRe_MatrixF inverseProjView = m_pCamera->GetInvertViewProjection();
 
 
-		//printf("%f %f %f\n", rayDir.x, rayDir.y, rayDir.z);
+				PuRe_Vector3F corners[8];
+				corners[0] = PuRe_Vector3F::Normalize(PuRe_Vector4F(rectStart.X, rectStart.Y, 1.0f, 1.0f) * inverseProjView);
+				corners[1] = PuRe_Vector3F::Normalize(PuRe_Vector4F(rectEnd.X, rectStart.Y, 1.0f, 1.0f) * inverseProjView);
+				corners[2] = PuRe_Vector3F::Normalize(PuRe_Vector4F(rectEnd.X, rectEnd.Y, 1.0f, 1.0f) * inverseProjView);
+				corners[3] = PuRe_Vector3F::Normalize(PuRe_Vector4F(rectStart.X, rectEnd.Y, 1.0f, 1.0f) * inverseProjView);
+	
+				auto a = PuRe_Vector4F(0, 0, 0.0f, 1) * m_pCamera->GetProjection();
+				auto b = PuRe_Vector4F(0, 0, 100.0f, 1) * m_pCamera->GetProjection();
+				auto c = PuRe_Vector4F(0, 0, 0.5f*100.0f, 1) * m_pCamera->GetProjection();
+				
+				auto _a = PuRe_Vector4F(0, 0, 0.0f, 1) * m_pCamera->GetInvertProjection();
+				auto _b = PuRe_Vector4F(1, 1, 100.0f, 100.0f) * PuRe_MatrixF::Invert(m_pCamera->GetProjection());
+				auto _c = PuRe_Vector4F(0, 0, 0.5f*100.0f, 1) * m_pCamera->GetInvertProjection();
+
+				ong::vec3 box[8];
+				box[0] = TheBrick::PuReToOng(m_pCamera->GetPosition() + corners[0] * 0.1f);
+				box[1] = TheBrick::PuReToOng(m_pCamera->GetPosition() + corners[1] * 0.1f);
+				box[2] = TheBrick::PuReToOng(m_pCamera->GetPosition() + corners[2] * 0.1f);
+				box[3] = TheBrick::PuReToOng(m_pCamera->GetPosition() + corners[3] * 0.1f);
+				box[4] = TheBrick::PuReToOng(m_pCamera->GetPosition() + corners[0] * 100.0f);
+				box[5] = TheBrick::PuReToOng(m_pCamera->GetPosition() + corners[1] * 100.0f);
+				box[6] = TheBrick::PuReToOng(m_pCamera->GetPosition() + corners[2] * 100.0f);
+				box[7] = TheBrick::PuReToOng(m_pCamera->GetPosition() + corners[3] * 100.0f);
+
+				//box[0] = TheBrick::PuReToOng(PuRe_Vector4F(rectStart.X, rectStart.Y, 0.1f, 0.1f)  * inverseProjView);
+				//box[1] = TheBrick::PuReToOng(PuRe_Vector4F(rectEnd.X, rectStart.Y,	 0.1f, 0.1f)  * inverseProjView);
+				//box[2] = TheBrick::PuReToOng(PuRe_Vector4F(rectEnd.X, rectEnd.Y,	 0.1f, 0.1f)  * inverseProjView);		
+				//box[3] = TheBrick::PuReToOng(PuRe_Vector4F(rectStart.X, rectEnd.Y,	 0.1f, 0.1f)  * inverseProjView);
+				//box[4] = TheBrick::PuReToOng(PuRe_Vector4F(rectStart.X, rectStart.Y, 100.0f, 100.0f) * inverseProjView);
+				//box[5] = TheBrick::PuReToOng(PuRe_Vector4F(rectEnd.X, rectStart.Y,	 100.0f, 100.0f) * inverseProjView);
+				//box[6] = TheBrick::PuReToOng(PuRe_Vector4F(rectEnd.X, rectEnd.Y,     100.0f, 100.0f) * inverseProjView);
+				//box[7] = TheBrick::PuReToOng(PuRe_Vector4F(rectStart.X, rectEnd.Y,   100.0f, 100.0f) * inverseProjView);
+
+				ong::ShapeDescription shapeDescr;
+				shapeDescr.constructionType = ong::ShapeConstruction::HULL_FROM_POINTS;
+				shapeDescr.hullFromPoints.points = box;
+				shapeDescr.hullFromPoints.numPoints = 8;
+
+				if (!!m_Rect)
+					m_World.destroyShape(m_Rect);
+
+				m_Rect = m_World.createShape(shapeDescr);
+			}
+		}
+
+
+		// ray cast
+		PuRe_Vector3F mousePos;
+		mousePos.X = (2.0f * input->GetAbsoluteMousePosition().X) / wDescr.Width - 1.0f;
+		mousePos.Y = 1.0f - (2.0f * input->GetAbsoluteMousePosition().Y) / wDescr.Height;
+		mousePos.Z = 0.0f;
+
+		PuRe_Vector4F rayV = PuRe_Vector4F(mousePos.X, mousePos.Y, 1.0f, 1.0f) * PuRe_MatrixF::Invert(m_pCamera->GetProjection());
+		PuRe_Vector4F rayW = rayV*PuRe_MatrixF::Invert(m_pCamera->GetView());
+
+		ong::vec3 rayDir = ong::normalize(ong::vec3(rayW.X, rayW.Y, rayW.Z));
+		ong::vec3 rayO = ong::vec3(m_pCamera->GetPosition().X, m_pCamera->GetPosition().Y, m_pCamera->GetPosition().Z);
+
 
 		ong::RayQueryResult rayResult = { 0 };
 		if (m_pBody->queryRay(rayO, rayDir, &rayResult))
@@ -764,9 +935,6 @@ namespace Content
 		PuRe_GraphicsDescription gdesc = graphics->GetDescription();
 
 
-
-
-
 		graphics->Clear(clear);
 		PuRe_BoundingBox box;
 		box.m_Position = PuRe_Vector3F();
@@ -807,15 +975,22 @@ namespace Content
 			drawPivot(m_Pivot);
 			break;
 		case Mode::HULL:
-			for (ong::Collider* c = m_pMeshBody->getCollider(); c != nullptr; c = c->getNext())
-			{
-				PuRe_Vector3F color;
-				if (c->getUserData() == &SELECTED)
-					color = PuRe_Vector3F(0, 1, 0);
-				else
-					color = PuRe_Vector3F(1, 1, 0);
-				TheBrick::DrawShape(m_VertexShape, c->getTransform(), color, m_pCamera, graphics);
-			}
+			//for (ong::Collider* c = m_pMeshBody->getCollider(); c != nullptr; c = c->getNext())
+			//{
+			//	PuRe_Vector3F color;
+			//	if (c->getUserData() == &SELECTED)
+			//	{
+			//		color = PuRe_Vector3F(1, 1, 0);
+			//		TheBrick::DrawShape(m_VertexShape, c->getTransform(), color, m_pCamera, graphics);
+			//	}
+			//	else
+			//		color = PuRe_Vector3F(1, 1, 0);
+			//}
+
+			TheBrick::DrawShape(m_TempHull, ong::Transform(ong::vec3(0, 0, 0), ong::Quaternion(ong::vec3(0, 0, 0), 1)), PuRe_Vector3F(1, 1, 1), m_pCamera, graphics);
+			TheBrick::DrawShape(m_Rect, ong::Transform(ong::vec3(0,0,0), ong::Quaternion(ong::vec3(0,0,0), 1)), PuRe_Vector3F(0.5,0.5, 0.5), m_pCamera, graphics);
+
+
 		}
 	
 

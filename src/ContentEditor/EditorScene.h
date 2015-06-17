@@ -32,6 +32,9 @@ namespace Content
 		PuRe_IMaterial* m_pPostMaterial;
 		PuRe_Rendertarget* m_pRenderTarget;
 
+
+		ong::Quaternion m_CameraRotation;
+
 		TheBrick::CBrick* m_pCurrBrick;
 		std::string m_CurrFileName;
 
@@ -45,10 +48,11 @@ namespace Content
 
 
 		ong::Body* m_pMeshBody;
-		std::vector<ong::Collider*> m_SelectedVertices;
+		std::vector<ong::vec3> m_HullPoints;
 		bool m_MouseDown;
-		ong::vec3 m_RectStartPos;
-		ong::vec3 m_RectStartDir;
+		PuRe_Vector2F m_RectStart;
+		ong::ShapePtr m_Rect;
+		ong::ShapePtr m_TempHull;
 
 
 		bool m_MouseValid;

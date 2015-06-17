@@ -549,7 +549,7 @@ void Test::init()
 	Transform t = Transform(vec3(0.0f, 8.0f, -10.0f), QuatFromAxisAngle(vec3(1, 0, 0), 0));
 	m_player = addPlayer(m_world, t);
 	m_entities.push_back(m_player);
-	
+
 
 
 	static int gNumSteps = 0;

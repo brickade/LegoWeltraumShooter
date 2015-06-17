@@ -881,7 +881,7 @@ namespace ong
 		vec3 c = transformVec3(sphereA->c, t);
 		vec3 p = closestPointOnHull(c, hullB);
 
-		return lengthSq(p - c) - sphereA->r*sphereA->r < -10.0f * epsilon;
+		return lengthSq(p - c) - sphereA->r*sphereA->r < -epsilon;
 	}
 
 	bool overlap(const Capsule* capsuleA, const Hull* hullB, const Transform& t1, const Transform& t2)

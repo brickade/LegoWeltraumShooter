@@ -25,8 +25,10 @@ namespace Content
 				v[i] = atof(c);
 			}
 
+			v.z *= -1;
 			a_Vertices.push_back(v);
 		}
+		fclose(f);
 
 	}
 }

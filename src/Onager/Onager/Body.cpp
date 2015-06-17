@@ -720,7 +720,7 @@ namespace ong
 	}
 
 
-	void Body::removeContact(Contact* contact)
+	ContactIter* Body::removeContact(Contact* contact)
 	{
 		for (ContactIter* c = m_pContacts; c != 0; c = c->next)
 		{
@@ -735,11 +735,12 @@ namespace ong
 					m_pContacts = c->next;
 				m_numContacts--;
 
-				return;
+				return c;
 			}
 		}
 
 		assert(true);
+		return 0;
 	}
 
 
