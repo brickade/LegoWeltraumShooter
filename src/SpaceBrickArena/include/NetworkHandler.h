@@ -8,15 +8,15 @@
 #include "include/INIReader.h"
 
 // Declare namespace Game
-namespace Game
+namespace sba
 {
-    enum { MaxPlayers = 10, Delay = 10 };
+    enum { MaxPlayers = 10, Delay = 10, BroadcastPort =13370, MaxName=12, MaxLength=15 };
 
-    enum Packet {Join,Left,IAm,CJoin,Start,STick,CTick};
+    enum EPacket { Broadcast,Join, Left, IAm, CJoin, Start, STick, CTick };
 
     /// @brief Struct which handles the Input one Player does
     ///
-    struct InputData
+    struct SInputData
     {
         unsigned char Player;
         bool Shoot;
@@ -28,70 +28,123 @@ namespace Game
     };
     /// @brief HeaderPacket, used to tell which Packet we got
     ///
-    struct HeadPacket
+    struct SHeadPacket
     {
-        Packet Type;
+        EPacket Type;
+    };
+    /// @brief Packet send over broadcast
+    ///
+    struct SBroadcastPacket
+    {
+        SHeadPacket Head;
+        char Name[MaxName];
+        char IP[MaxLength];
+        char Port[MaxLength];
     };
 
     /// @brief Packet used when Data is received, this checks the Header
     ///
-    struct ReceivePacket
+    struct SReceivePacket
     {
-        HeadPacket Head;
+        SHeadPacket Head;
         char* Buffer;
     };
 
     /// @brief Packet used to detect who left
     ///
-    struct LeftPacket
+    struct SLeftPacket
     {
-        HeadPacket Head;
+        SHeadPacket Head;
         int Who;
     };
 
     /// @brief Packet for Inputs
     ///
-    struct InputPacket
+    struct SInputPacket
     {
-        HeadPacket Head;
+        SHeadPacket Head;
         int Frame;
-        InputData Input;
+        SInputData Input;
     };
 
     /// @brief Packet for all Inputs
     ///
-    struct InputsPacket
+    struct SInputsPacket
     {
-        HeadPacket Head;
+        SHeadPacket Head;
         int Players;
         int Frame;
-        InputData Input[MaxPlayers]; //we send 
+        SInputData Input[MaxPlayers]; //we send 
     };
 
+    /// @brief What to Update
+    ///
+    enum EUpdate { IP,Port,Name};
 
     class CNetworkHandler
     {
     public:
         std::string m_IP;
         std::string m_Port;
-        bool m_Host;
-        int m_NetworkState;
+        std::string m_Name;
 
-        private:
-            PuRe_Socket* m_pSocket;
-        public:
-            CNetworkHandler();
-            ~CNetworkHandler();
+    private:
+        PuRe_Socket* m_pSocket;
+        PuRe_Socket* m_pBSocket;
+        bool m_Host;
+        bool m_Connected;
     public:
+        CNetworkHandler();
+        ~CNetworkHandler();
+    public:
+        /// @brief If he is connected or not
+        ///
+        bool IsConnected();
+        /// @brief Returns if he is hosting or not
+        ///
+        bool GetHost();
+        /// @brief Create a Broadcast Socket
+        ///
+        void CreateBroadcast(bool a_Broadcast,int a_Port);
+        /// @brief Broadcast Data
+        ///
+        void Broadcast(char* a_pBuffer, int a_Size);
+        /// @brief Disconnect
+        ///
+        void Disconnect();
+        /// @brief Delete the Broadcast Socket
+        ///
+        void DeleteBroadcast();
+        /// @brief Listen for Clients
+        ///
         bool Listen();
+        /// @brief Accept Clients
+        ///
         SOCKET Accept();
-            void Connect();
-            void Update(PuRe_IInput* a_pInput);
-            int GetState();
-            int GetSocket();
-            long Receive(char* a_pBuffer, int a_Size, SOCKET a_pSender);
-            void Send(char* a_pBuffer, int a_Size, SOCKET a_Receiver);
-            void SendHost(char* a_pBuffer, int a_Size);
+        /// @brief Initialite Socket
+        ///
+        void Connect(bool a_Host);
+        /// @brief Update Data
+        ///
+        void Update(PuRe_IInput* a_pInput, EUpdate a_What);
+        /// @brief Return this networkstate
+        ///
+        int GetState();
+        /// @brief Return the Broadcast Socket
+        ///
+        int GetBroadcast();
+        /// @brief Return this Socket
+        ///
+        int GetSocket();
+        /// @brief Receive Data 
+        ///
+        long Receive(char* a_pBuffer, int a_Size, SOCKET a_pSender);
+        /// @brief Send Data
+        ///
+        void Send(char* a_pBuffer, int a_Size, SOCKET a_Receiver);
+        /// @brief Send Data to Host
+        ///
+        void SendHost(char* a_pBuffer, int a_Size);
     };
 }
 #endif /* _NETWORKHANDLER_H_ */

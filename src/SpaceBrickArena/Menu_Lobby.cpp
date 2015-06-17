@@ -15,6 +15,15 @@ namespace Menu
 
     int CLobby::Update(PuRe_Timer* a_pTimer, PuRe_IWindow* a_pWindow, PuRe_IInput* a_pInput, int a_PlayerIdx)
     {
+        if (sba_Network->IsConnected())
+        {   
+            sba::SBroadcastPacket bp;
+            bp.Head.Type = sba::Broadcast;
+            memcpy(bp.IP, sba_Network->m_IP.c_str(), sba::MaxLength);
+            memcpy(bp.Port, sba_Network->m_Port.c_str(), sba::MaxLength);
+            memcpy(bp.Name, sba_Network->m_Name.c_str(), sba::MaxName);
+            sba_Network->Broadcast((char*)&bp, sizeof(sba::SBroadcastPacket)); //Now Spam it!
+        }
         this->m_pNavigation->Update(*a_pTimer, sba_Input->Direction(sba_Direction::MenuMove, a_PlayerIdx));
         if (sba_Input->ButtonPressed(sba_Button::MenuClick, a_PlayerIdx))
         {
@@ -68,7 +77,7 @@ namespace Menu
                 {
                     if (sba_Players[j]->PadID == i)
                     {
-                        sba::Player* p = sba_Players[j];
+                        sba::SPlayer* p = sba_Players[j];
                         int s = 0;
                         const char* path = "../data/ships/";
                         bool right = false;
@@ -131,11 +140,6 @@ namespace Menu
         return 1;
     }
 
-    void CLobby::Reset()
-    {
-
-    }
-
     void CLobby::Render(PuRe_Renderer* a_pRenderer,PuRe_Timer* a_pTimer, PuRe_Font* a_pFont, PuRe_IMaterial* a_pFontMaterial, PuRe_Vector2F a_Resolution)
     {
         PuRe_Vector3F Position;
@@ -159,7 +163,8 @@ namespace Menu
         a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "Back", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(36.0f, 36.0f, 0.0f), 32.0f, color);
 
         Position.X = 1920.0f - 600.0f;
-        Position.Y = 1080.0f - 200.0f;
+        Position.Y = 1080.0f - 300.0f;
+        color = PuRe_Color(1.0f, 1.0f, 1.0f);
         a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "Player", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(26.0f, 26.0f, 0.0f), 24.0f, color);
         Position.X += 300.0f;
         a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "Ship", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(26.0f, 26.0f, 0.0f), 24.0f, color);
@@ -175,12 +180,30 @@ namespace Menu
             Position.Y -= 64.0f;
             Position.X -= 300.0f;
         }
-        for (unsigned int i = 0; i < 4-sba_Players.size(); i++)
+        int localPlayer = 0;
+        for (unsigned int i = 0; i < sba_Players.size(); i++)
+        {
+            if (sba_Players[i]->PadID != -1)
+                localPlayer++;
+        }
+        for (int i = 0; i < 4 - localPlayer; i++)
         {
             PuRe_Color color = PuRe_Color(1.0f, 1.0f, 1.0f);
             color.A = ((sin(a_pTimer->GetTotalElapsedSeconds()*2.0f))+0.8f)/2.0f;
             a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "Press A to join ...", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(22.0f, 22.0f, 0.0f), 20.0f, color);
             Position.Y -= 64.0f;
+        }
+
+        if (sba_Network->IsConnected())
+        {
+            Position.X = 1920.0f - 500.0f;
+            Position.Y = 1080.0f - 50.0f;
+            color = PuRe_Color(1.0f, 1.0f, 1.0f);
+            a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "Name: " + sba_Network->m_Name, Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(22.0f, 22.0f, 0.0f), 22.0f, color);
+            Position.Y -= 64.0f;
+            a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "IP: " + sba_Network->m_IP, Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(22.0f, 22.0f, 0.0f), 22.0f, color);
+            Position.Y -= 64.0f;
+            a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "Port: " + sba_Network->m_Port, Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(22.0f, 22.0f, 0.0f), 22.0f, color);
         }
     }
 }

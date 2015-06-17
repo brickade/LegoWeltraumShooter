@@ -69,6 +69,9 @@
     <ClCompile Include="Menu_Lobby.cpp">
       <Filter>Menu</Filter>
     </ClCompile>
+    <ClCompile Include="Menu_Network.cpp">
+      <Filter>Menu</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Space.h" />
@@ -142,6 +145,12 @@
       <Filter>Menu</Filter>
     </ClInclude>
     <ClInclude Include="include\Player.h" />
+    <ClInclude Include="include\Menu_Network.h">
+      <Filter>Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Menu_Server.h">
+      <Filter>Menu</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Editor">

@@ -12,6 +12,7 @@ namespace sba
         this->BrickManager = new TheBrick::CBrickManager();
         this->World = new ong::World();
         this->InputManager = new sba::CInputManager();
+        this->m_pNetworkhandler = new sba::CNetworkHandler();
     }
 
     // **************************************************************************
@@ -28,6 +29,7 @@ namespace sba
         SAFE_DELETE(this->m_SSAOMaterial);
         SAFE_DELETE(this->BrickManager);
         SAFE_DELETE(this->World);
+        SAFE_DELETE(this->m_pNetworkhandler);
     }
 
     // **************************************************************************
@@ -71,7 +73,7 @@ namespace sba
 
     // **************************************************************************
     // **************************************************************************
-    void Space::DeletePlayer(int a_Index)
+    void Space::DeletePlayer(unsigned int a_Index)
     {
         if (this->m_Players.size() > a_Index)
         {
@@ -85,7 +87,7 @@ namespace sba
     // **************************************************************************
     void Space::CreatePlayer(int a_Pad,PuRe_IWindow* a_pWindow)
     {
-        sba::Player* p = new sba::Player();
+        sba::SPlayer* p = new sba::SPlayer();
         int ID = 0; // 0 is Host
         for (unsigned int j = 0; j < sba_Players.size(); j++)
         {

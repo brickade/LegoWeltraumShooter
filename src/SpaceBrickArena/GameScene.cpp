@@ -15,7 +15,7 @@ namespace Game
             if (this->m_pNetwork->Listen())
             {
                 SOCKADDR_IN* clientData = NULL;
-                if (sba_Players.size() < MaxPlayers)
+                if (sba_Players.size() < sba::MaxPlayers)
                 {
                     SOCKET s = this->m_pNetwork->Accept();
                     printf("Client connected!\n");
@@ -28,29 +28,29 @@ namespace Game
                             i = 0;
                         }
                     }
-                    sba::Player* p = new sba::Player();
+                    sba::SPlayer* p = new sba::SPlayer();
                     p->ID = ID;
                     p->NetworkInformation = s;
                     sba_Players.push_back(p);
                     printf("User %i joined!\n", ID);
                     //Tell him who he is
-                    LeftPacket lPacket;
-                    lPacket.Head.Type = Packet::IAm;
+                    sba::SLeftPacket lPacket;
+                    lPacket.Head.Type = sba::EPacket::IAm;
                     lPacket.Who = ID;
-                    this->m_pNetwork->Send((char*)&lPacket, sizeof(LeftPacket), s);
+                    this->m_pNetwork->Send((char*)&lPacket, sizeof(sba::SLeftPacket), s);
 
                     //Send to JOINER all existing players
-                    lPacket.Head.Type = Packet::CJoin;
+                    lPacket.Head.Type = sba::EPacket::CJoin;
                     for (unsigned int i = 0; i < sba_Players.size(); i++)
                     {
                         lPacket.Who = sba_Players[i]->ID;
                         printf("Sending to %i Data of player %i\n", ID, lPacket.Who);
-                        this->m_pNetwork->Send((char*)&lPacket, sizeof(LeftPacket), s);
+                        this->m_pNetwork->Send((char*)&lPacket, sizeof(sba::SLeftPacket), s);
                         //Same call send this player about the JOINER
                         if (sba_Players[i]->ID != ID&&sba_Players[i]->ID != 0)
                         {
                             lPacket.Who = ID;
-                            this->m_pNetwork->Send((char*)&lPacket, sizeof(LeftPacket), sba_Players[i]->NetworkInformation);
+                            this->m_pNetwork->Send((char*)&lPacket, sizeof(sba::SLeftPacket), sba_Players[i]->NetworkInformation);
                         }
                     }
                     std::thread HandleThread(&CGameScene::ReceiveData, this, s);
@@ -78,10 +78,10 @@ namespace Game
             while (dataLeft > 0)
             {
                 printf("Data left %d!\n", dataLeft);
-                ReceivePacket* Packet = (ReceivePacket*)buffer;
-                if (Packet->Head.Type == Packet::Left)
+                sba::SReceivePacket* Packet = (sba::SReceivePacket*)buffer;
+                if (Packet->Head.Type == sba::EPacket::Left)
                 {
-                    LeftPacket* lPacket = (LeftPacket*)Packet;
+                    sba::SLeftPacket* lPacket = (sba::SLeftPacket*)Packet;
 
                     for (unsigned int i = 0; i < sba_Players.size(); i++)
                     {
@@ -93,32 +93,32 @@ namespace Game
                     }
                     printf("User % i left!\n", lPacket->Who);
                     //Send to everyone else that one left
-                    if (this->m_pNetwork->m_Host)
+                    if (this->m_pNetwork->GetHost())
                     {
                         for (unsigned int i = 1; i < sba_Players.size(); i++)
                         {
-                            this->m_pNetwork->Send((char*)lPacket, sizeof(LeftPacket), sba_Players[i]->NetworkInformation);
+                            this->m_pNetwork->Send((char*)lPacket, sizeof(sba::SLeftPacket), sba_Players[i]->NetworkInformation);
                         }
                     }
                     //ship left
-                    long packetSize = sizeof(LeftPacket);
+                    long packetSize = sizeof(sba::SLeftPacket);
                     dataLeft -= packetSize;
                     memcpy(buffer, buffer + (int)packetSize, bufferSize - packetSize);
                 }
-                else if (Packet->Head.Type == Packet::IAm)
+                else if (Packet->Head.Type == sba::EPacket::IAm)
                 {
-                    LeftPacket* LPacket = (LeftPacket*)Packet;
+                    sba::SLeftPacket* LPacket = (sba::SLeftPacket*)Packet;
                     this->m_ID = LPacket->Who;
                     printf("I am %i!\n", this->m_ID);
                     //ship left
-                    long packetSize = sizeof(LeftPacket);
+                    long packetSize = sizeof(sba::SLeftPacket);
                     dataLeft -= packetSize;
                     memcpy(buffer, buffer + (int)packetSize, bufferSize - packetSize);
                 }
-                else if (Packet->Head.Type == Packet::CJoin)
+                else if (Packet->Head.Type == sba::EPacket::CJoin)
                 {
-                    LeftPacket* LPacket = (LeftPacket*)Packet;
-                    sba::Player* p = new sba::Player();
+                    sba::SLeftPacket* LPacket = (sba::SLeftPacket*)Packet;
+                    sba::SPlayer* p = new sba::SPlayer();
                     p->ID = LPacket->Who;
                     //if (p->ID == this->m_ID)
                     //    this->m_ArrayID = sba_Players.size();
@@ -127,43 +127,43 @@ namespace Game
                     printf("User %i joined!\n", p->ID);
 
                     //ship left
-                    long packetSize = sizeof(LeftPacket);
+                    long packetSize = sizeof(sba::SLeftPacket);
                     dataLeft -= packetSize;
                     memcpy(buffer, buffer + (int)packetSize, bufferSize - packetSize);
 
                 }
-                else if (Packet->Head.Type == Packet::Start)
+                else if (Packet->Head.Type == sba::EPacket::Start)
                 {
                     this->StartGame();
-                    long packetSize = sizeof(HeadPacket);
+                    long packetSize = sizeof(sba::SHeadPacket);
                     dataLeft -= packetSize;
                     memcpy(buffer, buffer + (int)packetSize, bufferSize - packetSize);
                 }
-                else if (Packet->Head.Type == Packet::STick)
+                else if (Packet->Head.Type == sba::EPacket::STick)
                 {
-                    InputPacket* IPacket = (InputPacket*)Packet;
+                    sba::SInputPacket* IPacket = (sba::SInputPacket*)Packet;
                     m_buffer[IPacket->Frame - m_PhysicFrame].Inputs[IPacket->Input.Player] = IPacket->Input;
                     m_numReceived[IPacket->Frame - m_PhysicFrame]++;
                     printf("received tick %d from player %d\n", IPacket->Frame, IPacket->Input.Player);
                     //ship left
-                    long packetSize = sizeof(InputPacket);
+                    long packetSize = sizeof(sba::SInputPacket);
                     dataLeft -= packetSize;
                     memcpy(buffer, buffer + (int)packetSize, bufferSize - packetSize);
                 }
-                else if (Packet->Head.Type == Packet::CTick)
+                else if (Packet->Head.Type == sba::EPacket::CTick)
                 {
-                    InputsPacket* IPacket = (InputsPacket*)Packet;
+                    sba::SInputsPacket* IPacket = (sba::SInputsPacket*)Packet;
                     PlayOutBuffer* pbuffer = &this->m_buffer[IPacket->Frame - this->m_PhysicFrame];
                     pbuffer->Frame = IPacket->Frame;
-                    memcpy(pbuffer->Inputs, IPacket->Input, sizeof(InputData)*IPacket->Players);
+                    memcpy(pbuffer->Inputs, IPacket->Input, sizeof(sba::SInputData)*IPacket->Players);
                     printf("received tick %d\n", IPacket->Frame);
                     //ship left
-                    long packetSize = sizeof(InputsPacket);
+                    long packetSize = sizeof(sba::SInputsPacket);
                     dataLeft -= packetSize;
                     memcpy(buffer, buffer + (int)packetSize, bufferSize - packetSize);
                 }
                 else
-                    dataLeft -= sizeof(HeadPacket);
+                    dataLeft -= sizeof(sba::SHeadPacket);
             }
             m_Mutex.unlock();
         }
@@ -179,12 +179,12 @@ namespace Game
 
     // **************************************************************************
     // **************************************************************************
-    InputData CGameScene::HandleInput(int a_PlayerIdx)
+    sba::SInputData CGameScene::HandleInput(int a_PlayerIdx)
     {
         PuRe_IInput* aInput = this->m_pApplication->GetInput();
 
-        InputData input;
-        memset(&input, 0, sizeof(InputData));
+        sba::SInputData input;
+        memset(&input, 0, sizeof(sba::SInputData));
 
         if (aInput->GamepadPressed(aInput->Pad_A, a_PlayerIdx))
             input.Shoot = true;
@@ -213,7 +213,7 @@ namespace Game
 
     // **************************************************************************
     // **************************************************************************
-    void CGameScene::ProcessInput(TheBrick::CSpaceship* a_Ship, InputData* a_Input, float a_DeltaTime)
+    void CGameScene::ProcessInput(TheBrick::CSpaceship* a_Ship, sba::SInputData* a_Input, float a_DeltaTime)
     {
         if (a_Input->Shoot)
         {
@@ -251,7 +251,7 @@ namespace Game
         PuRe_Timer* aTimer = this->m_pApplication->GetTimer();
         for (unsigned int i = 0; i < sba_Players.size(); i++)
         {
-            InputData input = this->HandleInput(sba_Players[i]->PadID);
+            sba::SInputData input = this->HandleInput(sba_Players[i]->PadID);
             this->ProcessInput(sba_Players[i]->Ship, &input, aTimer->GetElapsedSeconds());
         }
         sba::Space::Instance()->UpdatePhysics(aTimer);
@@ -263,23 +263,23 @@ namespace Game
     {
         PuRe_IInput* aInput = this->m_pApplication->GetInput();
         m_Mutex.lock();
-        if (this->m_pNetwork->m_Host)
+        if (this->m_pNetwork->GetHost())
         {
             for (int i = 0; i < BufferSize; ++i)
             {
-                InputsPacket packet;
+                sba::SInputsPacket packet;
                 //if all player send something
                 if (!m_send[i] && m_numReceived[i] >= sba_Players.size())
                 {
-                    packet.Head.Type = Packet::CTick;
+                    packet.Head.Type = sba::EPacket::CTick;
                     packet.Frame = m_buffer[i].Frame;
                     packet.Players = sba_Players.size();
-                    memcpy(packet.Input, m_buffer[i].Inputs, sizeof(InputData)*sba_Players.size());
+                    memcpy(packet.Input, m_buffer[i].Inputs, sizeof(sba::SInputData)*sba_Players.size());
                     //send tick with input
                     printf("send tick %d\n", m_buffer[i].Frame);
                     for (unsigned int j = 1; j < sba_Players.size(); ++j)
                     {
-                        this->m_pNetwork->Send((char*)&packet, sizeof(InputsPacket), sba_Players[j]->NetworkInformation);
+                        this->m_pNetwork->Send((char*)&packet, sizeof(sba::SInputsPacket), sba_Players[j]->NetworkInformation);
                     }
                     m_send[i] = 1;
                 }
@@ -292,7 +292,7 @@ namespace Game
         bool inputExists = true;
         while (m_PhysicTime >= 1.0f / 60.0f && inputExists)
         {
-            if (this->m_pNetwork->m_Host)
+            if (this->m_pNetwork->GetHost())
             {
                 inputExists = m_send[0] == 1;
             }
@@ -302,17 +302,17 @@ namespace Game
             if (inputExists)
             {
                 printf("Input exists, do Physik!\n");
-                InputPacket ipacket;
-                memset(&ipacket, 0, sizeof(InputPacket));
-                ipacket.Head.Type = Packet::STick;
-                ipacket.Frame = this->m_PhysicFrame + Delay;
+                sba::SInputPacket ipacket;
+                memset(&ipacket, 0, sizeof(sba::SInputPacket));
+                ipacket.Head.Type = sba::EPacket::STick;
+                ipacket.Frame = this->m_PhysicFrame + sba::Delay;
                 ipacket.Input = this->HandleInput(0);
                 ipacket.Input.Player = this->m_ID;
 
-                if (!this->m_pNetwork->m_Host)
+                if (!this->m_pNetwork->GetHost())
                 {
                     printf("send package %d\n", ipacket.Frame);
-                    this->m_pNetwork->SendHost((char*)&ipacket, sizeof(InputPacket));
+                    this->m_pNetwork->SendHost((char*)&ipacket, sizeof(sba::SInputPacket));
                 }
                 else
                 {
@@ -325,7 +325,7 @@ namespace Game
 
                 PlayOutBuffer* buffer = &this->m_buffer[0];
 
-                InputData* input;
+                sba::SInputData* input;
                 for (unsigned int i = 0; i < sba_Players.size(); i++)
                 {
                     unsigned int id = buffer->Inputs[i].Player;
@@ -341,7 +341,7 @@ namespace Game
                 }
 
                 memcpy(m_buffer, m_buffer + 1, sizeof(PlayOutBuffer) * BufferSize - 1);
-                if (this->m_pNetwork->m_Host)
+                if (this->m_pNetwork->GetHost())
                 {
                     memcpy(m_numReceived, m_numReceived + 1, sizeof(unsigned int) * BufferSize - 1);
                     memcpy(m_send, m_send + 1, sizeof(bool) * BufferSize - 1);
@@ -370,19 +370,19 @@ namespace Game
         //Check last network state
         int networkState = this->m_pNetwork->GetState();
 
-        this->m_pNetwork->Update(this->m_pApplication->GetInput()); //Update Network State
+        this->m_pNetwork->Update(this->m_pApplication->GetInput(),sba::EUpdate::IP); //Update Network State
 
         //If he connected
         this->m_Run = true;
         if (networkState != 3 && this->m_pNetwork->GetState() == 3)
         {
             printf("Connecting!\n");
-            this->m_pNetwork->Connect();
+            this->m_pNetwork->Connect(true);
             //Add self as 0 if host
-            if (this->m_pNetwork->m_Host)
+            if (this->m_pNetwork->GetHost())
             {
                 printf("You are the Host!\n");
-                sba::Player* p = new sba::Player();
+                sba::SPlayer* p = new sba::SPlayer();
                 p->ID = 0;
                 p->NetworkInformation = 0;
                 //this->m_ArrayID = sba_Players.size();
@@ -398,15 +398,15 @@ namespace Game
             }
         }
 
-        if (this->m_pApplication->GetInput()->KeyPressed(this->m_pApplication->GetInput()->F3) && networkState == 3 && this->m_pNetwork->m_Host)
+        if (this->m_pApplication->GetInput()->KeyPressed(this->m_pApplication->GetInput()->F3) && networkState == 3 && this->m_pNetwork->GetHost())
         {
             this->StartGame();
             //Send to everyone that the game started
-            HeadPacket Packet;
-            Packet.Type = Packet::Start;
+            sba::SHeadPacket Packet;
+            Packet.Type = sba::EPacket::Start;
             for (unsigned int i = 1; i < sba_Players.size(); i++)
             {
-                this->m_pNetwork->Send((char*)&Packet, sizeof(HeadPacket), sba_Players[i]->NetworkInformation);
+                this->m_pNetwork->Send((char*)&Packet, sizeof(sba::SHeadPacket), sba_Players[i]->NetworkInformation);
             }
         }
     }
@@ -419,22 +419,22 @@ namespace Game
         {
             this->m_PhysicTime = 0.0f;
             this->m_PhysicFrame = 0;
-            if (this->m_pNetwork->m_Host)
+            if (this->m_pNetwork->GetHost())
             {
                 printf("\n");
                 printf("Resetting Buffer ... \n");
                 for (int i = 0; i < BufferSize; ++i)
                 {
                     m_buffer[i].Frame = i;
-                    memset(m_buffer[i].Inputs, 0, sizeof(InputData) * MaxPlayers);
+                    memset(m_buffer[i].Inputs, 0, sizeof(sba::SInputData) * sba::MaxPlayers);
                     m_send[i] = 0;
                     m_numReceived[i] = 0;
                 }
                 printf("Buffer Reset!\n");
                 //send 6 frames from self, because server is also a player
-                for (int i = 0; i < Delay; i++)
+                for (int i = 0; i < sba::Delay; i++)
                 {
-                    memset(&m_buffer[i - m_PhysicFrame].Inputs[0], 0, sizeof(InputData));
+                    memset(&m_buffer[i - m_PhysicFrame].Inputs[0], 0, sizeof(sba::SInputData));
                     m_numReceived[i - m_PhysicFrame]++;
                 }
                 printf("Set Initial Input for Host.\n");
@@ -445,15 +445,15 @@ namespace Game
             {
                 memset(m_buffer, -1, sizeof(PlayOutBuffer) * BufferSize);
                 //send first 6 frames
-                InputPacket package;
-                memset(&package, 0, sizeof(InputPacket));
-                package.Head.Type = Packet::STick;
+                sba::SInputPacket package;
+                memset(&package, 0, sizeof(sba::SInputPacket));
+                package.Head.Type = sba::EPacket::STick;
                 package.Input.Player = this->m_ID;
 
-                for (int i = 0; i < Delay; ++i)
+                for (int i = 0; i < sba::Delay; ++i)
                 {
                     package.Frame = i;
-                    this->m_pNetwork->SendHost((char*)&package, sizeof(InputPacket));
+                    this->m_pNetwork->SendHost((char*)&package, sizeof(sba::SInputPacket));
                 }
                 printf("Send initial Data!\n");
             }
@@ -553,8 +553,7 @@ namespace Game
 
             if(this->m_Network)
             {
-            this->m_pNetwork = new CNetworkHandler();
-            this->m_pNetwork->m_NetworkState = 0;
+                this->m_pNetwork = new sba::CNetworkHandler();
             this->m_ID = 0;
             this->m_PhysicFrame = 0;
             this->gameStart = false;
@@ -751,10 +750,10 @@ namespace Game
         if (this->m_pNetwork != NULL)
         {
             //Send to Host that we left
-            LeftPacket lPacket;
-            lPacket.Head.Type = Packet::Left;
+            sba::SLeftPacket lPacket;
+            lPacket.Head.Type = sba::EPacket::Left;
             lPacket.Who = this->m_ID;
-            this->m_pNetwork->SendHost((char*)&lPacket, sizeof(LeftPacket));
+            this->m_pNetwork->SendHost((char*)&lPacket, sizeof(sba::SLeftPacket));
         }
         SAFE_DELETE(this->m_pParticleSprite);
         for (unsigned int i = 0; i < this->m_Emitters.size(); i++)

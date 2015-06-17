@@ -1,9 +1,12 @@
 #include "include/NetworkHandler.h"
 
-namespace Game
+namespace sba
 {
     CNetworkHandler::CNetworkHandler()
     {
+        this->m_IP = sba::CIniReader::Instance()->GetValue("IP");
+        this->m_Port = sba::CIniReader::Instance()->GetValue("Port");
+        this->m_Host = false;
     }
 
 
@@ -11,21 +14,69 @@ namespace Game
     // **************************************************************************
     CNetworkHandler::~CNetworkHandler()
     {
-        SAFE_DELETE(this->m_pSocket);
+        this->Disconnect();
+
     }
 
 
     // **************************************************************************
     // **************************************************************************
-    void CNetworkHandler::Connect()
+    void CNetworkHandler::Disconnect()
     {
-        if (this->m_Host)
-            this->m_pSocket = new PuRe_Socket(PuRe_SocketType::Host,PuRe_Protocol::TCP, std::stoi(this->m_Port),this->m_IP.c_str());
+        SAFE_DELETE(this->m_pSocket);
+        this->DeleteBroadcast();
+        this->m_Connected = false;
+    }
+
+
+    // **************************************************************************
+    // **************************************************************************
+    void CNetworkHandler::DeleteBroadcast()
+    {
+        SAFE_DELETE(this->m_pBSocket);
+    }
+
+
+    // **************************************************************************
+    // **************************************************************************
+    bool CNetworkHandler::GetHost()
+    {
+        return this->m_Host;
+    }
+
+
+    // **************************************************************************
+    // **************************************************************************
+    void CNetworkHandler::Broadcast(char* a_pBuffer, int a_Size)
+    {
+        this->m_pBSocket->Broadcast(a_pBuffer, a_Size);
+    }
+
+
+    // **************************************************************************
+    // **************************************************************************
+    void CNetworkHandler::CreateBroadcast(bool a_Broadcast,int a_Port)
+    {
+        this->m_pBSocket = new PuRe_Socket(PuRe_SocketType::Broadcast, PuRe_Protocol::UDP, a_Port, "0.0.0.0");
+    }
+
+
+    // **************************************************************************
+    // **************************************************************************
+    void CNetworkHandler::Connect(bool a_Host)
+    {
+        this->m_Host = a_Host;
+        if (a_Host)
+        {
+            this->m_pSocket = new PuRe_Socket(PuRe_SocketType::Host,PuRe_Protocol::TCP, std::stoi(this->m_Port));
+            this->m_IP = this->m_pSocket->GetIP();
+        }
         else
             this->m_pSocket = new PuRe_Socket(PuRe_SocketType::Client, PuRe_Protocol::TCP, std::stoi(this->m_Port), this->m_IP.c_str());
         sba::CIniReader::Instance()->SetValue("IP", this->m_IP);
         sba::CIniReader::Instance()->SetValue("Port", this->m_Port);
         sba::CIniReader::Instance()->Save();
+        this->m_Connected = true;
     }
 
     // **************************************************************************
@@ -37,9 +88,23 @@ namespace Game
 
     // **************************************************************************
     // **************************************************************************
+    int CNetworkHandler::GetBroadcast()
+    {
+        return this->m_pBSocket->GetSocket();
+    }
+
+    // **************************************************************************
+    // **************************************************************************
     int CNetworkHandler::GetSocket()
     {
         return this->m_pSocket->GetSocket();
+    }
+
+    // **************************************************************************
+    // **************************************************************************
+    bool CNetworkHandler::IsConnected()
+    {
+        return this->m_Connected;
     }
 
     // **************************************************************************
@@ -85,40 +150,28 @@ namespace Game
     // **************************************************************************
     int CNetworkHandler::GetState()
     {
-        return this->m_NetworkState;
+        return 1;
     }
 
 
     // **************************************************************************
     // **************************************************************************
-    void CNetworkHandler::Update(PuRe_IInput* a_pInput)
+    void CNetworkHandler::Update(PuRe_IInput* a_pInput, EUpdate a_What)
     {
-        if (this->m_NetworkState == 0)
-        {
-            if (a_pInput->KeyPressed(a_pInput->Zero))
-            {
-                this->m_Host = true;
-                this->m_IP = "127.0.0.1";
-                this->m_Port = sba::CIniReader::Instance()->GetValue("Port");
-                this->m_NetworkState = 2;
-            }
-            if (a_pInput->KeyPressed(a_pInput->One))
-            {
-                this->m_IP = sba::CIniReader::Instance()->GetValue("IP");
-                this->m_Port = sba::CIniReader::Instance()->GetValue("Port");
-                this->m_Host = false;
-                this->m_NetworkState = 1;
-            }
-        }
-        else if (this->m_NetworkState != 3)
-        {
-            std::string* text = nullptr;
-            if (this->m_NetworkState == 1)
-                text = &this->m_IP;
-            else if (this->m_NetworkState == 2)
-                text = &this->m_Port;
+        std::string* text = nullptr;
+        if (a_What == EUpdate::IP)
+            text = &this->m_IP;
+        else if (a_What == EUpdate::Port)
+            text = &this->m_Port;
+        else
+            text = &this->m_Name;
 
-            if (a_pInput->KeyPressed(a_pInput->Zero)||a_pInput->KeyPressed(a_pInput->Num_Zero))
+        if (a_pInput->KeyPressed(a_pInput->Backspace) && text->length() != 0)
+            *text = text->substr(0, text->length() - 1);
+        if (a_What == EUpdate::Name&&text->length() < MaxName || a_What != EUpdate::Name&&text->length() < MaxLength)
+        {
+            //handle numbers for all
+            if (a_pInput->KeyPressed(a_pInput->Zero) || a_pInput->KeyPressed(a_pInput->Num_Zero))
                 *text += "0";
             if (a_pInput->KeyPressed(a_pInput->One) || a_pInput->KeyPressed(a_pInput->Num_One))
                 *text += "1";
@@ -138,13 +191,24 @@ namespace Game
                 *text += "8";
             if (a_pInput->KeyPressed(a_pInput->Nine) || a_pInput->KeyPressed(a_pInput->Num_Nine))
                 *text += "9";
-            if (a_pInput->KeyPressed(a_pInput->Backspace) && text->length() != 0)
-                *text = text->substr(0, text->length() - 1);
-            if (this->m_NetworkState == 1 && a_pInput->KeyPressed(a_pInput->Period))
+            //handle . for IP only
+            if (a_What == EUpdate::IP&& a_pInput->KeyPressed(a_pInput->Period))
                 *text += ".";
-            if (a_pInput->KeyPressed(a_pInput->Enter))
+
+            //Handle A-Z for Name Update only
+            if (a_What == EUpdate::Name)
             {
-                this->m_NetworkState++;
+                for (int i = 0; i < 26; i++)
+                {
+                    int key = a_pInput->A + i;
+                    int first = 'A' - 0;
+                    if (a_pInput->KeyPressed((PuReEngine::Core::IInput::EKeys)key))
+                    {
+                        key = first+i;
+                        char val = (char)key;
+                        *text += val; 
+                    }
+                }
             }
         }
     }

@@ -25,7 +25,7 @@ namespace Game
     struct PlayOutBuffer
     {
         int Frame;
-        InputData Inputs[MaxPlayers]; //frame saved in here
+        sba::SInputData Inputs[sba::MaxPlayers]; //frame saved in here
     };
     /// @brief MainScene where the game functions are in, inherits from the Scene interface
     ///
@@ -41,7 +41,7 @@ namespace Game
         bool m_send[BufferSize];
         //All players
         PlayOutBuffer m_buffer[BufferSize];
-        InputPacket m_inputs[Delay];
+        sba::SInputPacket m_inputs[sba::Delay];
         //used for networking
         float m_PhysicTime;
         int m_ID;
@@ -52,7 +52,7 @@ namespace Game
         //whether we are still in menu or not
         bool gameStart;
         int m_TextureID;
-        CNetworkHandler* m_pNetwork;
+        sba::CNetworkHandler* m_pNetwork;
 
         PuRe_Font* m_pFont;
         PuRe_PointLight* m_pPointLight;
@@ -82,10 +82,10 @@ namespace Game
     public:
         /// @brief Handle Input Data
         ///
-        InputData HandleInput(int a_PlayerIdx);
+        sba::SInputData HandleInput(int a_PlayerIdx);
         /// @brief Process Input Data
         ///
-        void ProcessInput(TheBrick::CSpaceship* a_Ship,InputData* a_Input,float a_DeltaTime);
+        void ProcessInput(TheBrick::CSpaceship* a_Ship, sba::SInputData* a_Input, float a_DeltaTime);
         /// @brief Handle Local Data
         ///
         void HandleLocal();

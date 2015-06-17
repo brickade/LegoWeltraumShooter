@@ -199,11 +199,6 @@ namespace Menu
         return 1;
     }
 
-    void COptions::Reset()
-    {
-
-    }
-
     void COptions::Render(PuRe_Renderer* a_pRenderer, PuRe_Font* a_pFont, PuRe_IMaterial* a_pFontMaterial, PuRe_Vector2F a_Resolution)
     {
         PuRe_Vector3F Position;

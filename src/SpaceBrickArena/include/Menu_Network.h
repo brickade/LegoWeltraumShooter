@@ -1,27 +1,46 @@
-#ifndef _MENU_LOBBY_H_
-#define _MENU_LOBBY_H_
+#ifndef _MENU_NETWORK_H
+#define _MENU_NETWORK_H
 
 #include <PuReEngine/Core.h>
 #include <PuReEngine/Defines.h>
 
+#include <mutex>
+
 #include "Navigation.h"
-#include "TheBrick/Serializer.h"
 #include "Space.h"
+#include "Menu_Server.h"
 
 namespace Menu
 {
-    class CLobby
+    class CNetwork
     {
     private:
         sba::CNavigation* m_pNavigation;
-        int m_LocalPlayers;
+        bool m_Focus;
+        bool m_Focus2;
+        std::vector<SServer> m_Servers;
+        PuRe_Timer* m_pTimer;
+        std::mutex m_LockMutex;
+    public:
+        bool m_getList;
     public:
         /// @brief Constructor
         ///
-        CLobby();
+        /// @param Timer for Server Messages
+        ///
+        CNetwork(PuRe_Timer* a_pTimer);
         /// @brief Destructor
-        ~CLobby();
+        ~CNetwork();
     public:
+        /// @brief Delete all Servers
+        ///
+        void DeleteServers();
+        /// @brief Start the Network Broadcast
+        ///
+        void Start();
+        /// @brief Receive Data, run as thread
+        ///
+        void ReceiveData();
         /// @brief Update theCOptions
         ///
         /// @param Timer for deltatime
@@ -42,4 +61,4 @@ namespace Menu
 }
 
 
-#endif /* _MENU_LOBBY_H_ */
+#endif /* _MENU_NETWORK_H */

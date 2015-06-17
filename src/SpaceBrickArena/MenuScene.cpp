@@ -30,6 +30,7 @@ namespace Menu
         this->m_pMainMenu = new CMain();
         this->m_pOptions = new COptions();
         this->m_pLobby = new CLobby();
+        this->m_pNetwork = new CNetwork(a_pApplication->GetTimer());
     }
 
     // **************************************************************************
@@ -41,9 +42,6 @@ namespace Menu
         PuRe_IGraphics* graphics = a_pApplication->GetGraphics();
         PuRe_IPlatform* platform = a_pApplication->GetPlatform();
         PuRe_IWindow* window = a_pApplication->GetWindow();
-
-        if (input->KeyPressed(a_pApplication->GetInput()->ESC))
-            return 0;
 
         int result = 0;
         switch (this->m_Displayed)
@@ -61,6 +59,8 @@ namespace Menu
                 sba_Space->CreatePlayer(0, window);
                 break;
             case 3: //Multiplayer
+                this->m_Displayed = Network;
+                this->m_pNetwork->Start();
                 break;
             case 4: //Editor
                 return 4;
@@ -83,13 +83,21 @@ namespace Menu
                 return 2; //game Local
             else if (result == 0)
             {   //delete all players that are connected yet
-                for (int i = 0; i < sba_Players.size(); i++)
+                for (unsigned int i = 0; i < sba_Players.size(); i++)
                 {
                     sba_Space->DeletePlayer(i);
                     --i;
                 }
+                sba_Network->Disconnect();
                 this->m_Displayed = Main;
             }
+            break;
+        case Network:
+            result = this->m_pNetwork->Update(timer, window, input, *this->m_pPlayerIdx);
+            if (result == 2)
+                this->m_Displayed = Lobby;
+            if (result == 0)
+                this->m_Displayed = Main;
             break;
         default:
             break;
@@ -137,6 +145,9 @@ namespace Menu
         case Lobby:
             this->m_pLobby->Render(renderer, timer, this->m_pFont, this->m_pFontMaterial, resolution);
             break;
+        case Network:
+            this->m_pNetwork->Render(renderer, timer, this->m_pFont, this->m_pFontMaterial, resolution);
+            break;
         default:
             break;
         }
@@ -153,6 +164,7 @@ namespace Menu
         /////// CAMERAS ///////
         SAFE_DELETE(this->m_pLobby);
         SAFE_DELETE(this->m_pOptions);
+        SAFE_DELETE(this->m_pNetwork);
         SAFE_DELETE(this->m_pMainMenu);
         SAFE_DELETE(this->m_pSceneCamera);
         SAFE_DELETE(this->m_pUICamera);

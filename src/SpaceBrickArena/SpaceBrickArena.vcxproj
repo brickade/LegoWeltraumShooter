@@ -149,7 +149,9 @@
     <ClInclude Include="include\MenuScene.h" />
     <ClInclude Include="include\Menu_Lobby.h" />
     <ClInclude Include="include\Menu_Main.h" />
+    <ClInclude Include="include\Menu_Network.h" />
     <ClInclude Include="include\Menu_Options.h" />
+    <ClInclude Include="include\Menu_Server.h" />
     <ClInclude Include="include\Player.h" />
     <ClInclude Include="include\Space.h" />
     <ClInclude Include="include\Editor_Camera.h" />
@@ -175,6 +177,7 @@
     <ClCompile Include="Editor_ColorFields.cpp" />
     <ClCompile Include="Menu_Lobby.cpp" />
     <ClCompile Include="Menu_Main.cpp" />
+    <ClCompile Include="Menu_Network.cpp" />
     <ClCompile Include="Menu_Options.cpp" />
     <ClCompile Include="Space.cpp" />
     <ClCompile Include="Editor_Camera.cpp" />

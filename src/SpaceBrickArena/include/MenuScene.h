@@ -14,6 +14,7 @@
 #include "Menu_Main.h"
 #include "Menu_Options.h"
 #include "Menu_Lobby.h"
+#include "Menu_Network.h"
 
 
 // Declare namespace Game
@@ -23,13 +24,16 @@ namespace Menu
     {
         Main,
         Options,
-        Lobby
+        Lobby,
+        Network
     };
     /// @brief MainScene where the game functions are in, inherits from the Scene interface
     ///
     class CMenuScene : public PuRe_IScene
     {
     private:
+
+        CNetwork* m_pNetwork;
 
         CLobby* m_pLobby;
 

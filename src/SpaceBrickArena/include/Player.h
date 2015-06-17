@@ -9,7 +9,7 @@
 
 namespace sba
 {
-    struct Player
+    struct SPlayer
     {
         unsigned char ID;
         unsigned char PadID;

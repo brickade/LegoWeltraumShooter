@@ -13,7 +13,6 @@ namespace Menu
     {
     private:
         sba::CNavigation* m_pNavigation;
-        int* m_PlayerIdx;
         bool m_Focus;
         bool m_Switched;
         bool m_SSAO;
@@ -28,9 +27,6 @@ namespace Menu
         /// @brief Destructor
          ~COptions();
     public:
-        /// @brief Reset the Options
-        ///
-        void Reset();
         /// @brief Update theCOptions
         ///
         /// @param Timer for deltatime
