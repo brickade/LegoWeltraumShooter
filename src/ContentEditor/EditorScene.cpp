@@ -634,8 +634,16 @@ namespace Content
 		{
 			m_CameraType = CameraType::ORTHO;
 			m_pCamera->SetProjection(PuRe_MatrixF::ProjectionOrthogonalLH(m_OrthoZoom, gDescr.ResolutionHeight / (float)gDescr.ResolutionWidth * m_OrthoZoom, 0.1, 100.0f));
-			m_pCamera->SetPosition(PuRe_Vector3F(0, 2, 0));
-			m_pCamera->SetRotation(PuRe_Vector3F(-90, 0, 0));
+			if (input->KeyIsPressed(input->Ctrl))
+			{
+				m_pCamera->SetPosition(PuRe_Vector3F(0, -2, 0));
+				m_pCamera->SetRotation(PuRe_Vector3F(-90, 0, 0));
+			}
+			else
+			{
+				m_pCamera->SetPosition(PuRe_Vector3F(0, 2, 0));
+				m_pCamera->SetRotation(PuRe_Vector3F(90, 0, 0));
+			}
 			m_pCamera->Update();
 
 		}
@@ -643,16 +651,32 @@ namespace Content
 		{
 			m_CameraType = CameraType::ORTHO;
 			m_pCamera->SetProjection(PuRe_MatrixF::ProjectionOrthogonalLH(m_OrthoZoom, gDescr.ResolutionHeight / (float)gDescr.ResolutionWidth * m_OrthoZoom, 0.1, 100.0f));
-			m_pCamera->SetPosition(PuRe_Vector3F(0, 0, -2));
-			m_pCamera->SetRotation(PuRe_Vector3F(0, 0, 0));
+			if (input->KeyIsPressed(input->Ctrl))
+			{
+				m_pCamera->SetPosition(PuRe_Vector3F(0, 0, -2));
+				m_pCamera->SetRotation(PuRe_Vector3F(0, 180, 0));
+			}
+			else
+			{
+				m_pCamera->SetPosition(PuRe_Vector3F(0, 0, -2));
+				m_pCamera->SetRotation(PuRe_Vector3F(0, 0, 0));
+			}
 			m_pCamera->Update();
 		}
 		else if (input->KeyPressed(input->Four))
 		{
 			m_CameraType = CameraType::ORTHO;
 			m_pCamera->SetProjection(PuRe_MatrixF::ProjectionOrthogonalLH(m_OrthoZoom, gDescr.ResolutionHeight / (float)gDescr.ResolutionWidth * m_OrthoZoom, 0.1, 100.0f));
-			m_pCamera->SetPosition(PuRe_Vector3F(-2, 0, 0));
-			m_pCamera->SetRotation(PuRe_Vector3F(0, 90, 0));
+			if (input->KeyIsPressed(input->Ctrl))
+			{
+				m_pCamera->SetPosition(PuRe_Vector3F(-2, 0, 0));
+				m_pCamera->SetRotation(PuRe_Vector3F(0, -90, 0));
+			}
+			else 
+			{
+				m_pCamera->SetPosition(PuRe_Vector3F(2, 0, 0));
+				m_pCamera->SetRotation(PuRe_Vector3F(0, 90, 0));
+			}
 			m_pCamera->Update();
 		}
 
@@ -678,38 +702,36 @@ namespace Content
 				PuRe_MatrixF inverseProjView = m_pCamera->GetInvertViewProjection();
 
 
-				PuRe_Vector3F corners[8];
-				corners[0] = PuRe_Vector3F::Normalize(PuRe_Vector4F(rectStart.X, rectStart.Y, 1.0f, 1.0f) * inverseProjView);
-				corners[1] = PuRe_Vector3F::Normalize(PuRe_Vector4F(rectEnd.X, rectStart.Y, 1.0f, 1.0f) * inverseProjView);
-				corners[2] = PuRe_Vector3F::Normalize(PuRe_Vector4F(rectEnd.X, rectEnd.Y, 1.0f, 1.0f) * inverseProjView);
-				corners[3] = PuRe_Vector3F::Normalize(PuRe_Vector4F(rectStart.X, rectEnd.Y, 1.0f, 1.0f) * inverseProjView);
-	
-				auto a = PuRe_Vector4F(0, 0, 0.0f, 1) * m_pCamera->GetProjection();
-				auto b = PuRe_Vector4F(0, 0, 100.0f, 1) * m_pCamera->GetProjection();
-				auto c = PuRe_Vector4F(0, 0, 0.5f*100.0f, 1) * m_pCamera->GetProjection();
-				
-				auto _a = PuRe_Vector4F(0, 0, 0.0f, 1) * m_pCamera->GetInvertProjection();
-				auto _b = PuRe_Vector4F(1, 1, 100.0f, 100.0f) * PuRe_MatrixF::Invert(m_pCamera->GetProjection());
-				auto _c = PuRe_Vector4F(0, 0, 0.5f*100.0f, 1) * m_pCamera->GetInvertProjection();
-
 				ong::vec3 box[8];
-				box[0] = TheBrick::PuReToOng(m_pCamera->GetPosition() + corners[0] * 0.1f);
-				box[1] = TheBrick::PuReToOng(m_pCamera->GetPosition() + corners[1] * 0.1f);
-				box[2] = TheBrick::PuReToOng(m_pCamera->GetPosition() + corners[2] * 0.1f);
-				box[3] = TheBrick::PuReToOng(m_pCamera->GetPosition() + corners[3] * 0.1f);
-				box[4] = TheBrick::PuReToOng(m_pCamera->GetPosition() + corners[0] * 100.0f);
-				box[5] = TheBrick::PuReToOng(m_pCamera->GetPosition() + corners[1] * 100.0f);
-				box[6] = TheBrick::PuReToOng(m_pCamera->GetPosition() + corners[2] * 100.0f);
-				box[7] = TheBrick::PuReToOng(m_pCamera->GetPosition() + corners[3] * 100.0f);
 
-				//box[0] = TheBrick::PuReToOng(PuRe_Vector4F(rectStart.X, rectStart.Y, 0.1f, 0.1f)  * inverseProjView);
-				//box[1] = TheBrick::PuReToOng(PuRe_Vector4F(rectEnd.X, rectStart.Y,	 0.1f, 0.1f)  * inverseProjView);
-				//box[2] = TheBrick::PuReToOng(PuRe_Vector4F(rectEnd.X, rectEnd.Y,	 0.1f, 0.1f)  * inverseProjView);		
-				//box[3] = TheBrick::PuReToOng(PuRe_Vector4F(rectStart.X, rectEnd.Y,	 0.1f, 0.1f)  * inverseProjView);
-				//box[4] = TheBrick::PuReToOng(PuRe_Vector4F(rectStart.X, rectStart.Y, 100.0f, 100.0f) * inverseProjView);
-				//box[5] = TheBrick::PuReToOng(PuRe_Vector4F(rectEnd.X, rectStart.Y,	 100.0f, 100.0f) * inverseProjView);
-				//box[6] = TheBrick::PuReToOng(PuRe_Vector4F(rectEnd.X, rectEnd.Y,     100.0f, 100.0f) * inverseProjView);
-				//box[7] = TheBrick::PuReToOng(PuRe_Vector4F(rectStart.X, rectEnd.Y,   100.0f, 100.0f) * inverseProjView);
+				if (m_CameraType == CameraType::PERSP)
+				{
+					PuRe_Vector3F corners[8];
+					corners[0] = PuRe_Vector3F::Normalize(PuRe_Vector4F(rectStart.X, rectStart.Y, 1.0f, 1.0f) * inverseProjView);
+					corners[1] = PuRe_Vector3F::Normalize(PuRe_Vector4F(rectEnd.X, rectStart.Y, 1.0f, 1.0f) * inverseProjView);
+					corners[2] = PuRe_Vector3F::Normalize(PuRe_Vector4F(rectEnd.X, rectEnd.Y, 1.0f, 1.0f) * inverseProjView);
+					corners[3] = PuRe_Vector3F::Normalize(PuRe_Vector4F(rectStart.X, rectEnd.Y, 1.0f, 1.0f) * inverseProjView);
+
+					box[0] = TheBrick::PuReToOng(m_pCamera->GetPosition() + corners[0] * 0.1f);
+					box[1] = TheBrick::PuReToOng(m_pCamera->GetPosition() + corners[1] * 0.1f);
+					box[2] = TheBrick::PuReToOng(m_pCamera->GetPosition() + corners[2] * 0.1f);
+					box[3] = TheBrick::PuReToOng(m_pCamera->GetPosition() + corners[3] * 0.1f);
+					box[4] = TheBrick::PuReToOng(m_pCamera->GetPosition() + corners[0] * 100.0f);
+					box[5] = TheBrick::PuReToOng(m_pCamera->GetPosition() + corners[1] * 100.0f);
+					box[6] = TheBrick::PuReToOng(m_pCamera->GetPosition() + corners[2] * 100.0f);
+					box[7] = TheBrick::PuReToOng(m_pCamera->GetPosition() + corners[3] * 100.0f);
+				}
+				else
+				{
+					box[0] = TheBrick::PuReToOng(PuRe_Vector4F(rectStart.X, rectStart.Y, 0.0f, 1.0f)  * inverseProjView);
+					box[1] = TheBrick::PuReToOng(PuRe_Vector4F(rectEnd.X, rectStart.Y, 0.0f, 1.0f)  * inverseProjView);
+					box[2] = TheBrick::PuReToOng(PuRe_Vector4F(rectEnd.X, rectEnd.Y, 0.0f, 1.0f)  * inverseProjView);
+					box[3] = TheBrick::PuReToOng(PuRe_Vector4F(rectStart.X, rectEnd.Y, 0.0f, 1.0f)  * inverseProjView);
+					box[4] = TheBrick::PuReToOng(PuRe_Vector4F(rectStart.X, rectStart.Y, 1.0f, 1.0f) * inverseProjView);
+					box[5] = TheBrick::PuReToOng(PuRe_Vector4F(rectEnd.X, rectStart.Y, 1.0f, 1.0f) * inverseProjView);
+					box[6] = TheBrick::PuReToOng(PuRe_Vector4F(rectEnd.X, rectEnd.Y, 1.0f, 1.0f) * inverseProjView);
+					box[7] = TheBrick::PuReToOng(PuRe_Vector4F(rectStart.X, rectEnd.Y, 1.0f, 1.0f) * inverseProjView);
+				}
 
 				ong::ShapeDescription shapeDescr;
 				shapeDescr.constructionType = ong::ShapeConstruction::HULL_FROM_POINTS;
