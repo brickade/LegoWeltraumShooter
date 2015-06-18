@@ -682,8 +682,13 @@ namespace ong
 		Body* a = m_contacts[contact]->colliderA->getBody();
 		Body* b = m_contacts[contact]->colliderB->getBody();
 
-		a->removeContact(m_contacts[contact]);
-		b->removeContact(m_contacts[contact]);
+		ContactIter* iterA = a->removeContact(m_contacts[contact]);
+		ContactIter* iterB = b->removeContact(m_contacts[contact]);
+		
+		m_contactIterAllocator.sDelete(iterA);
+		m_contactIterAllocator.sDelete(iterB);
+
+		m_contactAllocator.sDelete(m_contacts[contact]);
 
 		m_contacts[contact] = m_contacts.back();
 		m_contacts.pop_back();

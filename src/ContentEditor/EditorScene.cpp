@@ -10,10 +10,19 @@
 #include <PuReEngine\Camera.h>
 #include <stdio.h>
 
+#include "ParseModel.h"
+
 namespace Content
 {
+
+	static const int SELECTED = 1;
+	static const int UNSELECTED = 0;
+
+
 	CEditorScene::CEditorScene(PuRe_Application* a_pApplication)
-		: m_pApplication(a_pApplication)
+		: m_pApplication(a_pApplication),
+		m_CameraType(CameraType::PERSP),
+		m_OrthoZoom(10.0f)
 	{
 	}
 
@@ -42,6 +51,14 @@ namespace Content
 				{
 					SCommand c;
 					c.type = SCommand::NEXT;
+					c.skip = 0;
+					m_Queue.push(c);
+				}
+				else if (strcmp(buffer, "skip") == 0)
+				{
+					SCommand c;
+					c.type = SCommand::NEXT;
+					c.skip = 1;
 					m_Queue.push(c);
 				}
 				else if (strcmp(buffer, "box") == 0)
@@ -158,12 +175,26 @@ namespace Content
 					printf(
 						"Control camera with alt + mouse.\n"
 						"Keyboard shortcuts:\n"
+						"\'1\'		perspective camera\n"
+						"\'2\'		orthografic top view\n"
+						"\'ctrl + 2\'	orthografic bottomn view\n"
+						"\'3\'		orthografic front view\n"
+						"\'ctrl + 3\'	orthografic back view\n"
+						"\'4\'		orthografic right view\n"
+						"\'ctrl + 4\'	orthografic left view\n\n"
 						"\'q\' male nubs\n"
 						"\'w\' female nubs\n"
-						"\'e\' pivot\n\n"
+						"\'e\' pivot\n"
+						"\'r\' hull editing mod\n"
+						"	select vertices with mouse drag\n"
+						"	use shift to remove from selection\n"
+						"	use ctrl to add to selection\n"
+						"	press enter to add hull to brick\n\n"	
 						"Commands:\n"
 						"\"next\" \n"
 						"get next file in the directory and save current brick\n"
+						"\"skip\" \n"
+						"get next file in the directory without saving current brick\n"
 						"\"undo\" \n"
 						"delete the last constructed collider\n"
 						"\"brickID id\" \n"
@@ -198,7 +229,7 @@ namespace Content
 
         PuRe_GraphicsDescription gdesc = graphics->GetDescription();
 		
-        m_pMaterial = graphics->LoadMaterial("../data/effects/editor/default");
+        m_pMaterial = graphics->LoadMaterial("../data/effects/content/default");
 		
 		m_pPostCamera = new PuRe_Camera(PuRe_Vector2F((float)gdesc.ResolutionWidth, (float)gdesc.ResolutionHeight), PuRe_Camera_Orthogonal);
         m_pPostMaterial = graphics->LoadMaterial("../data/effects/Post/default");
@@ -206,11 +237,14 @@ namespace Content
         m_pCamera = new PuRe_Camera(PuRe_Vector2F((float)gdesc.ResolutionWidth, (float)gdesc.ResolutionHeight), PuRe_Camera_Perspective);
 		m_pCamera->SetFoV(45.0f);
 		m_pCamera->Update();
-
+		m_CameraRotation = ong::Quaternion(ong::vec3(0, 0, 0), 1);
 		m_pCurrBrick = 0;
 
 		m_Polling = true;
 		m_InputThread = std::thread(&CEditorScene::getInput, this);
+
+		m_MouseDown = false;
+
 
 
 		// get all bricks in directories
@@ -278,12 +312,6 @@ namespace Content
 					{
                         newBrick->Deserialize(m_Serializer, *graphics, m_World);
 						m_Serializer.Close();
-
-
-						//char modelDir[FILENAME_MAX] = { 0 };
-						//strcat(modelDir, "..\\data\\models\\");
-						//strncat(modelDir, fileName, strrchr(fileName, '.') - fileName);
-						//strcat(modelDir, ".obj");
 
 						const char* modelDir = newBrick->GetModelPath();
 
@@ -359,6 +387,23 @@ namespace Content
 
 		m_OriginShape = m_World.createShape(origin);
 
+		ong::ShapeDescription vertex;
+		vertex.shapeType = ong::ShapeType::SPHERE;
+		vertex.sphere.c = ong::vec3(0, 0, 0);
+		vertex.sphere.r = 0.01;
+
+		m_VertexShape = m_World.createShape(vertex);
+		
+
+		ong::BodyDescription bdescr;
+		bdescr.type = ong::BodyType::Static;
+		bdescr.linearMomentum = ong::vec3(0, 0, 0);
+		bdescr.angularMomentum = ong::vec3(0, 0, 0);
+		bdescr.transform.p = ong::vec3(0, 0, 0);
+		bdescr.transform.q = ong::Quaternion(ong::vec3(0, 0, 0), 1);
+
+		m_pMeshBody = m_World.createBody(bdescr);
+
 		m_MouseValid = false;
 
 	}
@@ -372,17 +417,26 @@ namespace Content
             input->UnLockCursor();
 
 
+		PuRe_WindowDescription wDescr = window->GetDescription();
+		PuRe_GraphicsDescription gDescr = a_pApplication->GetGraphics()->GetDescription();
+
 		if (input->KeyIsPressed(input->Alt))
 		{
 			if (input->MouseIsPressed(input->LeftClick))
 			{
-				PuRe_Vector3F rot = PuRe_Vector3F(0, 1, 0) *  (input->GetRelativeMousePosition().X / 4.0f);
+				//PuRe_Vector3F rot = PuRe_Vector3F(0, 1, 0) *  (input->GetRelativeMousePosition().X / 4.0f);
 
-				m_pCamera->Rotate(rot.X, rot.Y, rot.Z);
+				//m_pCamera->Rotate(rot.X, rot.Y, rot.Z);
 
-				rot = m_pCamera->GetSide() *  (-input->GetRelativeMousePosition().Y / 4.0f);
+				//rot = m_pCamera->GetSide() *  (-input->GetRelativeMousePosition().Y / 4.0f);
 
-				m_pCamera->Rotate(rot.X, rot.Y, rot.Z);
+				//m_pCamera->Rotate(rot.X, rot.Y, rot.Z);
+
+
+				m_CameraRotation = ong::QuatFromAxisAngle(ong::vec3(0, 1, 0), input->GetRelativeMousePosition().X / 4.0f * ong_PI / 180.0f) * m_CameraRotation;
+				m_CameraRotation = ong::QuatFromAxisAngle(ong::rotate(ong::vec3(1, 0, 0), m_CameraRotation), input->GetRelativeMousePosition().Y / 4.0f * ong_PI / 180.0f) * m_CameraRotation;
+				
+				m_pCamera->SetRotation(TheBrick::OngToPuRe(m_CameraRotation));
 			}
 			if (input->MouseIsPressed(input->MiddleClick))
 			{
@@ -390,7 +444,26 @@ namespace Content
 			}
 			if (input->GetMouseScroll())
 			{
-				m_pCamera->Move(PuRe_Vector3F(0, 0, input->GetMouseScroll()));
+				if (m_CameraType == CameraType::PERSP)
+				{
+					m_pCamera->Move(PuRe_Vector3F(0, 0, input->GetMouseScroll()));
+				}
+				else
+				{
+					
+					if (input->GetMouseScroll() < 0)
+					{
+						m_OrthoZoom *= 1.1;
+					}
+					else if ( input->GetMouseScroll() > 0)
+					{
+						m_OrthoZoom *= 0.9;
+					}
+					
+					m_pCamera->SetProjection(PuRe_MatrixF::ProjectionOrthogonalLH(m_OrthoZoom, gDescr.ResolutionHeight / (float)gDescr.ResolutionWidth * m_OrthoZoom, 0.1, 100.0f));
+					m_pCamera->Update();
+					
+				}
 			}
 		}
 		else
@@ -399,6 +472,7 @@ namespace Content
 			{
 				if (input->MousePressed(input->LeftClick))
 				{
+				
 					switch (m_Mode)
 					{
 					case Mode::NUB:
@@ -412,7 +486,6 @@ namespace Content
 								break;
 							}
 						}
-
 						if (!duplicate)
 							m_pCurrBrick->GetNubs().push_back(m_NubPtr);
 						break;
@@ -420,6 +493,7 @@ namespace Content
 					case Mode::ORIGIN:
 						m_pCurrBrick->SetPivotOffset(TheBrick::OngToPuRe(m_Pivot));
 						break;
+
 					}
 
 				}
@@ -442,8 +516,115 @@ namespace Content
 
 					}
 				}
+	
+
 			}
 
+			if (m_Mode == Mode::HULL)
+			{
+				if (input->MousePressed(input->LeftClick))
+				{
+					m_MouseDown = true;
+					m_RectStart = input->GetAbsoluteMousePosition();
+				}
+				else if (m_MouseDown && !input->MouseIsPressed(input->LeftClick))
+				{
+					m_MouseDown = false;
+
+					int mode = 0;
+					// select vertices
+					if (input->KeyIsPressed(input->Shift))
+					{
+						mode = 1;
+					}
+					else if (!input->KeyIsPressed(input->Ctrl))
+					{
+						for (auto c = m_pMeshBody->getCollider(); c != nullptr; c = c->getNext())
+						{
+							c->setUserData((void*)&UNSELECTED);
+						}
+						m_HullPoints.clear();
+					}
+
+
+					ong::ShapeQueryCallBack callbacks[2]
+					{
+						[](ong::Collider* other, void* userData)->bool // add selection
+					{
+						if (other->getUserData() != &SELECTED)
+						{
+							std::vector<ong::vec3>* hullPoints = (std::vector<ong::vec3>*)userData;
+							hullPoints->push_back(other->getTransform().p);
+							other->setUserData((void*)&SELECTED);
+						}
+						return true;
+					},
+						[](ong::Collider* other, void* userData)->bool // remove selection
+					{
+						if (other->getUserData() == &SELECTED)
+						{
+							std::vector<ong::vec3>* hullPoints = (std::vector<ong::vec3>*)userData;
+							for (int i = 0; i < hullPoints->size(); ++i)
+							{
+								if ((*hullPoints)[i] == other->getTransform().p)
+								{
+									(*hullPoints)[i] = hullPoints->back();
+									hullPoints->pop_back();
+								}
+							}
+							other->setUserData((void*)&UNSELECTED);
+						}
+						return true;
+					}
+					};
+
+
+					if (!!m_Rect)
+					{
+						m_pMeshBody->queryShape(m_Rect, ong::Transform(ong::vec3(0, 0, 0), ong::Quaternion(ong::vec3(0, 0, 0), 1)), callbacks[mode], &m_HullPoints);
+					}
+
+					m_World.destroyShape(m_Rect);
+					m_Rect = ong::ShapePtr();
+
+
+					if (!!m_TempHull)
+						m_World.destroyShape(m_TempHull);
+
+					if (m_HullPoints.size() > 3)
+					{
+
+						ong::ShapeDescription shapeDescr;
+						shapeDescr.constructionType = ong::ShapeConstruction::HULL_FROM_POINTS;
+						shapeDescr.hullFromPoints.points = m_HullPoints.data();
+						shapeDescr.hullFromPoints.numPoints = m_HullPoints.size();
+
+						m_TempHull = m_World.createShape(shapeDescr);
+					}
+					else
+					{
+						m_TempHull = ong::ShapePtr();
+					}
+
+				}
+
+				if (input->KeyPressed(input->Enter))
+				{
+					if (!!m_TempHull)
+					{
+						SCommand c;
+						c.type = SCommand::NEWCOLLIDER;
+						c.shape.type = ong::ShapeType::HULL;
+						c.shape.hull = *m_TempHull.toHull();
+
+						if (ProcessCommand(c))
+							m_OldCommands.push(c);
+
+						m_World.destroyShape(m_TempHull);
+						m_TempHull = ong::ShapePtr();
+					}
+				}
+			}
 
 
 			if (input->KeyPressed(input->Q))
@@ -452,10 +633,132 @@ namespace Content
 				m_Mode = Mode::NUB, m_NubPtr.isMale = false;
 			else if (input->KeyPressed(input->E))
 				m_Mode = Mode::ORIGIN;
+			else if (input->KeyPressed(input->R))
+				m_Mode = Mode::HULL;
 		}
 
+
+
+		
+		//camera
+		if (input->KeyPressed(input->One))
+		{
+			m_CameraType = CameraType::PERSP;
+			m_pCamera->SetProjection(PuRe_MatrixF::ProjectionPerspectiveFovLH(45.0f, gDescr.ResolutionWidth/(float) gDescr.ResolutionHeight, 0.1f, 100.0f));
+			m_pCamera->SetPosition(PuRe_Vector3F(-2, 2, -2));
+			m_CameraRotation = ong::Quaternion(ong::vec3(0, 0, 0), 1);
+			m_pCamera->SetRotation(TheBrick::OngToPuRe(m_CameraRotation));
+			m_pCamera->Update();
+		}
+		else if (input->KeyPressed(input->Two))
+		{
+			m_CameraType = CameraType::ORTHO;
+			m_pCamera->SetProjection(PuRe_MatrixF::ProjectionOrthogonalLH(m_OrthoZoom, gDescr.ResolutionHeight / (float)gDescr.ResolutionWidth * m_OrthoZoom, 0.1, 100.0f));
+			if (input->KeyIsPressed(input->Ctrl))
+			{
+				m_pCamera->SetPosition(PuRe_Vector3F(0, -50, 0));
+				m_pCamera->SetRotation(PuRe_Vector3F(-90, 0, 0));
+			}
+			else
+			{
+				m_pCamera->SetPosition(PuRe_Vector3F(0, 50, 0));
+				m_pCamera->SetRotation(PuRe_Vector3F(90, 0, 0));
+			}
+			m_pCamera->Update();
+
+		}
+		else if (input->KeyPressed(input->Three))
+		{
+			m_CameraType = CameraType::ORTHO;
+			m_pCamera->SetProjection(PuRe_MatrixF::ProjectionOrthogonalLH(m_OrthoZoom, gDescr.ResolutionHeight / (float)gDescr.ResolutionWidth * m_OrthoZoom, 0.1, 100.0f));
+			if (input->KeyIsPressed(input->Ctrl))
+			{
+				m_pCamera->SetPosition(PuRe_Vector3F(0, 0, 50));
+				m_pCamera->SetRotation(PuRe_Vector3F(0, 180, 0));
+			}
+			else
+			{
+				m_pCamera->SetPosition(PuRe_Vector3F(0, 0, -50));
+				m_pCamera->SetRotation(PuRe_Vector3F(0, 0, 0));
+			}
+			m_pCamera->Update();
+		}
+		else if (input->KeyPressed(input->Four))
+		{
+			m_CameraType = CameraType::ORTHO;
+			m_pCamera->SetProjection(PuRe_MatrixF::ProjectionOrthogonalLH(m_OrthoZoom, gDescr.ResolutionHeight / (float)gDescr.ResolutionWidth * m_OrthoZoom, 0.1, 100.0f));
+			if (input->KeyIsPressed(input->Ctrl))
+			{
+				m_pCamera->SetPosition(PuRe_Vector3F(-50, 0, 0));
+				m_pCamera->SetRotation(PuRe_Vector3F(0, 90, 0));
+			}
+			else 
+			{
+				m_pCamera->SetPosition(PuRe_Vector3F(50, 0, 0));
+				m_pCamera->SetRotation(PuRe_Vector3F(0, -90, 0));
+			}
+			m_pCamera->Update();
+		}
+
+		//selectionRect
+		if (m_Mode == Mode::HULL && m_MouseDown)
+		{
+			PuRe_Vector2F rectStart, rectEnd;
+			rectStart.X = (2.0f*m_RectStart.X) / wDescr.Width - 1.0f;
+			rectStart.Y = 1.0f - (2.0f * m_RectStart.Y) / wDescr.Height;
+
+			rectEnd.X = (2.0f*input->GetAbsoluteMousePosition().X) / wDescr.Width - 1.0f;
+			rectEnd.Y = 1.0f - (2.0f * input->GetAbsoluteMousePosition().Y) / wDescr.Height;
+
+			if (abs(rectStart.X - rectEnd.X) >= 0.01f && abs(rectStart.Y - rectEnd.Y) >= 0.01f)
+			{
+				PuRe_MatrixF inverseProjView = m_pCamera->GetInvertViewProjection();
+
+				ong::vec3 box[8];
+
+				if (m_CameraType == CameraType::PERSP)
+				{
+					PuRe_Vector3F corners[8];
+					corners[0] = PuRe_Vector3F::Normalize(PuRe_Vector4F(rectStart.X, rectStart.Y, 1.0f, 1.0f) * inverseProjView);
+					corners[1] = PuRe_Vector3F::Normalize(PuRe_Vector4F(rectEnd.X, rectStart.Y, 1.0f, 1.0f) * inverseProjView);
+					corners[2] = PuRe_Vector3F::Normalize(PuRe_Vector4F(rectEnd.X, rectEnd.Y, 1.0f, 1.0f) * inverseProjView);
+					corners[3] = PuRe_Vector3F::Normalize(PuRe_Vector4F(rectStart.X, rectEnd.Y, 1.0f, 1.0f) * inverseProjView);
+
+					box[0] = TheBrick::PuReToOng(m_pCamera->GetPosition() + corners[0] * 0.1f);
+					box[1] = TheBrick::PuReToOng(m_pCamera->GetPosition() + corners[1] * 0.1f);
+					box[2] = TheBrick::PuReToOng(m_pCamera->GetPosition() + corners[2] * 0.1f);
+					box[3] = TheBrick::PuReToOng(m_pCamera->GetPosition() + corners[3] * 0.1f);
+					box[4] = TheBrick::PuReToOng(m_pCamera->GetPosition() + corners[0] * 100.0f);
+					box[5] = TheBrick::PuReToOng(m_pCamera->GetPosition() + corners[1] * 100.0f);
+					box[6] = TheBrick::PuReToOng(m_pCamera->GetPosition() + corners[2] * 100.0f);
+					box[7] = TheBrick::PuReToOng(m_pCamera->GetPosition() + corners[3] * 100.0f);
+				}
+				else
+				{
+					box[0] = TheBrick::PuReToOng(PuRe_Vector4F(rectStart.X, rectStart.Y, 0.0f, 1.0f)  * inverseProjView);
+					box[1] = TheBrick::PuReToOng(PuRe_Vector4F(rectEnd.X, rectStart.Y, 0.0f, 1.0f)  * inverseProjView);
+					box[2] = TheBrick::PuReToOng(PuRe_Vector4F(rectEnd.X, rectEnd.Y, 0.0f, 1.0f)  * inverseProjView);
+					box[3] = TheBrick::PuReToOng(PuRe_Vector4F(rectStart.X, rectEnd.Y, 0.0f, 1.0f)  * inverseProjView);
+					box[4] = TheBrick::PuReToOng(PuRe_Vector4F(rectStart.X, rectStart.Y, 1.0f, 1.0f) * inverseProjView);
+					box[5] = TheBrick::PuReToOng(PuRe_Vector4F(rectEnd.X, rectStart.Y, 1.0f, 1.0f) * inverseProjView);
+					box[6] = TheBrick::PuReToOng(PuRe_Vector4F(rectEnd.X, rectEnd.Y, 1.0f, 1.0f) * inverseProjView);
+					box[7] = TheBrick::PuReToOng(PuRe_Vector4F(rectStart.X, rectEnd.Y, 1.0f, 1.0f) * inverseProjView);
+				}
+
+				ong::ShapeDescription shapeDescr;
+				shapeDescr.constructionType = ong::ShapeConstruction::HULL_FROM_POINTS;
+				shapeDescr.hullFromPoints.points = box;
+				shapeDescr.hullFromPoints.numPoints = 8;
+
+				if (!!m_Rect)
+					m_World.destroyShape(m_Rect);
+
+				m_Rect = m_World.createShape(shapeDescr);
+			}
+		}
+
+
 		// ray cast
-		PuRe_WindowDescription wDescr = window->GetDescription();
 		PuRe_Vector3F mousePos;
 		mousePos.X = (2.0f * input->GetAbsoluteMousePosition().X) / wDescr.Width - 1.0f;
 		mousePos.Y = 1.0f - (2.0f * input->GetAbsoluteMousePosition().Y) / wDescr.Height;
@@ -467,13 +770,11 @@ namespace Content
 		ong::vec3 rayDir = ong::normalize(ong::vec3(rayW.X, rayW.Y, rayW.Z));
 		ong::vec3 rayO = ong::vec3(m_pCamera->GetPosition().X, m_pCamera->GetPosition().Y, m_pCamera->GetPosition().Z);
 
-		//printf("%f %f %f\n", rayDir.x, rayDir.y, rayDir.z);
 
 		ong::RayQueryResult rayResult = { 0 };
 		if (m_pBody->queryRay(rayO, rayDir, &rayResult))
 		{
 			m_MouseTransform.p = rayO + 0.999f*rayResult.t* rayDir;
-			//m_MouseTransform.p = rayResult.point;
 			m_MouseValid = true;
 		}
 		else
@@ -501,7 +802,8 @@ namespace Content
 			break;
 		case Mode::ORIGIN:
             m_Pivot.x = (float)(floor(m_MouseTransform.p.x / w) + 0.5) * w - (rayResult.normal.x * 0.5f*w);
-            m_Pivot.y = (float)(floor(m_MouseTransform.p.y / h) + 0.5) * h - (rayResult.normal.y * 0.5f*h);
+            //m_Pivot.y = (float)(floor(m_MouseTransform.p.y / h) + 0.5) * h - (rayResult.normal.y * 0.5f*h);
+			m_Pivot.y = 0.0f;
             m_Pivot.z = (float)(floor(m_MouseTransform.p.z / w) + 0.5) * w - (rayResult.normal.z * 0.5f*w);
 			break;
 		}
@@ -541,13 +843,20 @@ namespace Content
 					m_World.destroyCollider(pCollider);
 					pCollider = pNext;
 				}
-				if (m_Serializer.OpenWrite(m_CurrFileName.c_str()))
+				// write collider
+				if (!a_C.skip && m_Serializer.OpenWrite(m_CurrFileName.c_str()))
 				{
 					m_pCurrBrick->Serialize(m_Serializer);
 					m_Serializer.Close();
 				}
 
+				// clear mesh
+				for (ong::Collider* c = m_pMeshBody->getCollider(); c != nullptr; c = c->getNext())
+				{
+					m_World.destroyCollider(c);
+				}
 
+				
 				delete m_pCurrBrick;
 			}
 
@@ -561,10 +870,35 @@ namespace Content
 
 				for (auto& colliderData : m_pCurrBrick->GetColliderData())
 				{
-					m_pBody->addCollider(m_World.createCollider(colliderData));
+					ong::ColliderDescription cDescr;
+					cDescr.isSensor = false;
+					cDescr.material = &TheBrick::CBrick::BRICK_MATERIAL;
+					cDescr.shape = colliderData.shape;
+					cDescr.transform = colliderData.transform;
+
+					m_pBody->addCollider(m_World.createCollider(cDescr));
 				}
 				m_pCurrBrick->GetColliderData().clear();
 
+				// generate mesh body
+				ong::ColliderDescription colliderDescr;
+				colliderDescr.isSensor = true;
+				colliderDescr.material = 0;
+				colliderDescr.shape = m_VertexShape;
+				colliderDescr.transform.q = ong::Quaternion(ong::vec3(0, 0, 0), 1);
+
+				
+				std::vector<ong::vec3> vertices;
+				parseModel(m_pCurrBrick->GetModelPath(), vertices);
+				
+				for (auto v : vertices)
+				{
+					colliderDescr.transform.p = v;
+					ong::Collider* pCollider = m_World.createCollider(colliderDescr);
+					pCollider->setUserData((void*)&UNSELECTED);
+					m_pMeshBody->addCollider(pCollider);
+				}
+				
 				m_BrickQueue.pop();
 			}
 			else
@@ -582,16 +916,11 @@ namespace Content
 			return false;
 		case SCommand::NEWCOLLIDER:
 		{
-
-			//todo replace with real material!!!
-			static ong::Material* g_pMaterial = m_World.createMaterial({ 1.0f, 1.0f, 1.0f });
-
-
 			ong::ShapePtr shape = m_World.createShape(a_C.shape);
 
 			ong::ColliderDescription cDescr;
 			cDescr.shape = shape;
-			cDescr.material = g_pMaterial;
+			cDescr.material = &TheBrick::CBrick::BRICK_MATERIAL;
 			cDescr.transform = ong::Transform(ong::vec3(0, 0, 0), ong::Quaternion(ong::vec3(0, 0, 0), 1));
             cDescr.isSensor = false;
 			ong::Collider* pCollider = m_World.createCollider(cDescr);
@@ -625,11 +954,11 @@ namespace Content
 	}
 
 
-    void CEditorScene::Render(PuRe_Application* a_pApplication)
+	void CEditorScene::Render(PuRe_Application* a_pApplication)
 	{
 		static const PuRe_Vector3F MALE_COLOR = PuRe_Vector3F(0, 0, 1);
 		static const PuRe_Vector3F FEMALE_COLOR = PuRe_Vector3F(1.0f, 0.4f, 0.7f);
-        PuRe_IGraphics* graphics = a_pApplication->GetGraphics();
+		PuRe_IGraphics* graphics = a_pApplication->GetGraphics();
 
 		auto drawNub = [&](const TheBrick::SNub& nub){
 			ong::Transform t;
@@ -639,7 +968,7 @@ namespace Content
 			PuRe_Vector3F color = nub.isMale ? MALE_COLOR : FEMALE_COLOR;
 
 
-            TheBrick::DrawShape(m_NubShape, t, color, m_pCamera, graphics);
+			TheBrick::DrawShape(m_NubShape, t, color, m_pCamera, graphics);
 		};
 
 		auto drawPivot = [&](const ong::vec3& pivot)
@@ -648,44 +977,25 @@ namespace Content
 			t.p = pivot;
 			t.q = ong::Quaternion(ong::vec3(0, 0, 0), 1.0f);
 
-            TheBrick::DrawShape(m_OriginShape, t, PuRe_Vector3F(0, 1, 0), m_pCamera, graphics);
+			TheBrick::DrawShape(m_OriginShape, t, PuRe_Vector3F(0, 1, 0), m_pCamera, graphics);
 		};
 
 		PuRe_Color clear = PuRe_Color(0.1f, 0.1f, 0.1f);
-        PuRe_GraphicsDescription gdesc = graphics->GetDescription();
-
-		
-		
+		PuRe_GraphicsDescription gdesc = graphics->GetDescription();
 
 
-        graphics->Clear(clear);
-        PuRe_BoundingBox box;
-        box.m_Position = PuRe_Vector3F();
-        box.m_Size = PuRe_Vector3F((float)gdesc.ResolutionWidth, (float)gdesc.ResolutionHeight, 0.0f);
-        graphics->Begin(box);
-		
-		// draw brick
-		if (m_pCurrBrick)
-		{
+		graphics->Clear(clear);
+		PuRe_BoundingBox box;
+		box.m_Position = PuRe_Vector3F();
+		box.m_Size = PuRe_Vector3F((float)gdesc.ResolutionWidth, (float)gdesc.ResolutionHeight, 0.0f);
+		graphics->Begin(box);
 
-			m_pMaterial->Apply();
-            m_pCurrBrick->GetModel()->Draw(m_pCamera, m_pMaterial, PuRe_Primitive::Triangles);
-
-			
-			for (auto nub : m_pCurrBrick->GetNubs())
-			{
-				drawNub(nub);
-			}
-
-			drawPivot(TheBrick::PuReToOng(m_pCurrBrick->GetPivotOffset()));
-
-		}
 
 
 		// draw gui stuff
-        TheBrick::DrawShape(m_MousePtr, m_MouseTransform, PuRe_Vector3F(1, 1, 1), m_pCamera, graphics);
+		TheBrick::DrawShape(m_MousePtr, m_MouseTransform, PuRe_Vector3F(1, 1, 1), m_pCamera, graphics);
 
-        TheBrick::DrawBody(m_pBody, m_pCamera, graphics);
+		TheBrick::DrawBody(m_pBody, m_pCamera, graphics);
 
 		switch (m_Mode)
 		{
@@ -697,7 +1007,26 @@ namespace Content
 		case Mode::ORIGIN:
 			drawPivot(m_Pivot);
 			break;
+		case Mode::HULL:
+			TheBrick::DrawShape(m_TempHull, ong::Transform(ong::vec3(0, 0, 0), ong::Quaternion(ong::vec3(0, 0, 0), 1)), PuRe_Vector3F(1, 1, 1), m_pCamera, graphics);
+			TheBrick::DrawShape(m_Rect, ong::Transform(ong::vec3(0,0,0), ong::Quaternion(ong::vec3(0,0,0), 1)), PuRe_Vector3F(0.5,0.5, 0.5), m_pCamera, graphics);
 		}
+	
+		// draw brick
+		if (m_pCurrBrick)
+		{
+			m_pMaterial->Apply();
+			m_pCurrBrick->GetModel()->Draw(m_pCamera, m_pMaterial, PuRe_Primitive::Triangles);
+
+			for (auto nub : m_pCurrBrick->GetNubs())
+			{
+				drawNub(nub);
+			}
+
+			drawPivot(TheBrick::PuReToOng(m_pCurrBrick->GetPivotOffset()));
+		}
+
+
 
         graphics->End();
 	}

@@ -31,6 +31,7 @@ namespace Content
 			};
 			unsigned int brickID;
 			int transparent;
+			int skip;
 
 		};
 

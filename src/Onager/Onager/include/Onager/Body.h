@@ -145,7 +145,7 @@ namespace ong
 
 		void clearContacts();
 		void addContact(ContactIter* iter);
-		void removeContact(Contact* contact);
+		ContactIter* removeContact(Contact* contact);
 
 		void setProxyID(const ProxyID* proxyID);
 		const ProxyID* getProxyID();

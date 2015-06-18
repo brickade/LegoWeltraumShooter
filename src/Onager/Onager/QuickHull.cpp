@@ -192,7 +192,7 @@ namespace ong
 	}
 
 
-	void buildInitialHull(vec3* points, int numPoints, qhHull* hull)
+	bool buildInitialHull(vec3* points, int numPoints, qhHull* hull)
 	{
 
 
@@ -213,16 +213,16 @@ namespace ong
 
 
 			// find extreme points
-			int extremes[6] = { -1 };
+			int extremes[6] = { -1,-1,-1,-1,-1,-1 };
 			{
-				float max[6] = { FLT_MIN };
+				float max[6] = { -FLT_MAX, -FLT_MAX, -FLT_MAX, -FLT_MAX, -FLT_MAX, -FLT_MAX};
 
 				for (int i = 0; i < numPoints; ++i)
 				{
 					for (int j = 0; j < 6; ++j)
 					{
 						float dist = dot(points[i], dirs[j]);
-						if (dist < max[j])
+						if (dist > max[j])
 							extremes[j] = i, max[j] = dist;
 					}
 				}
@@ -235,7 +235,8 @@ namespace ong
 			{
 				for (int j = i + 1; j < 6; ++j)
 				{
-					float dist = lengthSq(points[j] - points[i]);
+					//float dist = lengthSq(points[j] - points[i]);
+					float dist = lengthSq(points[extremes[j]] - points[extremes[i]]);
 					if (dist > max)
 					{
 						p0 = points + extremes[i];
@@ -246,6 +247,8 @@ namespace ong
 			}
 		}
 		}
+		if (p0 == nullptr || p1 == nullptr)
+			return false;
 
 		Line e01 = lineFromAB(*p0, *p1);
 
@@ -264,6 +267,8 @@ namespace ong
 			}
 		}
 
+		if (p2 == nullptr)
+			return false;
 
 		// find last Point
 		{
@@ -303,6 +308,9 @@ namespace ong
 			}
 
 		}
+
+		if (p3 == nullptr)
+			return false;
 
 		// build hull
 
@@ -361,7 +369,7 @@ namespace ong
 			}
 		}
 
-
+		return true;
 	}
 
 
@@ -403,6 +411,7 @@ namespace ong
 
 		// add to hull
 
+		
 		cV->next = hull->vertices;
 		cV->prev = nullptr;
 
@@ -431,7 +440,10 @@ namespace ong
 			qhFace* nextFace = h->twin->face;
 
 			if (nextFace->visited)
+			{
+				h = h->next;
 				continue;
+			}
 
 			if (distPointFatPlane(v->position, nextFace->plane, epsilon) > 0)
 			{
@@ -500,8 +512,9 @@ namespace ong
 
 			while (cv != nullptr)
 			{
-				qhVertex* cvNext = cv->next;
 
+				qhVertex* cvNext = cv->next;
+				
 				float minDist = FLT_MAX;
 				qhFace* fnew = nullptr;
 				for (qhFace* f2 : newFaces)
@@ -515,8 +528,26 @@ namespace ong
 
 				}
 
+				//remove
+				if (cv->next)
+					cv->next->prev = cv->prev;
+
+				if (cv->prev)
+					cv->prev->next = cv->next;
+
+				if (f->contactList == cv)
+					f->contactList = cv->next;
+
 				if (fnew)
 				{
+#ifdef _DEBUG
+					qhVertex* v = fnew->contactList;
+					while (v != nullptr)
+					{
+						assert(v != cv);
+						v = v->next;
+					}
+#endif
 					cv->next = fnew->contactList;
 					cv->prev = nullptr;
 
@@ -529,17 +560,7 @@ namespace ong
 				}
 				else
 				{
-					//remove
-					if (cv->next)
-						cv->next->prev = cv->prev;
-
-					if (cv->prev)
-						cv->prev->next = cv->next;
-
-					qhVertex* _cv = cv;
-
-					hull->vAlloc->sDelete(_cv);
-
+					hull->vAlloc->sDelete(cv);
 				}
 
 				cv = cvNext;
@@ -572,15 +593,19 @@ namespace ong
 			{
 				qhFace* f2 = h->twin->face;
 
+				//check if face still valid
+				if (f2->edge->face != f2)
+				{
+					continue;
+				}
+
 				float f1Dist = distPointFatPlane(f2->center, f->plane, hull->epsilon);
 				float f2Dist = distPointFatPlane(f->center, f2->plane, hull->epsilon);
 
 				if (f1Dist >= 0.0f || f2Dist >= 0.0f) // not convex or coplanar
 				{
 					qhHalfEdge* ht = h->twin;
-
-					f->edge = h->prev;
-
+					
 					// set face
 					{
 						qhHalfEdge* _h = ht;
@@ -597,8 +622,12 @@ namespace ong
 					ht->prev->next = h->next;
 					ht->next->prev = h->prev;
 
+					if (f->edge == h)
+						f->edge = h->next;
 
-
+#ifdef _DEBUG
+					DEBUG_checkEdges(hull, f);
+#endif
 
 					// calc new center and plane
 					{
@@ -643,19 +672,34 @@ namespace ong
 
 						float minDist = FLT_MAX;
 						qhFace* fnew = nullptr;
-						for (qhFace* f2 : newFaces)
+						for (qhFace* face : newFaces)
 						{
-							float dist = distPointFatPlane(cv->position, f2->plane, hull->epsilon);
+							if (face == f2)
+								continue;
+
+							float dist = distPointFatPlane(cv->position, face->plane, hull->epsilon);
 							if (dist > 0 && dist < minDist)
 							{
 								minDist = dist;
-								fnew = f2;
+								fnew = face;
 							}
 
 						}
 
+						//remove
+						if (cv->next)
+							cv->next->prev = cv->prev;
+
+						if (cv->prev)
+							cv->prev->next = cv->next;
+
+						if (f2->contactList == cv)
+							f2->contactList = cv->next;
+
+
 						if (fnew)
 						{
+							
 							cv->next = fnew->contactList;
 							cv->prev = nullptr;
 
@@ -668,17 +712,7 @@ namespace ong
 						}
 						else
 						{
-							//remove
-							if (cv->next)
-								cv->next->prev = cv->prev;
-
-							if (cv->prev)
-								cv->prev->next = cv->next;
-
-							qhVertex* _cv = cv;
-
-							hull->vAlloc->sDelete(_cv);
-
+							hull->vAlloc->sDelete(cv);
 						}
 
 						cv = cvNext;
@@ -849,7 +883,15 @@ namespace ong
 		newHull.epsilon = (max.x + max.y + max.z) * FLT_EPSILON;
 
 		//
-		buildInitialHull(points, numPoints, &newHull);
+		if (!buildInitialHull(points, numPoints, &newHull))
+		{
+			printf("failed to build initial hull!\n");
+
+			hull->numVertices = 0;
+			hull->numEdges = 0;
+			hull->numFaces = 0;
+			return;
+		}
 
 
 		qhFace* currFace = nullptr;
