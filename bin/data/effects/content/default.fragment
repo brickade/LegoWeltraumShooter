@@ -1,0 +1,18 @@
+#version 330 core
+
+// Interpolated values from the vertex shaders
+in vec3 Normal;
+in vec4 Position;
+in vec3 ViewNormal;
+
+// Values that stay constant for the whole mesh.
+uniform vec4 Color;
+
+
+void main()
+{
+	vec3 c = vec3(0.3,0.3,0.3) * (0.5 + 0.5 * dot(ViewNormal, vec3(0,0,1)));
+	gl_FragData[0] = vec4(clamp(c, 0, 1),0.5);
+	gl_FragData[1] = vec4(Normal,1);
+	gl_FragData[2] = Position;
+}

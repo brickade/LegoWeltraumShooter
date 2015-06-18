@@ -215,7 +215,7 @@ namespace Content
 
         PuRe_GraphicsDescription gdesc = graphics->GetDescription();
 		
-        m_pMaterial = graphics->LoadMaterial("../data/effects/editor/default");
+        m_pMaterial = graphics->LoadMaterial("../data/effects/content/default");
 		
 		m_pPostCamera = new PuRe_Camera(PuRe_Vector2F((float)gdesc.ResolutionWidth, (float)gdesc.ResolutionHeight), PuRe_Camera_Orthogonal);
         m_pPostMaterial = graphics->LoadMaterial("../data/effects/Post/default");
@@ -632,7 +632,8 @@ namespace Content
 			m_CameraType = CameraType::PERSP;
 			m_pCamera->SetProjection(PuRe_MatrixF::ProjectionPerspectiveFovLH(45.0f, gDescr.ResolutionWidth/(float) gDescr.ResolutionHeight, 0.1f, 100.0f));
 			m_pCamera->SetPosition(PuRe_Vector3F(-2, 2, -2));
-			m_pCamera->SetRotation(PuRe_Vector3F(0, 0, 0));
+			m_CameraRotation = ong::Quaternion(ong::vec3(0, 0, 0), 1);
+			m_pCamera->SetRotation(TheBrick::OngToPuRe(m_CameraRotation));
 			m_pCamera->Update();
 		}
 		else if (input->KeyPressed(input->Two))
@@ -982,22 +983,6 @@ namespace Content
 		box.m_Size = PuRe_Vector3F((float)gdesc.ResolutionWidth, (float)gdesc.ResolutionHeight, 0.0f);
 		graphics->Begin(box);
 
-		// draw brick
-		if (m_pCurrBrick)
-		{
-
-			m_pMaterial->Apply();
-			m_pCurrBrick->GetModel()->Draw(m_pCamera, m_pMaterial, PuRe_Primitive::Triangles);
-
-
-			for (auto nub : m_pCurrBrick->GetNubs())
-			{
-				drawNub(nub);
-			}
-
-			drawPivot(TheBrick::PuReToOng(m_pCurrBrick->GetPivotOffset()));
-
-		}
 
 
 		// draw gui stuff
@@ -1034,6 +1019,25 @@ namespace Content
 
 		}
 	
+		// draw brick
+		if (m_pCurrBrick)
+		{
+
+
+			m_pMaterial->Apply();
+			m_pCurrBrick->GetModel()->Draw(m_pCamera, m_pMaterial, PuRe_Primitive::Triangles);
+
+
+			for (auto nub : m_pCurrBrick->GetNubs())
+			{
+				drawNub(nub);
+			}
+
+			drawPivot(TheBrick::PuReToOng(m_pCurrBrick->GetPivotOffset()));
+
+		}
+
+
 
         graphics->End();
 	}
