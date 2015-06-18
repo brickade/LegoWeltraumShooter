@@ -565,7 +565,10 @@ namespace Content
 					};
 
 
-					m_pMeshBody->queryShape(m_Rect, ong::Transform(ong::vec3(0, 0, 0), ong::Quaternion(ong::vec3(0, 0, 0), 1)), callbacks[mode], &m_HullPoints);
+					if (!!m_Rect)
+					{
+						m_pMeshBody->queryShape(m_Rect, ong::Transform(ong::vec3(0, 0, 0), ong::Quaternion(ong::vec3(0, 0, 0), 1)), callbacks[mode], &m_HullPoints);
+					}
 
 					m_World.destroyShape(m_Rect);
 					m_Rect = ong::ShapePtr();
