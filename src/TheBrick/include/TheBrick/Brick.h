@@ -26,6 +26,7 @@ namespace TheBrick
         static const float SEGMENT_WIDTH;
         static const float SEGMENT_HEIGHT;
         static const int MAX_MODEL_PATH_LENGTH;
+		static ong::Material BRICK_MATERIAL;
 
     private:
         unsigned int m_BrickId;

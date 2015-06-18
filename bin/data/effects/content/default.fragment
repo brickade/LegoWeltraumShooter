@@ -12,7 +12,8 @@ uniform vec4 Color;
 void main()
 {
 	vec3 c = vec3(0.3,0.3,0.3) * (0.5 + 0.5 * dot(ViewNormal, vec3(0,0,1)));
-	gl_FragData[0] = vec4(clamp(c, 0, 1),0.5);
+	c = Normal;
+	gl_FragData[0] = vec4(clamp(c, 0, 1),0.8);
 	gl_FragData[1] = vec4(Normal,1);
 	gl_FragData[2] = Position;
 }

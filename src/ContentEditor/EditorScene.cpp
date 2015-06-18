@@ -175,12 +175,26 @@ namespace Content
 					printf(
 						"Control camera with alt + mouse.\n"
 						"Keyboard shortcuts:\n"
+						"\'1\'		perspective camera\n"
+						"\'2\'		orthografic top view\n"
+						"\'ctrl + 2\'	orthografic bottomn view\n"
+						"\'3\'		orthografic front view\n"
+						"\'ctrl + 3\'	orthografic back view\n"
+						"\'4\'		orthografic right view\n"
+						"\'ctrl + 4\'	orthografic left view\n\n"
 						"\'q\' male nubs\n"
 						"\'w\' female nubs\n"
-						"\'e\' pivot\n\n"
+						"\'e\' pivot\n"
+						"\'r\' hull editing mod\n"
+						"	select vertices with mouse drag\n"
+						"	use shift to remove from selection\n"
+						"	use ctrl to add to selection\n"
+						"	press enter to add hull to brick\n\n"	
 						"Commands:\n"
 						"\"next\" \n"
 						"get next file in the directory and save current brick\n"
+						"\"skip\" \n"
+						"get next file in the directory without saving current brick\n"
 						"\"undo\" \n"
 						"delete the last constructed collider\n"
 						"\"brickID id\" \n"
@@ -696,17 +710,9 @@ namespace Content
 			rectEnd.X = (2.0f*input->GetAbsoluteMousePosition().X) / wDescr.Width - 1.0f;
 			rectEnd.Y = 1.0f - (2.0f * input->GetAbsoluteMousePosition().Y) / wDescr.Height;
 
-			//rectStart.X = -1.0;
-			//rectStart.Y = 1.0;
-			//rectEnd.X = 1.0;
-			//rectEnd.Y = 1.0;
-
 			if (abs(rectStart.X - rectEnd.X) >= 0.01f && abs(rectStart.Y - rectEnd.Y) >= 0.01f)
 			{
-
-				//PuRe_MatrixF inverseProjView = PuRe_MatrixF::Invert(m_pCamera->GetProjection())*PuRe_MatrixF::Invert(m_pCamera->GetView());
 				PuRe_MatrixF inverseProjView = m_pCamera->GetInvertViewProjection();
-
 
 				ong::vec3 box[8];
 
@@ -769,7 +775,6 @@ namespace Content
 		if (m_pBody->queryRay(rayO, rayDir, &rayResult))
 		{
 			m_MouseTransform.p = rayO + 0.999f*rayResult.t* rayDir;
-			//m_MouseTransform.p = rayResult.point;
 			m_MouseValid = true;
 		}
 		else
@@ -797,7 +802,8 @@ namespace Content
 			break;
 		case Mode::ORIGIN:
             m_Pivot.x = (float)(floor(m_MouseTransform.p.x / w) + 0.5) * w - (rayResult.normal.x * 0.5f*w);
-            m_Pivot.y = (float)(floor(m_MouseTransform.p.y / h) + 0.5) * h - (rayResult.normal.y * 0.5f*h);
+            //m_Pivot.y = (float)(floor(m_MouseTransform.p.y / h) + 0.5) * h - (rayResult.normal.y * 0.5f*h);
+			m_Pivot.y = 0.0f;
             m_Pivot.z = (float)(floor(m_MouseTransform.p.z / w) + 0.5) * w - (rayResult.normal.z * 0.5f*w);
 			break;
 		}
@@ -864,7 +870,13 @@ namespace Content
 
 				for (auto& colliderData : m_pCurrBrick->GetColliderData())
 				{
-					m_pBody->addCollider(m_World.createCollider(colliderData));
+					ong::ColliderDescription cDescr;
+					cDescr.isSensor = false;
+					cDescr.material = &TheBrick::CBrick::BRICK_MATERIAL;
+					cDescr.shape = colliderData.shape;
+					cDescr.transform = colliderData.transform;
+
+					m_pBody->addCollider(m_World.createCollider(cDescr));
 				}
 				m_pCurrBrick->GetColliderData().clear();
 
@@ -904,16 +916,11 @@ namespace Content
 			return false;
 		case SCommand::NEWCOLLIDER:
 		{
-
-			//todo replace with real material!!!
-			static ong::Material* g_pMaterial = m_World.createMaterial({ 1.0f, 1.0f, 1.0f });
-
-
 			ong::ShapePtr shape = m_World.createShape(a_C.shape);
 
 			ong::ColliderDescription cDescr;
 			cDescr.shape = shape;
-			cDescr.material = g_pMaterial;
+			cDescr.material = &TheBrick::CBrick::BRICK_MATERIAL;
 			cDescr.transform = ong::Transform(ong::vec3(0, 0, 0), ong::Quaternion(ong::vec3(0, 0, 0), 1));
             cDescr.isSensor = false;
 			ong::Collider* pCollider = m_World.createCollider(cDescr);
@@ -1001,32 +1008,15 @@ namespace Content
 			drawPivot(m_Pivot);
 			break;
 		case Mode::HULL:
-			//for (ong::Collider* c = m_pMeshBody->getCollider(); c != nullptr; c = c->getNext())
-			//{
-			//	PuRe_Vector3F color;
-			//	if (c->getUserData() == &SELECTED)
-			//	{
-			//		color = PuRe_Vector3F(1, 1, 0);
-			//		TheBrick::DrawShape(m_VertexShape, c->getTransform(), color, m_pCamera, graphics);
-			//	}
-			//	else
-			//		color = PuRe_Vector3F(1, 1, 0);
-			//}
-
 			TheBrick::DrawShape(m_TempHull, ong::Transform(ong::vec3(0, 0, 0), ong::Quaternion(ong::vec3(0, 0, 0), 1)), PuRe_Vector3F(1, 1, 1), m_pCamera, graphics);
 			TheBrick::DrawShape(m_Rect, ong::Transform(ong::vec3(0,0,0), ong::Quaternion(ong::vec3(0,0,0), 1)), PuRe_Vector3F(0.5,0.5, 0.5), m_pCamera, graphics);
-
-
 		}
 	
 		// draw brick
 		if (m_pCurrBrick)
 		{
-
-
 			m_pMaterial->Apply();
 			m_pCurrBrick->GetModel()->Draw(m_pCamera, m_pMaterial, PuRe_Primitive::Triangles);
-
 
 			for (auto nub : m_pCurrBrick->GetNubs())
 			{
@@ -1034,7 +1024,6 @@ namespace Content
 			}
 
 			drawPivot(TheBrick::PuReToOng(m_pCurrBrick->GetPivotOffset()));
-
 		}
 
 
