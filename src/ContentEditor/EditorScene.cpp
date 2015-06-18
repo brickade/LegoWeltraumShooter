@@ -628,6 +628,8 @@ namespace Content
 		{
 			m_CameraType = CameraType::PERSP;
 			m_pCamera->SetProjection(PuRe_MatrixF::ProjectionPerspectiveFovLH(45.0f, gDescr.ResolutionWidth/(float) gDescr.ResolutionHeight, 0.1f, 100.0f));
+			m_pCamera->SetPosition(PuRe_Vector3F(-2, 2, -2));
+			m_pCamera->SetRotation(PuRe_Vector3F(0, 0, 0));
 			m_pCamera->Update();
 		}
 		else if (input->KeyPressed(input->Two))
@@ -636,12 +638,12 @@ namespace Content
 			m_pCamera->SetProjection(PuRe_MatrixF::ProjectionOrthogonalLH(m_OrthoZoom, gDescr.ResolutionHeight / (float)gDescr.ResolutionWidth * m_OrthoZoom, 0.1, 100.0f));
 			if (input->KeyIsPressed(input->Ctrl))
 			{
-				m_pCamera->SetPosition(PuRe_Vector3F(0, -2, 0));
+				m_pCamera->SetPosition(PuRe_Vector3F(0, -50, 0));
 				m_pCamera->SetRotation(PuRe_Vector3F(-90, 0, 0));
 			}
 			else
 			{
-				m_pCamera->SetPosition(PuRe_Vector3F(0, 2, 0));
+				m_pCamera->SetPosition(PuRe_Vector3F(0, 50, 0));
 				m_pCamera->SetRotation(PuRe_Vector3F(90, 0, 0));
 			}
 			m_pCamera->Update();
@@ -653,12 +655,12 @@ namespace Content
 			m_pCamera->SetProjection(PuRe_MatrixF::ProjectionOrthogonalLH(m_OrthoZoom, gDescr.ResolutionHeight / (float)gDescr.ResolutionWidth * m_OrthoZoom, 0.1, 100.0f));
 			if (input->KeyIsPressed(input->Ctrl))
 			{
-				m_pCamera->SetPosition(PuRe_Vector3F(0, 0, -2));
+				m_pCamera->SetPosition(PuRe_Vector3F(0, 0, 50));
 				m_pCamera->SetRotation(PuRe_Vector3F(0, 180, 0));
 			}
 			else
 			{
-				m_pCamera->SetPosition(PuRe_Vector3F(0, 0, -2));
+				m_pCamera->SetPosition(PuRe_Vector3F(0, 0, -50));
 				m_pCamera->SetRotation(PuRe_Vector3F(0, 0, 0));
 			}
 			m_pCamera->Update();
@@ -669,13 +671,13 @@ namespace Content
 			m_pCamera->SetProjection(PuRe_MatrixF::ProjectionOrthogonalLH(m_OrthoZoom, gDescr.ResolutionHeight / (float)gDescr.ResolutionWidth * m_OrthoZoom, 0.1, 100.0f));
 			if (input->KeyIsPressed(input->Ctrl))
 			{
-				m_pCamera->SetPosition(PuRe_Vector3F(-2, 0, 0));
-				m_pCamera->SetRotation(PuRe_Vector3F(0, -90, 0));
+				m_pCamera->SetPosition(PuRe_Vector3F(-50, 0, 0));
+				m_pCamera->SetRotation(PuRe_Vector3F(0, 90, 0));
 			}
 			else 
 			{
-				m_pCamera->SetPosition(PuRe_Vector3F(2, 0, 0));
-				m_pCamera->SetRotation(PuRe_Vector3F(0, 90, 0));
+				m_pCamera->SetPosition(PuRe_Vector3F(50, 0, 0));
+				m_pCamera->SetRotation(PuRe_Vector3F(0, -90, 0));
 			}
 			m_pCamera->Update();
 		}
