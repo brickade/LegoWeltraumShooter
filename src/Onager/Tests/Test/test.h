@@ -20,7 +20,7 @@ public:
 
 	virtual void update(float dt) {};
 	virtual void render() {};
-	virtual void stepPhysics(float physicsTimer);
+	virtual void stepPhysics(float dt);
 
 protected:
 	World* m_world;
@@ -29,7 +29,7 @@ protected:
 
 	GLuint m_colorLocation;
 	bool m_stepping = false;
-
+	float m_physicsTimer;
 	Transform m_eye;
 
 	Entity* addBox(World* world, BodyDescription descr, Material* material);

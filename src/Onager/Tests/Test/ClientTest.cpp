@@ -77,10 +77,11 @@ void ClientTest::receiveFromServer()
 	}
 }
 
-void ClientTest::stepPhysics(float physicsTimer)
+void ClientTest::stepPhysics(float dt)
 {
+	m_physicsTimer += dt;
 	m_mutex.lock();
-	while (physicsTimer >= 1.0f / 60.0f && inputExists())
+	while (m_physicsTimer >= 1.0f / 60.0f && inputExists())
 	{
 		//send
 		Package package;
@@ -112,11 +113,8 @@ void ClientTest::stepPhysics(float physicsTimer)
 		m_buffer[31].frame = -1;
 
 		m_world->step(1.0f / 60.0f);
-		physicsTimer -= 1.0f / 60.0f;
+		m_physicsTimer -= 1.0f / 60.0f;
 		m_frame++;
-
-
-
 	}
 	m_mutex.unlock();
 }
