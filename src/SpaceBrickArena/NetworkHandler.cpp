@@ -4,6 +4,8 @@ namespace sba
 {
     CNetworkHandler::CNetworkHandler()
     {
+        this->m_pSocket = new PuRe_Socket();
+        this->m_pBSocket = new PuRe_Socket();
         this->m_IP = sba::CIniReader::Instance()->GetValue("IP");
         this->m_Port = sba::CIniReader::Instance()->GetValue("Port");
         this->m_Host = false;
@@ -14,7 +16,8 @@ namespace sba
     // **************************************************************************
     CNetworkHandler::~CNetworkHandler()
     {
-        this->Disconnect();
+        SAFE_DELETE(this->m_pBSocket);
+        SAFE_DELETE(this->m_pSocket);
 
     }
 
@@ -23,7 +26,7 @@ namespace sba
     // **************************************************************************
     void CNetworkHandler::Disconnect()
     {
-        SAFE_DELETE(this->m_pSocket);
+        this->m_pSocket->Cleanup();
         this->DeleteBroadcast();
         this->m_Connected = false;
     }
@@ -33,7 +36,7 @@ namespace sba
     // **************************************************************************
     void CNetworkHandler::DeleteBroadcast()
     {
-        SAFE_DELETE(this->m_pBSocket);
+        this->m_pBSocket->Cleanup();
     }
 
 
@@ -57,33 +60,53 @@ namespace sba
     // **************************************************************************
     void CNetworkHandler::CreateBroadcast(bool a_Broadcast,int a_Port)
     {
-        this->m_pBSocket = new PuRe_Socket(PuRe_SocketType::Broadcast, PuRe_Protocol::UDP, a_Port, "0.0.0.0");
+        if (a_Broadcast)
+            this->m_pBSocket->Initialize(PuRe_SocketType::Broadcaster, PuRe_Protocol::UDP, a_Port,"127.0.0.1");
+        else
+            this->m_pBSocket->Initialize(PuRe_SocketType::Broadcasted, PuRe_Protocol::UDP, a_Port, "0.0.0.0");
     }
 
 
     // **************************************************************************
     // **************************************************************************
-    void CNetworkHandler::Connect(bool a_Host)
+    bool CNetworkHandler::Connect(bool a_Host)
     {
         this->m_Host = a_Host;
         if (a_Host)
         {
-            this->m_pSocket = new PuRe_Socket(PuRe_SocketType::Host,PuRe_Protocol::TCP, std::stoi(this->m_Port));
+            this->m_pSocket->Initialize(PuRe_SocketType::Host, PuRe_Protocol::TCP, std::stoi(this->m_Port), "127.0.0.1");
             this->m_IP = this->m_pSocket->GetIP();
         }
         else
-            this->m_pSocket = new PuRe_Socket(PuRe_SocketType::Client, PuRe_Protocol::TCP, std::stoi(this->m_Port), this->m_IP.c_str());
+            this->m_pSocket->Initialize(PuRe_SocketType::Client, PuRe_Protocol::TCP, std::stoi(this->m_Port), this->m_IP.c_str());
         sba::CIniReader::Instance()->SetValue("IP", this->m_IP);
         sba::CIniReader::Instance()->SetValue("Port", this->m_Port);
         sba::CIniReader::Instance()->Save();
-        this->m_Connected = true;
+        if (this->m_pSocket->IsWorking())
+            this->m_Connected = true;
+        else
+            return false;
+        return true;
     }
 
     // **************************************************************************
     // **************************************************************************
     SOCKET CNetworkHandler::Accept()
     {
-        return this->m_pSocket->Accept(nullptr);
+        SOCKADDR_IN clientData;
+        SOCKET s = this->m_pSocket->Accept(&clientData);
+        if (s != 4294967295)
+            return s;
+        else
+            return NULL;
+    }
+
+    // **************************************************************************
+    // **************************************************************************
+    void CNetworkHandler::SetBlockMode(bool a_Block)
+    {
+        if (this->m_pSocket->IsWorking())
+            this->m_pSocket->SetMode(a_Block);
     }
 
     // **************************************************************************
@@ -120,7 +143,7 @@ namespace sba
     long CNetworkHandler::Receive(char* a_pBuffer, int a_Size, SOCKET a_pSender)
     {
         long error = this->m_pSocket->Receive(a_pSender, a_pBuffer, a_Size);
-        printf("Received Data with result %d\n", error);
+        //printf("Received Data with result %d\n", error);
         return error;
     }
 

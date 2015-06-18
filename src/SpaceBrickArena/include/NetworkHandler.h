@@ -7,6 +7,8 @@
 #include <TheBrick/TheBrick.h>
 #include "include/INIReader.h"
 
+#include <mutex>
+
 // Declare namespace Game
 namespace sba
 {
@@ -87,6 +89,7 @@ namespace sba
         std::string m_IP;
         std::string m_Port;
         std::string m_Name;
+        std::mutex m_Mutex;
 
     private:
         PuRe_Socket* m_pSocket;
@@ -97,6 +100,9 @@ namespace sba
         CNetworkHandler();
         ~CNetworkHandler();
     public:
+        /// @brief Sets whether the calls are blocking or not
+        ///
+        void SetBlockMode(bool a_Block);
         /// @brief If he is connected or not
         ///
         bool IsConnected();
@@ -123,7 +129,7 @@ namespace sba
         SOCKET Accept();
         /// @brief Initialite Socket
         ///
-        void Connect(bool a_Host);
+        bool Connect(bool a_Host);
         /// @brief Update Data
         ///
         void Update(PuRe_IInput* a_pInput, EUpdate a_What);

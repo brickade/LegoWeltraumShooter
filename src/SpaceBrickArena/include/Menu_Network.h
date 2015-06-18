@@ -4,8 +4,6 @@
 #include <PuReEngine/Core.h>
 #include <PuReEngine/Defines.h>
 
-#include <mutex>
-
 #include "Navigation.h"
 #include "Space.h"
 #include "Menu_Server.h"
@@ -20,7 +18,6 @@ namespace Menu
         bool m_Focus2;
         std::vector<SServer> m_Servers;
         PuRe_Timer* m_pTimer;
-        std::mutex m_LockMutex;
     public:
         bool m_getList;
     public:

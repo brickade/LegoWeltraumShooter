@@ -15,6 +15,9 @@ namespace Menu
     private:
         sba::CNavigation* m_pNavigation;
         int m_LocalPlayers;
+        bool m_Run;
+        std::thread m_LoadThread;
+        std::thread m_ReceiveThread;
     public:
         /// @brief Constructor
         ///
@@ -22,6 +25,17 @@ namespace Menu
         /// @brief Destructor
         ~CLobby();
     public:
+        /// @brief Receive Data
+        ///
+        /// @param Socket we receive from
+        ///
+        void ReceiveData(SOCKET s);
+        /// @brief Listen for incoming Users
+        ///
+        void ListenLoop();
+        /// @brief Start Connections
+        ///
+        void Start();
         /// @brief Update theCOptions
         ///
         /// @param Timer for deltatime

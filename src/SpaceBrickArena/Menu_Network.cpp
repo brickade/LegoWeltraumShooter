@@ -44,7 +44,7 @@ namespace Menu
                 sba::SReceivePacket* rpacket = (sba::SReceivePacket*)buffer;
                 if (rpacket->Head.Type == sba::EPacket::Broadcast)
                 {
-                    m_LockMutex.lock();
+                    sba_Network->m_Mutex.lock();
                     sba::SBroadcastPacket* bp = (sba::SBroadcastPacket*)rpacket;
                     SServer s;
                     s.IP = bp->IP;
@@ -62,7 +62,7 @@ namespace Menu
                     }
                     if (!in)
                         this->m_Servers.push_back(s);
-                    m_LockMutex.unlock();
+                    sba_Network->m_Mutex.unlock();
                 }
             }
         }
@@ -78,16 +78,16 @@ namespace Menu
         //All two seconds, delete old Servers
         if ((int)totalSeconds % 2 == 0)
         {
-            m_LockMutex.lock();
+            sba_Network->m_Mutex.lock();
             for (unsigned int i = 0; i < this->m_Servers.size(); i++)
             {
-                if (totalSeconds - this->m_Servers[i].LastUpdate > 2.0f) //since five seconds no response
+                if (totalSeconds - this->m_Servers[i].LastUpdate > 4.0f) //since five seconds no response
                 {
                     this->m_Servers.erase(this->m_Servers.begin()+i);
                     --i;
                 }
             }
-            m_LockMutex.unlock();
+            sba_Network->m_Mutex.unlock();
         }
 
         if (!this->m_Focus)
@@ -121,7 +121,7 @@ namespace Menu
         {
             switch (this->m_pNavigation->GetFocusedElementId())
             {
-            case 0:
+            case 0: //internet
                 if (this->m_Focus2)
                     sba_Network->Update(a_pInput, sba::EUpdate::IP);
                 else
@@ -142,7 +142,12 @@ namespace Menu
                         //check if port is not null, else connect
                         if (sba_Network->m_Port.length() > 0 && std::stoi(sba_Network->m_Port) >= 1024)
                         {
-                            sba_Network->DeleteBroadcast();
+                            if (sba_Network->Connect(false))
+                            {
+                                sba_Network->DeleteBroadcast();
+                                this->DeleteServers();
+                                return 2;
+                            }
                         }
                     }
                 }
@@ -153,7 +158,19 @@ namespace Menu
                     else
                         this->m_Focus2 = true;
                 }
-            case 2:
+            case 1: //Lan
+                if (sba_Input->ButtonPressed(sba_Button::MenuClick, a_PlayerIdx))
+                {
+                }
+                if (sba_Input->ButtonPressed(sba_Button::MenuBack, a_PlayerIdx))
+                {
+                    if (this->m_Focus2)
+                        this->m_Focus = false;
+                    else
+                        this->m_Focus2 = true;
+                }
+                break;
+            case 2: //Host
                 if (this->m_Focus2)
                     sba_Network->Update(a_pInput, sba::EUpdate::Name);
                 else
@@ -171,13 +188,15 @@ namespace Menu
                         //check if port is not null, else connect
                         if (sba_Network->m_Port.length() > 0 && std::stoi(sba_Network->m_Port) >= 1024 && std::stoi(sba_Network->m_Port) != sba::BroadcastPort)
                         {
-                            sba_Network->Connect(true);
-                            this->m_getList = false;
-                            sba_Network->DeleteBroadcast();
-                            sba_Network->CreateBroadcast(true, sba::BroadcastPort);
-                            sba_Space->CreatePlayer(0, a_pWindow);
-                            this->DeleteServers();
-                            return 2;
+                            if(sba_Network->Connect(true))
+                            {
+                                this->m_getList = false;
+                                sba_Network->DeleteBroadcast();
+                                sba_Network->CreateBroadcast(true, sba::BroadcastPort);
+                                sba_Space->CreatePlayer(0, a_pWindow);
+                                this->DeleteServers();
+                                return 2;
+                            }
                         }
                     }
                 }

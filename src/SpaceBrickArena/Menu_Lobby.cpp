@@ -10,7 +10,88 @@ namespace Menu
 
     CLobby::~CLobby()
     {
+        this->m_Run = false;
         SAFE_DELETE(this->m_pNavigation);
+    }
+
+    void CLobby::ListenLoop()
+    {
+        printf("Thread Start!\n");
+        const int len = 1024;
+        char buffer[len];
+        sba_Network->SetBlockMode(false);
+        while (this->m_Run)
+        {
+            memset(buffer, 0, len);
+            if (sba_Network->Listen())
+            {
+                if (sba_Players.size() < sba::MaxPlayers)
+                {
+                    SOCKET s = sba_Network->Accept();
+                    if (s > 0)
+                    {
+                        sba_Network->m_Mutex.lock();
+                        printf("Client connected!\n");
+                        int ID = 0; // 0 is Host
+                        for (unsigned int i = 0; i < sba_Players.size(); i++)
+                        {
+                            if (ID == sba_Players[i]->ID)
+                            {
+                                ID++;
+                                i = 0;
+                            }
+                        }
+                        sba::SPlayer* p = new sba::SPlayer();
+                        p->ID = ID;
+                        p->NetworkInformation = s;
+                        p->PadID = -1;
+                        sba_Players.push_back(p);
+                        printf("User %i joined!\n", ID);
+                        std::thread HandleThread(&CLobby::ReceiveData, this, s);
+                        HandleThread.detach(); 
+                        sba_Network->m_Mutex.unlock();
+                    }
+                }
+            }
+        }
+        sba_Network->SetBlockMode(true);
+        printf("Thread End!\n");
+    }
+
+    void CLobby::ReceiveData(SOCKET s)
+    {
+        printf("Thread Start!\n");
+        const int len = 1024;
+        char buffer[len];
+        sba_Network->SetBlockMode(false);
+        while (this->m_Run)
+        {
+            memset(buffer, 0, len);
+            if (sba_Network->Receive(buffer, len, s) > 0)
+            {
+
+            }
+        }
+        sba_Network->SetBlockMode(true);
+        printf("Thread End!\n");
+    }
+
+    void CLobby::Start()
+    {
+        if (sba_Network->IsConnected())
+        {
+            this->m_Run = true;
+            if (sba_Network->GetHost())
+            {
+                std::thread lThread(&CLobby::ListenLoop, this);
+                lThread.detach();
+            }
+            else
+            {
+                std::thread rThread(&CLobby::ReceiveData, this,sba_Network->GetSocket());
+                rThread.detach();
+            }
+        }
     }
 
     int CLobby::Update(PuRe_Timer* a_pTimer, PuRe_IWindow* a_pWindow, PuRe_IInput* a_pInput, int a_PlayerIdx)
@@ -22,7 +103,8 @@ namespace Menu
             memcpy(bp.IP, sba_Network->m_IP.c_str(), sba::MaxLength);
             memcpy(bp.Port, sba_Network->m_Port.c_str(), sba::MaxLength);
             memcpy(bp.Name, sba_Network->m_Name.c_str(), sba::MaxName);
-            sba_Network->Broadcast((char*)&bp, sizeof(sba::SBroadcastPacket)); //Now Spam it!
+            if ((int)a_pTimer->GetTotalElapsedSeconds() % 2 == 0)
+                sba_Network->Broadcast((char*)&bp, sizeof(sba::SBroadcastPacket)); //Now Spam it!
         }
         this->m_pNavigation->Update(*a_pTimer, sba_Input->Direction(sba_Direction::MenuMove, a_PlayerIdx));
         if (sba_Input->ButtonPressed(sba_Button::MenuClick, a_PlayerIdx))
@@ -30,9 +112,11 @@ namespace Menu
             switch (this->m_pNavigation->GetFocusedElementId())
             {
             case 0: //Start
+                this->m_Run = false;
                 return 2;
                 break;
             case 1: //Back
+                this->m_Run = false;
                 return 0;
                 break;
             }

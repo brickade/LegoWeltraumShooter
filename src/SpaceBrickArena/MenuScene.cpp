@@ -95,7 +95,10 @@ namespace Menu
         case Network:
             result = this->m_pNetwork->Update(timer, window, input, *this->m_pPlayerIdx);
             if (result == 2)
+            {
                 this->m_Displayed = Lobby;
+                this->m_pLobby->Start();
+            }
             if (result == 0)
                 this->m_Displayed = Main;
             break;
