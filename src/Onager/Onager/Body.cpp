@@ -74,11 +74,13 @@ namespace ong
 
 		collider->setBody(nullptr);
 
+		calculateMassData();
+
 		if (m_numCollider >= 2)
 		{
 			calculateTree();
 		}
-
+		calculateAABB();
 		m_pWorld->updateProxy(m_proxyID);
 
 	}
@@ -96,18 +98,18 @@ namespace ong
 		vec3 cm = vec3(0.0f, 0.0f, 0.0f);
 
 
-		if (m_flags & STATIC)
-		{
+		//if (m_flags & STATIC)
+		//{
 
-			vec3 oldPos = getPosition();
-			m_pWorld->m_r[m_index].p = oldPos + cm;
-			m_pWorld->m_m[m_index].localInvI = I;
-			m_pWorld->m_m[m_index].invM = m;
+		//	vec3 oldPos = getPosition();
+		//	m_pWorld->m_r[m_index].p = oldPos + cm;
+		//	m_pWorld->m_m[m_index].localInvI = I;
+		//	m_pWorld->m_m[m_index].invM = m;
 
-			m_cm = cm;
+		//	m_cm = cm;
 
-			return;
-		}
+		//	return;
+		//}
 
 		Collider* c = m_pCollider;
 		for (; c != nullptr; c = c->getNext())
@@ -143,9 +145,16 @@ namespace ong
 
 
 		vec3 oldPos = getPosition();
-		m_pWorld->m_r[m_index].p = oldPos + cm;
-		m_pWorld->m_m[m_index].invM = 1.0f / m;
-		m_pWorld->m_m[m_index].localInvI = inverse(I);
+		m_pWorld->m_r[m_index].p = oldPos + rotate(cm, getOrientation());
+		if (m_flags & STATIC)
+		{
+			memset(&m_pWorld->m_m[m_index], 0, sizeof(MassState));
+		}
+		else
+		{
+			m_pWorld->m_m[m_index].invM = 1.0f / m;
+			m_pWorld->m_m[m_index].localInvI = inverse(I);
+		}
 
 		m_cm = cm;
 	}
