@@ -10,9 +10,9 @@ namespace sba
     Space::Space()
     {
         this->World = new ong::World();
-        this->BrickManager = new TheBrick::CBrickManager();
         this->InputManager = new sba::CInputManager();
-        this->ShipManager = new sba::CShipManager();
+        this->BrickManager = new sba::CBrickManager("../data/bricks/");
+        this->ShipManager = new sba::CShipManager("../data/ships/");
     }
 
     // **************************************************************************
@@ -22,8 +22,8 @@ namespace sba
         SAFE_DELETE(this->Renderer);
         SAFE_DELETE(this->m_SSAOMaterial);
         SAFE_DELETE(this->ShipManager);
-        SAFE_DELETE(this->InputManager);
         SAFE_DELETE(this->BrickManager);
+        SAFE_DELETE(this->InputManager);
         SAFE_DELETE(this->World);
     }
 
@@ -41,8 +41,8 @@ namespace sba
             this->m_SSAOMaterial = a_pGraphics.LoadMaterial("../data/effects/SSAO/default");
             this->Renderer->SetSSAO(this->m_SSAOMaterial, "../data/textures/ssao.jpg");
         }
-        this->BrickManager->Initialize(a_pGraphics, a_pSoundPlayer);
-        this->InputManager->Initialize(&a_pInput);
+        this->BrickManager->Initialize();
+        this->InputManager->Initialize();
         this->Font = new PuRe_Font(&a_pGraphics, "../data/textures/font.png");
         this->FontMaterial = a_pGraphics.LoadMaterial("../data/effects/font/default");
 

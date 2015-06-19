@@ -35,7 +35,7 @@ namespace Editor
     // **************************************************************************
     void CShipWorker::SaveCurrentShip()
     {
-        sba_ShipManager->SaveShip(this->m_pNavigation->GetFocusedElementId());
+        sba_ShipManager->SaveShipToFile(this->m_pNavigation->GetFocusedElementId());
     }
 
     // **************************************************************************

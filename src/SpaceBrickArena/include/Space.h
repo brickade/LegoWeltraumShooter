@@ -13,10 +13,10 @@
 
 #include <Onager/World.h>
 
-#include <TheBrick/BrickManager.h>
 #include "InputManager.h"
-#include "INIReader.h"
+#include "BrickManager.h"
 #include "ShipManager.h"
+#include "INIReader.h"
 
 namespace sba
 {
@@ -35,8 +35,8 @@ namespace sba
         PuRe_Application* Application;
         ong::World* World;
         PuRe_Renderer* Renderer;
-        TheBrick::CBrickManager* BrickManager;
         sba::CInputManager* InputManager;
+        sba::CBrickManager* BrickManager;
         sba::CShipManager* ShipManager;
         PuRe_Font* Font;
         PuRe_IMaterial* FontMaterial;

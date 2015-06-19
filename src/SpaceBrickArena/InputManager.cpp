@@ -1,6 +1,7 @@
 #include "include/InputManager.h"
 
 #include <TheBrick/Serializer.h>
+#include "include/Space.h"
 
 namespace sba
 {
@@ -22,9 +23,9 @@ namespace sba
 
     // **************************************************************************
     // **************************************************************************
-    void CInputManager::Initialize(PuRe_IInput* a_pInput)
+    void CInputManager::Initialize()
     {
-        this->m_pInput = a_pInput;
+        this->m_pInput = sba_Application->GetInput();
         //this->Load("input.data");
         this->Reset();
     }
