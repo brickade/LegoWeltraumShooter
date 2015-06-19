@@ -9,9 +9,10 @@ namespace sba
     // **************************************************************************
     Space::Space()
     {
-        this->BrickManager = new TheBrick::CBrickManager();
         this->World = new ong::World();
+        this->BrickManager = new TheBrick::CBrickManager();
         this->InputManager = new sba::CInputManager();
+        this->ShipManager = new sba::CShipManager();
     }
 
     // **************************************************************************
@@ -20,6 +21,8 @@ namespace sba
     {
         SAFE_DELETE(this->Renderer);
         SAFE_DELETE(this->m_SSAOMaterial);
+        SAFE_DELETE(this->ShipManager);
+        SAFE_DELETE(this->InputManager);
         SAFE_DELETE(this->BrickManager);
         SAFE_DELETE(this->World);
     }

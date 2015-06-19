@@ -66,6 +66,9 @@
     <ClCompile Include="Menu_Options.cpp">
       <Filter>Menu</Filter>
     </ClCompile>
+    <ClCompile Include="ShipManager.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Space.h" />
@@ -134,6 +137,9 @@
     </ClInclude>
     <ClInclude Include="include\Menu_Options.h">
       <Filter>Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ShipManager.h">
+      <Filter>Utilities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

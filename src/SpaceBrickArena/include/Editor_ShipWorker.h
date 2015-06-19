@@ -6,6 +6,9 @@
 #include <Onager/World.h>
 
 #include "TheBrick/Spaceship.h"
+#include "Navigation.h"
+
+#include "include\Space.h"
 
 namespace TheBrick
 {
@@ -21,24 +24,24 @@ namespace Editor
     public:
 
     private:
-
-        TheBrick::CSpaceship* m_pCurrentSpaceship;
+        sba::CNavigation* m_pNavigation;
 
     public:
         TheBrick::CSpaceship* GetCurrentSpaceShip()
         {
-            return this->m_pCurrentSpaceship;
+            return (*sba_ShipManager)[this->m_pNavigation->GetFocusedElementId()];
         }
 
     public:
         CShipWorker();
         ~CShipWorker();
 
-        void LoadShipFromFile(const char* a_pFile);
-        void SaveShipToFile(const char* a_pFile);
+        void AddShip(const char* a_pName);
+        void SaveCurrentShip();
+        void ResetCurrentShip();
+        void DeleteCurrentShip();
 
-        void ResetShip();
-        TheBrick::CBrickInstance* AddBrickInstanceToShip(const TheBrick::CBrickInstance& a_pTemplate);
+        TheBrick::CBrickInstance* AddBrickInstanceToCurrentShip(const TheBrick::CBrickInstance& a_pTemplate);
     };
 }
 

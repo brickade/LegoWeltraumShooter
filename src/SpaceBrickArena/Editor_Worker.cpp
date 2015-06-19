@@ -71,13 +71,13 @@ namespace Editor
         //Safe Ship to file
         if (sba_Input->ButtonPressed(sba_Button::EditorSaveShip, this->m_playerIdx))
         {
-            this->m_pShipWorker->SaveShipToFile("../data/ships/banana.ship");
+            this->m_pShipWorker->SaveCurrentShipToFile("../data/ships/banana.ship");
         }
 
         //Reset/Delete Ship
         if (sba_Input->ButtonPressed(sba_Button::EditorResetShip, this->m_playerIdx))
         {
-            this->m_pShipWorker->ResetShip();
+            this->m_pShipWorker->ResetCurrentShip();
             this->m_pHistory->Clear();
         }
     }
@@ -289,7 +289,7 @@ namespace Editor
             this->m_pCurrentBrick->m_Color = this->m_currentBrickColor; //Apply right color
             this->m_pHistory->CutRedos();
             SHistoryStep step;
-            step.BrickInstance = this->m_pShipWorker->AddBrickInstanceToShip(*this->m_pCurrentBrick); //Add to ship
+            step.BrickInstance = this->m_pShipWorker->AddBrickInstanceToCurrentShip(*this->m_pCurrentBrick); //Add to ship
             step.Brick = step.BrickInstance->m_pBrick;
             step.Transform = this->m_pCurrentBrick->GetTransform();
             step.Color = this->m_currentBrickColor;

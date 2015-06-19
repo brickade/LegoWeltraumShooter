@@ -168,7 +168,7 @@ namespace sba
     void CNavigation::RemoveElement(int a_Position)
     {
         this->m_LastElement--;
-        if (a_Position != -1 && a_Position < this->m_FocusedElement)
+        if (a_Position != -1 && a_Position <= this->m_FocusedElement)
         {
             this->m_FocusedElement--;
         }
@@ -187,7 +187,7 @@ namespace sba
     void CNavigation::RemoveLine(int a_Position)
     {
         this->m_LastElement -= this->m_ElementsPerLine;
-        if (a_Position != -1 && a_Position < this->m_FocusedElement)
+        if (a_Position != -1 && a_Position <= this->m_FocusedElement)
         {
             this->m_FocusedElement -= this->m_ElementsPerLine;
         }

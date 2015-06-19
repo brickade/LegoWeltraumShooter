@@ -16,6 +16,7 @@
 #include <TheBrick/BrickManager.h>
 #include "InputManager.h"
 #include "INIReader.h"
+#include "ShipManager.h"
 
 namespace sba
 {
@@ -32,10 +33,11 @@ namespace sba
         }
 
         PuRe_Application* Application;
-        TheBrick::CBrickManager* BrickManager;
         ong::World* World;
         PuRe_Renderer* Renderer;
+        TheBrick::CBrickManager* BrickManager;
         sba::CInputManager* InputManager;
+        sba::CShipManager* ShipManager;
         PuRe_Font* Font;
         PuRe_IMaterial* FontMaterial;
 
@@ -67,4 +69,5 @@ namespace sba
 #define sba_World sba::Space::Instance()->World
 #define sba_Renderer sba::Space::Instance()->Renderer
 #define sba_Input sba::Space::Instance()->InputManager
+#define sba_ShipManager sba::Space::Instance()->ShipManager
 #endif /* _SPACE_H_ */
