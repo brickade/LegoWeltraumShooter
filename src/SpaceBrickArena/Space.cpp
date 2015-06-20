@@ -85,6 +85,34 @@ namespace sba
 
     // **************************************************************************
     // **************************************************************************
+    bool Space::CheckShip(PuRe_IWindow* a_pWindow)
+    {
+        int i = 0;
+        const char* path = "../data/ships/";
+        bool right = false;
+
+        std::string file = a_pWindow->GetFileAtIndex(i, path);
+        std::string lastFile = file;
+        
+        while (!right)
+        {
+            if (file.substr(file.find_last_of(".") + 1) == "ship")
+                return true;
+            else
+            {
+                i++;
+                file = a_pWindow->GetFileAtIndex(i, path);
+                if (lastFile == file)
+                    return false;
+                else
+                    lastFile = file;
+            }
+        }
+        return true;
+    }
+
+    // **************************************************************************
+    // **************************************************************************
     void Space::CreatePlayer(int a_Pad,PuRe_IWindow* a_pWindow)
     {
         sba::SPlayer* p = new sba::SPlayer();

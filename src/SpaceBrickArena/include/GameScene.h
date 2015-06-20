@@ -19,7 +19,7 @@
 namespace Game
 {
 
-    #define Skybox
+    //#define Skybox
 
     enum { BufferSize = 32 };
     struct PlayOutBuffer
@@ -32,8 +32,6 @@ namespace Game
     class CGameScene : public PuRe_IScene
     {
     private:
-        bool m_Network;
-
         bool m_Run;
         std::mutex m_Mutex;
         //host only
@@ -52,7 +50,6 @@ namespace Game
         //whether we are still in menu or not
         bool gameStart;
         int m_TextureID;
-        sba::CNetworkHandler* m_pNetwork;
 
         PuRe_Font* m_pFont;
         PuRe_PointLight* m_pPointLight;
@@ -92,14 +89,9 @@ namespace Game
         /// @brief Handle Network Data
         ///
         void HandleNetwork();
-        /// @brief Function to handle  before the Game started
-        ///
-        void GameSetup();
         /// @brief Start the Game
         ///
         void StartGame();
-
-        void ListenLoop();
         /// @brief Receives Data which were send via Network.
         ///
         void ReceiveData(SOCKET s);

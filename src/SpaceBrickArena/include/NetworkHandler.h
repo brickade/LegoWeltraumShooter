@@ -5,6 +5,7 @@
 #include <PuReEngine/Core.h>
 #include <PuReEngine/Defines.h>
 #include <TheBrick/TheBrick.h>
+#include <TheBrick/BrickData.h>
 #include "include/INIReader.h"
 
 #include <mutex>
@@ -12,9 +13,9 @@
 // Declare namespace Game
 namespace sba
 {
-    enum { MaxPlayers = 10, Delay = 10, BroadcastPort =13370, MaxName=12, MaxLength=15 };
+    enum { MaxPlayers = 10, Delay = 10, BroadcastPort =13370, MaxName=12, MaxLength=15, MaxBricks=100};
 
-    enum EPacket { Broadcast,Join, Left, IAm, CJoin, Start, STick, CTick };
+    enum EPacket { Broadcast, Join, User, IAm,WhoamI, Left,LobbyEnd,Brick,Start, STick, CTick };
 
     /// @brief Struct which handles the Input one Player does
     ///
@@ -34,15 +35,6 @@ namespace sba
     {
         EPacket Type;
     };
-    /// @brief Packet send over broadcast
-    ///
-    struct SBroadcastPacket
-    {
-        SHeadPacket Head;
-        char Name[MaxName];
-        char IP[MaxLength];
-        char Port[MaxLength];
-    };
 
     /// @brief Packet used when Data is received, this checks the Header
     ///
@@ -50,6 +42,48 @@ namespace sba
     {
         SHeadPacket Head;
         char* Buffer;
+    };
+    /// @brief Packet send over broadcast
+    ///
+    struct SBroadcastPacket
+    {
+        SHeadPacket Head;
+        unsigned int Players;
+        char Name[MaxName];
+        char IP[MaxLength];
+        char Port[MaxLength];
+    };
+    /// @brief Who am I
+    ///
+    struct SWhoamIPacket
+    {
+        SHeadPacket Head;
+        int Pad;
+    };
+    /// @brief Packet that tells the User who he is
+    ///
+    struct SIamPacket
+    {
+        SHeadPacket Head;
+        int ID;
+        int Pad;
+    };
+    /// @brief UserData's packet
+    ///
+    struct SUserPacket
+    {
+        SHeadPacket Head;
+        int ID;
+        char Name[MaxName+1];
+    };
+    /// @brief BrickData's packet
+    ///
+    struct SBrickPacket
+    {
+        SHeadPacket Head;
+        int ID;
+        int BrickNum;
+        TheBrick::SBrickData Bricks[MaxBricks];
     };
 
     /// @brief Packet used to detect who left

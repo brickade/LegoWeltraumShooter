@@ -12,7 +12,7 @@ namespace sba
     struct SPlayer
     {
         unsigned char ID;
-        unsigned char PadID;
+        char PadID;
         SOCKET NetworkInformation;
         TheBrick::CSpaceship* Ship;
     };

@@ -58,6 +58,7 @@ namespace sba
 
         void RenderFont(std::string a_Text, PuRe_Vector2F a_Position, float a_Size = 24, float a_Width = 1, unsigned int a_RendertargetIndex = 2);
 
+        bool CheckShip(PuRe_IWindow* a_pWindow);
         void CreatePlayer(int a_Pad, PuRe_IWindow* a_pWindow);
         void DeletePlayer(unsigned int a_Index);
 

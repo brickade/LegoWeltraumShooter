@@ -20,7 +20,7 @@ namespace Menu
         this->m_pPostMaterial = graphics->LoadMaterial("../data/effects/Post/default");
         this->m_pFontMaterial = graphics->LoadMaterial("../data/effects/font/default");
 
-        this->m_pSkyBox = new PuRe_SkyBox(graphics, "../data/textures/cube/");
+        //this->m_pSkyBox = new PuRe_SkyBox(graphics, "../data/textures/cube/");
         this->m_pFont = new PuRe_Font(graphics, "../data/textures/font.png");
 
         this->m_pSceneCamera = new PuRe_Camera(PuRe_Vector2F((float)1920, (float)1080), PuRe_CameraProjection::Perspective);
@@ -29,7 +29,7 @@ namespace Menu
         this->m_Displayed = Main;
         this->m_pMainMenu = new CMain();
         this->m_pOptions = new COptions();
-        this->m_pLobby = new CLobby();
+        this->m_pLobby = new CLobby(window);
         this->m_pNetwork = new CNetwork(a_pApplication->GetTimer());
     }
 
@@ -54,9 +54,13 @@ namespace Menu
                 return 0;
                 break;
             case 2: //local
-                //create first player
-                this->m_Displayed = Lobby;
-                sba_Space->CreatePlayer(0, window);
+                //test if he has a possible ship
+                if (sba_Space->CheckShip(window))
+                {
+                    //create first player
+                    this->m_Displayed = Lobby;
+                    sba_Space->CreatePlayer(0, window);
+                }
                 break;
             case 3: //Multiplayer
                 this->m_Displayed = Network;
@@ -134,7 +138,7 @@ namespace Menu
 
         renderer->Begin(PuRe_Color(0.0f, 0.0f, 0.0f));
 
-        renderer->Draw(0, true, this->m_pSkyBox, this->m_pSkyMaterial);
+        //renderer->Draw(0, true, this->m_pSkyBox, this->m_pSkyMaterial);
         sba_BrickManager->Render(*sba_Renderer);
 
         switch (this->m_Displayed)

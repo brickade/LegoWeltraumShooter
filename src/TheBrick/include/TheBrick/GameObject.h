@@ -6,6 +6,7 @@
 
 #include <Onager/Body.h>
 #include <Onager/myMath.h>
+#include "BrickData.h"
 
 namespace TheBrick
 {
@@ -36,6 +37,9 @@ namespace TheBrick
 
         virtual void Deserialize(CSerializer& a_pSerializer, CBrickManager& a_pBrickManager, ong::World& a_pWorld);
         virtual void Serialize(CSerializer& a_pSerializer);
+
+        SBrickData GetBrick(unsigned int a_Index);
+        void AddBrick(SBrickData a_Brick, CBrickManager& a_pBrickManager, ong::World& a_pWorld);
 
         void AddBrickInstance(CBrickInstance* a_pBrickInstance, ong::World& a_rWorld);
         void RemoveBrickInstance(const CBrickInstance& a_BrickInstance);

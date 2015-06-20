@@ -143,7 +143,8 @@ namespace sba
     long CNetworkHandler::Receive(char* a_pBuffer, int a_Size, SOCKET a_pSender)
     {
         long error = this->m_pSocket->Receive(a_pSender, a_pBuffer, a_Size);
-        //printf("Received Data with result %d\n", error);
+        if (error > -1)
+            printf("Received Data with result %d\n", error);
         return error;
     }
 
@@ -163,7 +164,7 @@ namespace sba
     {
         if (this->m_pSocket != NULL)
         {
-            long error = this->m_pSocket->Send(a_Receiver,a_pBuffer,a_Size);
+            long error = this->m_pSocket->Send(a_Receiver, a_pBuffer, a_Size);
             printf("Send Data with result %d\n",error);
         }
     }

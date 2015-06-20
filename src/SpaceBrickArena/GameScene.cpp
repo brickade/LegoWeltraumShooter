@@ -5,141 +5,23 @@
 namespace Game
 {
 
-
-    // **************************************************************************
-    // **************************************************************************
-    void CGameScene::ListenLoop()
-    {
-        while (this->m_Run)
-        {
-            if (this->m_pNetwork->Listen())
-            {
-                SOCKADDR_IN* clientData = NULL;
-                if (sba_Players.size() < sba::MaxPlayers)
-                {
-                    SOCKET s = this->m_pNetwork->Accept();
-                    printf("Client connected!\n");
-                    int ID = 0; // 0 is Host
-                    for (unsigned int i = 0; i < sba_Players.size(); i++)
-                    {
-                        if (ID == sba_Players[i]->ID)
-                        {
-                            ID++;
-                            i = 0;
-                        }
-                    }
-                    sba::SPlayer* p = new sba::SPlayer();
-                    p->ID = ID;
-                    p->NetworkInformation = s;
-                    sba_Players.push_back(p);
-                    printf("User %i joined!\n", ID);
-                    //Tell him who he is
-                    sba::SLeftPacket lPacket;
-                    lPacket.Head.Type = sba::EPacket::IAm;
-                    lPacket.Who = ID;
-                    this->m_pNetwork->Send((char*)&lPacket, sizeof(sba::SLeftPacket), s);
-
-                    //Send to JOINER all existing players
-                    lPacket.Head.Type = sba::EPacket::CJoin;
-                    for (unsigned int i = 0; i < sba_Players.size(); i++)
-                    {
-                        lPacket.Who = sba_Players[i]->ID;
-                        printf("Sending to %i Data of player %i\n", ID, lPacket.Who);
-                        this->m_pNetwork->Send((char*)&lPacket, sizeof(sba::SLeftPacket), s);
-                        //Same call send this player about the JOINER
-                        if (sba_Players[i]->ID != ID&&sba_Players[i]->ID != 0)
-                        {
-                            lPacket.Who = ID;
-                            this->m_pNetwork->Send((char*)&lPacket, sizeof(sba::SLeftPacket), sba_Players[i]->NetworkInformation);
-                        }
-                    }
-                    std::thread HandleThread(&CGameScene::ReceiveData, this, s);
-                    HandleThread.detach();
-                }
-
-            }
-        }
-
-    }
-
     // **************************************************************************
     // **************************************************************************
     void CGameScene::ReceiveData(SOCKET s)
     {
+        printf("Start Thread!\n");
         const int bufferSize = 1024;
         char buffer[bufferSize];
         while (this->m_Run)
         {
             memset(buffer, 0, bufferSize);
-            long dataLeft = this->m_pNetwork->Receive(buffer, bufferSize, s);
-            if (dataLeft == -1)
-                break;
-            m_Mutex.lock();
+            long dataLeft = sba_Network->Receive(buffer, bufferSize, s);
+            sba_Network->m_Mutex.lock();
             while (dataLeft > 0)
             {
                 printf("Data left %d!\n", dataLeft);
                 sba::SReceivePacket* Packet = (sba::SReceivePacket*)buffer;
-                if (Packet->Head.Type == sba::EPacket::Left)
-                {
-                    sba::SLeftPacket* lPacket = (sba::SLeftPacket*)Packet;
-
-                    for (unsigned int i = 0; i < sba_Players.size(); i++)
-                    {
-                        if (sba_Players[i]->ID == lPacket->Who)
-                        {
-                            SAFE_DELETE(sba_Players[i]);
-                            sba_Players.erase(sba_Players.begin() + i);
-                        }
-                    }
-                    printf("User % i left!\n", lPacket->Who);
-                    //Send to everyone else that one left
-                    if (this->m_pNetwork->GetHost())
-                    {
-                        for (unsigned int i = 1; i < sba_Players.size(); i++)
-                        {
-                            this->m_pNetwork->Send((char*)lPacket, sizeof(sba::SLeftPacket), sba_Players[i]->NetworkInformation);
-                        }
-                    }
-                    //ship left
-                    long packetSize = sizeof(sba::SLeftPacket);
-                    dataLeft -= packetSize;
-                    memcpy(buffer, buffer + (int)packetSize, bufferSize - packetSize);
-                }
-                else if (Packet->Head.Type == sba::EPacket::IAm)
-                {
-                    sba::SLeftPacket* LPacket = (sba::SLeftPacket*)Packet;
-                    this->m_ID = LPacket->Who;
-                    printf("I am %i!\n", this->m_ID);
-                    //ship left
-                    long packetSize = sizeof(sba::SLeftPacket);
-                    dataLeft -= packetSize;
-                    memcpy(buffer, buffer + (int)packetSize, bufferSize - packetSize);
-                }
-                else if (Packet->Head.Type == sba::EPacket::CJoin)
-                {
-                    sba::SLeftPacket* LPacket = (sba::SLeftPacket*)Packet;
-                    sba::SPlayer* p = new sba::SPlayer();
-                    p->ID = LPacket->Who;
-                    //if (p->ID == this->m_ID)
-                    //    this->m_ArrayID = sba_Players.size();
-                    p->NetworkInformation = s;
-                    sba_Players.push_back(p);
-                    printf("User %i joined!\n", p->ID);
-
-                    //ship left
-                    long packetSize = sizeof(sba::SLeftPacket);
-                    dataLeft -= packetSize;
-                    memcpy(buffer, buffer + (int)packetSize, bufferSize - packetSize);
-
-                }
-                else if (Packet->Head.Type == sba::EPacket::Start)
-                {
-                    this->StartGame();
-                    long packetSize = sizeof(sba::SHeadPacket);
-                    dataLeft -= packetSize;
-                    memcpy(buffer, buffer + (int)packetSize, bufferSize - packetSize);
-                }
-                else if (Packet->Head.Type == sba::EPacket::STick)
+                if (Packet->Head.Type == sba::EPacket::STick)
                 {
                     sba::SInputPacket* IPacket = (sba::SInputPacket*)Packet;
                     m_buffer[IPacket->Frame - m_PhysicFrame].Inputs[IPacket->Input.Player] = IPacket->Input;
@@ -165,8 +47,9 @@ namespace Game
                 else
                     dataLeft -= sizeof(sba::SHeadPacket);
             }
-            m_Mutex.unlock();
+            sba_Network->m_Mutex.unlock();
         }
+        printf("End Thread!\n");
     }
 
     // **************************************************************************
@@ -174,7 +57,6 @@ namespace Game
     CGameScene::CGameScene(PuRe_Application* a_pApplication, int a_playerIdx, bool a_Network)
     {
         this->m_pApplication = a_pApplication;
-        this->m_Network = m_Network;
     }
 
     // **************************************************************************
@@ -262,8 +144,8 @@ namespace Game
     void CGameScene::HandleNetwork()
     {
         PuRe_IInput* aInput = this->m_pApplication->GetInput();
-        m_Mutex.lock();
-        if (this->m_pNetwork->GetHost())
+        sba_Network->m_Mutex.lock();
+        if (sba_Network->GetHost())
         {
             for (int i = 0; i < BufferSize; ++i)
             {
@@ -277,10 +159,28 @@ namespace Game
                     memcpy(packet.Input, m_buffer[i].Inputs, sizeof(sba::SInputData)*sba_Players.size());
                     //send tick with input
                     printf("send tick %d\n", m_buffer[i].Frame);
-                    for (unsigned int j = 1; j < sba_Players.size(); ++j)
+                    std::vector<SOCKET> sendSockets;
+                    for (unsigned int j = 0; j < sba_Players.size(); ++j)
                     {
-                        this->m_pNetwork->Send((char*)&packet, sizeof(sba::SInputsPacket), sba_Players[j]->NetworkInformation);
+                        if (sba_Players[j]->PadID == -1)
+                        {
+                            bool send = false;
+                            for (unsigned n = 0; n < sendSockets.size(); n++)
+                            {
+                                if (sba_Players[j]->NetworkInformation == sendSockets[n])
+                                {
+                                    send = true;
+                                    break;
+                                }
+                            }
+                            if (!send)
+                            {
+                                sba_Network->Send((char*)&packet, sizeof(sba::SInputsPacket), sba_Players[j]->NetworkInformation);
+                                sendSockets.push_back(sba_Players[j]->NetworkInformation);
+                            }
+                        }
                     }
+                    sendSockets.clear();
                     m_send[i] = 1;
                 }
             }
@@ -292,7 +192,7 @@ namespace Game
         bool inputExists = true;
         while (m_PhysicTime >= 1.0f / 60.0f && inputExists)
         {
-            if (this->m_pNetwork->GetHost())
+            if (sba_Network->GetHost())
             {
                 inputExists = m_send[0] == 1;
             }
@@ -303,22 +203,28 @@ namespace Game
             {
                 printf("Input exists, do Physik!\n");
                 sba::SInputPacket ipacket;
-                memset(&ipacket, 0, sizeof(sba::SInputPacket));
-                ipacket.Head.Type = sba::EPacket::STick;
-                ipacket.Frame = this->m_PhysicFrame + sba::Delay;
-                ipacket.Input = this->HandleInput(0);
-                ipacket.Input.Player = this->m_ID;
+                for (unsigned int i = 0; i < sba_Players.size(); i++)
+                {
+                    if (sba_Players[i]->PadID != -1)
+                    {
+                        memset(&ipacket, 0, sizeof(sba::SInputPacket));
+                        ipacket.Head.Type = sba::EPacket::STick;
+                        ipacket.Frame = this->m_PhysicFrame + sba::Delay;
+                        ipacket.Input = this->HandleInput(sba_Players[i]->PadID);
+                        ipacket.Input.Player = sba_Players[i]->ID;
 
-                if (!this->m_pNetwork->GetHost())
-                {
-                    printf("send package %d\n", ipacket.Frame);
-                    this->m_pNetwork->SendHost((char*)&ipacket, sizeof(sba::SInputPacket));
-                }
-                else
-                {
-                    printf("Handle own Input %d\n", ipacket.Frame);
-                    m_buffer[ipacket.Frame - m_PhysicFrame].Inputs[0] = ipacket.Input;
-                    m_numReceived[ipacket.Frame - m_PhysicFrame]++;
+                        if (!sba_Network->GetHost())
+                        {
+                            printf("send package %d\n", ipacket.Frame);
+                            sba_Network->SendHost((char*)&ipacket, sizeof(sba::SInputPacket));
+                        }
+                        else
+                        {
+                            printf("Handle own Input %d\n", ipacket.Frame);
+                            m_buffer[ipacket.Frame - m_PhysicFrame].Inputs[sba_Players[i]->ID] = ipacket.Input;
+                            m_numReceived[ipacket.Frame - m_PhysicFrame]++;
+                        }
+                    }
                 }
 
                 //Now handle input
@@ -341,7 +247,7 @@ namespace Game
                 }
 
                 memcpy(m_buffer, m_buffer + 1, sizeof(PlayOutBuffer) * BufferSize - 1);
-                if (this->m_pNetwork->GetHost())
+                if (sba_Network->GetHost())
                 {
                     memcpy(m_numReceived, m_numReceived + 1, sizeof(unsigned int) * BufferSize - 1);
                     memcpy(m_send, m_send + 1, sizeof(bool) * BufferSize - 1);
@@ -360,66 +266,19 @@ namespace Game
 
         } //while physic run
 
-        m_Mutex.unlock();
-    }
-
-    // **************************************************************************
-    // **************************************************************************
-    void CGameScene::GameSetup()
-    {
-        //Check last network state
-        int networkState = this->m_pNetwork->GetState();
-
-        this->m_pNetwork->Update(this->m_pApplication->GetInput(),sba::EUpdate::IP); //Update Network State
-
-        //If he connected
-        this->m_Run = true;
-        if (networkState != 3 && this->m_pNetwork->GetState() == 3)
-        {
-            printf("Connecting!\n");
-            this->m_pNetwork->Connect(true);
-            //Add self as 0 if host
-            if (this->m_pNetwork->GetHost())
-            {
-                printf("You are the Host!\n");
-                sba::SPlayer* p = new sba::SPlayer();
-                p->ID = 0;
-                p->NetworkInformation = 0;
-                //this->m_ArrayID = sba_Players.size();
-                sba_Players.push_back(p);
-                this->m_ID = p->ID;
-                std::thread listenThread(&CGameScene::ListenLoop, this);
-                listenThread.detach();
-            }
-            else
-            {
-                std::thread receiveThread(&CGameScene::ReceiveData, this,this->m_pNetwork->GetSocket());
-                receiveThread.detach();
-            }
-        }
-
-        if (this->m_pApplication->GetInput()->KeyPressed(this->m_pApplication->GetInput()->F3) && networkState == 3 && this->m_pNetwork->GetHost())
-        {
-            this->StartGame();
-            //Send to everyone that the game started
-            sba::SHeadPacket Packet;
-            Packet.Type = sba::EPacket::Start;
-            for (unsigned int i = 1; i < sba_Players.size(); i++)
-            {
-                this->m_pNetwork->Send((char*)&Packet, sizeof(sba::SHeadPacket), sba_Players[i]->NetworkInformation);
-            }
-        }
+        sba_Network->m_Mutex.unlock();
     }
 
     // **************************************************************************
     // **************************************************************************
     void CGameScene::StartGame()
     {
-        if (this->m_pNetwork != NULL)
+        if (sba_Network->IsConnected())
         {
+            this->m_Run = true;
             this->m_PhysicTime = 0.0f;
             this->m_PhysicFrame = 0;
-            if (this->m_pNetwork->GetHost())
+            if (sba_Network->GetHost())
             {
                 printf("\n");
                 printf("Resetting Buffer ... \n");
@@ -432,30 +291,49 @@ namespace Game
                 }
                 printf("Buffer Reset!\n");
                 //send 6 frames from self, because server is also a player
-                for (int i = 0; i < sba::Delay; i++)
+                for (unsigned int i = 0; i < sba_Players.size(); i++)
                 {
-                    memset(&m_buffer[i - m_PhysicFrame].Inputs[0], 0, sizeof(sba::SInputData));
-                    m_numReceived[i - m_PhysicFrame]++;
+                    if (sba_Players[i]->PadID != -1)
+                    {
+                        for (int j = 0; j < sba::Delay; j++)
+                        {
+                            memset(&m_buffer[j - m_PhysicFrame].Inputs[sba_Players[i]->ID], 0, sizeof(sba::SInputData));
+                            m_numReceived[j - m_PhysicFrame]++;
+                        }
+                    }
+                    else
+                    {
+                        std::thread rthread(&CGameScene::ReceiveData, this, sba_Players[i]->NetworkInformation);
+                        rthread.detach();
+                    }
                 }
                 printf("Set Initial Input for Host.\n");
-                printf("\n");
 
             }
             else
             {
-                memset(m_buffer, -1, sizeof(PlayOutBuffer) * BufferSize);
-                //send first 6 frames
-                sba::SInputPacket package;
-                memset(&package, 0, sizeof(sba::SInputPacket));
-                package.Head.Type = sba::EPacket::STick;
-                package.Input.Player = this->m_ID;
-
-                for (int i = 0; i < sba::Delay; ++i)
+                std::thread rthread(&CGameScene::ReceiveData, this, sba_Network->GetSocket());
+                rthread.detach();
+                sba_Network->m_Mutex.lock();
+                for (unsigned int i = 0; i < sba_Players.size(); i++)
                 {
-                    package.Frame = i;
-                    this->m_pNetwork->SendHost((char*)&package, sizeof(sba::SInputPacket));
+                    if (sba_Players[i]->PadID != -1)
+                    {
+                        memset(m_buffer, -1, sizeof(PlayOutBuffer) * BufferSize);
+                        //send first 6 frames
+                        sba::SInputPacket package;
+                        memset(&package, 0, sizeof(sba::SInputPacket));
+                        package.Head.Type = sba::EPacket::STick;
+                        package.Input.Player = sba_Players[i]->ID;
+                        printf("Send initial Data!\n");
+                        for (int j = 0; j < sba::Delay; ++j)
+                        {
+                            package.Frame = j;
+                            sba_Network->SendHost((char*)&package, sizeof(sba::SInputPacket));
+                        }
+                    }
                 }
-                printf("Send initial Data!\n");
+                sba_Network->m_Mutex.unlock();
             }
         }
         for (unsigned int i = 0; i < sba_Players.size(); i++)
@@ -494,15 +372,12 @@ namespace Game
         sba_Renderer->DeleteTargets();
         PuRe_Vector2I size = PuRe_Vector2I(gdesc.ResolutionWidth, gdesc.ResolutionHeight);
         PuRe_Vector2F fsize = PuRe_Vector2F((float)gdesc.ResolutionWidth, (float)gdesc.ResolutionHeight);
-        if (!this->m_pNetwork)
+        if (this->m_LocalPlayers == 2)
+            size.X /= 2;
+        else if (this->m_LocalPlayers > 2)
         {
-            if (this->m_LocalPlayers == 2)
-                size.X /= 2;
-            else if (this->m_LocalPlayers > 2)
-            {
-                size.X /= 2;
-                size.Y /= 2;
-            }
+            size.X /= 2;
+            size.Y /= 2;
         }
         sba_Renderer->AddTarget(size);
         sba_Renderer->AddTarget(PuRe_Vector2I(gdesc.ResolutionWidth, gdesc.ResolutionHeight));
@@ -551,15 +426,7 @@ namespace Game
             this->m_pSkyBox = new PuRe_SkyBox(a_pApplication->GetGraphics(), "../data/textures/cube/");
         #endif
 
-            if(this->m_Network)
-            {
-                this->m_pNetwork = new sba::CNetworkHandler();
-            this->m_ID = 0;
-            this->m_PhysicFrame = 0;
-            this->gameStart = false;
-            }
-            else
-                this->StartGame();
+        this->StartGame();
 
     }
 
@@ -592,7 +459,7 @@ namespace Game
 
         if (this->gameStart)
         {
-            if (this->m_pNetwork != NULL)
+            if (sba_Network->IsConnected())
                 this->HandleNetwork();
             else
                 this->HandleLocal();
@@ -631,8 +498,8 @@ namespace Game
                         this->m_Emitters[camID]->Update(a_pApplication->GetTimer()->GetElapsedSeconds());
                     this->m_Emitters[camID]->m_Position = this->m_Cameras[camID]->GetPosition();
                     this->m_Emitters[camID]->m_Rotation = rotation;
+                    camID++;
                 }
-                camID++;
             }
             if (this->m_LocalPlayers == 3)
             {
@@ -648,8 +515,6 @@ namespace Game
                 this->m_Cameras[3]->Move(PuRe_Vector3F(0.0f, 0.0f, -100.0f));
             }
         }
-        else
-            this->GameSetup();
 
         for (unsigned int i = 0; i < this->m_Bullets.size(); i++)
         {
@@ -696,17 +561,7 @@ namespace Game
             sba_Renderer->Draw(0, true, this->m_Emitters[i], this->m_pParticleMaterial, this->m_pParticleSprite);
         ////////////////////////////////////////////////////
 
-        //////////////////////  NETWORK UI  /////////////////////////////
-        if (this->m_pNetwork != NULL)
-        {
-            int nstate = this->m_pNetwork->GetState();
-            if (nstate == 0)
-                sba_Renderer->Draw(1, false, this->m_pFont, this->m_pFontMaterial, "Press << 0 >> to Host and << 1 >> to Join", PuRe_Vector3F(10.0f, gdesc.ResolutionHeight - 32.0f, 0.0f), PuRe_MatrixF::Identity(), PuRe_Vector3F(32.0f, 32.0f, 32.0f), 32.0f);
-            else if (nstate == 1)
-                sba_Renderer->Draw(1, false, this->m_pFont, this->m_pFontMaterial, ("IP: " + this->m_pNetwork->m_IP).c_str(), PuRe_Vector3F(10.0f, gdesc.ResolutionHeight - 32.0f, 0.0f), PuRe_MatrixF::Identity(), PuRe_Vector3F(32.0f, 32.0f, 32.0f), 32.0f);
-            else if (nstate == 2)
-                sba_Renderer->Draw(1, false, this->m_pFont, this->m_pFontMaterial, ("Port: " + this->m_pNetwork->m_Port).c_str(), PuRe_Vector3F(10.0f, gdesc.ResolutionHeight - 32.0f, 0.0f), PuRe_MatrixF::Identity(), PuRe_Vector3F(32.0f, 32.0f, 32.0f), 32.0f);
-        }
+
         //////////////////// POST SCREEN ////////////////////////////////
         sba_Renderer->Set(0, (float)this->m_TextureID, "textureID");
         sba_Renderer->Set(0, PuRe_Vector3F(0.1f, 0.1f, 0.1f), "ambient");
@@ -747,14 +602,6 @@ namespace Game
     void CGameScene::Exit()
     {
         this->m_Run = false;
-        if (this->m_pNetwork != NULL)
-        {
-            //Send to Host that we left
-            sba::SLeftPacket lPacket;
-            lPacket.Head.Type = sba::EPacket::Left;
-            lPacket.Who = this->m_ID;
-            this->m_pNetwork->SendHost((char*)&lPacket, sizeof(sba::SLeftPacket));
-        }
         SAFE_DELETE(this->m_pParticleSprite);
         for (unsigned int i = 0; i < this->m_Emitters.size(); i++)
             SAFE_DELETE(this->m_Emitters[i]);

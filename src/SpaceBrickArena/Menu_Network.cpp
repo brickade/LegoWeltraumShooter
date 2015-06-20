@@ -9,6 +9,7 @@ namespace Menu
         this->m_Focus = false;
         this->m_Focus2 = false;
         this->m_pTimer = a_pTimer;
+        this->m_Server = 0;
     }
 
     CNetwork::~CNetwork()
@@ -50,6 +51,7 @@ namespace Menu
                     s.IP = bp->IP;
                     s.Name = bp->Name;
                     s.Port = bp->Port;
+                    s.Players = bp->Players;
                     bool in = false;
                     for (unsigned int i = 0; i < this->m_Servers.size(); i++)
                     {
@@ -69,10 +71,33 @@ namespace Menu
         printf("Thread End!\n");
     }
 
+    bool CNetwork::ConnectToServer(PuRe_IWindow* a_pWindow)
+    {
+        //test if he has a possible ship, so working Data is send to the Host
+        if (sba_Space->CheckShip(a_pWindow))
+        {
+            //seems possible, now connect
+            if (sba_Network->Connect(false))
+            {
+                this->m_getList = false;
+                sba_Network->DeleteBroadcast();
+                this->DeleteServers();
+                return true;
+            }
+        }
+        return false;
+    }
+
     int CNetwork::Update(PuRe_Timer* a_pTimer, PuRe_IWindow* a_pWindow, PuRe_IInput* a_pInput, int a_PlayerIdx)
     {
         if (this->m_pTimer == NULL)
             this->m_pTimer = a_pTimer;
+        if (this->m_ServerWait != 0.0f)
+        {
+            this->m_ServerWait -= a_pTimer->GetElapsedSeconds();
+            if (this->m_ServerWait < 0.0f)
+                this->m_ServerWait = 0.0f;
+        }
 
         float totalSeconds = a_pTimer->GetTotalElapsedSeconds();
         //All two seconds, delete old Servers
@@ -102,6 +127,7 @@ namespace Menu
                     this->m_Focus2 = true;
                     break;
                 case 1: //Lan
+                    this->m_Server = 0;
                     this->m_Focus = true;
                     break;
                 case 2: //Host
@@ -109,6 +135,8 @@ namespace Menu
                     this->m_Focus2 = true;
                     break;
                 case 3: //Back
+                    this->m_Focus = false;
+                    this->m_Focus2 = false;
                     this->m_getList = false;
                     sba_Network->DeleteBroadcast();
                     this->DeleteServers();
@@ -119,6 +147,7 @@ namespace Menu
         }
         else
         {
+            PuRe_Vector2F dir = sba_Input->Direction(sba_Direction::MenuMove, a_PlayerIdx);
             switch (this->m_pNavigation->GetFocusedElementId())
             {
             case 0: //internet
@@ -142,10 +171,11 @@ namespace Menu
                         //check if port is not null, else connect
                         if (sba_Network->m_Port.length() > 0 && std::stoi(sba_Network->m_Port) >= 1024)
                         {
-                            if (sba_Network->Connect(false))
+                            //just test if he can create a ship, otherwise it crashes before the user is connected
+                            if (this->ConnectToServer(a_pWindow))
                             {
-                                sba_Network->DeleteBroadcast();
-                                this->DeleteServers();
+                                this->m_Focus = false;
+                                this->m_Focus2 = false;
                                 return 2;
                             }
                         }
@@ -159,8 +189,33 @@ namespace Menu
                         this->m_Focus2 = true;
                 }
             case 1: //Lan
+                if (this->m_ServerWait == 0)
+                {
+                    if (dir.Y > 0.5f)
+                        this->m_Server--;
+                    else if (dir.Y < -0.5f)
+                        this->m_Server++;
+                    this->m_ServerWait = 0.1f;
+                }
+                if (0 > this->m_Server)
+                    this->m_Server = 0;
+                if (this->m_Servers.size()-1 < this->m_Server)
+                    this->m_Server = this->m_Servers.size()-1;
                 if (sba_Input->ButtonPressed(sba_Button::MenuClick, a_PlayerIdx))
                 {
+                    if (this->m_Servers.size() != 0)
+                    {
+                        //test if he has a possible ship
+                        sba_Network->m_Name = this->m_Servers[this->m_Server].Name;
+                        sba_Network->m_IP = this->m_Servers[this->m_Server].IP;
+                        sba_Network->m_Port = this->m_Servers[this->m_Server].Port;
+                        if (this->ConnectToServer(a_pWindow))
+                        {
+                            this->m_Focus = false;
+                            this->m_Focus2 = false;
+                            return 2;
+                        }
+                    }
                 }
                 if (sba_Input->ButtonPressed(sba_Button::MenuBack, a_PlayerIdx))
                 {
@@ -188,14 +243,21 @@ namespace Menu
                         //check if port is not null, else connect
                         if (sba_Network->m_Port.length() > 0 && std::stoi(sba_Network->m_Port) >= 1024 && std::stoi(sba_Network->m_Port) != sba::BroadcastPort)
                         {
-                            if(sba_Network->Connect(true))
+                            //test if he has a possible ship
+                            if (sba_Space->CheckShip(a_pWindow))
                             {
-                                this->m_getList = false;
-                                sba_Network->DeleteBroadcast();
-                                sba_Network->CreateBroadcast(true, sba::BroadcastPort);
-                                sba_Space->CreatePlayer(0, a_pWindow);
-                                this->DeleteServers();
-                                return 2;
+                                if(sba_Network->Connect(true))
+                                {
+                                    this->m_Focus = false;
+                                    this->m_Focus2 = false;
+
+                                    this->m_getList = false;
+                                    sba_Network->DeleteBroadcast();
+                                    sba_Network->CreateBroadcast(true, sba::BroadcastPort);
+                                    sba_Space->CreatePlayer(0, a_pWindow);
+                                    this->DeleteServers();
+                                    return 2;
+                                }
                             }
                         }
                     }
@@ -295,19 +357,19 @@ namespace Menu
 
             for (unsigned int i = 0; i < this->m_Servers.size(); i++)
             {
+                if (this->m_Focus&&this->m_Server == i)
+                    color = PuRe_Color(1.0f, 0.0f, 0.0f);
+                else
+                    color = PuRe_Color(1.0f, 1.0f, 1.0f);
                 Position.Y -= 40.0f;
                 Position.X = 200.0f;
-                color = PuRe_Color(1.0f, 1.0f, 1.0f);
                 a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, this->m_Servers[i].Name, Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(24.0f, 24.0f, 0.0f), 26.0f, color);
                 Position.X += 400.0f;
-                color = PuRe_Color(1.0f, 1.0f, 1.0f);
                 a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, this->m_Servers[i].IP, Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(24.0f, 24.0f, 0.0f), 26.0f, color);
                 Position.X += 400.0f;
-                color = PuRe_Color(1.0f, 1.0f, 1.0f);
                 a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, this->m_Servers[i].Port, Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(24.0f, 24.0f, 0.0f), 26.0f, color);
                 Position.X += 400.0f;
-                color = PuRe_Color(1.0f, 1.0f, 1.0f);
-                a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "0", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(24.0f, 24.0f, 0.0f), 26.0f, color);
+                a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, std::to_string(this->m_Servers[i].Players), Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(24.0f, 24.0f, 0.0f), 26.0f, color);
             }
             break;
         case 2: //Host

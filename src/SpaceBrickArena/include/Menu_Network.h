@@ -18,6 +18,8 @@ namespace Menu
         bool m_Focus2;
         std::vector<SServer> m_Servers;
         PuRe_Timer* m_pTimer;
+        int m_Server;
+        float m_ServerWait; 
     public:
         bool m_getList;
     public:
@@ -28,6 +30,12 @@ namespace Menu
         CNetwork(PuRe_Timer* a_pTimer);
         /// @brief Destructor
         ~CNetwork();
+    private:
+        /// @brief Connect to a Server
+        ///
+        /// @param Window to change DisplayMode
+        ///
+        bool ConnectToServer(PuRe_IWindow* a_pWindow);
     public:
         /// @brief Delete all Servers
         ///
