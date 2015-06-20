@@ -54,7 +54,7 @@ namespace sba
         delete serializer;
         if (this->m_Sprites.size() == 0)
         {
-            this->AddNewShip("Banana.ship");
+            this->AddNewShip("Banana");
         }
     }
 
@@ -71,8 +71,7 @@ namespace sba
     // **************************************************************************
     void CShipManager::AddNewShip(const char* a_pName)
     { //Add default ship with specified name
-        TheBrick::CSpaceship ship = TheBrick::CSpaceship(*sba_World, ong::vec3(0, 0, 0));
-        ship.SetNameFromFilename(a_pName);
+        TheBrick::CSpaceship ship = TheBrick::CSpaceship(*sba_World, a_pName);
         //Register
         this->m_Sprites.push_back(std::make_pair(std::string(ship.GetName()).insert(0, this->m_FolderPath), this->GetSpriteFromShip(ship)));
         //Set to default
@@ -135,7 +134,7 @@ namespace sba
     // **************************************************************************
     TheBrick::CSpaceship* CShipManager::GetShip(size_t a_Index)
     { //Load actual ship from disk
-        TheBrick::CSpaceship* ship = new TheBrick::CSpaceship(*sba_World, ong::vec3(0, 0, 0));
+        TheBrick::CSpaceship* ship = new TheBrick::CSpaceship(*sba_World, "");
         TheBrick::CSerializer* serializer = new TheBrick::CSerializer();
         if (serializer->OpenRead(this->PathFromName(this->m_Sprites[a_Index].first.c_str())))
         {

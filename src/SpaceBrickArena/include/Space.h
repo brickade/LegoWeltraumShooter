@@ -68,7 +68,9 @@ namespace sba
 #define sba_Height sba::Space::Instance()->Application->GetGraphics()->GetDescription().ResolutionHeight
 
 #define sba_Players sba::Space::Instance()->m_Players
-#define sba_Network sba::Space::Instance()->m_pNetworkhandler#define sba_World sba::Space::Instance()->World
+#define sba_Network sba::Space::Instance()->m_pNetworkhandler
+
+#define sba_World sba::Space::Instance()->World
 #define sba_Renderer sba::Space::Instance()->Renderer
 #define sba_Input sba::Space::Instance()->InputManager
 #define sba_BrickManager sba::Space::Instance()->BrickManager

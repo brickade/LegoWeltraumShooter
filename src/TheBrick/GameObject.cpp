@@ -88,9 +88,9 @@ namespace TheBrick
 
     // **************************************************************************
     // **************************************************************************
-    void CGameObject::AddBrick(SBrickData a_Brick, CBrickManager& a_pBrickManager, ong::World& a_pWorld)
+    void CGameObject::AddBrick(SBrickData a_Brick, BrickArray& a_rBricks, ong::World& a_pWorld)
     {
-        CBrickInstance* brick = new CBrickInstance(a_pBrickManager.GetBrick(a_Brick.ID), *this, a_pWorld);
+        CBrickInstance* brick = new CBrickInstance(*a_rBricks[a_Brick.ID], *this, a_pWorld);
         //m_Transform
         brick->SetTransform(a_Brick.Transform);
         //m_Color

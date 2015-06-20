@@ -40,7 +40,7 @@ namespace TheBrick
         virtual void Serialize(CSerializer& a_pSerializer);
 
         SBrickData GetBrick(unsigned int a_Index);
-        void AddBrick(SBrickData a_Brick, CBrickManager& a_pBrickManager, ong::World& a_pWorld);
+        void AddBrick(SBrickData a_Brick, BrickArray& a_rBricks, ong::World& a_pWorld);
 
         void AddBrickInstance(CBrickInstance* a_pBrickInstance, ong::World& a_rWorld);
         void RemoveBrickInstance(const CBrickInstance& a_BrickInstance);
