@@ -6,6 +6,8 @@
 
 #include "Onager/World.h"
 
+#include "TheBrick/Brick.h"
+
 #include <array>
 #include <cstring>
 
@@ -21,10 +23,16 @@ namespace sba
     public:
         
     private:
-        std::array<TheBrick::CBrick*, 200> m_bricks;
+        TheBrick::BrickArray m_bricks;
         PuRe_IMaterial* m_pBrickMaterial;
         PuRe_IMaterial* m_pBrickUIMaterial;
         std::string m_FolderPath = "";
+
+    public:
+        TheBrick::BrickArray& GetBrickArray()
+        {
+            return this->m_bricks;
+        }
 
     public:
         CBrickManager(const char* a_pFolder);

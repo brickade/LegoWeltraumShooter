@@ -2,6 +2,7 @@
 
 #include "TheBrick/Serializer.h"
 #include "TheBrick/Brick.h"
+#include "include/BrickManager.h"
 
 #include "include/Space.h"
 
@@ -24,7 +25,7 @@ namespace sba
     // **************************************************************************
     // **************************************************************************
     void CShipManager::Load()
-    {
+    { //Load all sprites and paths from folder
         TheBrick::CSerializer* serializer = new TheBrick::CSerializer();
         int i = 0;
         PuRe_IWindow* window = sba_Application->GetWindow();
@@ -61,73 +62,92 @@ namespace sba
     // **************************************************************************
     // **************************************************************************
     void CShipManager::AddShip(TheBrick::CSpaceship& a_rShip)
-    {
+    { //Add ship sprite and path and save ship file
         this->m_Sprites.push_back(std::make_pair(std::string(a_rShip.GetName()).insert(0, this->m_FolderPath), this->GetSpriteFromShip(a_rShip)));
-        
-        //Serialize ship
+        this->SaveShipToFile(a_rShip);
     }
 
     // **************************************************************************
     // **************************************************************************
     void CShipManager::AddNewShip(const char* a_pName)
-    {
+    { //Add default ship with specified name
         TheBrick::CSpaceship ship = TheBrick::CSpaceship(*sba_World, ong::vec3(0, 0, 0));
         ship.SetNameFromFilename(a_pName);
         //Register
-        this->AddShip(ship);
+        this->m_Sprites.push_back(std::make_pair(std::string(ship.GetName()).insert(0, this->m_FolderPath), this->GetSpriteFromShip(ship)));
         //Set to default
         this->ResetShip(ship);
         //Save to file
-        this->SaveShipToFile(this->m_Spaceships.size() - 1);
+        this->SaveShipToFile(ship);
     }
 
     // **************************************************************************
     // **************************************************************************
     void CShipManager::ResetShip(TheBrick::CSpaceship& a_rShip)
-    {
-        
-        &a_rShip = new TheBrick::CSpaceship(*sba_World, ong::vec3(0, 0, 0));
-
-        a_rShip.SetNameFromFilename("Banana.ship");
-        TheBrick::CBrickInstance* brickInstance = sba_BrickManager->GetBrick(1).CreateInstance(a_rShip, *sba_World);
-        brickInstance->SetTransform(ong::Transform(ong::vec3(0, 0, 0), ong::Quaternion(ong::vec3(0, 0, 0), 1)));
-        brickInstance->RotateAroundPivotOffset(PuRe_QuaternionF(0.0f, 0.0f, 0.0f));
-        brickInstance->m_Color = PuRe_Color(0, 0, 1);
+    { //Reset given ship to default and update sprite
+        a_rShip.Reset(sba_BrickManager->GetBrick(1), *sba_World);
         this->UpdateSprite(a_rShip);
     }
 
     // **************************************************************************
     // **************************************************************************
     void CShipManager::SaveShipToFile(TheBrick::CSpaceship& a_rShip)
-    {
+    { //Save given ship to file
         TheBrick::CSerializer* serializer = new TheBrick::CSerializer();
-        if (serializer->OpenWrite(this->PathFromShip(this->m_Spaceships[a_Index])))
+        if (serializer->OpenWrite(this->PathFromShip(a_rShip)))
         {
-            this->m_Spaceships[a_Index]->Serialize(*serializer);
+            a_rShip.Serialize(*serializer);
         }
         serializer->Close();
+        delete serializer;
+        std::string spritePath = this->PathFromShip(a_rShip);
+        spritePath = spritePath.substr(0, spritePath.find_last_of(".")).append(".dds");
+        this->GetSpriteFromShip(a_rShip).GetTexture()->SaveTextureToFile(spritePath.c_str());
     }
 
     // **************************************************************************
     // **************************************************************************
     void CShipManager::DeleteShip(TheBrick::CSpaceship& a_rShip)
-    {
-        delete this->m_Spaceships[a_Index];
-        this->m_Spaceships.erase(this->m_Spaceships.begin() + a_Index);
+    { //Delete given ship from disk and delete sprite and path
+        if (remove(this->PathFromShip(a_rShip)) != 0)
+        {
+            printf("cant delete ship bro");
+        }
+        std::string spritePath = this->PathFromShip(a_rShip);
+        spritePath = spritePath.substr(0, spritePath.find_last_of(".")).append(".dds");
+        if (remove(spritePath.c_str()) != 0)
+        {
+            printf("cant delete dds bro");
+        }
+        std::string path = this->PathFromShip(a_rShip);
+        for (std::vector<std::pair<std::string, PuRe_Sprite>>::iterator it = this->m_Sprites.begin(); it != this->m_Sprites.end(); ++it)
+        {
+            if ((*it).first.compare(path) == 0)
+            {
+                this->m_Sprites.erase(it);
+                break;
+            }
+        }
+
     }
 
     // **************************************************************************
     // **************************************************************************
     TheBrick::CSpaceship* CShipManager::GetShip(size_t a_Index)
-    {
-        
+    { //Load actual ship from disk
+        TheBrick::CSpaceship ship = TheBrick::CSpaceship(*sba_World, ong::vec3(0, 0, 0));
+        TheBrick::CSerializer* serializer = new TheBrick::CSerializer();
+        if (serializer->OpenRead(this->PathFromName(this->m_Sprites[a_Index].first.c_str())))
+        {
+            ship.Deserialize(*serializer, sba_BrickManager->GetBrickArray(), *sba_World);
+        }
     }
 
     // **************************************************************************
     // **************************************************************************
     void CShipManager::UpdateSprite(TheBrick::CSpaceship& a_rShip)
     {
-        std::string path = std::string(a_rShip.GetName()).insert(0, this->m_FolderPath);
+        std::string path = this->PathFromShip(a_rShip);
         for (std::vector<std::pair<std::string, PuRe_Sprite>>::iterator it = this->m_Sprites.begin(); it != this->m_Sprites.end(); ++it)
         {
             if ((*it).first.compare(path) == 0)

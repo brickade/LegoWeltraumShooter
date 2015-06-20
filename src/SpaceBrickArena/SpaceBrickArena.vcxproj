@@ -162,7 +162,7 @@
     <ClInclude Include="include\Minimap.h" />
     <ClInclude Include="include\Navigation.h" />
     <ClInclude Include="include\NetworkHandler.h" />
-    <ClInclude Include="include\Editor_ShipWorker.h" />
+    <ClInclude Include="include\Editor_ShipHandler.h" />
     <ClInclude Include="include\UIElementFader.h" />
   </ItemGroup>
   <ItemGroup>
@@ -189,7 +189,7 @@
     <ClCompile Include="Minimap.cpp" />
     <ClCompile Include="Navigation.cpp" />
     <ClCompile Include="NetworkHandler.cpp" />
-    <ClCompile Include="Editor_ShipWorker.cpp" />
+    <ClCompile Include="Editor_ShipHandler.cpp" />
     <ClCompile Include="UIElementFader.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

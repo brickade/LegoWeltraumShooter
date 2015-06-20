@@ -9,7 +9,6 @@
 #include "TheBrick/Spaceship.h"
 
 #include "Editor_Camera.h"
-#include "Editor_ShipWorker.h"
 
 #include "TheBrick/Brick.h"
 
@@ -23,7 +22,7 @@ namespace TheBrick
 namespace Editor
 {
     class CHistory;
-    class CShipWorker;
+    class CShipHandler;
 
     class CWorker
     {
@@ -52,7 +51,7 @@ namespace Editor
         TheBrick::CGameObject* m_pCurrentBrickObject;
         TheBrick::CBrickInstance* m_pCurrentBrick;
 
-        CShipWorker* m_pShipWorker;
+        CShipHandler* m_pShipWorker;
 
         PuRe_IMaterial* m_pGridMaterial;
         PuRe_Model* m_pGridBrick;
@@ -65,7 +64,7 @@ namespace Editor
         void DrawDebug(PuRe_IGraphics* a_pGraphics)
         {
             m_pCurrentBrickObject->Draw(a_pGraphics, m_pCamera);
-            this->m_pShipWorker->GetCurrentSpaceShip()->Draw(a_pGraphics, this->m_pCamera);
+            //this->m_pShipWorker->GetCurrentSpaceShip()->Draw(a_pGraphics, this->m_pCamera);
         }
 
         float GetCurrentBrickRotation()

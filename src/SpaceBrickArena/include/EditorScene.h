@@ -9,6 +9,7 @@
 #include "Space.h"
 
 #include "Editor_Worker.h"
+#include "Editor_ShipHandler.h"
 #include "Editor_BrickSupervisor.h"
 #include "Editor_ColorFields.h"
 #include "UIElementFader.h"
@@ -34,6 +35,7 @@ namespace Editor
         
         Editor::CBrickSupervisor* m_pBrickSupervisor;
         Editor::CWorker* m_pWorker;
+        Editor::CShipHandler* m_pShipHandler;
         Editor::CColorFields* m_pColorFields;
         sba::CUIElementFader* m_pBrickSupervisorFader;
         sba::CUIElementFader* m_pColorFieldsFader;

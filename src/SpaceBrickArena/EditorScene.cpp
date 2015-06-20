@@ -40,6 +40,8 @@ namespace Editor
         this->m_pWorker = new Editor::CWorker(this->m_PlayerIdx);
         this->m_pWorker->Initialize(*a_pApplication->GetGraphics());
 
+        this->m_pShipHandler = new Editor::CShipHandler(this->m_PlayerIdx);
+
         this->m_pColorFields = new Editor::CColorFields(this->m_PlayerIdx);
         this->m_pColorFields->Initialize(*a_pApplication->GetGraphics());
 
@@ -94,7 +96,7 @@ namespace Editor
         sba_Renderer->Draw(0, true, this->m_pSkyBox, this->m_pSkyBoxMaterial);
         //Bricks
         this->m_pWorker->Render();
-        sba_BrickManager->Render(*sba_Renderer);
+        sba_BrickManager->Render();
         this->m_pBrickSupervisor->Render(*a_pApplication->GetGraphics(), this->m_pBrickSupervisorFader->GetVisibility());
         this->m_pColorFields->Render(*a_pApplication->GetGraphics(), this->m_pColorFieldsFader->GetVisibility());
         //this->m_pWorker->DrawDebug(a_pApplication->GetGraphics());

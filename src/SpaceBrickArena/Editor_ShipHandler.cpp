@@ -1,9 +1,8 @@
-#include "include/Editor_ShipWorker.h"
+#include "include/Editor_ShipHandler.h"
 
 #include "TheBrick\Serializer.h"
 #include "TheBrick\Spaceship.h"
 #include "TheBrick\BrickInstance.h"
-#include "TheBrick\BrickManager.h"
 #include "TheBrick\Brick.h"
 #include "TheBrick/GameObject.h"
 
@@ -11,21 +10,22 @@ namespace Editor
 {
     // **************************************************************************
     // **************************************************************************
-    CShipWorker::CShipWorker()
+    CShipHandler::CShipHandler(int a_playerIdx)
     {
+        this->m_playerIdx = a_playerIdx;
         this->m_pNavigation = new sba::CNavigation();
     }
 
     // **************************************************************************
     // **************************************************************************
-    CShipWorker::~CShipWorker()
+    CShipHandler::~CShipHandler()
     {
 
     }
 
     // **************************************************************************
     // **************************************************************************
-    void CShipWorker::AddShip(const char* a_pName)
+    void CShipHandler::AddShip(const char* a_pName)
     {
         sba_ShipManager->AddNewShip(a_pName);
         this->m_pNavigation->AddElement(0);
@@ -33,33 +33,40 @@ namespace Editor
 
     // **************************************************************************
     // **************************************************************************
-    void CShipWorker::SaveCurrentShip()
+    void CShipHandler::SaveCurrentShip()
     {
-        sba_ShipManager->SaveShipToFile(this->m_pNavigation->GetFocusedElementId());
+        sba_ShipManager->SaveShipToFile(*this->GetCurrentSpaceShip());
     }
 
     // **************************************************************************
     // **************************************************************************
-    void CShipWorker::ResetCurrentShip()
+    void CShipHandler::ResetCurrentShip()
     {
-        sba_ShipManager->ResetShip(this->m_pNavigation->GetFocusedElementId());
+        sba_ShipManager->ResetShip(*this->GetCurrentSpaceShip());
     }
 
     // **************************************************************************
     // **************************************************************************
-    void CShipWorker::DeleteCurrentShip()
+    void CShipHandler::DeleteCurrentShip()
     {
-        sba_ShipManager->DeleteShip(this->m_pNavigation->GetFocusedElementId());
+        sba_ShipManager->DeleteShip(*this->GetCurrentSpaceShip());
         this->m_pNavigation->RemoveElement(this->m_pNavigation->GetFocusedElementId());
     }
 
     // **************************************************************************
     // **************************************************************************
-    TheBrick::CBrickInstance* CShipWorker::AddBrickInstanceToCurrentShip(const TheBrick::CBrickInstance& a_pTemplate)
+    TheBrick::CBrickInstance* CShipHandler::AddBrickInstanceToCurrentShip(const TheBrick::CBrickInstance& a_pTemplate)
     {
         TheBrick::CBrickInstance* brickInstance = a_pTemplate.m_pBrick->CreateInstance(*this->GetCurrentSpaceShip(), *sba_World);
         brickInstance->SetTransform(a_pTemplate.GetTransform());
         brickInstance->m_Color = a_pTemplate.m_Color;
         return brickInstance;
+    }
+
+    // **************************************************************************
+    // **************************************************************************
+    void CShipHandler::UpdateCurrentShipPreview()
+    {
+        sba_ShipManager->UpdateSprite(*this->GetCurrentSpaceShip());
     }
 }

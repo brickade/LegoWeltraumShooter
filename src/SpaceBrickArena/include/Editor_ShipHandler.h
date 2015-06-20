@@ -1,5 +1,5 @@
-#ifndef _EDITORSHIPWORKER_H_
-#define _EDITORSHIPWORKER_H_
+#ifndef _EDITORSHIPHANDLER_H_
+#define _EDITORSHIPHANDLER_H_
 
 #include <PuReEngine/Core.h>
 #include <PuReEngine/Defines.h>
@@ -8,7 +8,7 @@
 #include "TheBrick/Spaceship.h"
 #include "Navigation.h"
 
-#include "include\Space.h"
+#include "include/Space.h"
 
 namespace TheBrick
 {
@@ -18,23 +18,26 @@ namespace TheBrick
 
 namespace Editor
 {
-    class CShipWorker
+    class CShipHandler
     {
 
     public:
 
     private:
+        int m_playerIdx;
+
         sba::CNavigation* m_pNavigation;
+        TheBrick::CSpaceship* m_pCurrentSpaceship;
 
     public:
         TheBrick::CSpaceship* GetCurrentSpaceShip()
         {
-            return (*sba_ShipManager)[this->m_pNavigation->GetFocusedElementId()];
+            return this->m_pCurrentSpaceship;
         }
 
     public:
-        CShipWorker();
-        ~CShipWorker();
+        CShipHandler(int a_playerIdx);
+        ~CShipHandler();
 
         void AddShip(const char* a_pName);
         void SaveCurrentShip();
@@ -42,7 +45,9 @@ namespace Editor
         void DeleteCurrentShip();
 
         TheBrick::CBrickInstance* AddBrickInstanceToCurrentShip(const TheBrick::CBrickInstance& a_pTemplate);
+
+        void UpdateCurrentShipPreview();
     };
 }
 
-#endif /* _EDITORSHIPWORKER_H_ */
+#endif /* _EDITORSHIPHANDLER_H_ */

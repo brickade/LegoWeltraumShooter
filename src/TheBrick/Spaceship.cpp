@@ -2,6 +2,7 @@
 
 #include "include/TheBrick/Conversion.h"
 #include "include/TheBrick/BrickInstance.h"
+#include "include/TheBrick/Brick.h"
 
 namespace TheBrick
 {
@@ -33,12 +34,12 @@ namespace TheBrick
 
     // **************************************************************************
     // **************************************************************************
-    void CSpaceship::Shoot(std::vector<CBullet*>& a_rBullets, CBrickManager* a_pManager)
+    void CSpaceship::Shoot(std::vector<CBullet*>& a_rBullets/*, CBrickManager* a_pManager*/)
     {
         ong::Body* b = this->m_pBody;
         ong::World* w = b->getWorld();
         PuRe_Vector3F forward = TheBrick::OngToPuRe(ong::rotate(ong::vec3(0, 0, 1), b->getOrientation()));
-        a_rBullets.push_back(new TheBrick::CBullet(a_pManager, TheBrick::OngToPuRe(this->GetTransform().p) + PuRe_Vector3F(-0.5f, -0.5f, 0.0f) + forward*10.0f, forward*50.0f, *w));
+        //a_rBullets.push_back(new TheBrick::CBullet(a_pManager, TheBrick::OngToPuRe(this->GetTransform().p) + PuRe_Vector3F(-0.5f, -0.5f, 0.0f) + forward*10.0f, forward*50.0f, *w)); //Tmp comment out: compile
     }
 
     // **************************************************************************
@@ -76,7 +77,7 @@ namespace TheBrick
 
     // **************************************************************************
     // **************************************************************************
-    void CSpaceship::HandleInput(int a_CID, PuRe_IInput* a_pInput, float a_DeltaTime, std::vector<CBullet*>& a_rBullets, CBrickManager* a_pManager)
+    void CSpaceship::HandleInput(int a_CID, PuRe_IInput* a_pInput, float a_DeltaTime, std::vector<CBullet*>& a_rBullets/*, CBrickManager* a_pManager*/)
     {
         if (a_pInput->KeyPressed(a_pInput->R))
         {
@@ -105,7 +106,7 @@ namespace TheBrick
             shoot = a_pInput->GetGamepadLeftTrigger(a_CID) > 0.2f;
 
         if (shoot)
-            this->Shoot(a_rBullets, a_pManager);
+            //this->Shoot(a_rBullets, a_pManager); //Tmp commented out to compile
 
         //handle thrust from file
         Key = this->m_pCSVFile->GetValue("Thrust");
@@ -287,9 +288,9 @@ namespace TheBrick
 
     // **************************************************************************
     // **************************************************************************
-    void CSpaceship::Deserialize(CSerializer& a_pSerializer, CBrickManager& a_pBrickManager, ong::World& a_pWorld)
+    void CSpaceship::Deserialize(CSerializer& a_pSerializer, BrickArray& a_rBricks, ong::World& a_pWorld)
     {
-        CGameObject::Deserialize(a_pSerializer, a_pBrickManager, a_pWorld);
+        CGameObject::Deserialize(a_pSerializer, a_rBricks, a_pWorld);
     }
 
     // **************************************************************************
@@ -297,5 +298,16 @@ namespace TheBrick
     void CSpaceship::Serialize(CSerializer& a_pSerializer)
     {
         CGameObject::Serialize(a_pSerializer);
+    }
+
+    // **************************************************************************
+    // **************************************************************************
+    void CSpaceship::Reset(CBrick& a_rStartBrick, ong::World& a_rWorld)
+    {
+        this->SetNameFromFilename("Banana.ship");
+        CBrickInstance* brickInstance = a_rStartBrick.CreateInstance(*this, a_rWorld);
+        brickInstance->SetTransform(ong::Transform(ong::vec3(0, 0, 0), ong::Quaternion(ong::vec3(0, 0, 0), 1)));
+        brickInstance->RotateAroundPivotOffset(PuRe_QuaternionF(0.0f, 0.0f, 0.0f));
+        brickInstance->m_Color = PuRe_Color(0, 0, 1);
     }
 }

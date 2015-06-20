@@ -1,12 +1,6 @@
 #ifndef _SPACE_H_
 #define _SPACE_H_
 
-//####################################################################################################
-//####################################################################################################
-                                    /*COMMENT OUT FOR GAME SCENE*/
-                                            #define MENU
-//####################################################################################################
-//####################################################################################################
 // Framework specific includes
 #include <PuReEngine/Core.h>
 #include <PuReEngine/Defines.h>
@@ -65,9 +59,9 @@ namespace sba
 #define sba_Width sba::Space::Instance()->Application->GetGraphics()->GetDescription().ResolutionWidth
 #define sba_Height sba::Space::Instance()->Application->GetGraphics()->GetDescription().ResolutionHeight
 
-#define sba_BrickManager sba::Space::Instance()->BrickManager
 #define sba_World sba::Space::Instance()->World
 #define sba_Renderer sba::Space::Instance()->Renderer
 #define sba_Input sba::Space::Instance()->InputManager
+#define sba_BrickManager sba::Space::Instance()->BrickManager
 #define sba_ShipManager sba::Space::Instance()->ShipManager
 #endif /* _SPACE_H_ */

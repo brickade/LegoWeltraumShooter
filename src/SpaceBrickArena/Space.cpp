@@ -39,7 +39,7 @@ namespace sba
         if (CIniReader::Instance()->GetValue("SSAO") == "On")
         {
             this->m_SSAOMaterial = a_pGraphics.LoadMaterial("../data/effects/SSAO/default");
-            this->Renderer->SetSSAO(this->m_SSAOMaterial, "../data/textures/ssao.jpg");
+            //this->Renderer->SetSSAO(this->m_SSAOMaterial, "../data/textures/ssao.jpg");
         }
         this->BrickManager->Initialize();
         this->InputManager->Initialize();

@@ -29,11 +29,9 @@ namespace sba
         CShipManager(const char* a_pFolder);
         ~CShipManager();
 
-        PuRe_Sprite& GetSprite(size_t a_Index);
-
         void Load(); //Load all sprites and paths from folder
         void AddShip(TheBrick::CSpaceship& a_rShip); //Add ship sprite and path and save ship file
-        void AddNewShip(const char* a_pName); // Add default ship with specified name
+        void AddNewShip(const char* a_pName); //Add default ship with specified name
         void ResetShip(TheBrick::CSpaceship& a_rShip); //Reset given ship to default and update sprite
         void SaveShipToFile(TheBrick::CSpaceship& a_rShip); //Save given ship to file
         void DeleteShip(TheBrick::CSpaceship& a_rShip); //Delete given ship from disk and delete sprite and path
@@ -41,9 +39,9 @@ namespace sba
         void UpdateSprite(TheBrick::CSpaceship& a_rShip);
 
     private:
-        const char* PathFromShip(TheBrick::CSpaceship* a_pShip) const
+        const char* PathFromShip(TheBrick::CSpaceship& a_rShip) const
         {
-            std::string* tmp = new std::string(a_pShip->GetName());
+            std::string* tmp = new std::string(a_rShip.GetName());
             tmp->insert(0, this->m_FolderPath);
             return tmp->c_str();
         }

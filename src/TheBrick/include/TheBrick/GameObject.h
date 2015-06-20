@@ -7,11 +7,12 @@
 #include <Onager/Body.h>
 #include <Onager/myMath.h>
 
+#include "Brick.h"
+
 namespace TheBrick
 {
     class CBrickInstance;
     class CSerializer;
-    class CBrickManager;
 
     class CGameObject
     {
@@ -34,7 +35,7 @@ namespace TheBrick
         virtual void Update(float a_DeltaTime);
         virtual void Draw(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera);
 
-        virtual void Deserialize(CSerializer& a_pSerializer, CBrickManager& a_pBrickManager, ong::World& a_pWorld);
+        virtual void Deserialize(CSerializer& a_pSerializer, BrickArray& a_rBricks, ong::World& a_pWorld);
         virtual void Serialize(CSerializer& a_pSerializer);
 
         void AddBrickInstance(CBrickInstance* a_pBrickInstance, ong::World& a_rWorld);

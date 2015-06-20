@@ -6,7 +6,7 @@
 #include "include/Space.h"
 #include "include/Editor_History.h"
 #include <TheBrick/Conversion.h>
-#include "include\Editor_ShipWorker.h"
+#include "include/Editor_ShipHandler.h"
 
 #include "TheBrick/DebugDraw.h"
 #include "include/Editor_Assistant.h"
@@ -42,8 +42,9 @@ namespace Editor
         this->m_pHistory = new CHistory(300, 100);
         this->m_placeBelow = false;
         this->m_pCurrentBrickObject = new TheBrick::CGameObject(*sba_World, nullptr);
-        this->m_pShipWorker = new CShipWorker();
-        this->m_pShipWorker->LoadShipFromFile("../data/ships/Banana.ship"); //Load Ship from file
+        //this->m_pShipWorker = new CShipHandler();
+        //this->m_pShipWorker->LoadShipFromFile("../data/ships/Banana.ship"); //Load Ship from file
+        
         /*this->m_pGridMaterial = a_pGraphics.LoadMaterial("../data/effects/editor/grid");
         this->m_pGridBrick = new PuRe_Model(&a_pGraphics, "../data/models/Brick1X1.obj");*/
     }
@@ -71,7 +72,7 @@ namespace Editor
         //Safe Ship to file
         if (sba_Input->ButtonPressed(sba_Button::EditorSaveShip, this->m_playerIdx))
         {
-            this->m_pShipWorker->SaveCurrentShipToFile("../data/ships/banana.ship");
+            this->m_pShipWorker->SaveCurrentShip();
         }
 
         //Reset/Delete Ship

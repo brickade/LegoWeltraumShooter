@@ -11,12 +11,12 @@
 #include <cstring>
 
 #include "BrickInstance.h"
-#include "GameObject.h"
 #include "Nub.h"
 #include "Serializer.h"
 
 namespace TheBrick
 {
+    typedef std::array<TheBrick::CBrick*, 200> BrickArray;
     class CBrick
     {
     // ------------------------------------------------------------------------

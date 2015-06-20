@@ -1,14 +1,13 @@
 #include "include/TheBrick/Asteroid.h"
 
 #include "Onager/World.h"
-#include "include/TheBrick/BrickManager.h"
 #include "include/TheBrick/BrickInstance.h"
 
 namespace TheBrick
 {
     // **************************************************************************
     // **************************************************************************
-    CAsteroid::CAsteroid(CBrickManager* a_pBrickManager, ong::World& a_rWorld, ong::vec3 a_Position) : CGameObject(a_rWorld, nullptr)
+    CAsteroid::CAsteroid(/*CBrickManager* a_pBrickManager, */ong::World& a_rWorld, ong::vec3 a_Position) : CGameObject(a_rWorld, nullptr)
     {
         //m_Color
         this->m_pBody->setPosition(a_Position);
@@ -40,9 +39,9 @@ namespace TheBrick
 
     // **************************************************************************
     // **************************************************************************
-    void CAsteroid::Deserialize(CSerializer& a_pSerializer, CBrickManager& a_pBrickManager, ong::World& a_pWorld)
+    void CAsteroid::Deserialize(CSerializer& a_pSerializer, BrickArray& a_rBricks, ong::World& a_pWorld)
     {
-        CGameObject::Deserialize(a_pSerializer, a_pBrickManager, a_pWorld);
+        CGameObject::Deserialize(a_pSerializer, a_rBricks, a_pWorld);
     }
 
     // **************************************************************************

@@ -1,7 +1,5 @@
 #include "include/BrickManager.h"
 
-#include "TheBrick/Brick.h"
-
 #include "include/Space.h"
 
 namespace sba
@@ -56,7 +54,7 @@ namespace sba
     // **************************************************************************
     void CBrickManager::Render()
     {
-        for (std::array<TheBrick::CBrick*, 200>::iterator it = this->m_bricks.begin(); it != this->m_bricks.end(); ++it)
+        for (TheBrick::BrickArray::iterator it = this->m_bricks.begin(); it != this->m_bricks.end(); ++it)
         {
             if (*it != nullptr)
             {
@@ -69,7 +67,7 @@ namespace sba
     // **************************************************************************
     void CBrickManager::RebuildRenderInstances()
     {
-        for (std::array<TheBrick::CBrick*, 200>::iterator it = this->m_bricks.begin(); it != this->m_bricks.end(); ++it)
+        for (TheBrick::BrickArray::iterator it = this->m_bricks.begin(); it != this->m_bricks.end(); ++it)
         {
             if (*it != nullptr)
             {

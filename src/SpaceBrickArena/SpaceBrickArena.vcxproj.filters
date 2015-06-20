@@ -21,9 +21,6 @@
     <ClCompile Include="Editor_History.cpp">
       <Filter>Editor</Filter>
     </ClCompile>
-    <ClCompile Include="Editor_ShipWorker.cpp">
-      <Filter>Editor</Filter>
-    </ClCompile>
     <ClCompile Include="Editor_Worker.cpp">
       <Filter>Editor</Filter>
     </ClCompile>
@@ -72,6 +69,9 @@
     <ClCompile Include="ShipManager.cpp">
       <Filter>Manager</Filter>
     </ClCompile>
+    <ClCompile Include="Editor_ShipHandler.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Space.h" />
@@ -91,9 +91,6 @@
       <Filter>Editor</Filter>
     </ClInclude>
     <ClInclude Include="include\Editor_History.h">
-      <Filter>Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Editor_ShipWorker.h">
       <Filter>Editor</Filter>
     </ClInclude>
     <ClInclude Include="include\Editor_Worker.h">
@@ -146,6 +143,9 @@
     </ClInclude>
     <ClInclude Include="include\ShipManager.h">
       <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Editor_ShipHandler.h">
+      <Filter>Editor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
