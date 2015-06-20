@@ -19,6 +19,16 @@ struct Stud
 
 struct StudConnection
 {
+	enum Type
+	{
+		UP,
+		DOWN,
+		LEFT,
+		RIGHT,
+		FRONT,
+		BACK
+	} type;
+
 	Brick* brick;
 	StudConnection* other;
 	int numStuds = 0;
@@ -28,11 +38,13 @@ struct StudConnection
 
 struct Brick
 {
+	int pos[3];
 	int numConnections = 0;
-	StudConnection connections[2 * 4];
+	StudConnection connections[2 * 4 * 2];
 	Collider* collider;
 	Ship* ship;
 	int lastVisited = -1;
+	uint8 block[6];
 };
 
 
@@ -40,11 +52,14 @@ struct Brick
 class Ship : public Entity
 {
 private:
+	
 	Brick* m_base;
 	World* m_world;
 
 	friend void destroyBrick(Brick* brick);
+	
 public:
+	static ShapePtr brickShape;
 
 	Ship(World* world, Body* body, vec3 color, Brick* base)
 		: Entity(body, color),
@@ -52,135 +67,279 @@ public:
 		m_base(base)
 
 	{
+		if (!brickShape)
+		{
+			ShapeDescription sDescr;
+			sDescr.constructionType = ShapeConstruction::HULL_FROM_BOX;
+			sDescr.hullFromBox.c = vec3(0, 0, 0);
+			sDescr.hullFromBox.e = vec3(2, 0.5, 1);
+			brickShape = m_world->createShape(sDescr);
+		}
 	}
 
-	void buildNew()
+	void addBrick(int x, int y, int z)
 	{
-		ShapeDescription sDescr;
-		sDescr.constructionType = ShapeConstruction::HULL_FROM_BOX;
-		sDescr.hullFromBox.c = vec3(0, 0, 0);
-		sDescr.hullFromBox.e = vec3(2, 0.5, 1);
+
+		if (m_body->queryShape(brickShape, transformTransform(Transform(vec3(x, y, z), Quaternion(vec3(0, 0, 0), 1)), m_body->getTransform())))
+		{
+			return;
+		}
 
 		ColliderDescription cDescr;
 		cDescr.isSensor = false;
 		cDescr.material = m_world->createMaterial({ 1, 1, 1 });
-		cDescr.shape = m_world->createShape(sDescr);
-		cDescr.transform.p = vec3(0, 0, 0);
+		cDescr.shape = brickShape;
+		cDescr.transform.p = vec3(x,y,z);
 		cDescr.transform.q = Quaternion(vec3(0, 0, 0), 1);
 
 		Collider* collider = m_world->createCollider(cDescr);
 
-		m_body->addCollider(collider);
-
-		m_base->collider = collider;
-		m_base->collider->setUserData(m_base);
-		m_base->ship = this;
-
-		cDescr.transform.p = vec3(2, 1, 0);
-		collider = m_world->createCollider(cDescr);
-		m_body->addCollider(collider);
-
+		
 		Brick* brick = new Brick;
+		for (int i = 0; i < 6; ++i)
+			brick->block[i] = 0;
+
+		if (m_base == 0)
+			m_base = brick;
+		
+		brick->pos[0] = x;
+		brick->pos[1] = y;
+		brick->pos[2] = z;
 		brick->collider = collider;
 		brick->collider->setUserData(brick);
 		brick->ship = this;
 
-		StudConnection* a = &m_base->connections[m_base->numConnections++];
-		StudConnection* b = &brick->connections[brick->numConnections++];
+		//up
+		ShapeQueryCallBack studCallback = [](Collider* other, void* userData){
+			
+			Brick* brick = (Brick*)userData;
+			Brick* brick2 = (Brick*)other->getUserData();
 
-		a->brick = m_base;
-		a->other = b;
-		a->numStuds = 4;
-		a->studs[0] = { 0, 0, 0};
-		a->studs[1] = { 0, 1, 0};
-		a->studs[2] = { 1, 0, 0};
-		a->studs[3] = { 1, 1, 0};
+		
+			int dy = brick2->pos[1] - brick->pos[1];
+		
+			if (dy == 1 || dy == -1)
+			{
+				int dx = brick2->pos[0] - brick->pos[0];
+				int dz = brick2->pos[2] - brick->pos[2];
 
-		b->brick = brick;
-		b->other = a;
-		b->numStuds = 4;
-		b->studs[0] = { 2, 0, 1};
-		b->studs[1] = { 2, 1, 1};
-		b->studs[2] = { 3, 0, 1};
-		b->studs[3] = { 3, 1, 1};
+				int minX = 0, maxX = 0;
+				if (dx >= 0 && dx < 4)
+					minX = dx, maxX = 3;
+				else
+					minX = 0, maxX = 4 + dx;
+
+				int minZ = 0, maxZ = 0;
+				if (dz >= 0 && dz < 2)
+					minZ = dz, maxZ = 1;
+				else
+					minZ = 0, maxZ = 2 + dz;
+
+				StudConnection* a = &brick->connections[brick->numConnections++];
+				StudConnection* b = &brick2->connections[brick2->numConnections++];
+				a->brick = brick;
+				a->other = b;
+				b->brick = brick2;
+				b->other = a;
+				for (int x = minX; x <= maxX; ++x)
+				{
+					for (int z = minZ; z <= maxZ; ++z)
+					{
+						int y;
+						if (dy == 1)
+						{
+							y = 1;
+							a->type = StudConnection::DOWN;
+							b->type = StudConnection::UP;
+							brick->block[StudConnection::UP]++;
+							brick2->block[StudConnection::DOWN]++;
+						}
+						else if (dy == -1)
+						{
+							y = 0;
+							a->type = StudConnection::UP;
+							b->type = StudConnection::DOWN;
+							brick->block[StudConnection::DOWN]++;
+							brick2->block[StudConnection::UP]++;
+						}
 
 
-		cDescr.transform.p = vec3(4, 0, 0);
-		collider = m_world->createCollider(cDescr);
+						int i = a->numStuds++;
+						int j = b->numStuds++;
+
+						a->studs[i] = { x, z, y};
+						b->studs[j] = { x - dx, 1-y};
+					}
+				}
+
+			}
+
+
+			return true;
+		};
+
+		ShapeQueryCallBack leftBlockCallback = [](Collider* other, void* userData){
+			Brick* brick = (Brick*)userData;
+			Brick* brick2 = (Brick*)other->getUserData();
+
+			brick->block[StudConnection::LEFT]++;
+			brick2->block[StudConnection::RIGHT]++;
+
+			StudConnection* a = &brick->connections[brick->numConnections++];
+			StudConnection* b = &brick2->connections[brick2->numConnections++];
+			a->other = b;
+			a->brick = brick;
+			b->other = a;
+			b->brick = brick2;
+			a->type = StudConnection::RIGHT;
+			b->type = StudConnection::LEFT;
+
+			return true;
+		};
+		ShapeQueryCallBack rightBlockCallback = [](Collider* other, void* userData){
+			Brick* brick = (Brick*)userData;
+			Brick* brick2 = (Brick*)other->getUserData();
+
+			brick->block[StudConnection::RIGHT]++;
+			brick2->block[StudConnection::LEFT]++;
+
+			StudConnection* a = &brick->connections[brick->numConnections++];
+			StudConnection* b = &brick2->connections[brick2->numConnections++];
+			a->other = b;
+			a->brick = brick;
+			b->other = a;
+			b->brick = brick2;
+			a->type = StudConnection::LEFT;
+			b->type = StudConnection::RIGHT;
+			return true;
+		};
+		ShapeQueryCallBack frontBlockCallback = [](Collider* other, void* userData){
+			Brick* brick = (Brick*)userData;
+			Brick* brick2 = (Brick*)other->getUserData();
+
+			brick->block[StudConnection::FRONT]++;
+			brick2->block[StudConnection::BACK]++;
+			
+			StudConnection* a = &brick->connections[brick->numConnections++];
+			StudConnection* b = &brick2->connections[brick2->numConnections++];
+			a->other = b;
+			a->brick = brick;
+			b->other = a;
+			b->brick = brick2;
+			a->type = StudConnection::BACK;
+			b->type = StudConnection::FRONT;
+			return true;		
+		};
+		ShapeQueryCallBack backBlockCallback = [](Collider* other, void* userData){
+			Brick* brick = (Brick*)userData;
+			Brick* brick2 = (Brick*)other->getUserData();
+
+			brick->block[StudConnection::BACK]++;
+			brick2->block[StudConnection::FRONT]++;
+
+			StudConnection* a = &brick->connections[brick->numConnections++];
+			StudConnection* b = &brick2->connections[brick2->numConnections++];
+			a->other = b;
+			a->brick = brick;
+			b->other = a;
+			b->brick = brick2;
+			a->type = StudConnection::FRONT;
+			b->type = StudConnection::BACK;
+			return true;
+		};
+
+		//up
+		//down
+		m_body->queryShape(brickShape, transformTransform(Transform(vec3(x, y + 0.1, z), Quaternion(vec3(0, 0, 0), 1)), m_body->getTransform()), studCallback, brick);
+		m_body->queryShape(brickShape, transformTransform(Transform(vec3(x, y - 0.1, z), Quaternion(vec3(0, 0, 0), 1)), m_body->getTransform()), studCallback, brick);
+
+		//left
+		m_body->queryShape(brickShape, transformTransform(Transform(vec3(x-0.1, y, z), Quaternion(vec3(0, 0, 0), 1)), m_body->getTransform()), leftBlockCallback, brick);
+		//right
+		m_body->queryShape(brickShape, transformTransform(Transform(vec3(x + 0.1, y, z), Quaternion(vec3(0, 0, 0), 1)), m_body->getTransform()), rightBlockCallback, brick);
+		//front
+		m_body->queryShape(brickShape, transformTransform(Transform(vec3(x, y, z+0.1), Quaternion(vec3(0, 0, 0), 1)), m_body->getTransform()), frontBlockCallback, brick);
+		//back
+		m_body->queryShape(brickShape, transformTransform(Transform(vec3(x, y, z-0.1), Quaternion(vec3(0, 0, 0), 1)), m_body->getTransform()), backBlockCallback, brick);
+
+
+
 		m_body->addCollider(collider);
-
-		Brick* brick2 = new Brick;
-		brick2->collider = collider;
-		brick2->collider->setUserData(brick2);
-		brick2->ship = this;
-
-		a = &brick->connections[brick->numConnections++];
-		b = &brick2->connections[brick2->numConnections++];
-
-
-		a->brick = brick;
-		a->other = b;
-		a->numStuds = 4;
-		a->studs[0] = { 2, 0, 0 };
-		a->studs[1] = { 2, 1, 0 };
-		a->studs[2] = { 3, 0, 0 };
-		a->studs[3] = { 3, 1, 0 };
-
-		b->brick = brick2;
-		b->other = a;
-		b->numStuds = 4;
-		b->studs[0] = { 0, 0, 1 };
-		b->studs[1] = { 0, 1, 1 };
-		b->studs[2] = { 1, 0, 1 };
-		b->studs[3] = { 1, 1, 1 };
-
-
-		cDescr.transform.p = vec3(6, 1, 0);
-		collider = m_world->createCollider(cDescr);
-		m_body->addCollider(collider);
-
-		Brick* brick3 = new Brick;
-		brick3->collider = collider;
-		brick3->collider->setUserData(brick3);
-		brick3->ship = this;
-
-		a = &brick2->connections[brick2->numConnections++];
-		b = &brick3->connections[brick3->numConnections++];
-
-
-		a->brick = brick2;
-		a->other = b;
-		a->numStuds = 4;
-		a->studs[0] = { 2, 0, 1 };
-		a->studs[1] = { 2, 1, 1 };
-		a->studs[2] = { 3, 0, 1 };
-		a->studs[3] = { 3, 1, 1 };
-
-		b->brick = brick3;
-		b->other = a;
-		b->numStuds = 4;
-		b->studs[0] = { 0, 0, 0 };
-		b->studs[1] = { 0, 1, 0 };
-		b->studs[2] = { 1, 0, 0 };
-		b->studs[3] = { 1, 1, 0 };
-
 	}
 
-	void addImpulse(Brick* brick, vec3 pos, vec3 impulse)
+
+	bool addImpulse(Brick* brick, vec3 pos, vec3 impulse)
 	{
-		if (lengthSq(impulse) >= 250.0f)
+		static const float STUD_STRENGTH = 7.0f;
+		bool destroy = false;
+
+		float up = dot(vec3(0, 1, 0), impulse);
+		if (brick->block[StudConnection::UP] == 0 && up > 0)
+		{
+			
+			{// pure up
+				float studs = 0.0f;
+				for (int i = 0; i < brick->numConnections; ++i)
+				{
+					for (int j = 0; j < brick->connections[i].numStuds; ++j)
+					{
+						if (brick->connections[i].studs[j].y == 0)
+							studs += STUD_STRENGTH;
+					}
+
+				}
+
+				if (up > studs)
+					destroy = true;
+			}
+			{// joints
+				float studs;
+
+			}
+
+
+		
+			// search for movable bricks
+			// get cheapest one
+			// reverse build tree to original brick (all connections on which the accumulated force is weak enough)
+			// end condition???
+		}
+
+		float down = dot(vec3(0, -1, 0), impulse);
+		if (brick->block[StudConnection::DOWN] == 0 && down > 0)
+		{
+			float studs = 0.0f;
+			for (int i = 0; i < brick->numConnections; ++i)
+			{
+				for (int j = 0; j < brick->connections[i].numStuds; ++j)
+				{
+					if (brick->connections[i].studs[j].y == 1)
+						studs += STUD_STRENGTH;
+				}
+
+				if (down > studs)
+					destroy = true;
+
+			}
+
+		}
+
+
+		if (destroy)
 		{
 			destroyBrick(brick);
 			brick->ship->getBody()->applyImpulse(impulse, pos);
 		}
 		else
 		{
-			//m_body->applyImpulse(impulse, pos);
+			m_body->applyImpulse(impulse, pos);
 		}
+
+		return destroy;
 	}
 
 };
-
+ShapePtr Ship::brickShape;
 
 
 
@@ -204,15 +363,18 @@ bool connected(Brick* brick, Brick* base, int tick)
 	brick->lastVisited = tick;
 	for (int i = 0; i < brick->numConnections; ++i)
 	{
-		Brick* other = brick->connections[i].other->brick;
-
-		if (other == base)
-			return true;
-
-		if (other->lastVisited != tick)
+		if (brick->connections[i].numStuds > 0)
 		{
-			if (connected(other, base, tick))
+			Brick* other = brick->connections[i].other->brick;
+
+			if (other == base)
 				return true;
+
+			if (other->lastVisited != tick)
+			{
+				if (connected(other, base, tick))
+					return true;
+			}
 		}
 	}
 
@@ -228,11 +390,14 @@ void setShip(Brick* brick, Ship* ship, int tick)
 
 	for (int i = 0; i < brick->numConnections; ++i)
 	{
-		Brick* other = brick->connections[i].other->brick;
-
-		if (other->lastVisited != tick)
+		if (brick->connections[i].numStuds > 0)
 		{
-			setShip(other, ship, tick);
+			Brick* other = brick->connections[i].other->brick;
+
+			if (other->lastVisited != tick)
+			{
+				setShip(other, ship, tick);
+			}
 		}
 	}
 
@@ -253,8 +418,11 @@ void destroyBrick(Brick* brick)
 	for (int i = 0; i < brick->numConnections; ++i)
 	{
 		StudConnection* other = brick->connections[i].other;
+		other->brick->block[brick->connections[i].type]--;
+
 		*other = other->brick->connections[--other->brick->numConnections];
 		
+
 		// check for disconnecting
 		if (other->brick != brick->ship->m_base && !connected(other->brick, brick->ship->m_base, g_tick++))
 		{
@@ -265,6 +433,8 @@ void destroyBrick(Brick* brick)
 	}
 
 	brick->numConnections = 0;
+	for (int i = 0; i < 6; ++i)
+		brick->block[i] = 0;
 	Ship* newShip = createShip(brick, brick->ship->getBody()->getTransform(), BodyType::Dynamic);
 	brick->ship->getBody()->removeCollider(brick->collider);
 	brick->ship = newShip;
@@ -277,7 +447,7 @@ DestructionTest::DestructionTest()
 {
 	m_eye.p = vec3(0, 0, 0);
 	m_eye.q = Quaternion(vec3(0, 0, 0), 1);
-
+	m_force = 0.0f;
 	
 
 }
@@ -285,23 +455,45 @@ void DestructionTest::init()
 {
 	m_world = new World();
 	
+	Ship::brickShape = ShapePtr();
+
 	g_world = m_world;
 	g_entities = &m_entities;
 	
-	Ship* ship = createShip(new Brick, Transform(vec3(0, 0, 15), Quaternion(vec3(0,0,0),1)), BodyType::Static);
-	ship->buildNew();
+	Ship* ship = createShip(0, Transform(vec3(0, 0, 15), Quaternion(vec3(0,0,0),1)), BodyType::Static);
+	ship->addBrick(0, 0, 0);
+	ship->addBrick(2, 1, 0);
+	ship->addBrick(4, 0, 0);
+	ship->addBrick(6, 1, 0);
 
-	m_force = 0.0f;
 	m_stepping = false;
 }
 
 
+bool DestructionTest::procEvent(SDL_Event event)
+{
+	if (event.type == SDL_MOUSEWHEEL && ((SDL_GetModState()& KMOD_LCTRL) != 0))
+	{
+		m_force += event.wheel.y;
+		printf("force: %f\n", m_force);
+		return true;
+	}
+
+	if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON(SDL_BUTTON_LEFT))
+	{
+		m_click = true;
+
+	}
+
+	return false;
+}
+
 void DestructionTest::update(float dt)
 {
 	int x, y;
-	if (SDL_GetMouseState(&x, &y) & SDL_BUTTON(SDL_BUTTON_LEFT))
+	if (m_click && SDL_GetMouseState(&x, &y) & SDL_BUTTON(SDL_BUTTON_LEFT))
 	{
-		m_force = ong_MIN(m_force+ 50.0f * dt, 30.0f);
+		m_force += 30.0f * dt;
 		printf("force: %f\n", m_force);
 
 		int w, h;
@@ -327,11 +519,15 @@ void DestructionTest::update(float dt)
 		if (m_world->queryRay(m_eye.p, dir, &result))
 		{
 			Brick* brick = (Brick*)result.collider->getUserData();
-			brick->ship->addImpulse(brick, result.point, m_force * dir);
+			if (brick->ship->addImpulse(brick, result.point, m_force * dir))
+			{
+				m_click = false;
+			}
 		}
-		
-
-
+		else
+		{
+			m_click = false;
+		}
 	}
 	else
 	{

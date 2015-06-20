@@ -10,6 +10,9 @@ public:
 	DestructionTest();
 	void init();
 	void update(float dt);
+	bool procEvent(SDL_Event event) override;
 private:
+
+	bool m_click;
 	float m_force;
 };
