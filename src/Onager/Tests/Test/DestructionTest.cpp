@@ -302,7 +302,9 @@ public:
 			// search for movable bricks
 			// get cheapest one
 			// reverse build tree to original brick (all connections on which the accumulated force is weak enough)
+			
 			// end condition???
+			//	as soon as force point (com of query or fulcrum point) is behind plane com-pointOfImpact
 		}
 
 		float down = dot(vec3(0, -1, 0), impulse);
