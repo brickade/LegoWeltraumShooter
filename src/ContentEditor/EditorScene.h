@@ -32,6 +32,9 @@ namespace Content
 		PuRe_IMaterial* m_pPostMaterial;
 		PuRe_Rendertarget* m_pRenderTarget;
 
+
+		ong::Quaternion m_CameraRotation;
+
 		TheBrick::CBrick* m_pCurrBrick;
 		std::string m_CurrFileName;
 
@@ -43,6 +46,21 @@ namespace Content
 		ong::World m_World;
 		ong::Body* m_pBody;
 
+
+		ong::Body* m_pMeshBody;
+		std::vector<ong::vec3> m_HullPoints;
+		bool m_MouseDown;
+		PuRe_Vector2F m_RectStart;
+		ong::ShapePtr m_Rect;
+		ong::ShapePtr m_TempHull;
+		
+		enum CameraType
+		{
+			PERSP,
+			ORTHO
+		} m_CameraType;
+		float m_OrthoZoom;
+
 		bool m_MouseValid;
 
 		TheBrick::SNub m_NubPtr;
@@ -52,14 +70,18 @@ namespace Content
 		ong::ShapePtr m_MousePtr;
 		ong::ShapePtr m_NubShape;
 		ong::ShapePtr m_OriginShape;
+		ong::ShapePtr m_VertexShape;
 
 		TheBrick::CSerializer m_Serializer;
 
 		enum Mode
 		{
 			NUB,
-			ORIGIN
+			ORIGIN,
+			HULL
 		} m_Mode;
+
+
 
 	public:
 		CEditorScene(PuRe_Application* a_pApplication);
@@ -67,7 +89,7 @@ namespace Content
 		
         void Initialize(PuRe_Application* a_pApplication);
 
-        bool Update(PuRe_Application* a_pApplication);
+        int Update(PuRe_Application* a_pApplication);
 
         void Render(PuRe_Application* a_pApplication);
 

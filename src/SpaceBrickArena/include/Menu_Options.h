@@ -13,9 +13,10 @@ namespace Menu
     {
     private:
         sba::CNavigation* m_pNavigation;
-        int* m_PlayerIdx;
         bool m_Focus;
         bool m_Switched;
+        bool m_SSAO;
+        PuRe_DisplaySetting m_DMode;
     public:
         int m_Resolution;
         int m_Resolutions[7][2];
@@ -26,15 +27,14 @@ namespace Menu
         /// @brief Destructor
          ~COptions();
     public:
-        /// @brief Reset the Options
-        ///
-        void Reset();
         /// @brief Update theCOptions
         ///
         /// @param Timer for deltatime
+        /// @param Window to change DisplayMode
+        /// @param Graphics to Change Resolution
         /// @param Index of the player who handles the menu
         ///
-        int Update(PuRe_Timer* a_pTimer, int a_PlayerIdx);
+        int Update(PuRe_Renderer* a_pRenderer, PuRe_Timer* a_pTimer, PuRe_IWindow* a_pWindow, PuRe_IGraphics* a_pGraphics, int a_PlayerIdx);
         /// @brief Display the Options
         ///
         /// @param Renderer to use

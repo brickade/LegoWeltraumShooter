@@ -6,10 +6,10 @@ Camera.Y;-RightThumb.Y
 SpinLeft;LB
 SpinRight;-RB
 Shoot;A
-SpeedAcceleration;1000
-PitchAcceleration;1000
-YawAcceleration;1000
-RollAcceleration;500
+SpeedAcceleration;2000
+PitchAcceleration;2000
+YawAcceleration;2000
+RollAcceleration;1000
 MaxSpeed;10
 MaxYawSpeed;5
 MaxPitchSpeed;5

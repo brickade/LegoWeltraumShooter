@@ -6,6 +6,7 @@ namespace TheBrick
     const float CBrick::SEGMENT_WIDTH = 0.78f;
     const float CBrick::SEGMENT_HEIGHT = 0.32f;
     const int CBrick::MAX_MODEL_PATH_LENGTH = 200; //Win max path+filename length = 260
+	ong::Material CBrick::BRICK_MATERIAL = { 0.05f, 0.3f, 0.4f }; // Density, Restitution, Friction
 
     // **************************************************************************
     // **************************************************************************

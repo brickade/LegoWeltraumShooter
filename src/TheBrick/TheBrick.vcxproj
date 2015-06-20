@@ -150,6 +150,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\TheBrick\Asteroid.h" />
+    <ClInclude Include="include\TheBrick\BrickData.h" />
     <ClInclude Include="include\TheBrick\Bullet.h" />
     <ClInclude Include="include\TheBrick\Brick.h" />
     <ClInclude Include="include\TheBrick\BrickInstance.h" />

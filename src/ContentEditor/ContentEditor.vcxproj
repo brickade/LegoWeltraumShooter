@@ -89,10 +89,12 @@
     <ClCompile Include="CommandQueue.cpp" />
     <ClCompile Include="EditorScene.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="ParseModel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CommandQueue.h" />
     <ClInclude Include="EditorScene.h" />
+    <ClInclude Include="ParseModel.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

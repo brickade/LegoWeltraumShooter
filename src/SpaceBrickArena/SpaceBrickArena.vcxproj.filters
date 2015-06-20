@@ -60,6 +60,12 @@
     <ClCompile Include="Menu_Options.cpp">
       <Filter>Menu</Filter>
     </ClCompile>
+    <ClCompile Include="Menu_Lobby.cpp">
+      <Filter>Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Menu_Network.cpp">
+      <Filter>Menu</Filter>
+    </ClCompile>
     <ClCompile Include="InputManager.cpp">
       <Filter>Manager</Filter>
     </ClCompile>
@@ -130,6 +136,16 @@
       <Filter>Menu</Filter>
     </ClInclude>
     <ClInclude Include="include\Menu_Options.h">
+      <Filter>Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Menu_Lobby.h">
+      <Filter>Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Player.h" />
+    <ClInclude Include="include\Menu_Network.h">
+      <Filter>Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Menu_Server.h">
       <Filter>Menu</Filter>
     </ClInclude>
     <ClInclude Include="include\InputManager.h">

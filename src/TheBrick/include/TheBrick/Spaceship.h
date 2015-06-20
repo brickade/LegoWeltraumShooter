@@ -43,7 +43,7 @@ namespace TheBrick
         }
 
     public:
-        CSpaceship(ong::World& a_rWorld,ong::vec3& a_rPosition);
+        CSpaceship(ong::World& a_rWorld,std::string a_Name);
         ~CSpaceship();
 
         void Draw(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera) override;

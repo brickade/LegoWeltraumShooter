@@ -19,46 +19,44 @@
 namespace Game
 {
 
-    //#define NETWORKGAME
-    #define Skybox
+    //#define Skybox
 
     enum { BufferSize = 32 };
     struct PlayOutBuffer
     {
         int Frame;
-        InputData Inputs[MaxPlayers]; //frame saved in here
+        sba::SInputData Inputs[sba::MaxPlayers]; //frame saved in here
     };
-    struct Player
+    struct GotBuffer
     {
-        unsigned char ID;
-        SOCKADDR_IN NetworkInformation;
-        TheBrick::CSpaceship* Ship;
+        bool Player[sba::MaxPlayers];
     };
     /// @brief MainScene where the game functions are in, inherits from the Scene interface
     ///
     class CGameScene : public PuRe_IScene
     {
     private:
+        int m_Test;
+        float m_Timeout;
+        bool m_Run;
         std::mutex m_Mutex;
         //host only
         unsigned int m_numReceived[BufferSize];
+        GotBuffer m_numGot[BufferSize];
         bool m_send[BufferSize];
         //All players
         PlayOutBuffer m_buffer[BufferSize];
-        InputPacket m_inputs[Delay];
+        sba::SInputPacket m_inputs[sba::Delay];
         //used for networking
         float m_PhysicTime;
         int m_ID;
-        int m_ArrayID;
+        int m_LocalPlayers;
         int m_PhysicFrame;
         //multiple players
-        std::vector<Player*> m_Players;
-        std::vector<CGameCamera*> m_Cameras;
         PuRe_Camera* m_pUICam;
         //whether we are still in menu or not
         bool gameStart;
         int m_TextureID;
-        CNetworkHandler* m_pNetwork;
 
         PuRe_Font* m_pFont;
         PuRe_PointLight* m_pPointLight;
@@ -72,9 +70,10 @@ namespace Game
         PuRe_IMaterial* m_pDirectionalLightMaterial;
         PuRe_IMaterial* m_pParticleMaterial;
         CMinimap* m_pMinimap;
-        PuRe_ParticleEmitter* m_pEmitter;
         PuRe_Sprite* m_pParticleSprite;
 
+        std::vector<PuRe_ParticleEmitter*> m_Emitters;
+        std::vector<CGameCamera*> m_Cameras;
         std::vector<TheBrick::CBullet*> m_Bullets;
         std::vector<TheBrick::CAsteroid*> m_Asteroids;
         /// @brief Engine's Application
@@ -83,29 +82,26 @@ namespace Game
     public:
         /// @brief Constructor to Initialize the MainScene
         ///
-        CGameScene(PuRe_Application* a_pApplication, int a_playerIdx);
+        CGameScene(PuRe_Application* a_pApplication, int a_playerIdx, bool a_Network);
     public:
         /// @brief Handle Input Data
         ///
-        InputData HandleInput(int a_PlayerIdx);
+        sba::SInputData HandleInput(int a_PlayerIdx);
         /// @brief Process Input Data
         ///
-        void ProcessInput(TheBrick::CSpaceship* a_Ship,InputData* a_Input,float a_DeltaTime);
+        void ProcessInput(TheBrick::CSpaceship* a_Ship, sba::SInputData* a_Input, float a_DeltaTime);
         /// @brief Handle Local Data
         ///
         void HandleLocal();
         /// @brief Handle Network Data
         ///
         void HandleNetwork();
-        /// @brief Function to handle  before the Game started
-        ///
-        void GameSetup();
         /// @brief Start the Game
         ///
         void StartGame();
         /// @brief Receives Data which were send via Network.
         ///
-        void ReceiveData();
+        void ReceiveData(SOCKET s);
         /// @brief Initializes the scene.
         ///
         /// @param graphics The graphics interface.

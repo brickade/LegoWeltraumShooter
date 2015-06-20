@@ -106,7 +106,7 @@ namespace sba
         {
             Input::EGamepadButton::Pad_A,
             {
-                Input::EKeyboardButton::MouseLeft,
+                Input::EKeyboardButton::Enter,
                 Input::EKeyboardButton::Enter,
                 Input::EKeyboardButton::Enter,
                 Input::EKeyboardButton::Enter
@@ -116,10 +116,10 @@ namespace sba
         {
             Input::EGamepadButton::Pad_B,
             {
-                Input::EKeyboardButton::Backspace,
-                Input::EKeyboardButton::Backspace,
-                Input::EKeyboardButton::Backspace,
-                Input::EKeyboardButton::Backspace
+                Input::EKeyboardButton::Escape,
+                Input::EKeyboardButton::Escape,
+                Input::EKeyboardButton::Escape,
+                Input::EKeyboardButton::Escape
             }
         };
         this->m_pButtonMapping[Input::EButton::EditorPlaceBrick] =

@@ -103,5 +103,8 @@
     <ClInclude Include="ServerTest.h">
       <Filter>Header Files\Network</Filter>
     </ClInclude>
+    <ClInclude Include="ShapeTest.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

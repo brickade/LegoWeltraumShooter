@@ -30,7 +30,7 @@ namespace Editor
         this->m_pDirectionalLightMaterial = a_pApplication->GetGraphics()->LoadMaterial("../data/effects/DirectionalLight/default");
 
         //UICamera
-        this->m_UICamera = new PuRe_Camera(PuRe_Vector2F(a_pApplication->GetGraphics()->GetDescription().ResolutionWidth, a_pApplication->GetGraphics()->GetDescription().ResolutionHeight), PuRe_CameraProjection::Orthogonal);
+        this->m_UICamera = new PuRe_Camera(PuRe_Vector2F(1920,1080), PuRe_CameraProjection::Orthogonal);
         this->m_UICamera->setNearFar(PuRe_Vector2F(0.1f, 1000));
 
 

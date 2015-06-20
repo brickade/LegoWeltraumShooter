@@ -68,6 +68,38 @@ namespace TheBrick
 
     // **************************************************************************
     // **************************************************************************
+    SBrickData CGameObject::GetBrick(unsigned int a_Index)
+    {
+        SBrickData BrickData;
+        if (this->m_pBricks.size() > a_Index)
+        {
+            CBrickInstance* brick = this->m_pBricks[a_Index];
+
+            //Brick ID
+            BrickData.ID = brick->m_pBrick->GetBrickId();
+            //m_Transform
+            BrickData.Transform = brick->GetTransform();
+            //m_Color
+            BrickData.Color = brick->m_Color;
+        }
+        return BrickData;
+    }
+
+
+    // **************************************************************************
+    // **************************************************************************
+    void CGameObject::AddBrick(SBrickData a_Brick, CBrickManager& a_pBrickManager, ong::World& a_pWorld)
+    {
+        CBrickInstance* brick = new CBrickInstance(a_pBrickManager.GetBrick(a_Brick.ID), *this, a_pWorld);
+        //m_Transform
+        brick->SetTransform(a_Brick.Transform);
+        //m_Color
+        brick->m_Color = a_Brick.Color;
+    }
+
+
+    // **************************************************************************
+    // **************************************************************************
     void CGameObject::Deserialize(CSerializer& a_pSerializer, BrickArray& a_rBricks, ong::World& a_pWorld)
     {
         //m_pBricks

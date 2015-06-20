@@ -52,6 +52,9 @@
     <ClInclude Include="include\TheBrick\Nub.h">
       <Filter>Quelldateien\Brick</Filter>
     </ClInclude>
+    <ClInclude Include="include\TheBrick\BrickData.h">
+      <Filter>Quelldateien\Brick</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Brick.cpp">
