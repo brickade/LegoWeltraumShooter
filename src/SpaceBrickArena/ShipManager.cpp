@@ -36,9 +36,9 @@ namespace sba
             {
                 continue;
             }
-            std::pair<std::string, PuRe_Sprite> pair;
+            std::pair<std::string, PuRe_Sprite*> pair;
             pair.first = std::string(file).insert(0, this->m_FolderPath); //Set Path
-            pair.second = PuRe_Sprite(sba_Application->GetGraphics(), pair.first); //Load Texture
+            pair.second = new PuRe_Sprite(sba_Application->GetGraphics(), pair.first); //Load Texture
             //Get Ship
             /*TheBrick::CSpaceship* ship = new TheBrick::CSpaceship(*sba_World, ong::vec3(0, 0, 0));
             serializer->OpenRead(pair.first.c_str());
@@ -102,7 +102,7 @@ namespace sba
         delete serializer;
         std::string spritePath = this->PathFromShip(a_rShip);
         spritePath = spritePath.substr(0, spritePath.find_last_of(".")).append(".dds");
-        this->GetSpriteFromShip(a_rShip).GetTexture()->SaveTextureToFile(spritePath.c_str());
+        this->GetSpriteFromShip(a_rShip)->GetTexture()->SaveTextureToFile(spritePath.c_str());
     }
 
     // **************************************************************************
@@ -120,7 +120,7 @@ namespace sba
             printf("cant delete dds bro");
         }
         std::string path = this->PathFromShip(a_rShip);
-        for (std::vector<std::pair<std::string, PuRe_Sprite>>::iterator it = this->m_Sprites.begin(); it != this->m_Sprites.end(); ++it)
+        for (std::vector<std::pair<std::string, PuRe_Sprite*>>::iterator it = this->m_Sprites.begin(); it != this->m_Sprites.end(); ++it)
         {
             if ((*it).first.compare(path) == 0)
             {
@@ -135,12 +135,15 @@ namespace sba
     // **************************************************************************
     TheBrick::CSpaceship* CShipManager::GetShip(size_t a_Index)
     { //Load actual ship from disk
-        TheBrick::CSpaceship ship = TheBrick::CSpaceship(*sba_World, ong::vec3(0, 0, 0));
+        TheBrick::CSpaceship* ship = new TheBrick::CSpaceship(*sba_World, ong::vec3(0, 0, 0));
         TheBrick::CSerializer* serializer = new TheBrick::CSerializer();
         if (serializer->OpenRead(this->PathFromName(this->m_Sprites[a_Index].first.c_str())))
         {
-            ship.Deserialize(*serializer, sba_BrickManager->GetBrickArray(), *sba_World);
+            ship->Deserialize(*serializer, sba_BrickManager->GetBrickArray(), *sba_World);
         }
+        serializer->Close();
+        delete serializer;
+        return ship;
     }
 
     // **************************************************************************
@@ -148,7 +151,7 @@ namespace sba
     void CShipManager::UpdateSprite(TheBrick::CSpaceship& a_rShip)
     {
         std::string path = this->PathFromShip(a_rShip);
-        for (std::vector<std::pair<std::string, PuRe_Sprite>>::iterator it = this->m_Sprites.begin(); it != this->m_Sprites.end(); ++it)
+        for (std::vector<std::pair<std::string, PuRe_Sprite*>>::iterator it = this->m_Sprites.begin(); it != this->m_Sprites.end(); ++it)
         {
             if ((*it).first.compare(path) == 0)
             {
@@ -160,10 +163,11 @@ namespace sba
 
     // **************************************************************************
     // **************************************************************************
-    PuRe_Sprite CShipManager::GetSpriteFromShip(TheBrick::CSpaceship& a_rShip) const
+    PuRe_Sprite* CShipManager::GetSpriteFromShip(TheBrick::CSpaceship& a_rShip) const
     {
-        PuRe_Sprite sprite = PuRe_Sprite(sba_Application->GetGraphics(), "");
-
+        PuRe_Sprite* sprite = new PuRe_Sprite(sba_Application->GetGraphics(), "");
+        //TODO: implement
+        
         return sprite;
     }
 }

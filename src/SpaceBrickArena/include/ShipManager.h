@@ -11,16 +11,16 @@ namespace sba
     class CShipManager
     {
     private:
-        std::vector<std::pair<std::string, PuRe_Sprite>> m_Sprites;
+        std::vector<std::pair<std::string, PuRe_Sprite*>> m_Sprites;
         std::string m_FolderPath = "";
 
     public:
-        PuRe_Sprite& operator[](size_t a_Index)
+        PuRe_Sprite* operator[](size_t a_Index)
         {
             return this->m_Sprites[a_Index].second;
         };
 
-        const PuRe_Sprite& operator[](size_t a_Index) const
+        const PuRe_Sprite* operator[](size_t a_Index) const
         {
             return this->m_Sprites[a_Index].second;
         };
@@ -53,7 +53,7 @@ namespace sba
             return tmp->c_str();
         }
 
-        PuRe_Sprite GetSpriteFromShip(TheBrick::CSpaceship& a_rShip) const;
+        PuRe_Sprite* GetSpriteFromShip(TheBrick::CSpaceship& a_rShip) const;
     };
 }
 
