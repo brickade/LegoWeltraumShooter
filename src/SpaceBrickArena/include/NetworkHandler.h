@@ -15,7 +15,7 @@ namespace sba
 {
     enum { MaxPlayers = 10, Delay = 10, BroadcastPort =13370, MaxName=12, MaxLength=15, MaxBricks=100};
 
-    enum EPacket { Broadcast, Join, User, IAm,WhoamI, Left,LobbyEnd,Brick,Start, STick, CTick };
+    enum EPacket { Broadcast, Join, User, IAm,WhoamI, Left,LobbyEnd,Brick,Start,Init, STick, CTick };
 
     /// @brief Struct which handles the Input one Player does
     ///
@@ -136,7 +136,7 @@ namespace sba
     public:
         /// @brief Sets whether the calls are blocking or not
         ///
-        void SetBlockMode(bool a_Block);
+        void SetBlockMode(SOCKET s,bool a_Block);
         /// @brief If he is connected or not
         ///
         bool IsConnected();
@@ -178,13 +178,13 @@ namespace sba
         int GetSocket();
         /// @brief Receive Data 
         ///
-        long Receive(char* a_pBuffer, int a_Size, SOCKET a_pSender);
+        long Receive(char* a_pBuffer, int a_Size, SOCKET a_pSender, bool a_Select);
         /// @brief Send Data
         ///
-        void Send(char* a_pBuffer, int a_Size, SOCKET a_Receiver);
+        void Send(char* a_pBuffer, int a_Size, SOCKET a_Receiver, bool a_Select);
         /// @brief Send Data to Host
         ///
-        void SendHost(char* a_pBuffer, int a_Size);
+        void SendHost(char* a_pBuffer, int a_Size, bool a_Select);
     };
 }
 #endif /* _NETWORKHANDLER_H_ */

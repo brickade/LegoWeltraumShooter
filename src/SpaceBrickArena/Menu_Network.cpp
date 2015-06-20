@@ -35,12 +35,13 @@ namespace Menu
     {
         printf("Thread Start!\n");
         SOCKET bsocket = sba_Network->GetBroadcast();
+        sba_Network->SetBlockMode(bsocket, false);
         const int len = 1024;
         char buffer[len];
         while (this->m_getList)
         {
             memset(buffer,0,len);
-            if (sba_Network->Receive(buffer, len, bsocket) > 0)
+            if (sba_Network->Receive(buffer, len, bsocket,true) > 0)
             {
                 sba::SReceivePacket* rpacket = (sba::SReceivePacket*)buffer;
                 if (rpacket->Head.Type == sba::EPacket::Broadcast)

@@ -23,20 +23,28 @@ namespace Menu
                 {
                     lp.Who = sba_Players[i]->ID;
                     printf("Left: %i", lp.Who);
-                    sba_Network->SendHost((char*)&lp, sizeof(sba::SLeftPacket));
+                    sba_Network->SendHost((char*)&lp, sizeof(sba::SLeftPacket), true);
                 }
             }
         }
         this->m_Run = false;
+        this->m_Start = true;
+        for (unsigned int i = 0; i < this->m_Threads.size(); i++)
+        {
+            if (this->m_Threads[i]->joinable())
+                this->m_Threads[i]->join();
+            SAFE_DELETE(this->m_Threads[i]);
+        }
+        this->m_Threads.clear();
         SAFE_DELETE(this->m_pNavigation);
     }
 
     void CLobby::ListenLoop()
     {
         printf("Thread Start LISTEN!\n");
+        sba_Network->SetBlockMode(sba_Network->GetSocket(), false);
         const int len = 1024;
         char buffer[len];
-        sba_Network->SetBlockMode(false);
         while (this->m_Run)
         {
             memset(buffer, 0, len);
@@ -45,6 +53,8 @@ namespace Menu
                 if (sba_Players.size() < sba::MaxPlayers)
                 {
                     SOCKET s = sba_Network->Accept();
+                    if (this->m_Start||!this->m_Run)
+                        break;
                     if (s > 0)
                     {
                         sba_Network->m_Mutex.lock();
@@ -75,7 +85,7 @@ namespace Menu
                             int size = sizeof(up.Head.Type) + sizeof(up.ID) + nameSize;
                             //now send the packet to the host
                             printf("Send Ship Name and his ID %i!!\n",up.ID);
-                            sba_Network->Send((char*)&up, size,s);
+                            sba_Network->Send((char*)&up, size, s, true);
                             //Get the Data from the ship the player has
                             printf("Start sending Bricks!!\n");
                             sba::SBrickPacket bp;
@@ -85,7 +95,7 @@ namespace Menu
                             printf("Send Bricks\n");
                             for (unsigned int j = 0; j < sba_Players[i]->Ship->m_pBricks.size(); j++)
                                 bp.Bricks[j] = sba_Players[i]->Ship->GetBrick(j);
-                            sba_Network->Send((char*)&bp, sizeof(sba::SBrickPacket), s);
+                            sba_Network->Send((char*)&bp, sizeof(sba::SBrickPacket), s, true);
                             printf("All Bricks Sent!\n");
                         }
                         printf("Now Send IAM Packet!\n");
@@ -100,23 +110,23 @@ namespace Menu
                         iam.Head.Type = sba::EPacket::IAm;
                         iam.ID = ID;
                         iam.Pad = 0;
-                        sba_Network->Send((char*)&iam, sizeof(sba::SIamPacket), s);
+                        sba_Network->Send((char*)&iam, sizeof(sba::SIamPacket), s, true);
                         printf("IAm Packet send to ID %i!\n",ID);
 
-                        std::thread HandleThread(&CLobby::ReceiveData, this, s);
-                        HandleThread.detach();
+                        std::thread* rThread = new std::thread(&CLobby::ReceiveData, this, s);
+                        this->m_Threads.push_back(rThread);
                         sba_Network->m_Mutex.unlock();
                     }
                 }
             }
         }
-        sba_Network->SetBlockMode(true);
         printf("Thread End LISTEN!\n");
     }
 
     void CLobby::ReceiveData(SOCKET s)
     {
         printf("Thread Start LOBBY!\n");
+        sba_Network->SetBlockMode(s, false);
         //int shipSize = sizeof(unsigned int)*sizeof(ong::Transform)*sizeof(PuRe_Color) * 1000; 
         const int len = 16384;
         char buffer[len];
@@ -126,13 +136,14 @@ namespace Menu
         int packets = 0;
         int leftData = 0;
 
-        sba_Network->SetBlockMode(false);
         bool locked = false;
         long packetSize = 0;
         while (this->m_Run)
         {
-            long dataLeft = sba_Network->Receive(buffer, len, s);
-
+            
+            long dataLeft = sba_Network->Receive(buffer, len, s, false);
+            if (this->m_Start||!this->m_Run)
+                break;
             if (dataLeft > 0)
             {
                 //we received something, copy received into our buffer + offset
@@ -144,18 +155,38 @@ namespace Menu
                 locked = true;
 
             }
-            else if (dataLeft == 0) //data empty, seems closed
+            else if (dataLeft == -1) //data empty, seems closed
+            {
+                if (sba_Network->GetHost())
+                {
+                    sba::SLeftPacket sleft;
+                    sleft.Head.Type = sba::EPacket::Left;
+                    for (unsigned int i = 0; i < sba_Players.size(); i++)
+                    {
+                        if (sba_Players[i]->NetworkInformation == s) //send to all that are not local
+                        {
+                            sleft.Who = sba_Players[i]->ID;
+                            for (unsigned int j = 0; j < sba_Players.size(); j++)
+                                sba_Network->Send((char*)&sleft, sizeof(sba::SLeftPacket), sba_Players[j]->NetworkInformation, true);
+
+                            printf("Deleted Player %i!\n", sleft.Who);
+                            sba_Space->DeletePlayer(i);
+                            --i;
+                        }
+                    }
+                }
+                else
+                {
+                    this->m_GameEnd = true;
+                    this->m_Run = false;
+                }
                 break;
+            }
 
             while (leftData > 0) //aslong as we have data left
             {
                 sba::SReceivePacket* rpacket = (sba::SReceivePacket*)buffer2;
                 packetSize = 0;
-                if (rpacket->Head.Type == sba::EPacket::Start&&leftData >= sizeof(sba::SHeadPacket))
-                {
-                    this->m_Start = true;
-                    packetSize = sizeof(sba::SHeadPacket);
-                }
                 if (rpacket->Head.Type == sba::EPacket::Left&&leftData >= sizeof(sba::SLeftPacket))
                 {
                     sba::SLeftPacket* sleft = (sba::SLeftPacket*)rpacket;
@@ -163,7 +194,7 @@ namespace Menu
                     for (unsigned int i = 0; i < sba_Players.size(); i++)
                     {
                         if (sba_Network->GetHost()&&sba_Players[i]->PadID == -1) //send to all that are not local
-                            sba_Network->Send((char*)sleft, sizeof(sba::SLeftPacket), sba_Players[i]->NetworkInformation);
+                            sba_Network->Send((char*)sleft, sizeof(sba::SLeftPacket), sba_Players[i]->NetworkInformation, true);
                         if (sleft->Who == sba_Players[i]->ID) //client and host sees this
                         {
                             printf("Deleted Player %i!\n",sleft->Who);
@@ -173,7 +204,7 @@ namespace Menu
                     }
                     packetSize = sizeof(sba::SLeftPacket);
                 }
-                if (rpacket->Head.Type == sba::EPacket::Start&&leftData >= sizeof(sba::SHeadPacket))
+                else if (rpacket->Head.Type == sba::EPacket::Start&&leftData >= sizeof(sba::SHeadPacket))
                 {
                     printf("GAME START\n");
                     this->m_Start = true;
@@ -215,7 +246,7 @@ namespace Menu
                     iam.ID = ID;
                     iam.Pad = wpackets->Pad;
                     printf("Send Client to Clients\n");
-                    sba_Network->Send((char*)&iam, sizeof(sba::SIamPacket), s);
+                    sba_Network->Send((char*)&iam, sizeof(sba::SIamPacket), s, true);
                     packetSize = sizeof(sba::SWhoamIPacket);
                 }
                 else if (rpacket->Head.Type == sba::EPacket::Brick&&leftData >= sizeof(sba::SBrickPacket))
@@ -240,7 +271,7 @@ namespace Menu
                                 }
                                 if (!send)
                                 {
-                                    sba_Network->Send((char*)bp, sizeof(sba::SBrickPacket), sba_Players[i]->NetworkInformation);
+                                    sba_Network->Send((char*)bp, sizeof(sba::SBrickPacket), sba_Players[i]->NetworkInformation, true);
                                     sendSockets.push_back(sba_Players[i]->NetworkInformation);
 
                                 }
@@ -291,7 +322,7 @@ namespace Menu
                                 if (!send)
                                 {
                                     printf("Send User %i to %i\n", up->ID, sba_Players[i]->ID);
-                                    sba_Network->Send((char*)up, size, sba_Players[i]->NetworkInformation);
+                                    sba_Network->Send((char*)up, size, sba_Players[i]->NetworkInformation, true);
                                     sendSockets.push_back(sba_Players[i]->NetworkInformation);
                                 }
                             }
@@ -340,7 +371,7 @@ namespace Menu
                     int size = sizeof(up.Head.Type) + sizeof(up.ID) + nameSize;
                     //now send the packet to the host
                     printf("Send Ship Name and who I am %i!!\n",up.ID);
-                    sba_Network->SendHost((char*)&up, size);
+                    sba_Network->SendHost((char*)&up, size, true);
                     //Get the Data from the ship the player has
                     sba::SBrickPacket bp;
                     bp.Head.Type = sba::EPacket::Brick;
@@ -348,7 +379,7 @@ namespace Menu
                     bp.BrickNum = p->Ship->m_pBricks.size();
                     for (unsigned int i = 0; i < p->Ship->m_pBricks.size(); i++)
                         bp.Bricks[i] = p->Ship->GetBrick(i);
-                    sba_Network->SendHost((char*)&bp, sizeof(sba::SBrickPacket));
+                    sba_Network->SendHost((char*)&bp, sizeof(sba::SBrickPacket), true);
                     packetSize = sizeof(sba::SIamPacket);
                 }
 
@@ -370,7 +401,6 @@ namespace Menu
                 sba_Network->m_Mutex.unlock();
             }
         }
-        sba_Network->SetBlockMode(true);
         printf("Thread End LOBBY!\n");
     }
 
@@ -381,13 +411,13 @@ namespace Menu
             this->m_Run = true;
             if (sba_Network->GetHost())
             {
-                std::thread lThread(&CLobby::ListenLoop, this);
-                lThread.detach();
+                std::thread* lThread = new std::thread(&CLobby::ListenLoop, this);
+                this->m_Threads.push_back(lThread);
             }
             else
             {
-                std::thread rThread(&CLobby::ReceiveData, this, sba_Network->GetSocket());
-                rThread.detach();
+                std::thread* rThread = new std::thread(&CLobby::ReceiveData, this, sba_Network->GetSocket());
+                this->m_Threads.push_back(rThread);
             }
         }
     }
@@ -416,6 +446,14 @@ namespace Menu
         if (this->m_Start)
         {
             this->m_Run = false;
+            printf("Delete Threads\n");
+            for (unsigned int i = 0; i < this->m_Threads.size(); i++)
+            {
+                if (this->m_Threads[i]->joinable())
+                    this->m_Threads[i]->join();
+                SAFE_DELETE(this->m_Threads[i]);
+            }
+            this->m_Threads.clear();
             return 2;
         }
         this->m_pNavigation->Update(*a_pTimer, sba_Input->Direction(sba_Direction::MenuMove, a_PlayerIdx));
@@ -428,8 +466,10 @@ namespace Menu
                 {
                     if (sba_Network->IsConnected())
                     {
+                        sba_Network->m_Mutex.lock();
                         if (sba_Network->GetHost())
                         {
+                            printf("Game Start!\n");
                             this->m_Start = true;
                             sba::SHeadPacket hp;
                             hp.Type = sba::EPacket::Start;
@@ -449,13 +489,14 @@ namespace Menu
                                     }
                                     if (!send)
                                     {
-                                        sba_Network->Send((char*)&hp, sizeof(sba::SHeadPacket), sba_Players[m]->NetworkInformation);
+                                        sba_Network->Send((char*)&hp, sizeof(sba::SHeadPacket), sba_Players[m]->NetworkInformation, true);
                                         sendSockets.push_back(sba_Players[m]->NetworkInformation);
                                     }
                                 }
                             }
                             sendSockets.clear();
                         }
+                        sba_Network->m_Mutex.unlock();
                     }
                     else
                         this->m_Start = true;
@@ -471,7 +512,7 @@ namespace Menu
                         sba::SHeadPacket hp;
                         hp.Type = sba::EPacket::LobbyEnd;
                         for (unsigned int i = 0; i < sba_Players.size(); i++)
-                            sba_Network->Send((char*)&hp, sizeof(sba::SHeadPacket), sba_Players[i]->NetworkInformation);
+                            sba_Network->Send((char*)&hp, sizeof(sba::SHeadPacket), sba_Players[i]->NetworkInformation, true);
                     }
                     else
                     {
@@ -484,13 +525,19 @@ namespace Menu
                             {
                                 lp.Who = sba_Players[i]->ID;
                                 printf("Left: %i", lp.Who);
-                                sba_Network->SendHost((char*)&lp, sizeof(sba::SLeftPacket));
+                                sba_Network->SendHost((char*)&lp, sizeof(sba::SLeftPacket), true);
                             }
                         }
                     }
                     sba_Network->m_Mutex.unlock();
+                    this->m_Run = false;
+                    for (unsigned int i = 0; i < this->m_Threads.size(); i++)
+                    {
+                        this->m_Threads[i]->join();
+                        SAFE_DELETE(this->m_Threads[i]);
+                    }
+                    this->m_Threads.clear();
                 }
-                this->m_Run = false;
                 return 0;
                 break;
             }
@@ -564,7 +611,7 @@ namespace Menu
                                             if (!send)
                                             {
                                                 printf("Send Ship Name and who I am to player %i!!\n",sba_Players[m]->ID);
-                                                sba_Network->Send((char*)&up, size,sba_Players[m]->NetworkInformation);
+                                                sba_Network->Send((char*)&up, size, sba_Players[m]->NetworkInformation, true);
                                                 //Get the Data from the ship the player has
                                                 sba::SBrickPacket bp;
                                                 bp.Head.Type = sba::EPacket::Brick;
@@ -573,7 +620,7 @@ namespace Menu
                                                 printf("Calculate Data for Bricks\n");
                                                 for (unsigned int k = 0; k < p->Ship->m_pBricks.size(); k++)
                                                     bp.Bricks[k] = p->Ship->GetBrick(k);
-                                                sba_Network->Send((char*)&bp, sizeof(sba::SBrickPacket), sba_Players[m]->NetworkInformation);
+                                                sba_Network->Send((char*)&bp, sizeof(sba::SBrickPacket), sba_Players[m]->NetworkInformation, true);
                                                 printf("Send Data!\n");
                                                 sendSockets.push_back(sba_Players[m]->NetworkInformation);
                                             }
@@ -586,7 +633,7 @@ namespace Menu
                                     sba::SWhoamIPacket wp;
                                     wp.Head.Type = sba::EPacket::WhoamI;
                                     wp.Pad = i;
-                                    sba_Network->SendHost((char*)&wp, sizeof(sba::SWhoamIPacket));
+                                    sba_Network->SendHost((char*)&wp, sizeof(sba::SWhoamIPacket), true);
                                     //asks the server who he is
                                 }
                             }
@@ -627,7 +674,7 @@ namespace Menu
                                 sba::SLeftPacket lp;
                                 lp.Head.Type = sba::EPacket::Left;
                                 lp.Who = ID;
-                                sba_Network->Send((char*)&lp, sizeof(sba::SLeftPacket), sba_Players[j]->NetworkInformation);
+                                sba_Network->Send((char*)&lp, sizeof(sba::SLeftPacket), sba_Players[j]->NetworkInformation, true);
 
                             }
                         }
@@ -651,7 +698,7 @@ namespace Menu
                         sba::SLeftPacket lp;
                         lp.Head.Type = sba::EPacket::Left;
                         lp.Who = ID;
-                        sba_Network->SendHost((char*)&lp, sizeof(sba::SLeftPacket));
+                        sba_Network->SendHost((char*)&lp, sizeof(sba::SLeftPacket), true);
                     }
                 }
 
@@ -770,9 +817,9 @@ namespace Menu
                                             if (!send)
                                             {
                                                 printf("Send User %i to %i\n", up.ID, sba_Players[m]->ID);
-                                                sba_Network->Send((char*)&up, size, sba_Players[m]->NetworkInformation);
+                                                sba_Network->Send((char*)&up, size, sba_Players[m]->NetworkInformation, true);
                                                 printf("Send Bricks to %i\n", sba_Players[m]->ID);
-                                                sba_Network->Send((char*)&bp, sizeof(sba::SBrickPacket), sba_Players[m]->NetworkInformation);
+                                                sba_Network->Send((char*)&bp, sizeof(sba::SBrickPacket), sba_Players[m]->NetworkInformation, true);
                                                 sendSockets.push_back(sba_Players[m]->NetworkInformation);
                                             }
                                         }
@@ -782,9 +829,9 @@ namespace Menu
                                 else
                                 {
                                     printf("Send User %i to Host\n", up.ID);
-                                    sba_Network->SendHost((char*)&up, size);
+                                    sba_Network->SendHost((char*)&up, size, true);
                                     printf("Send Bricks to Host\n");
-                                    sba_Network->SendHost((char*)&bp, sizeof(sba::SBrickPacket));
+                                    sba_Network->SendHost((char*)&bp, sizeof(sba::SBrickPacket), true);
                                 }
                             } //only for the network
                         }

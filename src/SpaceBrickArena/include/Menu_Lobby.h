@@ -17,8 +17,7 @@ namespace Menu
         int m_LocalPlayers;
         bool m_Run;
         bool m_Start;
-        std::thread m_LoadThread;
-        std::thread m_ReceiveThread;
+        std::vector<std::thread*> m_Threads;
         PuRe_IWindow* m_pWindow;
         bool m_GameEnd;
     public:

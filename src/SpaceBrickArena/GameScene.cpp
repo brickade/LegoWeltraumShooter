@@ -9,18 +9,47 @@ namespace Game
     // **************************************************************************
     void CGameScene::ReceiveData(SOCKET s)
     {
+        sba_Network->SetBlockMode(s, true);
         printf("Start Thread!\n");
         const int bufferSize = 1024;
         char buffer[bufferSize];
         while (this->m_Run)
         {
             memset(buffer, 0, bufferSize);
-            long dataLeft = sba_Network->Receive(buffer, bufferSize, s);
+            long dataLeft = sba_Network->Receive(buffer, bufferSize, s, false);
+            if (dataLeft == -1)
+            {
+                printf("Connection lost\n");
+                break;
+            }
             sba_Network->m_Mutex.lock();
             while (dataLeft > 0)
             {
                 printf("Data left %d!\n", dataLeft);
                 sba::SReceivePacket* Packet = (sba::SReceivePacket*)buffer;
+                long packetSize = 4;
+                if (Packet->Head.Type == sba::EPacket::Init)
+                {
+                    printf("Received INIT!\n", dataLeft);
+                    sba::SInputPacket package;
+                    memset(&package, 0, sizeof(sba::SInputPacket));
+                    package.Head.Type = sba::EPacket::STick;
+                    for (unsigned int i = 0; i < sba_Players.size(); i++)
+                    {
+                        if (sba_Players[i]->PadID != -1)
+                        {
+                            //send first 6 frames
+                            package.Input.Player = sba_Players[i]->ID;
+                            printf("Send initial Data!\n");
+                            for (int j = 0; j < sba::Delay; ++j)
+                            {
+                                package.Frame = j;
+                                sba_Network->SendHost((char*)&package, sizeof(sba::SInputPacket), false);
+                            }
+                        }
+                    }
+                    packetSize = sizeof(sba::SHeadPacket);
+                }
                 if (Packet->Head.Type == sba::EPacket::STick)
                 {
                     sba::SInputPacket* IPacket = (sba::SInputPacket*)Packet;
@@ -28,9 +57,7 @@ namespace Game
                     m_numReceived[IPacket->Frame - m_PhysicFrame]++;
                     printf("received tick %d from player %d\n", IPacket->Frame, IPacket->Input.Player);
                     //ship left
-                    long packetSize = sizeof(sba::SInputPacket);
-                    dataLeft -= packetSize;
-                    memcpy(buffer, buffer + (int)packetSize, bufferSize - packetSize);
+                    packetSize = sizeof(sba::SInputPacket);
                 }
                 else if (Packet->Head.Type == sba::EPacket::CTick)
                 {
@@ -40,12 +67,10 @@ namespace Game
                     memcpy(pbuffer->Inputs, IPacket->Input, sizeof(sba::SInputData)*IPacket->Players);
                     printf("received tick %d\n", IPacket->Frame);
                     //ship left
-                    long packetSize = sizeof(sba::SInputsPacket);
-                    dataLeft -= packetSize;
-                    memcpy(buffer, buffer + (int)packetSize, bufferSize - packetSize);
+                    packetSize = sizeof(sba::SInputsPacket);
                 }
-                else
-                    dataLeft -= sizeof(sba::SHeadPacket);
+                dataLeft -= packetSize;
+                memcpy(buffer, buffer + (int)packetSize, bufferSize - packetSize);
             }
             sba_Network->m_Mutex.unlock();
         }
@@ -165,7 +190,7 @@ namespace Game
                         if (sba_Players[j]->PadID == -1)
                         {
                             bool send = false;
-                            for (unsigned n = 0; n < sendSockets.size(); n++)
+                            for (unsigned int n = 0; n < sendSockets.size(); n++)
                             {
                                 if (sba_Players[j]->NetworkInformation == sendSockets[n])
                                 {
@@ -175,7 +200,7 @@ namespace Game
                             }
                             if (!send)
                             {
-                                sba_Network->Send((char*)&packet, sizeof(sba::SInputsPacket), sba_Players[j]->NetworkInformation);
+                                sba_Network->Send((char*)&packet, sizeof(sba::SInputsPacket), sba_Players[j]->NetworkInformation, false);
                                 sendSockets.push_back(sba_Players[j]->NetworkInformation);
                             }
                         }
@@ -201,7 +226,7 @@ namespace Game
 
             if (inputExists)
             {
-                printf("Input exists, do Physik!\n");
+                printf("Input exists, do Physik for Frame %i!\n",this->m_PhysicFrame);
                 sba::SInputPacket ipacket;
                 for (unsigned int i = 0; i < sba_Players.size(); i++)
                 {
@@ -216,7 +241,7 @@ namespace Game
                         if (!sba_Network->GetHost())
                         {
                             printf("send package %d\n", ipacket.Frame);
-                            sba_Network->SendHost((char*)&ipacket, sizeof(sba::SInputPacket));
+                            sba_Network->SendHost((char*)&ipacket, sizeof(sba::SInputPacket), false);
                         }
                         else
                         {
@@ -273,13 +298,16 @@ namespace Game
     // **************************************************************************
     void CGameScene::StartGame()
     {
+        this->m_PhysicTime = 0.0f;
+        this->m_PhysicFrame = 0;
+        memset(m_buffer, -1, sizeof(PlayOutBuffer) * BufferSize);
         if (sba_Network->IsConnected())
         {
+            printf("set block mode true\n");
             this->m_Run = true;
-            this->m_PhysicTime = 0.0f;
-            this->m_PhysicFrame = 0;
             if (sba_Network->GetHost())
             {
+                sba_Network->m_Mutex.lock();
                 printf("\n");
                 printf("Resetting Buffer ... \n");
                 for (int i = 0; i < BufferSize; ++i)
@@ -307,6 +335,32 @@ namespace Game
                         rthread.detach();
                     }
                 }
+                printf("Send init to all.\n");
+                sba::SHeadPacket sh;
+                sh.Type = sba::EPacket::Init;
+                std::vector<SOCKET> sendSockets;
+                for (unsigned int i = 0; i < sba_Players.size(); i++)
+                {
+                    if (sba_Players[i]->PadID == -1)
+                    {
+                        bool send = false;
+                        for (unsigned int n = 0; n < sendSockets.size(); n++)
+                        {
+                            if (sba_Players[i]->NetworkInformation == sendSockets[n])
+                            {
+                                send = true;
+                                break;
+                            }
+                        }
+                        if (!send)
+                        {
+                            sba_Network->Send((char*)&sh, sizeof(sba::SHeadPacket), sba_Players[i]->NetworkInformation, false);
+                            sendSockets.push_back(sba_Players[i]->NetworkInformation);
+                        }
+                    }
+                }
+                sendSockets.clear();
+                sba_Network->m_Mutex.unlock();
                 printf("Set Initial Input for Host.\n");
 
             }
@@ -314,26 +368,6 @@ namespace Game
             {
                 std::thread rthread(&CGameScene::ReceiveData, this, sba_Network->GetSocket());
                 rthread.detach();
-                sba_Network->m_Mutex.lock();
-                for (unsigned int i = 0; i < sba_Players.size(); i++)
-                {
-                    if (sba_Players[i]->PadID != -1)
-                    {
-                        memset(m_buffer, -1, sizeof(PlayOutBuffer) * BufferSize);
-                        //send first 6 frames
-                        sba::SInputPacket package;
-                        memset(&package, 0, sizeof(sba::SInputPacket));
-                        package.Head.Type = sba::EPacket::STick;
-                        package.Input.Player = sba_Players[i]->ID;
-                        printf("Send initial Data!\n");
-                        for (int j = 0; j < sba::Delay; ++j)
-                        {
-                            package.Frame = j;
-                            sba_Network->SendHost((char*)&package, sizeof(sba::SInputPacket));
-                        }
-                    }
-                }
-                sba_Network->m_Mutex.unlock();
             }
         }
         for (unsigned int i = 0; i < sba_Players.size(); i++)
