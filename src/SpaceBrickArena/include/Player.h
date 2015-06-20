@@ -14,6 +14,7 @@ namespace sba
         unsigned char ID;
         char PadID;
         SOCKET NetworkInformation;
+        bool Timeout;
         TheBrick::CSpaceship* Ship;
     };
 }

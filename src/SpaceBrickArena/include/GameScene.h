@@ -27,15 +27,22 @@ namespace Game
         int Frame;
         sba::SInputData Inputs[sba::MaxPlayers]; //frame saved in here
     };
+    struct GotBuffer
+    {
+        bool Player[sba::MaxPlayers];
+    };
     /// @brief MainScene where the game functions are in, inherits from the Scene interface
     ///
     class CGameScene : public PuRe_IScene
     {
     private:
+        int m_Test;
+        float m_Timeout;
         bool m_Run;
         std::mutex m_Mutex;
         //host only
         unsigned int m_numReceived[BufferSize];
+        GotBuffer m_numGot[BufferSize];
         bool m_send[BufferSize];
         //All players
         PlayOutBuffer m_buffer[BufferSize];

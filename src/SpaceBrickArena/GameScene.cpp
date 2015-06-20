@@ -53,9 +53,17 @@ namespace Game
                 if (Packet->Head.Type == sba::EPacket::STick)
                 {
                     sba::SInputPacket* IPacket = (sba::SInputPacket*)Packet;
-                    m_buffer[IPacket->Frame - m_PhysicFrame].Inputs[IPacket->Input.Player] = IPacket->Input;
-                    m_numReceived[IPacket->Frame - m_PhysicFrame]++;
-                    printf("received tick %d from player %d\n", IPacket->Frame, IPacket->Input.Player);
+                    for (unsigned int i = 0; i < sba_Players.size(); i++)
+                    {
+                        if (!sba_Players[i]->Timeout&&sba_Players[i]->ID == IPacket->Input.Player)
+                        {
+                            m_buffer[IPacket->Frame - m_PhysicFrame].Inputs[IPacket->Input.Player] = IPacket->Input;
+                            m_numReceived[IPacket->Frame - m_PhysicFrame]++;
+                            m_numGot[IPacket->Frame - m_PhysicFrame].Player[IPacket->Input.Player] = true;
+                            printf("received tick %d from player %d\n", IPacket->Frame, IPacket->Input.Player);
+                            break;
+                        }
+                    }
                     //ship left
                     packetSize = sizeof(sba::SInputPacket);
                 }
@@ -82,6 +90,7 @@ namespace Game
     CGameScene::CGameScene(PuRe_Application* a_pApplication, int a_playerIdx, bool a_Network)
     {
         this->m_pApplication = a_pApplication;
+        this->m_Test = -1;
     }
 
     // **************************************************************************
@@ -107,6 +116,7 @@ namespace Game
             input.MoveY = 2;
 
         float Thrust = aInput->GetGamepadRightTrigger(a_PlayerIdx);
+        printf("Thrust in Handle: %f\n",Thrust);
         if (Thrust > 0.2f)
             input.Thrust = true;
 
@@ -123,12 +133,13 @@ namespace Game
     void CGameScene::ProcessInput(TheBrick::CSpaceship* a_Ship, sba::SInputData* a_Input, float a_DeltaTime)
     {
         if (a_Input->Shoot)
-        {
             a_Ship->Shoot(this->m_Bullets, sba_BrickManager);
-        }
 
         if (a_Input->Thrust)
+        { 
+            printf("THRUST DOING\n");
             a_Ship->Thrust(1.0f);
+        }
 
         PuRe_Vector2F Move = PuRe_Vector2F(0.0f, 0.0f);
         if (a_Input->MoveX == 1)
@@ -174,6 +185,14 @@ namespace Game
         {
             for (int i = 0; i < BufferSize; ++i)
             {
+                for (unsigned int j = 0; j < sba_Players.size(); j++)
+                {
+                    if (!this->m_numGot[i].Player[j] && sba_Players[j]->Timeout)
+                    {
+                        m_numReceived[i]++;
+                        this->m_numGot[i].Player[sba_Players[j]->ID] = true;
+                    }
+                }
                 sba::SInputsPacket packet;
                 //if all player send something
                 if (!m_send[i] && m_numReceived[i] >= sba_Players.size())
@@ -187,7 +206,7 @@ namespace Game
                     std::vector<SOCKET> sendSockets;
                     for (unsigned int j = 0; j < sba_Players.size(); ++j)
                     {
-                        if (sba_Players[j]->PadID == -1)
+                        if (!sba_Players[j]->Timeout&&sba_Players[j]->PadID == -1)
                         {
                             bool send = false;
                             for (unsigned int n = 0; n < sendSockets.size(); n++)
@@ -211,8 +230,6 @@ namespace Game
             }
         }
 
-
-
         m_PhysicTime += this->m_pApplication->GetTimer()->GetElapsedSeconds();
         bool inputExists = true;
         while (m_PhysicTime >= 1.0f / 60.0f && inputExists)
@@ -226,6 +243,7 @@ namespace Game
 
             if (inputExists)
             {
+                this->m_Timeout = 0;
                 printf("Input exists, do Physik for Frame %i!\n",this->m_PhysicFrame);
                 sba::SInputPacket ipacket;
                 for (unsigned int i = 0; i < sba_Players.size(); i++)
@@ -248,6 +266,7 @@ namespace Game
                             printf("Handle own Input %d\n", ipacket.Frame);
                             m_buffer[ipacket.Frame - m_PhysicFrame].Inputs[sba_Players[i]->ID] = ipacket.Input;
                             m_numReceived[ipacket.Frame - m_PhysicFrame]++;
+                            m_numGot[ipacket.Frame - m_PhysicFrame].Player[sba_Players[i]->ID] = true;
                         }
                     }
                 }
@@ -276,6 +295,8 @@ namespace Game
                 {
                     memcpy(m_numReceived, m_numReceived + 1, sizeof(unsigned int) * BufferSize - 1);
                     memcpy(m_send, m_send + 1, sizeof(bool) * BufferSize - 1);
+                    memcpy(m_numGot, m_numGot + 1, sizeof(GotBuffer) * BufferSize - 1);
+                    memset(m_numGot[BufferSize - 1].Player, 0, sizeof(bool)*sba::MaxPlayers);
                     m_numReceived[BufferSize - 1] = 0;
                     m_send[BufferSize - 1] = 0;
                     m_buffer[BufferSize - 1].Frame = this->m_PhysicFrame + BufferSize;
@@ -290,6 +311,21 @@ namespace Game
             } //if input exists
 
         } //while physic run
+
+
+
+        if (sba_Network->GetHost())
+        {
+            //Kein Physic Frame seit 4 Sekunden
+            if (this->m_Timeout > 4.0f)
+            {
+                for (unsigned int i = 0; i < sba_Players.size(); i++)
+                {
+                    if (!m_numGot[0].Player[i])
+                        sba_Players[i]->Timeout = true;
+                }
+            }
+        }
 
         sba_Network->m_Mutex.unlock();
     }
@@ -314,6 +350,7 @@ namespace Game
                 {
                     m_buffer[i].Frame = i;
                     memset(m_buffer[i].Inputs, 0, sizeof(sba::SInputData) * sba::MaxPlayers);
+                    memset(&m_numGot[i].Player, 0, sizeof(bool)* sba::MaxPlayers);
                     m_send[i] = 0;
                     m_numReceived[i] = 0;
                 }
@@ -327,6 +364,7 @@ namespace Game
                         {
                             memset(&m_buffer[j - m_PhysicFrame].Inputs[sba_Players[i]->ID], 0, sizeof(sba::SInputData));
                             m_numReceived[j - m_PhysicFrame]++;
+                            m_numGot[j - m_PhysicFrame].Player[sba_Players[i]->ID] = true;
                         }
                     }
                     else
@@ -469,6 +507,7 @@ namespace Game
     int CGameScene::Update(PuRe_Application* a_pApplication)
     {
         PuRe_Timer* timer = a_pApplication->GetTimer();
+        m_Timeout += timer->GetElapsedSeconds();
         //Handle ESC Button
         if (a_pApplication->GetInput()->KeyPressed(a_pApplication->GetInput()->ESC))
         {
@@ -478,16 +517,22 @@ namespace Game
 
         if (a_pApplication->GetInput()->KeyPressed(a_pApplication->GetInput()->Left))
         {
-            this->m_TextureID--;
-            if (this->m_TextureID < 0)
-                this->m_TextureID = 4;
+            //this->m_TextureID--;
+            //if (this->m_TextureID < 0)
+            //    this->m_TextureID = 4;
+            this->m_Test--;
+            if (this->m_Test < 0)
+                this->m_Test = sba_Players.size()-1;
         }
 
         else if (a_pApplication->GetInput()->KeyPressed(a_pApplication->GetInput()->Right))
         {
-            this->m_TextureID++;
-            if (this->m_TextureID > 4)
-                this->m_TextureID = 0;
+            //this->m_TextureID++;
+            //if (this->m_TextureID > 4)
+            //    this->m_TextureID = 0;
+            this->m_Test++;
+            if (this->m_Test > sba_Players.size()-1)
+                this->m_Test = 0;
         }
 
 
@@ -503,7 +548,11 @@ namespace Game
             {
                 if (sba_Players[i]->PadID != -1)
                 {
-                    TheBrick::CSpaceship* playerShip = sba_Players[i]->Ship;
+                    TheBrick::CSpaceship* playerShip;
+                    if (camID == 0 && this->m_Test != -1)
+                        playerShip = sba_Players[this->m_Test]->Ship;
+                    else
+                        playerShip = sba_Players[i]->Ship;
                     this->m_Cameras[camID]->Update(0, playerShip, a_pApplication->GetInput(), a_pApplication->GetTimer());
                     PuRe_QuaternionF rotation = this->m_Cameras[camID]->GetQuaternion();
 
