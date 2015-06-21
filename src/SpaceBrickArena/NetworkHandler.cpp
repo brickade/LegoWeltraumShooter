@@ -94,7 +94,7 @@ namespace sba
     SOCKET CNetworkHandler::Accept()
     {
         SOCKADDR_IN clientData;
-        //!!!!!!!!!!CommentedOutForMergeCompile!!!!!!!!!!   if (this->m_pSocket->Select(this->m_pSocket->GetSocket(),PuRe_SocketSelect::Read,1000))
+        if (this->m_pSocket->Select(this->m_pSocket->GetSocket(),PuRe_SocketSelect::Read,1000))
         {
             SOCKET s = this->m_pSocket->Accept(&clientData);
             if (s != 4294967295)
@@ -108,7 +108,7 @@ namespace sba
     void CNetworkHandler::SetBlockMode(SOCKET s,bool a_Block)
     {
         if (this->m_pSocket->IsWorking())
-            this->m_pSocket->SetMode(a_Block);
+            this->m_pSocket->SetMode(s, a_Block);
     }
 
     // **************************************************************************
@@ -150,7 +150,7 @@ namespace sba
         {
             long selerror = 0;
             while (selerror == 0)
-                //!!!!!!!!!!CommentedOutForMergeCompile!!!!!!!!!!   selerror = this->m_pSocket->Select(a_pSender, PuRe_SocketSelect::Read, 1000);
+                selerror = this->m_pSocket->Select(a_pSender, PuRe_SocketSelect::Read, 1000);
             //if he is ready, check if he really is ready or if he got an error
             if (selerror > 0)
             {
@@ -160,8 +160,8 @@ namespace sba
             else
             {
                 //got an error, print it
-                //!!!!!!!!!!CommentedOutForMergeCompile!!!!!!!!!!   int err = this->m_pSocket->GetError();
-                //!!!!!!!!!!CommentedOutForMergeCompile!!!!!!!!!!   printf("Error Receiving Select: %i\n", this->m_pSocket->GetError());
+                int err = this->m_pSocket->GetError();
+                printf("Error Receiving Select: %i\n", this->m_pSocket->GetError());
             }
         }
         if (!a_Select)
@@ -172,10 +172,10 @@ namespace sba
             else
             {
                 //nope, receive got error, print it
-                //!!!!!!!!!!CommentedOutForMergeCompile!!!!!!!!!!   int err = this->m_pSocket->GetError();
-                //!!!!!!!!!!CommentedOutForMergeCompile!!!!!!!!!!   if (err != 10035)
-                    //!!!!!!!!!!CommentedOutForMergeCompile!!!!!!!!!!   printf("Error Receiving: %i\n", this->m_pSocket->GetError());
-                //!!!!!!!!!!CommentedOutForMergeCompile!!!!!!!!!!   else
+                int err = this->m_pSocket->GetError();
+                if (err != 10035)
+                    printf("Error Receiving: %i\n", this->m_pSocket->GetError());
+                else
                     return 0;
             }
         }
@@ -205,7 +205,7 @@ namespace sba
             {
                 long selerror = 0;
                 while (selerror == 0)
-                    //!!!!!!!!!!CommentedOutForMergeCompile!!!!!!!!!!   selerror = this->m_pSocket->Select(a_Receiver, PuRe_SocketSelect::Write, 1000);
+                    selerror = this->m_pSocket->Select(a_Receiver, PuRe_SocketSelect::Write, 1000);
                 //if he is ready, check if he really is ready or if he got an error
                 if (selerror > 0)
                 {
@@ -215,8 +215,8 @@ namespace sba
                 else
                 {
                     //got an error, print it
-                    //!!!!!!!!!!CommentedOutForMergeCompile!!!!!!!!!!   int err = this->m_pSocket->GetError();
-                    //!!!!!!!!!!CommentedOutForMergeCompile!!!!!!!!!!   printf("Error Send Select: %i\n", this->m_pSocket->GetError());
+                    int err = this->m_pSocket->GetError();
+                    printf("Error Send Select: %i\n", this->m_pSocket->GetError());
                 }
             }
             if (!a_Select)
@@ -228,8 +228,8 @@ namespace sba
                 else
                 {
                     //nope, receive got error, print it
-                    //!!!!!!!!!!CommentedOutForMergeCompile!!!!!!!!!!   int err = this->m_pSocket->GetError();
-                    //!!!!!!!!!!CommentedOutForMergeCompile!!!!!!!!!!   printf("Error Send: %i\n", this->m_pSocket->GetError());
+                    int err = this->m_pSocket->GetError();
+                    printf("Error Send: %i\n", this->m_pSocket->GetError());
                 }
             }
         }
