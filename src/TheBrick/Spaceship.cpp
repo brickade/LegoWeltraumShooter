@@ -23,14 +23,6 @@ namespace TheBrick
         SAFE_DELETE(this->m_pCSVFile);
     }
 
-	// **************************************************************************
-    // **************************************************************************
-    void CSpaceship::Draw(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera)
-    {
-        DrawBody(this->m_pBody,a_pCamera,a_pGraphics);
-        CGameObject::Draw(a_pGraphics, a_pCamera);
-    }
-
     // **************************************************************************
     // **************************************************************************
     void CSpaceship::Shoot(std::vector<CBullet*>& a_rBullets/*, CBrickManager* a_pManager*/)

@@ -131,7 +131,6 @@ namespace Editor
             sba_BrickManager->Render();
             this->m_pBrickSupervisor->Render(*a_pApplication->GetGraphics(), this->m_pBrickSupervisorFader->GetVisibility());
             this->m_pColorFields->Render(*a_pApplication->GetGraphics(), this->m_pColorFieldsFader->GetVisibility());
-            //this->m_pWorker->DrawDebug(a_pApplication->GetGraphics());
             break;
         }
 

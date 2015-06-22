@@ -32,13 +32,6 @@ namespace TheBrick
 
     // **************************************************************************
     // **************************************************************************
-    void CBullet::Draw(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera)
-    {
-        DrawBody(this->m_pBody, a_pCamera, a_pGraphics);
-    }
-
-    // **************************************************************************
-    // **************************************************************************
     void CBullet::Update(float a_DeltaTime)
     {
         this->m_lifeTime += a_DeltaTime;

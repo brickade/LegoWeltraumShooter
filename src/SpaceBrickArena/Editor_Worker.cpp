@@ -38,7 +38,7 @@ namespace Editor
         this->m_currentPosition = PuRe_Vector2F(0, 0);
         this->m_currentBrickPosition = PuRe_Vector2I(0, 0);
         this->m_currentHeight = 0;
-        this->m_maxBrickDistance = 15;
+        this->m_maxBrickDistance = 15 * 3;
         this->m_pHistory = new CHistory(300, 100);
         this->m_placeBelow = false;
         this->m_pCurrentBrickObject = new TheBrick::CGameObject(*sba_World, nullptr);
@@ -97,7 +97,7 @@ namespace Editor
     void CWorker::UpdateTranslation(PuRe_Vector3F a_cameraLook, float a_speed)
     {
         PuRe_Vector2F MoveInput = sba_Input->Direction(sba_Direction::EditorMoveBrick, this->m_playerIdx) * a_speed;
-        if (a_cameraLook.Y > 0.5f)
+        if (a_cameraLook.Y > 0.6f)
         {
             MoveInput.Y *= -1;
         }

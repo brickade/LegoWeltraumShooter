@@ -48,26 +48,6 @@ namespace TheBrick
 
     // **************************************************************************
     // **************************************************************************
-    void CGameObject::Draw(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera)
-    {
-        DrawBody(this->m_pBody, a_pCamera, a_pGraphics);
-        return;
-        for (auto&& brickinstance : this->m_pBricks)
-        {
-            std::vector<TheBrick::SNub>& nubs = brickinstance->m_pBrick->GetNubs();
-            for (auto&& nub : nubs)
-            {
-                ong::Sphere s;
-                s.r = 0.1f;
-                s.c = TheBrick::PuReToOng(nub.Position);
-                TheBrick::DrawShape(&s, ong::Transform(brickinstance->GetTransform()), PuRe_Vector3F(0, 1, 1), a_pCamera, a_pGraphics);
-            }
-        }
-    }
-
-
-    // **************************************************************************
-    // **************************************************************************
     SBrickData CGameObject::GetBrick(unsigned int a_Index)
     {
         SBrickData BrickData;

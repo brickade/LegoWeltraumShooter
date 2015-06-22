@@ -59,11 +59,6 @@ namespace Editor
         {
             return this->m_pCamera;
         }
-        void DrawDebug(PuRe_IGraphics* a_pGraphics)
-        {
-            m_pCurrentBrickObject->Draw(a_pGraphics, m_pCamera);
-            //this->m_pShipWorker->GetCurrentSpaceShip()->Draw(a_pGraphics, this->m_pCamera);
-        }
 
         float GetCurrentBrickRotation()
         {
