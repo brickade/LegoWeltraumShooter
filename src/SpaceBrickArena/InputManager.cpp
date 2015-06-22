@@ -1,6 +1,7 @@
 #include "include/InputManager.h"
 
 #include <TheBrick/Serializer.h>
+#include "include/Space.h"
 
 namespace sba
 {
@@ -22,9 +23,9 @@ namespace sba
 
     // **************************************************************************
     // **************************************************************************
-    void CInputManager::Initialize(PuRe_IInput* a_pInput)
+    void CInputManager::Initialize()
     {
-        this->m_pInput = a_pInput;
+        this->m_pInput = sba_Application->GetInput();
         //this->Load("input.data");
         this->Reset();
     }
@@ -35,7 +36,7 @@ namespace sba
     {
         //Direction
         memset(&this->m_pDirectionMapping, 0, sizeof(this->m_pDirectionMapping));
-        this->m_pDirectionMapping[Input::EDirection::MenuMove] =
+        this->m_pDirectionMapping[Input::EDirection::Navigate] =
         {
             Input::EGamepadDirection::LeftThumb,
             {
@@ -101,26 +102,6 @@ namespace sba
 
         //Button
         memset(&this->m_pButtonMapping, 0, sizeof(this->m_pButtonMapping));
-        this->m_pButtonMapping[Input::EButton::MenuClick] =
-        {
-            Input::EGamepadButton::Pad_A,
-            {
-                Input::EKeyboardButton::Enter,
-                Input::EKeyboardButton::Enter,
-                Input::EKeyboardButton::Enter,
-                Input::EKeyboardButton::Enter
-            }
-        };
-        this->m_pButtonMapping[Input::EButton::MenuBack] =
-        {
-            Input::EGamepadButton::Pad_B,
-            {
-                Input::EKeyboardButton::Escape,
-                Input::EKeyboardButton::Escape,
-                Input::EKeyboardButton::Escape,
-                Input::EKeyboardButton::Escape
-            }
-        };
         this->m_pButtonMapping[Input::EButton::EditorPlaceBrick] =
         {
             Input::EGamepadButton::Pad_A,
@@ -261,7 +242,26 @@ namespace sba
                 Input::EKeyboardButton::Num_Five
             }
         };
-
+        this->m_pButtonMapping[Input::EButton::NaviagtionSelect] =
+        {
+            Input::EGamepadButton::Pad_A,
+            {
+                Input::EKeyboardButton::Enter,
+                Input::EKeyboardButton::Enter,
+                Input::EKeyboardButton::Enter,
+                Input::EKeyboardButton::Enter
+            }
+        };
+        this->m_pButtonMapping[Input::EButton::NavigationBack] =
+        {
+            Input::EGamepadButton::Pad_B,
+            {
+                Input::EKeyboardButton::Backspace,
+                Input::EKeyboardButton::Backspace,
+                Input::EKeyboardButton::Backspace,
+                Input::EKeyboardButton::Backspace
+            }
+        };
         this->m_pButtonMapping[Input::EButton::Exit] =
         {
             Input::EGamepadButton::Pad_Back,

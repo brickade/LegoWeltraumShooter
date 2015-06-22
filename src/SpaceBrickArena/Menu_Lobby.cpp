@@ -281,7 +281,7 @@ namespace Menu
                         if (sba_Players[i]->ID == bp->ID)
                         {
                             for (int j=0;j<bp->BrickNum;j++)
-                                sba_Players[i]->Ship->AddBrick(bp->Bricks[j], *sba_BrickManager, *sba_World);
+                                sba_Players[i]->Ship->AddBrick(bp->Bricks[j], sba_BrickManager->GetBrickArray(), *sba_World);
                             break;
                         }
                     }
@@ -456,8 +456,8 @@ namespace Menu
             this->m_Threads.clear();
             return 2;
         }
-        this->m_pNavigation->Update(*a_pTimer, sba_Input->Direction(sba_Direction::MenuMove, a_PlayerIdx));
-        if (sba_Input->ButtonPressed(sba_Button::MenuClick, a_PlayerIdx))
+        this->m_pNavigation->Update(*a_pTimer, sba_Input->Direction(sba_Direction::Navigate, a_PlayerIdx));
+        if (sba_Input->ButtonPressed(sba_Button::NaviagtionSelect, a_PlayerIdx))
         {
             switch (this->m_pNavigation->GetFocusedElementId())
             {
@@ -773,7 +773,7 @@ namespace Menu
                             ong::vec3 pos = ong::vec3(0.0f, 0.0f, 0.0f);
                             SAFE_DELETE(p->Ship);
                             p->Ship = new TheBrick::CSpaceship(*sba_World, name);
-                            p->Ship->Deserialize(serializer, *sba_BrickManager, *sba_World);
+                            p->Ship->Deserialize(serializer, sba_BrickManager->GetBrickArray(), *sba_World);
                             serializer.Close();
 
                             if (sba_Network->IsConnected())

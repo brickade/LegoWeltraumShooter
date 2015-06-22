@@ -139,6 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\BrickManager.h" />
     <ClInclude Include="include\Editor_BrickCategory.h" />
     <ClInclude Include="include\Editor_BrickSupervisor.h" />
     <ClInclude Include="include\Editor_Assistant.h" />
@@ -151,6 +152,7 @@
     <ClInclude Include="include\Menu_Main.h" />
     <ClInclude Include="include\Menu_Network.h" />
     <ClInclude Include="include\Menu_Options.h" />
+    <ClInclude Include="include\ShipManager.h" />
     <ClInclude Include="include\Menu_Server.h" />
     <ClInclude Include="include\Player.h" />
     <ClInclude Include="include\Space.h" />
@@ -164,10 +166,11 @@
     <ClInclude Include="include\Minimap.h" />
     <ClInclude Include="include\Navigation.h" />
     <ClInclude Include="include\NetworkHandler.h" />
-    <ClInclude Include="include\Editor_ShipWorker.h" />
+    <ClInclude Include="include\Editor_ShipHandler.h" />
     <ClInclude Include="include\UIElementFader.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BrickManager.cpp" />
     <ClCompile Include="Editor_BrickCategory.cpp" />
     <ClCompile Include="Editor_BrickSupervisor.cpp" />
     <ClCompile Include="Editor_Assistant.cpp" />
@@ -179,6 +182,7 @@
     <ClCompile Include="Menu_Main.cpp" />
     <ClCompile Include="Menu_Network.cpp" />
     <ClCompile Include="Menu_Options.cpp" />
+    <ClCompile Include="ShipManager.cpp" />
     <ClCompile Include="Space.cpp" />
     <ClCompile Include="Editor_Camera.cpp" />
     <ClCompile Include="Editor_Worker.cpp" />
@@ -191,7 +195,7 @@
     <ClCompile Include="Minimap.cpp" />
     <ClCompile Include="Navigation.cpp" />
     <ClCompile Include="NetworkHandler.cpp" />
-    <ClCompile Include="Editor_ShipWorker.cpp" />
+    <ClCompile Include="Editor_ShipHandler.cpp" />
     <ClCompile Include="UIElementFader.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

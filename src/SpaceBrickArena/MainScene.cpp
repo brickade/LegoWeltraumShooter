@@ -15,7 +15,8 @@ namespace sba
         PuRe_GraphicsDescription gdesc = a_pApplication->GetGraphics()->GetDescription();
 
         Space::Instance()->Initialize(*a_pApplication->GetGraphics(), *a_pApplication->GetInput(), *a_pApplication->GetSoundPlayer(), *a_pApplication);
-        sba_BrickManager->Load(*a_pApplication->GetGraphics(), *a_pApplication->GetWindow(), *sba_World, *sba_BrickManager->GetBrickMaterial(), "../data/bricks/");
+        sba_BrickManager->Load();
+        sba_ShipManager->Load();
 
         this->m_pMenuScene->Initialize(a_pApplication);
         this->m_pActiveScene = this->m_pMenuScene;
@@ -25,8 +26,7 @@ namespace sba
     // **************************************************************************
     int CMainScene::Update(PuRe_Application* a_pApplication)
     {
-        //Handle ESC Button
-            //Drop update after lag to avoid strange camera movement jumps etc
+        //Drop update after lag to avoid strange camera movement jumps etc
         if (a_pApplication->GetTimer()->GetElapsedMilliseconds() > 200)
             return 1;
 

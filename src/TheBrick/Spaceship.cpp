@@ -2,6 +2,7 @@
 
 #include "include/TheBrick/Conversion.h"
 #include "include/TheBrick/BrickInstance.h"
+#include "include/TheBrick/Brick.h"
 
 namespace TheBrick
 {
@@ -20,6 +21,7 @@ namespace TheBrick
     // **************************************************************************
     CSpaceship::~CSpaceship()
     {
+
     }
 
     // **************************************************************************
@@ -80,17 +82,9 @@ namespace TheBrick
         }
     }
 
-	// **************************************************************************
-    // **************************************************************************
-    void CSpaceship::Draw(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera)
-    {
-        DrawBody(this->m_pBody,a_pCamera,a_pGraphics);
-        CGameObject::Draw(a_pGraphics, a_pCamera);
-    }
-
     // **************************************************************************
     // **************************************************************************
-    void CSpaceship::Shoot(std::vector<CBullet*>& a_rBullets, CBrickManager* a_pManager)
+    void CSpaceship::Shoot(std::vector<CBullet*>& a_rBullets/*, CBrickManager* a_pManager*/)
     {
         ong::Body* b = this->m_pBody;
         ong::World* w = b->getWorld();
@@ -130,7 +124,7 @@ namespace TheBrick
     }
     // **************************************************************************
     // **************************************************************************
-    void CSpaceship::Update(float a_DeltaTime)
+    void CSpaceship::HandleInput(int a_CID, PuRe_IInput* a_pInput, float a_DeltaTime, std::vector<CBullet*>& a_rBullets, CBrickManager* a_pManager)
     {
         if (this->m_Respawn > 0.0f)
         {
@@ -189,9 +183,10 @@ namespace TheBrick
 
     // **************************************************************************
     // **************************************************************************
-    void CSpaceship::Deserialize(CSerializer& a_pSerializer, CBrickManager& a_pBrickManager, ong::World& a_pWorld)
+    // **************************************************************************
+    void CSpaceship::Deserialize(CSerializer& a_pSerializer, BrickArray& a_rBricks, ong::World& a_pWorld)
     {
-        CGameObject::Deserialize(a_pSerializer, a_pBrickManager, a_pWorld);
+        CGameObject::Deserialize(a_pSerializer, a_rBricks, a_pWorld);
     }
 
     // **************************************************************************
@@ -199,5 +194,21 @@ namespace TheBrick
     void CSpaceship::Serialize(CSerializer& a_pSerializer)
     {
         CGameObject::Serialize(a_pSerializer);
+    }
+
+    // **************************************************************************
+    // **************************************************************************
+    void CSpaceship::Reset(CBrick& a_rStartBrick, ong::World& a_rWorld)
+    {
+        for (size_t i = 0; i < this->m_pBricks.size(); i++)
+        {
+            SAFE_DELETE(this->m_pBricks[i]);
+            i--;
+        }
+        this->SetNameFromFilename("Banana");
+        CBrickInstance* brickInstance = a_rStartBrick.CreateInstance(*this, a_rWorld);
+        brickInstance->SetTransform(ong::Transform(ong::vec3(0, 0, 0), ong::Quaternion(ong::vec3(0, 0, 0), 1)));
+        brickInstance->RotateAroundPivotOffset(PuRe_QuaternionF(0.0f, 0.0f, 0.0f));
+        brickInstance->m_Color = PuRe_Color(0, 0, 1);
     }
 }

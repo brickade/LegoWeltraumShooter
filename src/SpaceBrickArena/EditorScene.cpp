@@ -7,6 +7,7 @@ namespace Editor
     CEditorScene::CEditorScene(PuRe_Application* a_pApplication, int a_playerIdx)
     {
         this->m_PlayerIdx = a_playerIdx;
+        this->m_State = EEditorState::SelectShip;
     }
 
     // **************************************************************************
@@ -40,6 +41,8 @@ namespace Editor
         this->m_pWorker = new Editor::CWorker(this->m_PlayerIdx);
         this->m_pWorker->Initialize(*a_pApplication->GetGraphics());
 
+        this->m_pShipHandler = new Editor::CShipHandler(this->m_PlayerIdx);
+
         this->m_pColorFields = new Editor::CColorFields(this->m_PlayerIdx);
         this->m_pColorFields->Initialize(*a_pApplication->GetGraphics());
 
@@ -52,31 +55,58 @@ namespace Editor
     int CEditorScene::Update(PuRe_Application* a_pApplication)
     {
         //Handle ESC Button
-        if (a_pApplication->GetInput()->KeyPressed(a_pApplication->GetInput()->ESC))
+        if (sba_Input->ButtonPressed(sba_Button::Exit, this->m_PlayerIdx))
         {
-            return 0;
+            if (this->m_State == EEditorState::EditShip)
+            {
+                this->m_State = EEditorState::SelectShip;
+            }
+            else
+            {
+                return 5;
+            }
         }
 
-        if (this->m_pBrickSupervisorFader->Update(*a_pApplication->GetTimer()))
+        switch (this->m_State)
         {
-            this->m_pColorFieldsFader->Hide();
-        }
-        if (this->m_pColorFieldsFader->Update(*a_pApplication->GetTimer()))
-        {
-            this->m_pBrickSupervisorFader->Hide();
-        }
-        if (!sba_Input->ButtonIsPressed(sba_Button::EditorFadeHold, this->m_PlayerIdx) && !sba_Input->ButtonIsPressed(sba_Button::EditorUndoRedoHold, this->m_PlayerIdx))
-        {
-            if (this->m_pBrickSupervisorFader->IsVisible())
+        case EEditorState::SelectShip:
+            //------------------------------
+            // Select
+            //------------------------------
+            if (sba_Input->ButtonPressed(sba_Button::NaviagtionSelect, this->m_PlayerIdx))
             {
-                this->m_pBrickSupervisor->Update(*a_pApplication->GetGraphics(), *a_pApplication->GetWindow(), *a_pApplication->GetTimer(), *a_pApplication->GetSoundPlayer());
+                this->m_State = EEditorState::EditShip;
+                break;
             }
-            if (this->m_pColorFieldsFader->IsVisible())
+            this->m_pShipHandler->Update();
+            break;
+        case EEditorState::EditShip:
+            //------------------------------
+            // Edit
+            //------------------------------
+            if (this->m_pBrickSupervisorFader->Update(*a_pApplication->GetTimer()))
             {
-                this->m_pColorFields->Update(*a_pApplication->GetGraphics(), *a_pApplication->GetWindow(), *a_pApplication->GetTimer(), *a_pApplication->GetSoundPlayer());
+                this->m_pColorFieldsFader->Hide();
             }
+            if (this->m_pColorFieldsFader->Update(*a_pApplication->GetTimer()))
+            {
+                this->m_pBrickSupervisorFader->Hide();
+            }
+            if (!sba_Input->ButtonIsPressed(sba_Button::EditorFadeHold, this->m_PlayerIdx) && !sba_Input->ButtonIsPressed(sba_Button::EditorUndoRedoHold, this->m_PlayerIdx))
+            {
+                if (this->m_pBrickSupervisorFader->IsVisible())
+                {
+                    this->m_pBrickSupervisor->Update(*a_pApplication->GetGraphics(), *a_pApplication->GetWindow(), *a_pApplication->GetTimer(), *a_pApplication->GetSoundPlayer());
+                }
+                if (this->m_pColorFieldsFader->IsVisible())
+                {
+                    this->m_pColorFields->Update(*a_pApplication->GetGraphics(), *a_pApplication->GetWindow(), *a_pApplication->GetTimer(), *a_pApplication->GetSoundPlayer());
+                }
+            }
+
+            this->m_pWorker->Update(*a_pApplication->GetGraphics(), *a_pApplication->GetWindow(), *a_pApplication->GetTimer(), *a_pApplication->GetSoundPlayer(), this->m_pBrickSupervisor->GetSelectedBrick(), this->m_pColorFields->GetCurrentColor(), *this->m_pShipHandler);
+            break;
         }
-        this->m_pWorker->Update(*a_pApplication->GetGraphics(), *a_pApplication->GetWindow(), *a_pApplication->GetTimer(), *a_pApplication->GetSoundPlayer(), this->m_pBrickSupervisor->GetSelectedBrick(), this->m_pColorFields->GetCurrentColor());
         sba_BrickManager->RebuildRenderInstances(); //Update RenderInstances
         return 1;
     }
@@ -92,20 +122,30 @@ namespace Editor
         
         //Skybox
         sba_Renderer->Draw(0, true, this->m_pSkyBox, this->m_pSkyBoxMaterial);
+
         //Bricks
-        this->m_pWorker->Render();
-        sba_BrickManager->Render(*sba_Renderer);
-        this->m_pBrickSupervisor->Render(*a_pApplication->GetGraphics(), this->m_pBrickSupervisorFader->GetVisibility());
-        this->m_pColorFields->Render(*a_pApplication->GetGraphics(), this->m_pColorFieldsFader->GetVisibility());
-        //this->m_pWorker->DrawDebug(a_pApplication->GetGraphics());
+        switch (this->m_State)
+        {
+        case EEditorState::SelectShip:
+            //---------Select---------
+            this->m_pShipHandler->Render();
+            break;
+        case EEditorState::EditShip:
+            //----------Edit----------
+            this->m_pWorker->Render(*this->m_pShipHandler);
+            sba_BrickManager->Render();
+            this->m_pBrickSupervisor->Render(*a_pApplication->GetGraphics(), this->m_pBrickSupervisorFader->GetVisibility());
+            this->m_pColorFields->Render(*a_pApplication->GetGraphics(), this->m_pColorFieldsFader->GetVisibility());
+            break;
+        }
 
         //Post
         sba_Renderer->Set(0, PuRe_Vector3F(0.2f, 0.2f, 0.2f), "ambient");
         sba_Renderer->Set(1, PuRe_Vector3F(0.2f, 0.2f, 0.2f), "ambient");
         sba_Renderer->Set(2, PuRe_Vector3F(1, 1, 1), "ambient");
-        sba_Renderer->Render(0,0, this->m_pWorker->GetCamera(), this->m_pPostMaterial);
-        sba_Renderer->Render(0,1, this->m_UICamera, this->m_pPostMaterial);
-        sba_Renderer->Render(0,2, this->m_UICamera, this->m_pPostMaterial);
+        sba_Renderer->Render(0, this->m_pWorker->GetCamera(), this->m_pPostMaterial); //Scene
+        sba_Renderer->Render(1, this->m_UICamera, this->m_pPostMaterial); //UI
+        sba_Renderer->Render(2, this->m_UICamera, this->m_pPostMaterial); //Font
         sba_Renderer->End();
     }
 
@@ -113,9 +153,14 @@ namespace Editor
     // **************************************************************************
     void CEditorScene::Exit()
     {
+        SAFE_DELETE(this->m_pColorFieldsFader);
+        SAFE_DELETE(this->m_pBrickSupervisorFader);
+        SAFE_DELETE(this->m_pColorFields);
+        SAFE_DELETE(this->m_pShipHandler);
         SAFE_DELETE(this->m_pWorker);
         SAFE_DELETE(this->m_pBrickSupervisor);
         SAFE_DELETE(this->m_pSkyBox);
         SAFE_DELETE(this->m_pPostMaterial);
+        sba_BrickManager->RebuildRenderInstances();
     }
 }

@@ -9,6 +9,7 @@
 #include "Space.h"
 
 #include "Editor_Worker.h"
+#include "Editor_ShipHandler.h"
 #include "Editor_BrickSupervisor.h"
 #include "Editor_ColorFields.h"
 #include "UIElementFader.h"
@@ -17,8 +18,19 @@ namespace Editor
 {
     class CEditorScene : public PuRe_IScene
     {
+        struct EEditorState
+        {
+            enum Type
+            {
+                SelectShip,
+                EditShip
+            };
+        };
+
     private:
         int m_PlayerIdx;
+
+        EEditorState::Type m_State;
 
         PuRe_SkyBox* m_pSkyBox;
         PuRe_IMaterial* m_pSkyBoxMaterial;
@@ -34,6 +46,7 @@ namespace Editor
         
         Editor::CBrickSupervisor* m_pBrickSupervisor;
         Editor::CWorker* m_pWorker;
+        Editor::CShipHandler* m_pShipHandler;
         Editor::CColorFields* m_pColorFields;
         sba::CUIElementFader* m_pBrickSupervisorFader;
         sba::CUIElementFader* m_pColorFieldsFader;

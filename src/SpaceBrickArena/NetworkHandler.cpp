@@ -110,7 +110,7 @@ namespace sba
     void CNetworkHandler::SetBlockMode(SOCKET s,bool a_Block)
     {
         if (this->m_pSocket->IsWorking())
-            this->m_pSocket->SetMode(s,a_Block);
+            this->m_pSocket->SetMode(s, a_Block);
     }
 
     // **************************************************************************

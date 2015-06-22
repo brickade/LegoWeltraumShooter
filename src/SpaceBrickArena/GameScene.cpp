@@ -132,7 +132,7 @@ namespace Game
     void CGameScene::ProcessInput(TheBrick::CSpaceship* a_Ship, sba::SInputData* a_Input, float a_DeltaTime)
     {
         if (a_Input->Shoot)
-            a_Ship->Shoot(this->m_Bullets, sba_BrickManager);
+            a_Ship->Shoot(this->m_Bullets);
 
         if (a_Input->Thrust)
             a_Ship->Thrust(1.0f);
@@ -417,10 +417,10 @@ namespace Game
         ong::vec3 start(50.0f, 50.0f, 50.0f);
         for (int i = 0; i < 10; i++)
         {
-            TheBrick::CAsteroid* asteroid = new TheBrick::CAsteroid(sba_BrickManager, *sba_World, start + ong::vec3((i % 4)*10.0f, ((i * 5) % 2)*2.0f, i*5.0f));
+            TheBrick::CAsteroid* asteroid = new TheBrick::CAsteroid(*sba_World, start + ong::vec3((i % 4)*10.0f, ((i * 5) % 2)*2.0f, i*5.0f));
             TheBrick::CSerializer serializer;
             serializer.OpenRead("../data/ships/asteroid.object");
-            asteroid->Deserialize(serializer, *sba_BrickManager, *sba_World);
+            asteroid->Deserialize(serializer, sba_BrickManager->GetBrickArray(), *sba_World);
             this->m_Asteroids.push_back(asteroid);
             serializer.Close();
         }
@@ -654,7 +654,7 @@ namespace Game
         ////////////////////////////////////////////////////
 
         /////////////  DRAW BRICKS  ///////////////////////
-        sba_BrickManager->Render(*sba_Renderer);
+        sba_BrickManager->Render();
         ////////////////////////////////////////////////////
 
         /////////////  DRAW Particles  ///////////////////////

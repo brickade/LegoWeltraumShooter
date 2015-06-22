@@ -47,6 +47,10 @@ namespace Menu
         switch (this->m_Displayed)
         {
         case Main:
+            if (sba_Input->ButtonPressed(sba_Button::Exit, *this->m_pPlayerIdx))
+            {
+                return 0;
+            }
             result = this->m_pMainMenu->Update(timer, *this->m_pPlayerIdx);
             switch (result)
             {
@@ -139,7 +143,7 @@ namespace Menu
         renderer->Begin(PuRe_Color(0.0f, 0.0f, 0.0f));
 
         //renderer->Draw(0, true, this->m_pSkyBox, this->m_pSkyMaterial);
-        sba_BrickManager->Render(*sba_Renderer);
+        sba_BrickManager->Render();
 
         switch (this->m_Displayed)
         {

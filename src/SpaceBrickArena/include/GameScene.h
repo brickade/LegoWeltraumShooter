@@ -16,6 +16,7 @@
 #include "GameCamera.h"
 #include "Minimap.h"
 #include "NetworkHandler.h"
+#include <TheBrick/Asteroid.h>
 
 // Declare namespace Game
 namespace Game

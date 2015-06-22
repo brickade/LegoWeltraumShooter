@@ -2,8 +2,6 @@
 
 #include "include/TheBrick/BrickInstance.h"
 #include "include/TheBrick/Serializer.h"
-#include "include/TheBrick/BrickManager.h"
-#include "include/TheBrick/Brick.h"
 #include "include/TheBrick/DebugDraw.h"
 #include "include/TheBrick/Conversion.h"
 
@@ -50,26 +48,6 @@ namespace TheBrick
 
     // **************************************************************************
     // **************************************************************************
-    void CGameObject::Draw(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera)
-    {
-        DrawBody(this->m_pBody, a_pCamera, a_pGraphics);
-        return;
-        for (auto&& brickinstance : this->m_pBricks)
-        {
-            std::vector<TheBrick::SNub>& nubs = brickinstance->m_pBrick->GetNubs();
-            for (auto&& nub : nubs)
-            {
-                ong::Sphere s;
-                s.r = 0.1f;
-                s.c = TheBrick::PuReToOng(nub.Position);
-                TheBrick::DrawShape(&s, ong::Transform(brickinstance->GetTransform()), PuRe_Vector3F(0, 1, 1), a_pCamera, a_pGraphics);
-            }
-        }
-    }
-
-
-    // **************************************************************************
-    // **************************************************************************
     SBrickData CGameObject::GetBrick(unsigned int a_Index)
     {
         SBrickData BrickData;
@@ -90,9 +68,9 @@ namespace TheBrick
 
     // **************************************************************************
     // **************************************************************************
-    void CGameObject::AddBrick(SBrickData a_Brick, CBrickManager& a_pBrickManager, ong::World& a_pWorld)
+    void CGameObject::AddBrick(SBrickData a_Brick, BrickArray& a_rBricks, ong::World& a_pWorld)
     {
-        CBrickInstance* brick = new CBrickInstance(a_pBrickManager.GetBrick(a_Brick.ID), *this, a_pWorld);
+        CBrickInstance* brick = new CBrickInstance(*a_rBricks[a_Brick.ID], *this, a_pWorld);
         //m_Transform
         brick->SetTransform(a_Brick.Transform);
         //m_Color
@@ -102,7 +80,7 @@ namespace TheBrick
 
     // **************************************************************************
     // **************************************************************************
-    void CGameObject::Deserialize(CSerializer& a_pSerializer, CBrickManager& a_pBrickManager, ong::World& a_pWorld)
+    void CGameObject::Deserialize(CSerializer& a_pSerializer, BrickArray& a_rBricks, ong::World& a_pWorld)
     {
         //m_pBricks
         unsigned int bricksSize = a_pSerializer.ReadIntUnsigned();
@@ -110,7 +88,7 @@ namespace TheBrick
         {
             //m_pBrick
             int brickId = a_pSerializer.ReadInt();
-            CBrickInstance* brick = new CBrickInstance(a_pBrickManager.GetBrick(brickId), *this, a_pWorld);
+            CBrickInstance* brick = new CBrickInstance(*a_rBricks[brickId], *this, a_pWorld);
             //m_Transform
             ong::Transform transform;
             a_pSerializer.Read(&transform, sizeof(transform));

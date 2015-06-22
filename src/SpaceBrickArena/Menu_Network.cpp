@@ -118,8 +118,8 @@ namespace Menu
 
         if (!this->m_Focus)
         {
-            this->m_pNavigation->Update(*a_pTimer, sba_Input->Direction(sba_Direction::MenuMove, a_PlayerIdx));
-            if (sba_Input->ButtonPressed(sba_Button::MenuClick, a_PlayerIdx))
+            this->m_pNavigation->Update(*a_pTimer, sba_Input->Direction(sba_Direction::Navigate, a_PlayerIdx));
+            if (sba_Input->ButtonPressed(sba_Button::NaviagtionSelect, a_PlayerIdx))
             {
                 switch (this->m_pNavigation->GetFocusedElementId())
                 {
@@ -148,7 +148,7 @@ namespace Menu
         }
         else
         {
-            PuRe_Vector2F dir = sba_Input->Direction(sba_Direction::MenuMove, a_PlayerIdx);
+            PuRe_Vector2F dir = sba_Input->Direction(sba_Direction::Navigate, a_PlayerIdx);
             switch (this->m_pNavigation->GetFocusedElementId())
             {
             case 0: //internet
@@ -156,7 +156,7 @@ namespace Menu
                     sba_Network->Update(a_pInput, sba::EUpdate::IP);
                 else
                     sba_Network->Update(a_pInput, sba::EUpdate::Port);
-                if (sba_Input->ButtonPressed(sba_Button::MenuClick, a_PlayerIdx))
+                if (sba_Input->ButtonPressed(sba_Button::NaviagtionSelect, a_PlayerIdx))
                 {
                     if (this->m_Focus2)
                     {
@@ -182,7 +182,7 @@ namespace Menu
                         }
                     }
                 }
-                if (sba_Input->ButtonPressed(sba_Button::MenuBack, a_PlayerIdx))
+                if (sba_Input->ButtonPressed(sba_Button::NavigationBack, a_PlayerIdx))
                 {
                     if (this->m_Focus2)
                         this->m_Focus = false;
@@ -202,7 +202,7 @@ namespace Menu
                     this->m_Server = 0;
                 if (this->m_Servers.size()-1 < this->m_Server)
                     this->m_Server = this->m_Servers.size()-1;
-                if (sba_Input->ButtonPressed(sba_Button::MenuClick, a_PlayerIdx))
+                if (sba_Input->ButtonPressed(sba_Button::NaviagtionSelect, a_PlayerIdx))
                 {
                     if (this->m_Servers.size() != 0)
                     {
@@ -218,7 +218,7 @@ namespace Menu
                         }
                     }
                 }
-                if (sba_Input->ButtonPressed(sba_Button::MenuBack, a_PlayerIdx))
+                if (sba_Input->ButtonPressed(sba_Button::NavigationBack, a_PlayerIdx))
                 {
                     if (this->m_Focus2)
                         this->m_Focus = false;
@@ -231,7 +231,7 @@ namespace Menu
                     sba_Network->Update(a_pInput, sba::EUpdate::Name);
                 else
                     sba_Network->Update(a_pInput, sba::EUpdate::Port);
-                if (sba_Input->ButtonPressed(sba_Button::MenuClick, a_PlayerIdx))
+                if (sba_Input->ButtonPressed(sba_Button::NaviagtionSelect, a_PlayerIdx))
                 {
                     if (this->m_Focus2)
                     {
@@ -263,7 +263,7 @@ namespace Menu
                         }
                     }
                 }
-                if (sba_Input->ButtonPressed(sba_Button::MenuBack, a_PlayerIdx))
+                if (sba_Input->ButtonPressed(sba_Button::NavigationBack, a_PlayerIdx))
                 {
                     if (this->m_Focus2)
                         this->m_Focus = false;
@@ -272,7 +272,7 @@ namespace Menu
                 }
             break;
             default:
-                if (sba_Input->ButtonPressed(sba_Button::MenuBack, a_PlayerIdx))
+                if (sba_Input->ButtonPressed(sba_Button::NavigationBack, a_PlayerIdx))
                     this->m_Focus = false;
                 break;
             }

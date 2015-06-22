@@ -109,8 +109,8 @@ namespace sba
                 EditorCameraRotate,
                 EditorMoveBrick,
                 EditorChooseElement,
-                MenuMove,
-                LAST = MenuMove
+                Navigate,
+                LAST = Navigate
             };
         };
 
@@ -142,8 +142,8 @@ namespace sba
                 EditorFadeHold,
                 EditorFadeSupervisor,
                 EditorFadeColors,
-                MenuClick,
-                MenuBack,
+                NaviagtionSelect,
+                NavigationBack,
                 Exit,
                 LAST = Exit
             };

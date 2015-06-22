@@ -9,9 +9,10 @@ namespace sba
     // **************************************************************************
     Space::Space()
     {
-        this->BrickManager = new TheBrick::CBrickManager();
         this->World = new ong::World();
         this->InputManager = new sba::CInputManager();
+        this->BrickManager = new sba::CBrickManager("../data/bricks/");
+        this->ShipManager = new sba::CShipManager("../data/ships/");
         this->m_pNetworkhandler = new sba::CNetworkHandler();
     }
 
@@ -27,7 +28,9 @@ namespace sba
         this->m_Players.clear();
         SAFE_DELETE(this->Renderer);
         SAFE_DELETE(this->m_SSAOMaterial);
+        SAFE_DELETE(this->ShipManager);
         SAFE_DELETE(this->BrickManager);
+        SAFE_DELETE(this->InputManager);
         SAFE_DELETE(this->World);
         SAFE_DELETE(this->m_pNetworkhandler);
     }
@@ -36,6 +39,7 @@ namespace sba
     // **************************************************************************
     void Space::Initialize(PuRe_IGraphics& a_pGraphics, PuRe_IInput& a_pInput, PuRe_SoundPlayer& a_pSoundPlayer, PuRe_Application& a_rpApplication)
     {
+        this->Application = &a_rpApplication;
         this->Renderer = new PuRe_Renderer(&a_pGraphics);
         this->m_SSAOMaterial = a_pGraphics.LoadMaterial("../data/effects/SSAO/default");
         this->m_pNoiseTexture = new PuRe_Sprite(&a_pGraphics, "../data/textures/ssao.jpg");
@@ -48,12 +52,11 @@ namespace sba
             this->Renderer->SetSSAO(0, this->m_SSAOMaterial, this->m_pNoiseTexture);
             this->Renderer->SetSSAO(1, this->m_SSAOMaterial, this->m_pNoiseTexture);
         }
-        this->BrickManager->Initialize(a_pGraphics, a_pSoundPlayer);
-        this->InputManager->Initialize(&a_pInput);
+        this->BrickManager->Initialize();
+        this->InputManager->Initialize();
         this->Font = new PuRe_Font(&a_pGraphics, "../data/textures/font.png");
         this->FontMaterial = a_pGraphics.LoadMaterial("../data/effects/font/default");
-
-        this->Application = &a_rpApplication;
+        this->SpriteMaterial = a_pGraphics.LoadMaterial("../data/effects/default/default");
     }
 
     // **************************************************************************
@@ -157,7 +160,7 @@ namespace sba
         serializer.OpenRead(file.c_str());
         ong::vec3 pos = ong::vec3(0.0f, 0.0f, 0.0f);
         p->Ship = new TheBrick::CSpaceship(*sba_World, name);
-        p->Ship->Deserialize(serializer, *sba_BrickManager, *sba_World);
+        p->Ship->Deserialize(serializer, sba_BrickManager->GetBrickArray(), *sba_World);
         serializer.Close();
         sba_Players.push_back(p);
     }

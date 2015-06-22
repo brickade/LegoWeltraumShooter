@@ -10,10 +10,11 @@
 #include "DebugDraw.h"
 #include "CSVParser.h"
 #include "Bullet.h"
-#include "BrickManager.h"
 
 namespace TheBrick
 {
+    class CBrick;
+
     class CSpaceship : public CGameObject
     {
     private:
@@ -52,16 +53,17 @@ namespace TheBrick
         ~CSpaceship();
 
         void CalculateData();
-        void Draw(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera) override;
         void Update(float a_DeltaTime) override;
         void Thrust(float a_Thrust);
         void Spin(float a_Spin);
         void Move(PuRe_Vector2F a_Move);
-        void Shoot(std::vector<CBullet*>& a_rBullets, CBrickManager* a_pManager);
+        void Shoot(std::vector<CBullet*>& a_rBullets/*, CBrickManager* a_pManager*/);
         static void Collision(ong::Collider* thisCollider, ong::Contact* contact);
 
-        void Deserialize(CSerializer& a_pSerializer, CBrickManager& a_pBrickManager, ong::World& a_pWorld) override;
+        void Deserialize(CSerializer& a_pSerializer, BrickArray& a_rBricks, ong::World& a_pWorld) override;
         void Serialize(CSerializer& a_pSerializer);
+
+        void Reset(CBrick& a_rStartBrick, ong::World& a_rWorld);
     };
 }
 

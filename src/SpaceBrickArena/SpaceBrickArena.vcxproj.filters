@@ -21,9 +21,6 @@
     <ClCompile Include="Editor_History.cpp">
       <Filter>Editor</Filter>
     </ClCompile>
-    <ClCompile Include="Editor_ShipWorker.cpp">
-      <Filter>Editor</Filter>
-    </ClCompile>
     <ClCompile Include="Editor_Worker.cpp">
       <Filter>Editor</Filter>
     </ClCompile>
@@ -37,9 +34,6 @@
       <Filter>Scenes</Filter>
     </ClCompile>
     <ClCompile Include="INIReader.cpp">
-      <Filter>Utilities</Filter>
-    </ClCompile>
-    <ClCompile Include="InputManager.cpp">
       <Filter>Utilities</Filter>
     </ClCompile>
     <ClCompile Include="MainScene.cpp">
@@ -72,6 +66,18 @@
     <ClCompile Include="Menu_Network.cpp">
       <Filter>Menu</Filter>
     </ClCompile>
+    <ClCompile Include="InputManager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="BrickManager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="ShipManager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor_ShipHandler.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Space.h" />
@@ -93,9 +99,6 @@
     <ClInclude Include="include\Editor_History.h">
       <Filter>Editor</Filter>
     </ClInclude>
-    <ClInclude Include="include\Editor_ShipWorker.h">
-      <Filter>Editor</Filter>
-    </ClInclude>
     <ClInclude Include="include\Editor_Worker.h">
       <Filter>Editor</Filter>
     </ClInclude>
@@ -109,12 +112,6 @@
       <Filter>Scenes</Filter>
     </ClInclude>
     <ClInclude Include="include\INIReader.h">
-      <Filter>Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="include\InputManager.h">
-      <Filter>Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="include\InputManagerTypes.h">
       <Filter>Utilities</Filter>
     </ClInclude>
     <ClInclude Include="include\MainScene.h">
@@ -151,6 +148,21 @@
     <ClInclude Include="include\Menu_Server.h">
       <Filter>Menu</Filter>
     </ClInclude>
+    <ClInclude Include="include\InputManager.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="include\InputManagerTypes.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="include\BrickManager.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ShipManager.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Editor_ShipHandler.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Editor">
@@ -170,6 +182,9 @@
     </Filter>
     <Filter Include="Menu">
       <UniqueIdentifier>{87fb103d-c303-4ce4-aeca-4df476054666}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Manager">
+      <UniqueIdentifier>{4a5d2d5f-175e-43d1-95e3-26a9daf0c419}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

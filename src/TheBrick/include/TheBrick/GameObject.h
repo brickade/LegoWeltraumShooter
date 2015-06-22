@@ -8,11 +8,12 @@
 #include <Onager/myMath.h>
 #include "BrickData.h"
 
+#include "Brick.h"
+
 namespace TheBrick
 {
     class CBrickInstance;
     class CSerializer;
-    class CBrickManager;
     enum EGameObjectType {Ship, Bullet, Object};
     class CGameObject
     {
@@ -34,13 +35,12 @@ namespace TheBrick
         virtual ~CGameObject();
 
         virtual void Update(float a_DeltaTime);
-        virtual void Draw(PuRe_IGraphics* a_pGraphics, PuRe_Camera* a_pCamera);
 
-        virtual void Deserialize(CSerializer& a_pSerializer, CBrickManager& a_pBrickManager, ong::World& a_pWorld);
+        virtual void Deserialize(CSerializer& a_pSerializer, BrickArray& a_rBricks, ong::World& a_pWorld);
         virtual void Serialize(CSerializer& a_pSerializer);
 
         SBrickData GetBrick(unsigned int a_Index);
-        void AddBrick(SBrickData a_Brick, CBrickManager& a_pBrickManager, ong::World& a_pWorld);
+        void AddBrick(SBrickData a_Brick, BrickArray& a_rBricks, ong::World& a_pWorld);
 
         void AddBrickInstance(CBrickInstance* a_pBrickInstance, ong::World& a_rWorld);
         void RemoveBrickInstance(const CBrickInstance& a_BrickInstance);

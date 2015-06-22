@@ -49,9 +49,6 @@
     <ClInclude Include="include\TheBrick\BrickInstance.h">
       <Filter>Quelldateien\Brick</Filter>
     </ClInclude>
-    <ClInclude Include="include\TheBrick\BrickManager.h">
-      <Filter>Quelldateien\Brick</Filter>
-    </ClInclude>
     <ClInclude Include="include\TheBrick\Nub.h">
       <Filter>Quelldateien\Brick</Filter>
     </ClInclude>
@@ -64,9 +61,6 @@
       <Filter>Quelldateien\Brick</Filter>
     </ClCompile>
     <ClCompile Include="BrickInstance.cpp">
-      <Filter>Quelldateien\Brick</Filter>
-    </ClCompile>
-    <ClCompile Include="BrickManager.cpp">
       <Filter>Quelldateien\Brick</Filter>
     </ClCompile>
     <ClCompile Include="GameObject.cpp">

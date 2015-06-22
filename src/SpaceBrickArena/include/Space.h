@@ -1,21 +1,15 @@
 #ifndef _SPACE_H_
 #define _SPACE_H_
 
-//####################################################################################################
-//####################################################################################################
-                                    /*COMMENT OUT FOR GAME SCENE*/
-                                            #define MENU
-//####################################################################################################
-//####################################################################################################
 // Framework specific includes
 #include <PuReEngine/Core.h>
 #include <PuReEngine/Defines.h>
 
 #include <Onager/World.h>
-
-#include <TheBrick/BrickManager.h>
 #include <TheBrick/Serializer.h>
 #include "InputManager.h"
+#include "BrickManager.h"
+#include "ShipManager.h"
 #include "INIReader.h"
 #include "Player.h"
 #include "NetworkHandler.h"
@@ -35,11 +29,13 @@ namespace sba
         }
 
         PuRe_Application* Application;
-        TheBrick::CBrickManager* BrickManager;
         ong::World* World;
         PuRe_Renderer* Renderer;
         sba::CInputManager* InputManager;
+        sba::CBrickManager* BrickManager;
+        sba::CShipManager* ShipManager;
         PuRe_Font* Font;
+        PuRe_IMaterial* SpriteMaterial;
         PuRe_IMaterial* FontMaterial;
         PuRe_IMaterial* m_SSAOMaterial;
         PuRe_Sprite* m_pNoiseTexture;
@@ -69,14 +65,15 @@ namespace sba
 }
 #define sba_Space sba::Space::Instance()
 #define sba_Application sba::Space::Instance()->Application
-#define sba_Width sba::Space::Instance()->Application->GetGraphics()->GetDescription().ResolutionWidth
-#define sba_Height sba::Space::Instance()->Application->GetGraphics()->GetDescription().ResolutionHeight
+#define sba_Width 1920
+#define sba_Height 1080
 
 #define sba_Players sba::Space::Instance()->m_Players
 #define sba_Network sba::Space::Instance()->m_pNetworkhandler
 
-#define sba_BrickManager sba::Space::Instance()->BrickManager
 #define sba_World sba::Space::Instance()->World
 #define sba_Renderer sba::Space::Instance()->Renderer
 #define sba_Input sba::Space::Instance()->InputManager
+#define sba_BrickManager sba::Space::Instance()->BrickManager
+#define sba_ShipManager sba::Space::Instance()->ShipManager
 #endif /* _SPACE_H_ */

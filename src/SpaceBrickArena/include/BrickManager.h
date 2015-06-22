@@ -6,33 +6,45 @@
 
 #include "Onager/World.h"
 
+#include "TheBrick/Brick.h"
+
 #include <array>
 #include <cstring>
 
 namespace TheBrick
 {
     class CBrick;
+}
 
+namespace sba
+{
     class CBrickManager
     {
     public:
         
     private:
-        std::array<CBrick*, 200> m_bricks;
+        TheBrick::BrickArray m_bricks;
         PuRe_IMaterial* m_pBrickMaterial;
         PuRe_IMaterial* m_pBrickUIMaterial;
+        std::string m_FolderPath = "";
 
     public:
-        CBrickManager();
+        TheBrick::BrickArray& GetBrickArray()
+        {
+            return this->m_bricks;
+        }
+
+    public:
+        CBrickManager(const char* a_pFolder);
         ~CBrickManager();
 
-        void Initialize(PuRe_IGraphics& a_pGraphics, PuRe_SoundPlayer& a_pSoundPlayer);
-        void Load(PuRe_IGraphics& a_pGraphics, PuRe_IWindow& a_pWindow, ong::World& a_pWorld, PuRe_IMaterial& a_pMaterial, const char* a_pFolder);
-        void Render(PuRe_Renderer& a_rRenderer);
+        void Initialize();
+        void Load();
+        void Render();
         void RebuildRenderInstances();
 
-        CBrick& GetBrick(int a_BrickId);
-        CBrick** GetCategoryStart(int a_CategoryId);
+        TheBrick::CBrick& GetBrick(size_t a_BrickId);
+        TheBrick::CBrick** GetCategoryStart(int a_CategoryId);
         int GetCategoryCount();
 
         PuRe_IMaterial* GetBrickMaterial();
