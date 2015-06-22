@@ -1,6 +1,8 @@
 #ifndef _GAMESCENE_H_
 #define _GAMESCENE_H_
 
+#define Skybox
+
 // Framework specific includes
 #include <PuReEngine/Core.h>
 #include <PuReEngine/Defines.h>

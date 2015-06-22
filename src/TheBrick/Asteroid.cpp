@@ -10,6 +10,7 @@ namespace TheBrick
     // **************************************************************************
     CAsteroid::CAsteroid(CBrickManager* a_pBrickManager, ong::World& a_rWorld, ong::vec3 a_Position) : CGameObject(a_rWorld, nullptr)
     {
+        this->m_Type = EGameObjectType::Object;
         //m_Color
         this->m_pBody->setPosition(a_Position);
     }

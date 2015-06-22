@@ -116,7 +116,6 @@ namespace Game
             input.MoveY = 2;
 
         float Thrust = aInput->GetGamepadRightTrigger(a_PlayerIdx);
-        printf("Thrust in Handle: %f\n",Thrust);
         if (Thrust > 0.2f)
             input.Thrust = true;
 
@@ -136,10 +135,7 @@ namespace Game
             a_Ship->Shoot(this->m_Bullets, sba_BrickManager);
 
         if (a_Input->Thrust)
-        { 
-            printf("THRUST DOING\n");
             a_Ship->Thrust(1.0f);
-        }
 
         PuRe_Vector2F Move = PuRe_Vector2F(0.0f, 0.0f);
         if (a_Input->MoveX == 1)
@@ -334,11 +330,11 @@ namespace Game
     // **************************************************************************
     void CGameScene::StartGame()
     {
-        this->m_PhysicTime = 0.0f;
-        this->m_PhysicFrame = 0;
-        memset(m_buffer, -1, sizeof(PlayOutBuffer) * BufferSize);
         if (sba_Network->IsConnected())
         {
+            this->m_PhysicTime = 0.0f;
+            this->m_PhysicFrame = 0;
+            memset(m_buffer, -1, sizeof(PlayOutBuffer) * BufferSize);
             printf("set block mode true\n");
             this->m_Run = true;
             if (sba_Network->GetHost())
@@ -408,8 +404,10 @@ namespace Game
                 rthread.detach();
             }
         }
+
         for (unsigned int i = 0; i < sba_Players.size(); i++)
         {
+            sba_Players[i]->Ship->CalculateData();
             ong::vec3 pos = ong::vec3(10.0f, 10.0f, 10.0f);
             pos.x += sba_Players[i]->ID*10.0f;
             sba_Players[i]->Ship->m_pBody->setPosition(pos);
@@ -443,7 +441,7 @@ namespace Game
         //Camera
         sba_Renderer->DeleteTargets();
         PuRe_Vector2I size = PuRe_Vector2I(gdesc.ResolutionWidth, gdesc.ResolutionHeight);
-        PuRe_Vector2F fsize = PuRe_Vector2F((float)gdesc.ResolutionWidth, (float)gdesc.ResolutionHeight);
+        PuRe_Vector2F fsize = PuRe_Vector2F((float)1920, (float)1080);
         if (this->m_LocalPlayers == 2)
             size.X /= 2;
         else if (this->m_LocalPlayers > 2)
@@ -452,12 +450,11 @@ namespace Game
             size.Y /= 2;
         }
         sba_Renderer->AddTarget(size);
-        sba_Renderer->AddTarget(PuRe_Vector2I(gdesc.ResolutionWidth, gdesc.ResolutionHeight));
+        sba_Renderer->AddTarget(size);
         sba_Renderer->AddTarget(PuRe_Vector2I(gdesc.ResolutionWidth, gdesc.ResolutionHeight));
         if (sba::CIniReader::Instance()->GetValue("SSAO") == "On")
         {
             sba_Renderer->SetSSAO(0, sba_Space->m_SSAOMaterial, sba_Space->m_pNoiseTexture);
-            sba_Renderer->SetSSAO(1, sba_Space->m_SSAOMaterial, sba_Space->m_pNoiseTexture);
         }
 
 
@@ -603,7 +600,7 @@ namespace Game
         {
             this->m_Bullets[i]->Update(a_pApplication->GetTimer()->GetElapsedSeconds());
 
-            if (this->m_Bullets[i]->m_lifeTime > 5.0f)
+            if (this->m_Bullets[i]->m_Collided||this->m_Bullets[i]->m_lifeTime > 5.0f)
             {
                 SAFE_DELETE(this->m_Bullets[i]);
                 if (this->m_Bullets.begin() + i < this->m_Bullets.end())
@@ -644,26 +641,49 @@ namespace Game
             sba_Renderer->Draw(0, true, this->m_Emitters[i], this->m_pParticleMaterial, this->m_pParticleSprite);
         ////////////////////////////////////////////////////
 
+        /////////////  DRAW FONT  ///////////////////////
+        PuRe_Color c = PuRe_Color(1.0f,1.0f,1.0f,1.0f);
+        PuRe_Vector3F size = PuRe_Vector3F(32.0f,32.0f,0.0f);
+        PuRe_Vector3F pos = PuRe_Vector3F(100.0f, 1080 - 100.0f, 0.0f);
+        int local = 0;
+        for (unsigned int i=0;i<sba_Players.size();i++)
+        {
+            if (sba_Players[i]->PadID != -1)
+            {
+                sba_Renderer->Draw(1, false, this->m_pFont, this->m_pFontMaterial, "Life: " + std::to_string(sba_Players[i]->Ship->m_Life), pos, PuRe_MatrixF(), size, 36.0f, c, local);
+                local++;
+            }
+        }
+        ////////////////////////////////////////////////////
+
 
         //////////////////// POST SCREEN ////////////////////////////////
         sba_Renderer->Set(0, (float)this->m_TextureID, "textureID");
-        sba_Renderer->Set(0, PuRe_Vector3F(0.1f, 0.1f, 0.1f), "ambient");
-        PuRe_Vector3F size = PuRe_Vector3F(0.0f, 0.0f, 0.0f);
+        size = PuRe_Vector3F(0.0f, 0.0f, 0.0f);
         for (int i = 0; i < this->m_LocalPlayers; i++)
         {
             switch (this->m_LocalPlayers)
             {
             case 1:
-                sba_Renderer->Render(0, this->m_Cameras[i], this->m_pPostMaterial, size);
+                sba_Renderer->Set(0, PuRe_Vector3F(0.1f, 0.1f, 0.1f), "ambient");
+                sba_Renderer->Render(0,0, this->m_Cameras[i], this->m_pPostMaterial, size);
+                sba_Renderer->Set(1, PuRe_Vector3F(1.0f, 1.0f, 1.0f), "ambient");
+                sba_Renderer->Render(i, 1, this->m_pUICam, this->m_pUIMaterial, size);
                 break;
             case 2:
                 size.X = i*gdesc.ResolutionWidth / 2.0f;
-                sba_Renderer->Render(0, this->m_Cameras[i], this->m_pPostMaterial, size);
+                sba_Renderer->Set(0, PuRe_Vector3F(0.1f, 0.1f, 0.1f), "ambient");
+                sba_Renderer->Render(0, 0, this->m_Cameras[i], this->m_pPostMaterial, size);
+                sba_Renderer->Set(1, PuRe_Vector3F(1.0f, 1.0f, 1.0f), "ambient");
+                sba_Renderer->Render(i, 1, this->m_pUICam, this->m_pUIMaterial, size);
                 break;
             default:
+                sba_Renderer->Set(0, PuRe_Vector3F(0.1f, 0.1f, 0.1f), "ambient");
                 size.X = (i % 2)*gdesc.ResolutionWidth / 2.0f;
                 size.Y = (1 - ((int)(i / 2)))*gdesc.ResolutionHeight / 2.0f;
-                sba_Renderer->Render(0, this->m_Cameras[i], this->m_pPostMaterial, size);
+                sba_Renderer->Render(0, 0, this->m_Cameras[i], this->m_pPostMaterial, size);
+                sba_Renderer->Set(1, PuRe_Vector3F(1.0f, 1.0f, 1.0f), "ambient");
+                sba_Renderer->Render(i, 1, this->m_pUICam, this->m_pUIMaterial, size);
                 break;
             }
         }
@@ -671,9 +691,9 @@ namespace Game
         {
             size.X = gdesc.ResolutionWidth / 2.0f;
             size.Y = 0.0f;
-            sba_Renderer->Render(0, this->m_Cameras[3], this->m_pPostMaterial, size);
+            sba_Renderer->Set(0, PuRe_Vector3F(0.1f, 0.1f, 0.1f), "ambient");
+            sba_Renderer->Render(0,0, this->m_Cameras[3], this->m_pPostMaterial, size);
         }
-        sba_Renderer->Render(1, this->m_pUICam, this->m_pPostMaterial, size);
         sba_Renderer->End();
         ////////////////////////////////////////////////////
 

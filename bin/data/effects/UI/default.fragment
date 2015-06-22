@@ -1,17 +1,25 @@
 #version 330 core
 
-// Interpolated values from the vertex shaders
-in vec2 UV;
-in vec4 Color;
-in vec3 Normal;
-in vec3 Position;
+uniform sampler2D DiffuseMap;
+uniform sampler2D NormalMap;
+uniform sampler2D LightMap;
+uniform sampler2D DepthMap;
+uniform sampler2D SSAOMap;
 
-uniform sampler2D Diffuse;
+uniform float textureID;
+uniform vec2 Resolution;
+uniform vec3 ambient = vec3(0.1,0.1,0.1);
+
+uniform int BlurSize = 4;
+
+vec2 CalcTexCoord()
+{
+   return gl_FragCoord.xy / Resolution;
+}
 
 void main()
 {
-	
-	vec4 blend = texture2D( Diffuse, vec2(UV.x,UV.y) );
-	gl_FragData[0] = vec4(0.0,0.0,1.0,0.5);
-	gl_FragData[1] = (vec4(Normal,1)+1)/2;
+	vec2 TexCoord = CalcTexCoord();
+	vec4 blend = texture2D( DiffuseMap, TexCoord );
+	gl_FragColor = blend;
 }

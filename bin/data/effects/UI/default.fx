@@ -3,8 +3,15 @@ float4x4 Rotation;
 float4x4 Translation;
 float4x4 View;
 float4x4 Projection;
+float textureID;
+float2 Resolution;
+float3 ambient = float3(0.1,0.1,0.1);
 
-Texture2D Diffuse;
+Texture2D DiffuseMap;
+Texture2D NormalMap;
+Texture2D DepthMap;
+Texture2D LightMap;
+Texture2D SSAOMap;
 
 SamplerState TextureSampler
 {
@@ -17,24 +24,26 @@ struct VertexShaderInput
   float3 Position : POSITION0;
   float2 UV       : TEXCOORD0;
   float3 Color    : COLOR0;
-  float3 Normal   : NORMAL0;
+  float3 Normal   : NORMAL;
 };
 
 struct VertexShaderOutput
 {
-  float4 PositionOut : SV_POSITION;
-  float4 Position : POSITION0;
+  float4 Position : SV_POSITION;
   float2 UV       : TEXCOORD0;
   float3 Color    : COLOR0;
-  float3 Normal   : NORMAL0;
+  float3 Normal   : NORMAL;
 };
 
 struct PixelShaderOutput
 {
-  float4 colorMap: SV_TARGET0;
-  float4 normalMap: SV_TARGET1;
+  float4 color: SV_TARGET0;
 };
 
+float2 CalcTexCoord(float4 Position)
+{
+    return Position.xy / Resolution;
+}
 
 VertexShaderOutput VS_MAIN(VertexShaderInput input)
 {
@@ -46,13 +55,12 @@ VertexShaderOutput VS_MAIN(VertexShaderInput input)
   float4x4 MVP = mul(mul(Model,View),Projection);
 
   Output.Position = mul(pos,MVP);
-  Output.PositionOut = mul(pos,MVP);
 
   Output.UV = input.UV;
 
   Output.Color = input.Color;
 
-  Output.Normal = normalize(mul(input.Normal,(float3x3)Model));
+  Output.Normal = input.Normal;
   
   return Output;
 }
@@ -61,18 +69,43 @@ PixelShaderOutput PS_MAIN(VertexShaderOutput input)
 {
   PixelShaderOutput output;
 
-  float4 blend = Diffuse.Sample(TextureSampler, input.UV);
-  output.colorMap = blend;
-  output.normalMap = (float4(input.Normal,1) +1)/2;
+  float2 TexCoord = CalcTexCoord(input.Position);
 
+  float4 blend = DiffuseMap.Sample(TextureSampler, TexCoord);
+  float4 norm = (NormalMap.Sample(TextureSampler, TexCoord)*2)-1;
+  float4 depth = DepthMap.Sample(TextureSampler, TexCoord);
+  float4 light = LightMap.Sample(TextureSampler, TexCoord);
+  float4 ssao = SSAOMap.Sample(TextureSampler, TexCoord);
+
+
+  blend = float4((blend.xyz*(light.xyz+ambient))*ssao,blend.a);
+  if(blend.a < 0.1)
+	discard;
+
+
+  if(textureID == 0.0)
+    output.color = blend;
+  else if(textureID == 1.0)
+    output.color = norm;
+  else if(textureID == 2.0)
+    output.color = float4(1-depth.r,1-depth.r,1-depth.r,1);
+  else if(textureID == 3.0)
+    output.color = float4(light.xyz+ambient,1);
+  else
+    output.color = float4(ssao.r,ssao.g,ssao.b,1);
   return output;
 }
 
+RasterizerState Culling
+{
+  CullMode = 1;
+};
 
 technique10 Main
 {
   pass p0
   {
+    SetRasterizerState(Culling);
     SetVertexShader(CompileShader(vs_4_0, VS_MAIN()));
     SetGeometryShader(NULL);
     SetPixelShader(CompileShader(ps_4_0, PS_MAIN()));

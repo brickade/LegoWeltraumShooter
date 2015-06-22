@@ -11,6 +11,7 @@ namespace TheBrick
     // **************************************************************************
     CBullet::CBullet(CBrickManager* a_pBrickManager, PuRe_Vector3F a_Position, PuRe_Vector3F a_Speed, ong::World& a_rWorld) : CGameObject(a_rWorld, nullptr)
     {
+        this->m_Type = EGameObjectType::Bullet;
 
         ////////   TESTING ONLY   ////////
         CBrickInstance* brick = new CBrickInstance(a_pBrickManager->GetBrick(0), *this, a_rWorld);
@@ -22,7 +23,9 @@ namespace TheBrick
         this->m_pBody->applyImpulse(TheBrick::PuReToOng(a_Speed));
 
         this->m_lifeTime = 0.0f;
-    }
+        this->m_Damage = 5;
+        this->m_Collided = false;
+    }   
 
     // **************************************************************************
     // **************************************************************************

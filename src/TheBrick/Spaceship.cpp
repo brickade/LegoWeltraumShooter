@@ -9,7 +9,7 @@ namespace TheBrick
     // **************************************************************************
     CSpaceship::CSpaceship(ong::World& a_rWorld,std::string a_Name) : CGameObject(a_rWorld, nullptr)
     {
-        this->m_pCSVFile = new CCSVParser("../data/player.csv");
+        this->m_Type = EGameObjectType::Ship;
         this->m_TargetVec = ong::vec3(0.0f, 0.0f, 0.0f);
         this->m_TargetAng = ong::vec3(0.0f, 0.0f, 0.0f);
         this->m_Name = a_Name;
@@ -19,7 +19,63 @@ namespace TheBrick
     // **************************************************************************
     CSpaceship::~CSpaceship()
     {
-        SAFE_DELETE(this->m_pCSVFile);
+    }
+
+    // **************************************************************************
+    // **************************************************************************
+    void CSpaceship::Collision(ong::Collider* thisCollider, ong::Contact* contact)
+    {
+        CSpaceship* Ship = (CSpaceship*)thisCollider->getBody()->getUserData();
+        ong::Collider* other;
+        if (thisCollider == contact->colliderA)
+            other = contact->colliderB;
+        else
+            other = contact->colliderA;
+
+        CGameObject* object = static_cast<CGameObject*>(other->getBody()->getUserData());
+        if (object->m_Type == EGameObjectType::Ship)
+        {
+            
+        }
+        else if (object->m_Type == EGameObjectType::Bullet)
+        {
+            CBullet* bull = static_cast<CBullet*>(object);
+            if (!bull->m_Collided)
+            {
+                Ship->m_Life -= bull->m_Damage;
+                bull->m_Collided = true;
+            }
+        }
+        else
+        {
+
+        }
+        
+            
+    }
+
+    // **************************************************************************
+    // **************************************************************************
+    void CSpaceship::CalculateData()
+    {
+        float mass = 1.0f/this->m_pBody->getInverseMass();
+        this->m_RotationAcceleration = PuRe_Vector3F(mass*20.0f, mass*20.0f, mass*20.0f);
+        this->m_SpeedAcceleration = mass*20.0f;
+        this->m_MaxRotationSpeed = PuRe_Vector3F(5.0f, 5.0f, 5.0f);
+        this->m_MaxSpeed = 10.0f*(200.0f/mass);
+        this->m_MaxLife = (int)(mass*10.0f);
+        this->m_Life = this->m_MaxLife;
+
+
+        ong::Collider* c = this->m_pBody->getCollider();
+        ong::ColliderCallbacks cb;
+        cb.beginContact = CSpaceship::Collision;
+
+        while (c)
+        {
+            c->setCallbacks(cb);
+            c = c->getNext();
+        }
     }
 
 	// **************************************************************************
@@ -44,21 +100,18 @@ namespace TheBrick
     // **************************************************************************
     void CSpaceship::Spin(float a_Spin)
     {
-        float maxRollSpeed = (float)atof(this->m_pCSVFile->GetValue("MaxRollSpeed").c_str());
         if (a_Spin > 0.2f || a_Spin < -0.2f)
-            this->m_TargetAng.z = a_Spin * maxRollSpeed;
+            this->m_TargetAng.z = a_Spin * this->m_MaxRotationSpeed.X;
     }
 
     // **************************************************************************
     // **************************************************************************
     void CSpaceship::Move(PuRe_Vector2F a_Move)
     {
-        float maxYawSpeed = (float)atof(this->m_pCSVFile->GetValue("MaxYawSpeed").c_str());
-        float maxPitchSpeed = (float)atof(this->m_pCSVFile->GetValue("MaxPitchSpeed").c_str());
         if (a_Move.Length() > 0.5f)
         {
-            this->m_TargetAng.x = a_Move.Y * maxPitchSpeed;
-            this->m_TargetAng.y = a_Move.X * maxYawSpeed;
+            this->m_TargetAng.x = a_Move.Y * this->m_MaxRotationSpeed.Z;
+            this->m_TargetAng.y = a_Move.X * this->m_MaxRotationSpeed.Y;
         }
 
     }
@@ -67,180 +120,9 @@ namespace TheBrick
     // **************************************************************************
     void CSpaceship::Thrust(float a_Thrust)
     {
-        float maxSpeed = (float)atof(this->m_pCSVFile->GetValue("MaxSpeed").c_str());
         if (a_Thrust > 0.2f || a_Thrust < -0.2f)
-            this->m_TargetVec.z += a_Thrust * maxSpeed;
+            this->m_TargetVec.z += a_Thrust * this->m_MaxSpeed;
     }
-
-
-    // **************************************************************************
-    // **************************************************************************
-    void CSpaceship::HandleInput(int a_CID, PuRe_IInput* a_pInput, float a_DeltaTime, std::vector<CBullet*>& a_rBullets, CBrickManager* a_pManager)
-    {
-        if (a_pInput->KeyPressed(a_pInput->R))
-        {
-            SAFE_DELETE(this->m_pCSVFile);
-            this->m_pCSVFile = new CCSVParser("../data/player.csv");
-        }
-
-
-        std::string Key = this->m_pCSVFile->GetValue("Shoot");
-        bool shoot = false;
-        if (Key == "A")
-            shoot = a_pInput->GamepadPressed(a_pInput->Pad_A, a_CID);
-        else if (Key == "X")
-            shoot = a_pInput->GamepadPressed(a_pInput->Pad_X, a_CID);
-        else if (Key == "Y")
-            shoot = a_pInput->GamepadPressed(a_pInput->Pad_Y, a_CID);
-        else if (Key == "B")
-            shoot = a_pInput->GamepadPressed(a_pInput->Pad_B, a_CID);
-        else if (Key == "LB")
-            shoot = a_pInput->GamepadPressed(a_pInput->Left_Shoulder, a_CID);
-        else if (Key == "RB")
-            shoot = a_pInput->GamepadPressed(a_pInput->Right_Shoulder, a_CID);
-        else if (Key == "RT")
-            shoot = a_pInput->GetGamepadRightTrigger(a_CID) > 0.2f;
-        else if (Key == "LT")
-            shoot = a_pInput->GetGamepadLeftTrigger(a_CID) > 0.2f;
-
-        if (shoot)
-            this->Shoot(a_rBullets, a_pManager);
-
-        //handle thrust from file
-        Key = this->m_pCSVFile->GetValue("Thrust");
-
-        bool invert = false;
-        if (Key.substr(0, 1) == "-")
-        {
-            Key = Key.substr(1, Key.length());
-            invert = true;
-        }
-
-        float thrust = 0.0f;
-        if (Key == "RT")
-            thrust = a_pInput->GetGamepadRightTrigger(a_CID);
-        else if (Key == "LT")
-            thrust = a_pInput->GetGamepadLeftTrigger(a_CID);
-        else if (Key == "LB"&&a_pInput->GamepadIsPressed(a_pInput->Left_Shoulder, a_CID))
-            thrust = 1.0f;
-        else if (Key == "RB"&&a_pInput->GamepadIsPressed(a_pInput->Right_Shoulder, a_CID))
-            thrust = 1.0f;
-        else if (Key == "LeftThumb.X")
-            thrust = a_pInput->GetGamepadLeftThumb(a_CID).X;
-        else if (Key == "RightThumb.X")
-            thrust = a_pInput->GetGamepadRightThumb(a_CID).X;
-        else if (Key == "LeftThumb.Y")
-            thrust = a_pInput->GetGamepadLeftThumb(a_CID).Y;
-        else if (Key == "RightThumb.Y")
-            thrust = a_pInput->GetGamepadRightThumb(a_CID).Y;
-        if (invert)
-            thrust = -thrust;
-
-        this->Thrust(thrust);
-
-        //handle X/YRotation from file
-        PuRe_Vector2F Move;
-        Key = this->m_pCSVFile->GetValue("Move.X");
-        invert = false;
-        if (Key.substr(0, 1) == "-")
-        {
-            Key = Key.substr(1, Key.length());
-            invert = true;
-        }
-        if (Key == "LeftThumb.X")
-            Move.X = a_pInput->GetGamepadLeftThumb(a_CID).X;
-        else if (Key == "RightThumb.X")
-            Move.X = a_pInput->GetGamepadRightThumb(a_CID).X;
-        else if (Key == "LeftThumb.Y")
-            Move.X = a_pInput->GetGamepadLeftThumb(a_CID).Y;
-        else if (Key == "RightThumb.Y")
-            Move.X = a_pInput->GetGamepadRightThumb(a_CID).Y;
-        if (invert)
-            Move.X = -Move.X;
-
-        Key = this->m_pCSVFile->GetValue("Move.Y");
-
-        invert = false;
-        if (Key.substr(0, 1) == "-")
-        {
-            Key = Key.substr(1, Key.length());
-            invert = true;
-        }
-
-        if (Key == "LeftThumb.X")
-            Move.Y = a_pInput->GetGamepadLeftThumb(a_CID).X;
-        else if (Key == "RightThumb.X")
-            Move.Y = a_pInput->GetGamepadRightThumb(a_CID).X;
-        else if (Key == "LeftThumb.Y")
-            Move.Y = a_pInput->GetGamepadLeftThumb(a_CID).Y;
-        else if (Key == "RightThumb.Y")
-            Move.Y = a_pInput->GetGamepadRightThumb(a_CID).Y;
-        if (invert)
-            Move.Y = -Move.Y;
-        //apply X/Y Rotation via Input
-
-        this->Move(Move);
-
-
-        //handle LeftSpin from file
-        Key = this->m_pCSVFile->GetValue("SpinLeft");
-        invert = false;
-        if (Key.substr(0, 1) == "-")
-        {
-            Key = Key.substr(1, Key.length());
-            invert = true;
-        }
-        float SpinL = 0.0f;
-        float SpinR = 0.0f;
-        if (Key == "RT")
-            SpinL += a_pInput->GetGamepadRightTrigger(a_CID);
-        else if (Key == "LT")
-            SpinL += a_pInput->GetGamepadLeftTrigger(a_CID);
-        else if (Key == "LB"&&a_pInput->GamepadIsPressed(a_pInput->Left_Shoulder, a_CID))
-            SpinL += 1.0f;
-        else if (Key == "RB"&&a_pInput->GamepadIsPressed(a_pInput->Right_Shoulder, a_CID))
-            SpinL += 1.0f;
-        else if (Key == "LeftThumb.X")
-            SpinL += a_pInput->GetGamepadLeftThumb(a_CID).X;
-        else if (Key == "RightThumb.X")
-            SpinL += a_pInput->GetGamepadRightThumb(a_CID).X;
-        else if (Key == "LeftThumb.Y")
-            SpinL += a_pInput->GetGamepadLeftThumb(a_CID).Y;
-        else if (Key == "RightThumb.Y")
-            SpinL += a_pInput->GetGamepadRightThumb(a_CID).Y;
-        if (invert)
-            SpinL = -SpinL;
-        //handle RightSpin from file
-        Key = this->m_pCSVFile->GetValue("SpinRight");
-        invert = false;
-        if (Key.substr(0, 1) == "-")
-        {
-            Key = Key.substr(1, Key.length());
-            invert = true;
-        }
-        if (Key == "RT")
-            SpinR += a_pInput->GetGamepadRightTrigger(a_CID);
-        else if (Key == "LT")
-            SpinR += a_pInput->GetGamepadLeftTrigger(a_CID);
-        else if (Key == "LB"&&a_pInput->GamepadIsPressed(a_pInput->Left_Shoulder, a_CID))
-            SpinR += 1.0f;
-        else if (Key == "RB"&&a_pInput->GamepadIsPressed(a_pInput->Right_Shoulder, a_CID))
-            SpinR += 1.0f;
-        else if (Key == "LeftThumb.X")
-            SpinR += a_pInput->GetGamepadLeftThumb(a_CID).X;
-        else if (Key == "RightThumb.X")
-            SpinR += a_pInput->GetGamepadRightThumb(a_CID).X;
-        else if (Key == "LeftThumb.Y")
-            SpinR += a_pInput->GetGamepadLeftThumb(a_CID).Y;
-        else if (Key == "RightThumb.Y")
-            SpinR += a_pInput->GetGamepadRightThumb(a_CID).Y;
-        if (invert)
-            SpinR = -SpinR;
-        float Spin = SpinR+SpinL;
-
-        this->Spin(Spin);
-    }
-
     // **************************************************************************
     // **************************************************************************
     void CSpaceship::Update(float a_DeltaTime)
@@ -248,10 +130,10 @@ namespace TheBrick
         ong::vec3 currVel = ong::rotate(this->m_pBody->getLinearVelocity(), ong::conjugate(this->m_pBody->getOrientation()));
         ong::vec3 currAng = ong::rotate(this->m_pBody->getAngularVelocity(), ong::conjugate(this->m_pBody->getOrientation()));
 
-        float forAcc = (float)atof(this->m_pCSVFile->GetValue("SpeedAcceleration").c_str());
-        float yawAcc = (float)atof(this->m_pCSVFile->GetValue("YawAcceleration").c_str());
-        float pitchAcc = (float)atof(this->m_pCSVFile->GetValue("PitchAcceleration").c_str());
-        float rollAcc = (float)atof(this->m_pCSVFile->GetValue("RollAcceleration").c_str());
+        float forAcc = this->m_SpeedAcceleration;
+        float yawAcc = this->m_RotationAcceleration.Y;
+        float pitchAcc = this->m_RotationAcceleration.Z;
+        float rollAcc = this->m_RotationAcceleration.X;
         // negate rotational velocity
         this->m_pBody->applyRelativeImpulse(1.0f / this->m_pBody->getInverseMass() * ong::vec3(this->m_TargetVec.x - currVel.x, this->m_TargetVec.y - currVel.y, 0));
 

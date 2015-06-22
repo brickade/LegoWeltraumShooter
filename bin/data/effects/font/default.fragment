@@ -15,5 +15,6 @@ void main()
 	if(blend.a < 0.1)
 		discard;
 
-	gl_FragColor = blend;
+	gl_FragData[0] = blend;
+	gl_FragData[1] = (vec4(-1,0,0,0)+1)/2;
 }

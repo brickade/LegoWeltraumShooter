@@ -80,41 +80,41 @@ namespace Game
 
 
         PuRe_Vector2F Cam;
-        std::string Key = a_pPlayer->m_pCSVFile->GetValue("Camera.X");
-        bool invert = false;
-        if (Key.substr(0, 1) == "-")
-        {
-            Key = Key.substr(1, Key.length());
-            invert = true;
-        }
-        if (Key == "LeftThumb.X")
-            Cam.X = a_pInput->GetGamepadLeftThumb(a_CID).X;
-        else if (Key == "RightThumb.X")
-            Cam.X = a_pInput->GetGamepadRightThumb(a_CID).X;
-        else if (Key == "LeftThumb.Y")
-            Cam.X = a_pInput->GetGamepadLeftThumb(a_CID).Y;
-        else if (Key == "RightThumb.Y")
-            Cam.X = a_pInput->GetGamepadRightThumb(a_CID).Y;
-        if (invert)
-            Cam.X = -Cam.X;
+        //std::string Key = a_pPlayer->m_pCSVFile->GetValue("Camera.X");
+        //bool invert = false;
+        //if (Key.substr(0, 1) == "-")
+        //{
+        //    Key = Key.substr(1, Key.length());
+        //    invert = true;
+        //}
+        //if (Key == "LeftThumb.X")
+        //    Cam.X = a_pInput->GetGamepadLeftThumb(a_CID).X;
+        //else if (Key == "RightThumb.X")
+        //    Cam.X = a_pInput->GetGamepadRightThumb(a_CID).X;
+        //else if (Key == "LeftThumb.Y")
+        //    Cam.X = a_pInput->GetGamepadLeftThumb(a_CID).Y;
+        //else if (Key == "RightThumb.Y")
+        //    Cam.X = a_pInput->GetGamepadRightThumb(a_CID).Y;
+        //if (invert)
+        //    Cam.X = -Cam.X;
 
-        Key = a_pPlayer->m_pCSVFile->GetValue("Camera.Y");
-        invert = false;
-        if (Key.substr(0, 1) == "-")
-        {
-            Key = Key.substr(1, Key.length());
-            invert = true;
-        }
-        if (Key == "LeftThumb.X")
-            Cam.Y = a_pInput->GetGamepadLeftThumb(a_CID).X;
-        else if (Key == "RightThumb.X")
-            Cam.Y = a_pInput->GetGamepadRightThumb(a_CID).X;
-        else if (Key == "LeftThumb.Y")
-            Cam.Y = a_pInput->GetGamepadLeftThumb(a_CID).Y;
-        else if (Key == "RightThumb.Y")
-            Cam.Y = a_pInput->GetGamepadRightThumb(a_CID).Y;
-        if (invert)
-            Cam.Y = -Cam.Y;
+        //Key = a_pPlayer->m_pCSVFile->GetValue("Camera.Y");
+        //invert = false;
+        //if (Key.substr(0, 1) == "-")
+        //{
+        //    Key = Key.substr(1, Key.length());
+        //    invert = true;
+        //}
+        //if (Key == "LeftThumb.X")
+        //    Cam.Y = a_pInput->GetGamepadLeftThumb(a_CID).X;
+        //else if (Key == "RightThumb.X")
+        //    Cam.Y = a_pInput->GetGamepadRightThumb(a_CID).X;
+        //else if (Key == "LeftThumb.Y")
+        //    Cam.Y = a_pInput->GetGamepadLeftThumb(a_CID).Y;
+        //else if (Key == "RightThumb.Y")
+        //    Cam.Y = a_pInput->GetGamepadRightThumb(a_CID).Y;
+        //if (invert)
+        //    Cam.Y = -Cam.Y;
 
         PuRe_QuaternionF quat = TheBrick::OngToPuRe(a_pPlayer->m_pBody->getOrientation());
         if (this->m_Rotation != quat)

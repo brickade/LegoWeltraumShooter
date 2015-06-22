@@ -13,12 +13,13 @@ namespace TheBrick
     class CBrickInstance;
     class CSerializer;
     class CBrickManager;
-
+    enum EGameObjectType {Ship, Bullet, Object};
     class CGameObject
     {
     public:
         PuRe_List<CBrickInstance*> m_pBricks;
         ong::Body* m_pBody;
+        EGameObjectType m_Type;
 
     private:
 

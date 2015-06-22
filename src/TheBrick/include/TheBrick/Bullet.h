@@ -15,6 +15,8 @@ namespace TheBrick
     {
     public:
         float m_lifeTime;
+        int m_Damage;
+        bool m_Collided;
     private:
 
 
