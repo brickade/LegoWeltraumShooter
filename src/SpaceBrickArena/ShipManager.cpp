@@ -48,7 +48,7 @@ namespace sba
             if (!preview.good())
             { //Create new Sprite
                 //Load Ship
-                Game::CSpaceship ship(*sba_World, "");
+                sba::CSpaceship ship(*sba_World, "");
                 TheBrick::CSerializer* serializer = new TheBrick::CSerializer();
                 serializer->OpenRead(std::string(namePath).append(".ship").c_str());
                 ship.Deserialize(*serializer, sba_BrickManager->GetBrickArray(), *sba_World);
@@ -76,7 +76,7 @@ namespace sba
 
     // **************************************************************************
     // **************************************************************************
-    void CShipManager::AddShip(Game::CSpaceship& a_rShip)
+    void CShipManager::AddShip(sba::CSpaceship& a_rShip)
     { //Add ship sprite and path and save ship file
         this->m_Sprites.push_back(std::make_pair(std::string(a_rShip.GetName()).insert(0, this->m_FolderPath), this->GetSpriteFromShip(a_rShip)));
         this->SaveShipToFile(a_rShip);
@@ -86,7 +86,7 @@ namespace sba
     // **************************************************************************
     void CShipManager::AddNewShip(const char* a_pName)
     { //Add default ship with specified name
-        Game::CSpaceship ship = Game::CSpaceship(*sba_World, a_pName);
+        sba::CSpaceship ship = sba::CSpaceship(*sba_World, a_pName);
         //Register
         this->m_Sprites.push_back(std::make_pair(std::string(ship.GetName()).insert(0, this->m_FolderPath), this->GetSpriteFromShip(ship)));
         //Set to default
@@ -97,7 +97,7 @@ namespace sba
 
     // **************************************************************************
     // **************************************************************************
-    void CShipManager::ResetShip(Game::CSpaceship& a_rShip)
+    void CShipManager::ResetShip(sba::CSpaceship& a_rShip)
     { //Reset given ship to default and update sprite
         a_rShip.Reset(sba_BrickManager->GetBrick(1), *sba_World);
         this->UpdateSprite(a_rShip);
@@ -105,7 +105,7 @@ namespace sba
 
     // **************************************************************************
     // **************************************************************************
-    void CShipManager::SaveShipToFile(Game::CSpaceship& a_rShip)
+    void CShipManager::SaveShipToFile(sba::CSpaceship& a_rShip)
     { //Save given ship to file
         TheBrick::CSerializer* serializer = new TheBrick::CSerializer();
         std::string tmp = std::string(this->PathFromShip(a_rShip)).append(".ship");
@@ -122,7 +122,7 @@ namespace sba
 
     // **************************************************************************
     // **************************************************************************
-    void CShipManager::DeleteShip(Game::CSpaceship& a_rShip)
+    void CShipManager::DeleteShip(sba::CSpaceship& a_rShip)
     { //Delete given ship from disk and delete sprite and path
         if (remove(std::string(this->PathFromShip(a_rShip)).append(".ship").c_str()) != 0)
         {
@@ -148,9 +148,9 @@ namespace sba
 
     // **************************************************************************
     // **************************************************************************
-    Game::CSpaceship* CShipManager::GetShip(size_t a_Index)
+    sba::CSpaceship* CShipManager::GetShip(size_t a_Index)
     { //Load actual ship from disk
-        Game::CSpaceship* ship = new Game::CSpaceship(*sba_World, this->m_Sprites[a_Index].first.substr(this->m_Sprites[a_Index].first.find_last_of("/") + 1));
+        sba::CSpaceship* ship = new sba::CSpaceship(*sba_World, this->m_Sprites[a_Index].first.substr(this->m_Sprites[a_Index].first.find_last_of("/") + 1));
         TheBrick::CSerializer* serializer = new TheBrick::CSerializer();
         if (serializer->OpenRead(std::string(this->m_Sprites[a_Index].first).append(".ship").c_str()))
         {
@@ -163,7 +163,7 @@ namespace sba
 
     // **************************************************************************
     // **************************************************************************
-    void CShipManager::UpdateSprite(Game::CSpaceship& a_rShip)
+    void CShipManager::UpdateSprite(sba::CSpaceship& a_rShip)
     {
         std::string path = this->PathFromShip(a_rShip);
         for (std::vector<std::pair<std::string, PuRe_Sprite*>>::iterator it = this->m_Sprites.begin(); it != this->m_Sprites.end(); ++it)
@@ -178,7 +178,7 @@ namespace sba
 
     // **************************************************************************
     // **************************************************************************
-    PuRe_Sprite* CShipManager::GetSpriteFromShip(Game::CSpaceship& a_rShip) const
+    PuRe_Sprite* CShipManager::GetSpriteFromShip(sba::CSpaceship& a_rShip) const
     {
         PuRe_Sprite* sprite = new PuRe_Sprite(sba_Application->GetGraphics(), "");
         //TODO: implement

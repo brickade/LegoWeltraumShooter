@@ -17,7 +17,7 @@ namespace TheBrick
     class CGameObject;
     class CBrickInstance;
 }
-namespace Game
+namespace sba
 {
     class CSpaceship;
 }

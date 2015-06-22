@@ -3,12 +3,15 @@
 #include "TheBrick/Conversion.h"
 #include "TheBrick/BrickInstance.h"
 
-namespace Game
+#include "include/Player.h"
+
+namespace sba
 {
     // **************************************************************************
     // **************************************************************************
-    CBullet::CBullet(PuRe_Vector3F a_Position, PuRe_Vector3F a_Speed, ong::World& a_rWorld) : CGameObject(a_rWorld, nullptr)
+    CBullet::CBullet(PuRe_Vector3F a_Position, PuRe_Vector3F a_Speed, ong::World& a_rWorld,SPlayer* a_pOwner) : CGameObject(a_rWorld, nullptr)
     {
+        this->m_pOwner = a_pOwner;
         this->m_Type = TheBrick::EGameObjectType::Bullet;
         this->m_pBody->setPosition(TheBrick::PuReToOng(a_Position));
         this->m_pBody->applyImpulse(TheBrick::PuReToOng(a_Speed));

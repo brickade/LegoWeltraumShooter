@@ -1,6 +1,6 @@
 #include "include/Minimap.h"
 
-namespace Game
+namespace sba
 {
     CMinimap::CMinimap(PuRe_IGraphics* a_pGraphics)
     {

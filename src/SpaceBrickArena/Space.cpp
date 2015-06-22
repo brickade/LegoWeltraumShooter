@@ -159,7 +159,7 @@ namespace sba
         TheBrick::CSerializer serializer;
         serializer.OpenRead(file.c_str());
         ong::vec3 pos = ong::vec3(0.0f, 0.0f, 0.0f);
-        p->Ship = new Game::CSpaceship(*sba_World, name);
+        p->Ship = new sba::CSpaceship(*sba_World, name);
         p->Ship->Deserialize(serializer, sba_BrickManager->GetBrickArray(), *sba_World);
         serializer.Close();
         sba_Players.push_back(p);

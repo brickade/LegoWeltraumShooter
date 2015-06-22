@@ -332,7 +332,7 @@ namespace Menu
                             printf("Created ship %s for player %i!\n", up->Name,up->ID);
                             exist = true;
                             SAFE_DELETE(sba_Players[i]->Ship);
-                            sba_Players[i]->Ship = new Game::CSpaceship(*sba_World, up->Name);
+                            sba_Players[i]->Ship = new sba::CSpaceship(*sba_World, up->Name);
                             break;
                         }
                     }
@@ -345,7 +345,7 @@ namespace Menu
                         printf("User %i joined!\n", up->ID);
                         p->NetworkInformation = s; //save socket, only important for server
                         p->PadID = -1;
-                        p->Ship = new Game::CSpaceship(*sba_World, up->Name);
+                        p->Ship = new sba::CSpaceship(*sba_World, up->Name);
                         sba_Players.push_back(p);
                     }
                     packetSize = size;
@@ -772,7 +772,7 @@ namespace Menu
                             serializer.OpenRead(file.c_str());
                             ong::vec3 pos = ong::vec3(0.0f, 0.0f, 0.0f);
                             SAFE_DELETE(p->Ship);
-                            p->Ship = new Game::CSpaceship(*sba_World, name);
+                            p->Ship = new sba::CSpaceship(*sba_World, name);
                             p->Ship->Deserialize(serializer, sba_BrickManager->GetBrickArray(), *sba_World);
                             serializer.Close();
 

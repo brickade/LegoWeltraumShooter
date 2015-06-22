@@ -30,16 +30,16 @@ namespace sba
         ~CShipManager();
 
         void Load(); //Load all sprites and paths from folder
-        void AddShip(Game::CSpaceship& a_rShip); //Add ship sprite and path and save ship file
+        void AddShip(sba::CSpaceship& a_rShip); //Add ship sprite and path and save ship file
         void AddNewShip(const char* a_pName); //Add default ship with specified name
-        void ResetShip(Game::CSpaceship& a_rShip); //Reset given ship to default and update sprite
-        void SaveShipToFile(Game::CSpaceship& a_rShip); //Save given ship to file
-        void DeleteShip(Game::CSpaceship& a_rShip); //Delete given ship from disk and delete sprite and path
-        Game::CSpaceship* GetShip(size_t a_Index); //Load actual ship from disk
-        void UpdateSprite(Game::CSpaceship& a_rShip); //Updates the sprite, does not save it to file
+        void ResetShip(sba::CSpaceship& a_rShip); //Reset given ship to default and update sprite
+        void SaveShipToFile(sba::CSpaceship& a_rShip); //Save given ship to file
+        void DeleteShip(sba::CSpaceship& a_rShip); //Delete given ship from disk and delete sprite and path
+        sba::CSpaceship* GetShip(size_t a_Index); //Load actual ship from disk
+        void UpdateSprite(sba::CSpaceship& a_rShip); //Updates the sprite, does not save it to file
 
     private:
-        const char* PathFromShip(Game::CSpaceship& a_rShip) const
+        const char* PathFromShip(sba::CSpaceship& a_rShip) const
         {
             std::string* tmp = new std::string(a_rShip.GetName());
             tmp->insert(0, this->m_FolderPath);
@@ -53,7 +53,7 @@ namespace sba
             return tmp->c_str();
         }
 
-        PuRe_Sprite* GetSpriteFromShip(Game::CSpaceship& a_rShip) const;
+        PuRe_Sprite* GetSpriteFromShip(sba::CSpaceship& a_rShip) const;
     };
 }
 

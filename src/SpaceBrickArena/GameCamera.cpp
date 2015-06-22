@@ -2,7 +2,7 @@
 
 #include "TheBrick/Conversion.h"
 
-namespace Game
+namespace sba
 {
     CGameCamera::CGameCamera(PuRe_Vector3F a_Position, PuRe_Vector3F a_Direction, PuRe_Vector3F a_Up, float a_FOV, float a_AspectRatio,
         PuRe_Vector2F a_NearFar, PuRe_Vector2F a_Resolution, PuReEngine::Core::CameraProjection a_UsedProjection) : PuRe_Camera(a_Position, a_Direction, a_Up, a_FOV, a_AspectRatio, a_NearFar, a_Resolution, a_UsedProjection)
@@ -27,7 +27,7 @@ namespace Game
         this->m_Rotation = PuRe_QuaternionF();
     }
 
-    void CGameCamera::Update(int a_CID, Game::CSpaceship* a_pPlayer, PuRe_IInput* a_pInput, PuRe_Timer* a_pTimer)
+    void CGameCamera::Update(int a_CID, sba::CSpaceship* a_pPlayer, PuRe_IInput* a_pInput, PuRe_Timer* a_pTimer)
     {
         //Seconds for frame independent movement
         float Seconds = a_pTimer->GetElapsedSeconds();
