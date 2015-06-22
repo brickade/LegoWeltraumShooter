@@ -2,6 +2,7 @@
 
 #include "defines.h"
 #include "geomMath.h"
+#include <float.h>
 
 namespace ong
 {
@@ -165,10 +166,10 @@ namespace ong
 	// hull
 	vec3 getHullSupport(const vec3& dir, const Hull* hull, int* idx = 0);
 	vec3 getSegmentSupport(const vec3& dir, const vec3& a, const vec3& b, int* idx = 0);
-	vec3 closestPointOnHull(const vec3& p, const Hull* hull);
+	vec3 closestPointOnHull(const vec3& p, const Hull* hull, float epsilon = FLT_EPSILON);
 
 	// return the squared distance between points
-	float closestPtSegmentHull(const vec3& a, const vec3& b, const Hull* hull, vec3& cSegment, vec3& cHull);
+	float closestPtSegmentHull(const vec3& a, const vec3& b, const Hull* hull, vec3& cSegment, vec3& cHull, float epsilon = FLT_EPSILON);
 
 	
 

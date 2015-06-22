@@ -1,6 +1,7 @@
 #include "Shapes.h"
 #include <float.h>
 #include <algorithm>
+#include "Settings.h"
 
 namespace ong
 {
@@ -479,11 +480,13 @@ namespace ong
 		}
 	}
 
-	vec3 closestPointOnHull(const vec3& p, const Hull* hull)
+	vec3 closestPointOnHull(const vec3& p, const Hull* hull, float epsilon)
 	{
 
 
 		Simplex simplex;
+
+		float hullEpsilon = hull->epsilon / FLT_EPSILON * epsilon;
 
 		//starting point
 		{
@@ -503,12 +506,12 @@ namespace ong
 			if (_p == p || simplex.size == 4)
 				return p;
 
-			if (lengthSq(_p - last_p) <= lengthSq(_p) * FLT_EPSILON)
+			if (lengthSq(_p - last_p) <= lengthSq(_p) * epsilon)
 				return _p;
 
 
 			vec3 d = p - _p;
-			if (lengthSq(d) < hull->epsilon)
+			if (lengthSq(d) < hullEpsilon)
 				return _p;
 
 
@@ -517,7 +520,7 @@ namespace ong
 
 
 
-			if (abs(dot(d, support) - dot(d, _p)) <= 10.0f * hull->epsilon)
+			if (abs(dot(d, support) - dot(d, _p)) <= 10.0f * hullEpsilon)
 				return _p;
 
 			for (int i = 0; i < simplex.size; ++i)
@@ -540,9 +543,11 @@ namespace ong
 
 
 	// todo proper failure state
-	float closestPtSegmentHull(const vec3& a, const vec3& b, const Hull* hull, vec3& cSegment, vec3& cHull)
+	float closestPtSegmentHull(const vec3& a, const vec3& b, const Hull* hull, vec3& cSegment, vec3& cHull, float epsilon)
 	{
 		Simplex simplex;
+
+		float hullEpsilon = hull->epsilon / FLT_EPSILON * epsilon;
 
 		//starting point
 		{
@@ -566,12 +571,12 @@ namespace ong
 			if (_p == o || simplex.size == 4)
 				break;
 
-			if (lengthSq(_p - last_p) <= lengthSq(_p) * FLT_EPSILON)
+			if (lengthSq(_p - last_p) <= lengthSq(_p) * epsilon)
 				break;
 
 
 			vec3 d = -_p;
-			if (lengthSq(d) < hull->epsilon)
+			if (lengthSq(d) < hullEpsilon)
 				break;
 
 
@@ -583,7 +588,7 @@ namespace ong
 
 
 
-			if (abs(dot(d, support) - dot(d, _p)) <= 10.0f * hull->epsilon)
+			if (abs(dot(d, support) - dot(d, _p)) <= 10.0f * hullEpsilon)
 				break;
 
 
@@ -725,6 +730,9 @@ namespace ong
 
 	bool overlap(const Hull* hullA, const Hull* hullB, const Transform& t1, const Transform& t2)
 	{
+		float aEpsilon = hullA->epsilon / FLT_EPSILON * ong_OVERLAP_EPSILON;
+		float bEpsilon = hullB->epsilon / FLT_EPSILON * ong_OVERLAP_EPSILON;
+
 		//planes A
 		Transform tB = invTransformTransform(t1, t2);
 		for (int i = 0; i < hullA->numFaces; ++i)
@@ -732,7 +740,7 @@ namespace ong
 			Plane p = transformPlane(hullA->pPlanes[i], tB);
 
 			vec3 support = getHullSupport(-p.n, hullB);
-			float dist = distPointFatPlane(support, p, hullA->epsilon);
+			float dist = distPointFatPlane(support, p, aEpsilon);
 
 			if (dist >= 0.0f)
 				return false;
@@ -745,7 +753,7 @@ namespace ong
 			Plane p = transformPlane(hullB->pPlanes[i], tA);
 
 			vec3 support = getHullSupport(-p.n, hullA);
-			float dist = distPointFatPlane(support, p, hullB->epsilon);
+			float dist = distPointFatPlane(support, p, bEpsilon);
 
 			if (dist >= 0.0f)
 				return false;
@@ -789,7 +797,7 @@ namespace ong
 				// project
 				vec3 n = cross(E1, E2);
 
-				float epsilon = ong_MAX(hullA->epsilon, hullB->epsilon);
+				float epsilon = ong_MAX(aEpsilon, bEpsilon);
 
 				if (lengthSq(n) < epsilon)
 				{
@@ -822,12 +830,15 @@ namespace ong
 
 
 		float r = sphereA->r + sphereB->r;
-		float epsilon = (3 * r) * FLT_EPSILON;
+		float epsilon = (3 * r) * ong_OVERLAP_EPSILON;
 
 		Transform t = invTransformTransform(t2, t1);
 
 		vec3 ca = sphereA->c;
 		vec3 cb = transformVec3(sphereB->c, t);
+
+		if (ca == cb)
+			return true;
 
 		return lengthSq(cb - ca) - r*r < -(epsilon*epsilon);
 	}
@@ -850,7 +861,7 @@ namespace ong
 		vec3 c1, c2;
 		float distSq = closestPtSegmentSegment(p1, q1, p2, q2, S, T, c1, c2);
 
-		float epsilon = (ong_MAX(length(q1 - p1), length(q2 - p2) + 3 * ong_MAX(capsuleA->r, capsuleB->r))) * FLT_EPSILON;
+		float epsilon = (ong_MAX(length(q1 - p1), length(q2 - p2) + 3 * ong_MAX(capsuleA->r, capsuleB->r))) * ong_OVERLAP_EPSILON;
 
 		return (distSq - r*r < -(epsilon*epsilon));
 	}
@@ -865,7 +876,7 @@ namespace ong
 
 		float distSq = sqDistPointSegment(c, capsuleB->c1, capsuleB->c2);
 
-		float epsilon = (length(capsuleB->c2 - capsuleB->c1) + 3 * ong_MAX(sphereA->r, capsuleB->r)) * FLT_EPSILON;
+		float epsilon = (length(capsuleB->c2 - capsuleB->c1) + 3 * ong_MAX(sphereA->r, capsuleB->r)) * ong_OVERLAP_EPSILON;
 
 		return (distSq - r*r < -(epsilon*epsilon));
 	}
@@ -874,19 +885,22 @@ namespace ong
 
 	bool overlap(const Sphere* sphereA, const Hull* hullB, const Transform& t1, const Transform& t2)
 	{
-		float epsilon = (3 * sphereA->r) * FLT_EPSILON + hullB->epsilon;
+		float epsilon = (3 * sphereA->r) * ong_OVERLAP_EPSILON + (hullB->epsilon/FLT_EPSILON * ong_OVERLAP_EPSILON);
 
 		Transform t = invTransformTransform(t1, t2);
 
 		vec3 c = transformVec3(sphereA->c, t);
-		vec3 p = closestPointOnHull(c, hullB);
+		vec3 p = closestPointOnHull(c, hullB, ong_OVERLAP_EPSILON);
+		
+		if (c == p)
+			return true;
 
-		return lengthSq(p - c) - sphereA->r*sphereA->r < -epsilon;
+		return lengthSq(p - c) - sphereA->r*sphereA->r < -10.0f*epsilon;
 	}
 
 	bool overlap(const Capsule* capsuleA, const Hull* hullB, const Transform& t1, const Transform& t2)
 	{
-		float epsilon = ong_MAX(hullB->epsilon, (3 * capsuleA->r + length(capsuleA->c2 - capsuleA->c1)) * FLT_EPSILON);
+		float epsilon = ong_MAX((hullB->epsilon/FLT_EPSILON * ong_OVERLAP_EPSILON), (3 * capsuleA->r + length(capsuleA->c2 - capsuleA->c1)) * ong_OVERLAP_EPSILON);
 
 		Transform t = invTransformTransform(t1, t2);
 
@@ -894,7 +908,7 @@ namespace ong
 		vec3 c2 = transformVec3(capsuleA->c2, t);
 
 		vec3 s, h;
-		float distSq = closestPtSegmentHull(c1, c2, hullB, s, h);
+		float distSq = closestPtSegmentHull(c1, c2, hullB, s, h, ong_OVERLAP_EPSILON);
 
 		return distSq - capsuleA->r * capsuleA->r < -10.0f * epsilon;
 	}

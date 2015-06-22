@@ -113,6 +113,7 @@
     <ClInclude Include="include\Onager\Narrowphase.h" />
     <ClInclude Include="include\Onager\QuickHull.h" />
     <ClInclude Include="include\Onager\SAT.h" />
+    <ClInclude Include="include\Onager\Settings.h" />
     <ClInclude Include="include\Onager\Shapes.h" />
     <ClInclude Include="include\Onager\VolumeIntegration.h" />
     <ClInclude Include="include\Onager\World.h" />
