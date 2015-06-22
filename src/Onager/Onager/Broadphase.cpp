@@ -425,7 +425,9 @@ namespace ong
 		}
 
 		int bucket;
-		for (;;)
+		//todo FIX !!!
+		static int MAX_ITERS = 100;
+		for (int iter = 0 ; iter < MAX_ITERS;++ iter)
 		{
 			float ooSize = 1.0f / maxSize;
 

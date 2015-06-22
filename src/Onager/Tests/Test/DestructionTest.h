@@ -11,8 +11,10 @@ public:
 	void init();
 	void update(float dt);
 	bool procEvent(SDL_Event event) override;
+	void render() override;
 private:
 	int impulse();
 	bool m_click;
 	float m_force;
+
 };

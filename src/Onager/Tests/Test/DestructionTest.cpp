@@ -9,13 +9,17 @@ class Ship;
 struct Brick;
 void destroyBrick(Brick* brick);
 Ship* createShip(Brick* base, Transform transform, BodyType::Type type);
+void setShip(Brick* brick, Ship* ship, int tick);
+bool connected(Brick* brick, Brick* base, int tick);
 
+
+vec3 g_fulcrum = vec3(0,0,0);
 
 struct Stud
 {
-	int x;
-	int z;
-	int y;
+	float x;
+	float z;
+	float y;
 };
 
 struct StudConnection
@@ -168,8 +172,8 @@ public:
 						int i = a->numStuds++;
 						int j = b->numStuds++;
 
-						a->studs[i] = { x, z, y};
-						b->studs[j] = { x - dx, 1-y};
+						a->studs[i] = { brick->pos[0] + x - 1.5, brick->pos[2] + z - 0.5, brick->pos[1] + y  - 0.5};
+						b->studs[j] = { brick2->pos[0] + x - dx - 1.5,brick2->pos[2] + z - dz - 0.5, brick2->pos[1] +  1-y - 0.5};
 					}
 				}
 
@@ -271,7 +275,7 @@ public:
 
 	bool addImpulse(Brick* brick, vec3 pos, vec3 impulse)
 	{
-		static const float STUD_STRENGTH = 7.0f;
+		static const float STUD_STRENGTH = 20.0f;
 		bool destroy = false;
 
 		//Transform t = invTransformTransform(invTransform(m_body->getTransform()), brick->collider->getTransform);
@@ -298,56 +302,168 @@ public:
 		}
 
 		
-
+		Plane cmPlane = { normalize(_pos - m_body->getLocalCenter()), dot(normalize(_pos - m_body->getLocalCenter()), m_body->getLocalCenter()) };
 		while (true)
 		{
 			if (front.size() == 0)
 				break;
 
-			// check if selection is past center of mass
-			vec3 cm = vec3(0, 0, 0);
-			float m = 0.0f;
-			for (int i = 0; i < selection.size(); ++i)
-			{
-				cm += selection[i]->collider->getMassData().m * transformVec3(selection[i]->collider->getMassData().cm, selection[i]->collider->getTransform());
-				m += selection[i]->collider->getMassData().m;
-			}
-			cm = 1.0f / m * cm;
-
-			Plane plane = { normalize(_pos - m_body->getLocalCenter()), dot(normalize(_pos - m_body->getLocalCenter()), m_body->getLocalCenter()) };
-			if (distPointFatPlane(cm, plane, FLT_EPSILON) <= 0.0f)
-			{
-				break;
-			}
-
-
+		
 			// check for destruction
-			// pure force
-			float studForce = 0.0f;
-
-			for (int i = 0; i < front.size(); ++i)
 			{
-				if ((_impulse.y > 0 && front[i]->type == StudConnection::UP) ||
-					(_impulse.y < 0 && front[i]->type == StudConnection::DOWN))
+				// pure force
+				float studForce = 0.0f;
+
+				for (int i = 0; i < front.size(); ++i)
 				{
-					studForce = FLT_MAX;
-					break;
-				}
-				else
-				{
-					for (int j = 0; j < front[i]->numStuds; ++j)
+					if ((_impulse.y > 0 && front[i]->type == StudConnection::UP) ||
+						(_impulse.y < 0 && front[i]->type == StudConnection::DOWN))
 					{
-						studForce += STUD_STRENGTH;
+						studForce = FLT_MAX;
+						break;
+					}
+					else
+					{
+						for (int j = 0; j < front[i]->numStuds; ++j)
+						{
+							studForce += STUD_STRENGTH;
+						}
 					}
 				}
-			}
 
-			if (abs(_impulse.y) > studForce)
-			{
-				destroy = true;
-				break;
-			}
+				if (abs(_impulse.y) > studForce)
+				{
+					destroy = true;
+					break;
+				}
 
+				// check for leverage
+				for (int i = 0; i < front.size(); ++i)
+				{
+					for (int d = -1; d <= 1; d += 2)
+					{
+
+						Stud* studX = nullptr;
+						Stud* studZ = nullptr;
+						float maxX = -FLT_MAX;
+						float maxZ = -FLT_MAX;
+						for (int j = 0; j < front[i]->numStuds; ++j)
+						{
+							if (d * front[i]->studs[j].x > maxX)
+								studX = front[i]->studs + j, maxX = d*front[i]->studs[j].x;
+
+							if (d * front[i]->studs[j].z > maxZ)
+								studZ = front[i]->studs + j, maxZ = d*front[i]->studs[j].z;
+						}
+
+						// check if frustrum is blocked
+						if (d == 1)
+						{
+							if (front[i]->other->brick->pos[0] - front[i]->brick->pos[0] < 0)
+							{
+								if (front[i]->brick->block[StudConnection::RIGHT] > 0)
+									continue;
+							}
+							else
+							{
+								if (front[i]->other->brick->block[StudConnection::RIGHT] > 0)
+									continue;
+							}
+
+							if (front[i]->other->brick->pos[2] - front[i]->brick->pos[2] < 0)
+							{
+								if (front[i]->brick->block[StudConnection::BACK] > 0)
+									continue;
+							}
+							else
+							{
+								if (front[i]->other->brick->block[StudConnection::BACK] > 0)
+									continue;
+							}
+						}
+						else if (d == -1)
+						{
+							if (front[i]->other->brick->pos[0] - front[i]->brick->pos[0] > 0)
+							{
+								if (front[i]->brick->block[StudConnection::LEFT] > 0)
+									continue;
+							}
+							else
+							{
+								if (front[i]->other->brick->block[StudConnection::LEFT] > 0)
+									continue;
+							}
+
+							if (front[i]->other->brick->pos[2] - front[i]->brick->pos[2] > 0)
+							{
+								if (front[i]->brick->block[StudConnection::FRONT] > 0)
+									continue;
+							}
+							else
+							{
+								if (front[i]->other->brick->block[StudConnection::FRONT] > 0)
+									continue;
+							}
+						}
+
+
+						// check torques around frustrums
+						float y = front[i]->studs[0].y;
+						float fulcrumX = studX->x + (d*0.5f);
+						float fulcrumZ = studZ->z + (d*0.5f);
+						float torqueX = cross(vec3(_pos.x - fulcrumX, _pos.y - y, 0), _impulse).z;
+						float torqueZ = cross(vec3(0, _pos.y - y, _pos.z - fulcrumZ), _impulse).x;
+						float studTorqueX = 0;
+						float studTorqueZ = 0;
+
+						float dx = torqueX > 0 ? 1 : -1;
+						float dz= torqueZ > 0 ? 1 : -1;
+
+						for (int j = 0; j < front.size(); ++j)
+						{
+							if (front[j]->type == StudConnection::UP)
+								break;
+
+							for (int k = 0; k < front[j]->numStuds; ++k)
+							{
+								Stud* stud = front[j]->studs + k;
+								float tX = cross(vec3(stud->x - fulcrumX, stud->y - y, 0), vec3(0, -STUD_STRENGTH, 0)).z;
+								// if torque stud and torque impact point in the same direction not valid fulcrum
+								if (torqueX * tX > 0)
+									studTorqueX = -dx * FLT_MAX;
+								else
+									studTorqueX += tX;
+
+								float tZ = cross(vec3(0, stud->y - y, stud->z - fulcrumZ), vec3(0, -STUD_STRENGTH, 0)).x;
+
+								if (torqueZ * tZ > 0)
+									studTorqueZ = -dz * FLT_MAX;
+								else
+									studTorqueZ += tZ;
+
+							}
+						}
+						
+						if (dx * (torqueX + studTorqueX) > 0)
+						{
+							destroy = true;
+							break;
+						}
+
+						if (dz * (torqueZ + studTorqueZ) > 0)
+						{
+							destroy = true;
+							break;
+						}
+
+
+					}
+				}
+
+				if (destroy)
+					break;
+
+			}
 			// expand the selection with the front with the smallest increase in size
 			int expansion = -1;
 			float minSize = FLT_MAX;
@@ -355,6 +471,9 @@ public:
 			{
 				int newSize = frontSize - front[i]->numStuds;
 				Brick* newBrick = front[i]->other->brick;
+				// check if new brick is past center of mass
+				if (distPointFatPlane(transformVec3(newBrick->collider->getMassData().cm, newBrick->collider->getTransform()), cmPlane, FLT_EPSILON) <= 0.0f)
+					continue;
 				for (int j = 0; j < brick->numConnections; ++j)
 				{
 					if (newBrick->connections[j].numStuds > 0 && newBrick->connections[j].other->brick->lastVisited != tick)
@@ -369,7 +488,9 @@ public:
 				}
 			}
 
-			assert(expansion != -1);
+			if (expansion == -1)
+				break;
+			
 			Brick* newBrick = front[expansion]->other->brick;
 			front[expansion] = front.back();
 			front.pop_back();
@@ -404,6 +525,13 @@ public:
 		{
 			//destroyBrick(brick);
 
+
+			if (m_base->lastVisited == tick)
+			{
+				assert(front.size() > 0);
+				m_base = front[0]->other->brick;
+			}
+
 			// dissassembly front
 			for (int i = 0; i < front.size(); ++i)
 			{
@@ -412,6 +540,12 @@ public:
 				StudConnection* b = front[i]->other;
 				*a = a->brick->connections[--a->brick->numConnections];
 				*b = b->brick->connections[--b->brick->numConnections];
+
+				if (!connected(b->brick, m_base, g_tick++))
+				{
+					Ship* ship = createShip(b->brick, brick->ship->getBody()->getTransform(), BodyType::Dynamic);
+					setShip(b->brick, ship, g_tick++);
+				}
 			}
 
 			// seperate selection
@@ -435,6 +569,60 @@ public:
 
 		return destroy;
 	}
+
+	void renderBrick(Brick* brick, int tick)
+	{
+		brick->lastVisited = tick;
+		for (int i = 0; i < brick->numConnections; ++i)
+		{
+			for (int j = 0; j < brick->connections[i].numStuds; ++j)
+			{
+
+				Stud* stud = &brick->connections[i].studs[j];
+				glBegin(GL_LINES);
+
+				glVertex3f(stud->x, stud->y, stud->z);
+				if (brick->connections[i].type == StudConnection::UP)
+					glVertex3f(stud->x, stud->y + 0.1f, stud->z);
+				else if (brick->connections[i].type == StudConnection::DOWN)
+					glVertex3f(stud->x, stud->y - 0.1f, stud->z);
+
+				glEnd();
+			}
+
+			if (brick->connections[i].other->brick->lastVisited != tick)
+				renderBrick(brick->connections[i].other->brick, tick);
+		}
+	}
+
+
+	void render(GLuint colorLocation) override
+	{
+		Entity::render(colorLocation);
+
+		glPushMatrix();
+		vec3 p = m_body->getPosition();
+		glTranslatef(p.x, p.y, p.z);
+
+		mat3x3 q = transpose(toRotMat(m_body->getOrientation()));
+
+		float rot[16] =
+		{
+			q[0][0], q[0][1], q[0][2], 0.0f,
+			q[1][0], q[1][1], q[1][2], 0.0f,
+			q[2][0], q[2][1], q[2][2], 0.0f,
+			0.0f, 0.0f, 0.0f, 1.0f,
+		};
+
+		glMultMatrixf(rot);
+
+		glUniform3f(colorLocation, 0, 1, 1);
+		renderBrick(m_base, g_tick++);
+
+
+		glPopMatrix();
+	}
+
 
 };
 ShapePtr Ship::brickShape;
@@ -559,8 +747,10 @@ void DestructionTest::init()
 	g_entities = &m_entities;
 	
 	Ship* ship = createShip(0, Transform(vec3(0, 0, 15), Quaternion(vec3(0,0,0),1)), BodyType::Static);
+	ship->addBrick(-4, 0, 0);
 	ship->addBrick(0, 0, 0);
 	ship->addBrick(4, 0, 0);
+	ship->addBrick(-6, 1, 0);
 	ship->addBrick(-2, 1, 0);
 	ship->addBrick(2, 1, 0);
 	ship->addBrick(7, 1, 0);
@@ -586,7 +776,6 @@ bool DestructionTest::procEvent(SDL_Event event)
 
 	if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT)
 	{
-		m_force = 0.0f;
 		m_click = true;
 	}
 	if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_RIGHT)
@@ -607,6 +796,7 @@ void DestructionTest::update(float dt)
 		int i = impulse();
 		if (i == -1 || i == 1)
 		{
+			
 			m_click = false;
 		}
 	}
@@ -636,7 +826,7 @@ int DestructionTest::impulse()
 
 	dir = normalize(rotate(dir, m_eye.q));
 	RayQueryResult result = { 0 };
-	if (m_world->queryRay(m_eye.p, dir, &result))
+	if (m_world->queryRay(m_eye.p, dir, &result) && result.collider != 0)
 	{
 		Brick* brick = (Brick*)result.collider->getUserData();
 		if (brick->ship->addImpulse(brick, result.point, m_force * dir))
@@ -652,4 +842,15 @@ int DestructionTest::impulse()
 	{
 		return -1;
 	}
+}
+
+void DestructionTest::render()
+{
+	glUniform3f(m_colorLocation, 1, 1, 1);
+	glPushMatrix();
+	glTranslatef(0, 0, 15);
+	glBegin(GL_POINTS);
+	glVertex3f(g_fulcrum.x, g_fulcrum.y, g_fulcrum.z);
+	glEnd();
+	glPopMatrix();
 }
