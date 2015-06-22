@@ -13,6 +13,7 @@ namespace TheBrick
         this->m_TargetVec = ong::vec3(0.0f, 0.0f, 0.0f);
         this->m_TargetAng = ong::vec3(0.0f, 0.0f, 0.0f);
         this->m_Name = a_Name;
+        this->m_Respawn = 0.0f;
     }
 
     // **************************************************************************
@@ -42,7 +43,8 @@ namespace TheBrick
             CBullet* bull = static_cast<CBullet*>(object);
             if (!bull->m_Collided)
             {
-                Ship->m_Life -= bull->m_Damage;
+                if (Ship->m_Respawn == 0.0f)
+                    Ship->m_Life -= bull->m_Damage;
                 bull->m_Collided = true;
             }
         }
@@ -93,7 +95,10 @@ namespace TheBrick
         ong::Body* b = this->m_pBody;
         ong::World* w = b->getWorld();
         PuRe_Vector3F forward = TheBrick::OngToPuRe(ong::rotate(ong::vec3(0, 0, 1), b->getOrientation()));
-        a_rBullets.push_back(new TheBrick::CBullet(a_pManager, TheBrick::OngToPuRe(this->GetTransform().p) + PuRe_Vector3F(-0.5f, -0.5f, 0.0f) + forward*10.0f, forward*50.0f, *w));
+        PuRe_Vector3F speed = PuRe_Vector3F::Normalize(TheBrick::OngToPuRe(this->m_pBody->getLinearMomentum()));
+        speed *= 100.0f;
+        speed += forward*10.0f;
+        a_rBullets.push_back(new TheBrick::CBullet(a_pManager, TheBrick::OngToPuRe(this->GetTransform().p) + PuRe_Vector3F(-0.5f, -0.5f, 0.0f) + forward*10.0f, speed, *w));
     }
 
     // **************************************************************************
@@ -127,43 +132,59 @@ namespace TheBrick
     // **************************************************************************
     void CSpaceship::Update(float a_DeltaTime)
     {
-        ong::vec3 currVel = ong::rotate(this->m_pBody->getLinearVelocity(), ong::conjugate(this->m_pBody->getOrientation()));
-        ong::vec3 currAng = ong::rotate(this->m_pBody->getAngularVelocity(), ong::conjugate(this->m_pBody->getOrientation()));
-
-        float forAcc = this->m_SpeedAcceleration;
-        float yawAcc = this->m_RotationAcceleration.Y;
-        float pitchAcc = this->m_RotationAcceleration.Z;
-        float rollAcc = this->m_RotationAcceleration.X;
-        // negate rotational velocity
-        this->m_pBody->applyRelativeImpulse(1.0f / this->m_pBody->getInverseMass() * ong::vec3(this->m_TargetVec.x - currVel.x, this->m_TargetVec.y - currVel.y, 0));
-
-        // apply thrust
-        if (lengthSq(currVel - this->m_TargetVec) > 0.1f * 0.1f)
-            this->m_pBody->applyRelativeForce(hadamardProduct(ong::vec3(0, 0, forAcc), normalize(this->m_TargetVec - currVel)), a_DeltaTime);
-
-        //apply rotation
-        if (ong::lengthSq(currAng - this->m_TargetAng) > 0.0f)
+        if (this->m_Respawn > 0.0f)
         {
-
-            ong::vec3 f = ong::hadamardProduct(ong::vec3(pitchAcc, yawAcc, rollAcc), ong::normalize(this->m_TargetAng - currAng));
-            ong::vec3 dAng = this->m_pBody->getInverseMass() * a_DeltaTime* f;
-
-            if (ong::lengthSq(dAng) > ong::lengthSq(currAng - this->m_TargetAng))
+            this->m_Respawn -= a_DeltaTime;
+            if (this->m_Respawn < 0.0f)
             {
-                ong::vec3 dAngularMomentum = 1.0f / this->m_pBody->getInverseMass() * (this->m_TargetAng - currAng);
-                this->m_pBody->applyRelativeAngularImpulse(dAngularMomentum);
-            }
-            else
-            {
-                this->m_pBody->applyRelativeTorque(f, a_DeltaTime);
+                this->m_Respawn = 0.0f;
+                float x = (float)(std::rand() % 100);
+                float y = (float)(std::rand() % 100);
+                float z = (float)(std::rand() % 100);
+                this->m_pBody->setPosition(ong::vec3(x, y, z));
+                this->m_Life = this->m_MaxLife;
             }
         }
+        else
+        {
+            ong::vec3 currVel = ong::rotate(this->m_pBody->getLinearVelocity(), ong::conjugate(this->m_pBody->getOrientation()));
+            ong::vec3 currAng = ong::rotate(this->m_pBody->getAngularVelocity(), ong::conjugate(this->m_pBody->getOrientation()));
 
-        //this->m_Transform = this->m_pBody->getTransform();
-        this->m_TargetVec = ong::vec3(0.0f,0.0f,0.0f);
-        this->m_TargetAng = ong::vec3(0.0f, 0.0f, 0.0f);
+            float forAcc = this->m_SpeedAcceleration;
+            float yawAcc = this->m_RotationAcceleration.Y;
+            float pitchAcc = this->m_RotationAcceleration.Z;
+            float rollAcc = this->m_RotationAcceleration.X;
+            // negate rotational velocity
+            this->m_pBody->applyRelativeImpulse(1.0f / this->m_pBody->getInverseMass() * ong::vec3(this->m_TargetVec.x - currVel.x, this->m_TargetVec.y - currVel.y, 0));
 
-        ong::Transform t = ong::Transform(ong::vec3(0.0f, 0.0f, 0.0f), ong::Quaternion(ong::vec3(0, 0, 0), 1));
+            // apply thrust
+            if (lengthSq(currVel - this->m_TargetVec) > 0.1f * 0.1f)
+                this->m_pBody->applyRelativeForce(hadamardProduct(ong::vec3(0, 0, forAcc), normalize(this->m_TargetVec - currVel)), a_DeltaTime);
+
+            //apply rotation
+            if (ong::lengthSq(currAng - this->m_TargetAng) > 0.0f)
+            {
+
+                ong::vec3 f = ong::hadamardProduct(ong::vec3(pitchAcc, yawAcc, rollAcc), ong::normalize(this->m_TargetAng - currAng));
+                ong::vec3 dAng = this->m_pBody->getInverseMass() * a_DeltaTime* f;
+
+                if (ong::lengthSq(dAng) > ong::lengthSq(currAng - this->m_TargetAng))
+                {
+                    ong::vec3 dAngularMomentum = 1.0f / this->m_pBody->getInverseMass() * (this->m_TargetAng - currAng);
+                    this->m_pBody->applyRelativeAngularImpulse(dAngularMomentum);
+                }
+                else
+                {
+                    this->m_pBody->applyRelativeTorque(f, a_DeltaTime);
+                }
+            }
+
+            //this->m_Transform = this->m_pBody->getTransform();
+            this->m_TargetVec = ong::vec3(0.0f,0.0f,0.0f);
+            this->m_TargetAng = ong::vec3(0.0f, 0.0f, 0.0f);
+
+            ong::Transform t = ong::Transform(ong::vec3(0.0f, 0.0f, 0.0f), ong::Quaternion(ong::vec3(0, 0, 0), 1));
+        }
     }
 
     // **************************************************************************

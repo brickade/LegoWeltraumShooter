@@ -23,7 +23,7 @@ namespace TheBrick
         this->m_pBody->applyImpulse(TheBrick::PuReToOng(a_Speed));
 
         this->m_lifeTime = 0.0f;
-        this->m_Damage = 5;
+        this->m_Damage = 10;
         this->m_Collided = false;
     }   
 

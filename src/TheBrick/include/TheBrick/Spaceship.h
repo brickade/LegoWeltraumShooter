@@ -29,6 +29,7 @@ namespace TheBrick
     public:
         int m_Life;
         int m_MaxLife;
+        float m_Respawn;
 
     public:
         const std::string& GetName() const

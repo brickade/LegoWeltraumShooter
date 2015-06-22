@@ -169,6 +169,7 @@ namespace Game
             this->ProcessInput(sba_Players[i]->Ship, &input, aTimer->GetElapsedSeconds());
         }
         sba::Space::Instance()->UpdatePhysics(aTimer);
+        this->m_TimeLimit -= aTimer->GetElapsedSeconds();
     }
 
     // **************************************************************************
@@ -302,6 +303,7 @@ namespace Game
                 this->m_PhysicTime -= 1.0f / 60.0f;
                 printf("Physic: %i\n", this->m_PhysicFrame);
                 this->m_PhysicFrame++;
+                this->m_TimeLimit -= 1.0f/60.0f;
                 assert(this->m_PhysicFrame != 2147483647);
                 sba_BrickManager->RebuildRenderInstances(); //Update RenderInstances
             } //if input exists
@@ -423,6 +425,7 @@ namespace Game
             serializer.Close();
         }
         this->gameStart = true;
+        this->m_TimeLimit = 60.0f*10.0f; //seconds * Minutes
         sba_BrickManager->RebuildRenderInstances(); //Update RenderInstances
 
     }
@@ -505,10 +508,17 @@ namespace Game
     {
         PuRe_Timer* timer = a_pApplication->GetTimer();
         m_Timeout += timer->GetElapsedSeconds();
+
         //Handle ESC Button
-        if (a_pApplication->GetInput()->KeyPressed(a_pApplication->GetInput()->ESC))
+        if (this->m_Timeout+10.0f < 0.0f||a_pApplication->GetInput()->KeyPressed(a_pApplication->GetInput()->ESC))
         {
-            return 0;
+            if (sba_Network->IsConnected())
+            {
+                this->m_Run = false;
+                SAFE_DELETE(sba_Network);
+                sba_Network = new sba::CNetworkHandler();
+            }
+            return 5;
         }
 
 
@@ -610,6 +620,17 @@ namespace Game
         }
 
 
+
+        for (unsigned int i = 0; i < sba_Players.size(); i++)
+        {
+            if (sba_Players[i]->Ship->m_Respawn == 0&&sba_Players[i]->Ship->m_Life <= 0)
+            {
+                sba_Players[i]->Ship->m_Respawn = 5.0f;
+                sba_Players[i]->Ship->m_Life = 0.0f;
+            }
+        }
+
+
         return 1;
     }
 
@@ -654,6 +675,13 @@ namespace Game
                 local++;
             }
         }
+
+        if (this->m_Timeout + 10.0f > 0.0f)
+        {
+            size = PuRe_Vector3F(64.0f, 64.0f, 0.0f);
+            pos = PuRe_Vector3F(1920.0f/2.0f - 200.0f,1080.0f/2.0f, 0.0f);
+            sba_Renderer->Draw(2, false, this->m_pFont, this->m_pFontMaterial, "Player "+std::to_string(this->m_WinID)+" won!", pos, PuRe_MatrixF(), size, 72.0f, c, local);
+        }
         ////////////////////////////////////////////////////
 
 
@@ -694,6 +722,7 @@ namespace Game
             sba_Renderer->Set(0, PuRe_Vector3F(0.1f, 0.1f, 0.1f), "ambient");
             sba_Renderer->Render(0,0, this->m_Cameras[3], this->m_pPostMaterial, size);
         }
+        sba_Renderer->Render(0, 2, this->m_pUICam, this->m_pUIMaterial, size);
         sba_Renderer->End();
         ////////////////////////////////////////////////////
 

@@ -38,6 +38,8 @@ namespace Game
     class CGameScene : public PuRe_IScene
     {
     private:
+        int m_WinID;
+        float m_TimeLimit;
         int m_Test;
         float m_Timeout;
         bool m_Run;

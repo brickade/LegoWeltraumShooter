@@ -8,7 +8,6 @@
 
 #include "GameObject.h"
 
-
 namespace TheBrick
 {
     class CBullet : public CGameObject
@@ -18,7 +17,6 @@ namespace TheBrick
         int m_Damage;
         bool m_Collided;
     private:
-
 
     public:
         CBullet(CBrickManager* a_pBrickManager,PuRe_Vector3F a_Position, PuRe_Vector3F a_Speed, ong::World& a_rWorld);

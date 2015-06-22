@@ -16,6 +16,8 @@ namespace sba
     // **************************************************************************
     CNetworkHandler::~CNetworkHandler()
     {
+        if (this->m_Connected)
+            this->Disconnect();
         SAFE_DELETE(this->m_pBSocket);
         SAFE_DELETE(this->m_pSocket);
 
