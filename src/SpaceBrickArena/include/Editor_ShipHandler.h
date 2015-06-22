@@ -39,6 +39,9 @@ namespace Editor
         CShipHandler(int a_playerIdx);
         ~CShipHandler();
 
+        void Update();
+        void Render();
+
         void AddShip(const char* a_pName);
         void SaveCurrentShip();
         void ResetCurrentShip();

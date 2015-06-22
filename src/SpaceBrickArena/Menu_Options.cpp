@@ -49,7 +49,7 @@ namespace Menu
 
     int COptions::Update(PuRe_Renderer* a_pRenderer,PuRe_Timer* a_pTimer, PuRe_IWindow* a_pWindow, PuRe_IGraphics* a_pGraphics, int a_PlayerIdx)
     {
-        PuRe_Vector2F nav = sba_Input->Direction(sba_Direction::MenuMove, a_PlayerIdx);
+        PuRe_Vector2F nav = sba_Input->Direction(sba_Direction::Navigate, a_PlayerIdx);
         PuRe_GraphicsDescription gdesc = a_pGraphics->GetDescription();
         PuRe_Vector2I size = PuRe_Vector2I(gdesc.ResolutionWidth, gdesc.ResolutionHeight);
         if (!this->m_Focus)

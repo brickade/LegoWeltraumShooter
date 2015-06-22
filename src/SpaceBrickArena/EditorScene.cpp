@@ -7,7 +7,7 @@ namespace Editor
     CEditorScene::CEditorScene(PuRe_Application* a_pApplication, int a_playerIdx)
     {
         this->m_PlayerIdx = a_playerIdx;
-        this->m_State = EEditorState::EditShip;
+        this->m_State = EEditorState::SelectShip;
     }
 
     // **************************************************************************
@@ -73,7 +73,12 @@ namespace Editor
             //------------------------------
             // Select
             //------------------------------
-            //this->m_pShipHandler->Update();
+            if (sba_Input->ButtonPressed(sba_Button::NaviagtionSelect, this->m_PlayerIdx))
+            {
+                this->m_State = EEditorState::EditShip;
+                break;
+            }
+            this->m_pShipHandler->Update();
             break;
         case EEditorState::EditShip:
             //------------------------------
@@ -123,7 +128,7 @@ namespace Editor
         {
         case EEditorState::SelectShip:
             //---------Select---------
-            //this->m_pShipHandler->Render();
+            this->m_pShipHandler->Render();
             break;
         case EEditorState::EditShip:
             //----------Edit----------

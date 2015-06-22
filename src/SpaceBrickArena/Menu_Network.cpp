@@ -118,7 +118,7 @@ namespace Menu
 
         if (!this->m_Focus)
         {
-            this->m_pNavigation->Update(*a_pTimer, sba_Input->Direction(sba_Direction::MenuMove, a_PlayerIdx));
+            this->m_pNavigation->Update(*a_pTimer, sba_Input->Direction(sba_Direction::Navigate, a_PlayerIdx));
             if (sba_Input->ButtonPressed(sba_Button::NaviagtionSelect, a_PlayerIdx))
             {
                 switch (this->m_pNavigation->GetFocusedElementId())
@@ -148,7 +148,7 @@ namespace Menu
         }
         else
         {
-            PuRe_Vector2F dir = sba_Input->Direction(sba_Direction::MenuMove, a_PlayerIdx);
+            PuRe_Vector2F dir = sba_Input->Direction(sba_Direction::Navigate, a_PlayerIdx);
             switch (this->m_pNavigation->GetFocusedElementId())
             {
             case 0: //internet

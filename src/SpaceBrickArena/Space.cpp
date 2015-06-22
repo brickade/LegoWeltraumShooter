@@ -56,6 +56,7 @@ namespace sba
         this->InputManager->Initialize();
         this->Font = new PuRe_Font(&a_pGraphics, "../data/textures/font.png");
         this->FontMaterial = a_pGraphics.LoadMaterial("../data/effects/font/default");
+        this->SpriteMaterial = a_pGraphics.LoadMaterial("../data/effects/default/default");
     }
 
     // **************************************************************************

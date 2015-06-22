@@ -36,7 +36,7 @@ namespace sba
     {
         //Direction
         memset(&this->m_pDirectionMapping, 0, sizeof(this->m_pDirectionMapping));
-        this->m_pDirectionMapping[Input::EDirection::MenuMove] =
+        this->m_pDirectionMapping[Input::EDirection::Navigate] =
         {
             Input::EGamepadDirection::LeftThumb,
             {

@@ -109,8 +109,8 @@ namespace sba
                 EditorCameraRotate,
                 EditorMoveBrick,
                 EditorChooseElement,
-                MenuMove,
-                LAST = MenuMove
+                Navigate,
+                LAST = Navigate
             };
         };
 

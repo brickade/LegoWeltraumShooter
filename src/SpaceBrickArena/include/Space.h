@@ -35,6 +35,7 @@ namespace sba
         sba::CBrickManager* BrickManager;
         sba::CShipManager* ShipManager;
         PuRe_Font* Font;
+        PuRe_IMaterial* SpriteMaterial;
         PuRe_IMaterial* FontMaterial;
         PuRe_IMaterial* m_SSAOMaterial;
         PuRe_Sprite* m_pNoiseTexture;
