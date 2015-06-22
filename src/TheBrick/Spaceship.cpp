@@ -92,7 +92,7 @@ namespace TheBrick
         PuRe_Vector3F speed = PuRe_Vector3F::Normalize(TheBrick::OngToPuRe(this->m_pBody->getLinearMomentum()));
         speed *= 100.0f;
         speed += forward*10.0f;
-        a_rBullets.push_back(new TheBrick::CBullet(a_pManager, TheBrick::OngToPuRe(this->GetTransform().p) + PuRe_Vector3F(-0.5f, -0.5f, 0.0f) + forward*10.0f, speed, *w));
+        a_rBullets.push_back(new TheBrick::CBullet(TheBrick::OngToPuRe(this->GetTransform().p) + PuRe_Vector3F(-0.5f, -0.5f, 0.0f) + forward*10.0f, speed, *w));
     }
 
     // **************************************************************************
@@ -124,7 +124,7 @@ namespace TheBrick
     }
     // **************************************************************************
     // **************************************************************************
-    void CSpaceship::HandleInput(int a_CID, PuRe_IInput* a_pInput, float a_DeltaTime, std::vector<CBullet*>& a_rBullets, CBrickManager* a_pManager)
+/*    void CSpaceship::HandleInput(int a_CID, PuRe_IInput* a_pInput, float a_DeltaTime, std::vector<CBullet*>& a_rBullets, CBrickManager* a_pManager)
     {
         if (this->m_Respawn > 0.0f)
         {
@@ -179,7 +179,7 @@ namespace TheBrick
 
             ong::Transform t = ong::Transform(ong::vec3(0.0f, 0.0f, 0.0f), ong::Quaternion(ong::vec3(0, 0, 0), 1));
         }
-    }
+    }*/
 
     // **************************************************************************
     // **************************************************************************

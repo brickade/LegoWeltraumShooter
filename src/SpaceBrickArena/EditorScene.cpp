@@ -143,9 +143,9 @@ namespace Editor
         sba_Renderer->Set(0, PuRe_Vector3F(0.2f, 0.2f, 0.2f), "ambient");
         sba_Renderer->Set(1, PuRe_Vector3F(0.2f, 0.2f, 0.2f), "ambient");
         sba_Renderer->Set(2, PuRe_Vector3F(1, 1, 1), "ambient");
-        sba_Renderer->Render(0, this->m_pWorker->GetCamera(), this->m_pPostMaterial); //Scene
-        sba_Renderer->Render(1, this->m_UICamera, this->m_pPostMaterial); //UI
-        sba_Renderer->Render(2, this->m_UICamera, this->m_pPostMaterial); //Font
+        sba_Renderer->Render(0, 0, this->m_pWorker->GetCamera(), this->m_pPostMaterial); //Scene
+        sba_Renderer->Render(0, 1, this->m_UICamera, this->m_pPostMaterial); //UI
+        sba_Renderer->Render(0, 2, this->m_UICamera, this->m_pPostMaterial); //Font
         sba_Renderer->End();
     }
 
