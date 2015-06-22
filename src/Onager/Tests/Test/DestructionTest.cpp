@@ -38,6 +38,8 @@ struct StudConnection
 	StudConnection* other;
 	int numStuds = 0;
 	Stud studs[2 * 4];
+	float fulcrumX;
+	float fulcrumZ;
 };
 
 
@@ -120,6 +122,8 @@ public:
 			Brick* brick = (Brick*)userData;
 			Brick* brick2 = (Brick*)other->getUserData();
 
+			StudConnection* a = &brick->connections[brick->numConnections++];
+			StudConnection* b = &brick2->connections[brick2->numConnections++];
 		
 			int dy = brick2->pos[1] - brick->pos[1];
 		
@@ -130,43 +134,59 @@ public:
 
 				int minX = 0, maxX = 0;
 				if (dx >= 0 && dx < 4)
+				{
 					minX = dx, maxX = 3;
+					a->fulcrumX = minX;
+					b->fulcrumX = maxX;
+				}
 				else
+				{
 					minX = 0, maxX = 3 + dx;
+					a->fulcrumX = maxX;
+					b->fulcrumX = minX;
+				}
 
 				int minZ = 0, maxZ = 0;
 				if (dz >= 0 && dz < 2)
+				{
 					minZ = dz, maxZ = 1;
+					a->fulcrumX = minZ;
+					b->fulcrumX = maxZ;
+				}
 				else
+				{
 					minZ = 0, maxZ = 1 + dz;
+					a->fulcrumX = maxZ;
+					b->fulcrumX = minZ;
+				}
 
-				StudConnection* a = &brick->connections[brick->numConnections++];
-				StudConnection* b = &brick2->connections[brick2->numConnections++];
 				a->brick = brick;
 				a->other = b;
 				b->brick = brick2;
 				b->other = a;
+				
+				int y;
+				if (dy == 1)
+				{
+					y = 1;
+					a->type = StudConnection::UP;
+					b->type = StudConnection::DOWN;
+					brick->block[StudConnection::UP]++;
+					brick2->block[StudConnection::DOWN]++;
+				}
+				else if (dy == -1)
+				{
+					y = 0;
+					a->type = StudConnection::DOWN;
+					b->type = StudConnection::UP;
+					brick->block[StudConnection::DOWN]++;
+					brick2->block[StudConnection::UP]++;
+				}
+
 				for (int x = minX; x <= maxX; ++x)
 				{
 					for (int z = minZ; z <= maxZ; ++z)
 					{
-						int y;
-						if (dy == 1)
-						{
-							y = 1;
-							a->type = StudConnection::UP;
-							b->type = StudConnection::DOWN;
-							brick->block[StudConnection::UP]++;
-							brick2->block[StudConnection::DOWN]++;
-						}
-						else if (dy == -1)
-						{
-							y = 0;
-							a->type = StudConnection::DOWN;
-							b->type = StudConnection::UP;
-							brick->block[StudConnection::DOWN]++;
-							brick2->block[StudConnection::UP]++;
-						}
 
 
 						int i = a->numStuds++;
@@ -174,6 +194,10 @@ public:
 
 						a->studs[i] = { brick->pos[0] + x - 1.5, brick->pos[2] + z - 0.5, brick->pos[1] + y  - 0.5};
 						b->studs[j] = { brick2->pos[0] + x - dx - 1.5,brick2->pos[2] + z - dz - 0.5, brick2->pos[1] +  1-y - 0.5};
+
+						//todo fulcrum
+
+
 					}
 				}
 
@@ -301,15 +325,164 @@ public:
 			}
 		}
 
-		
 		Plane cmPlane = { normalize(_pos - m_body->getLocalCenter()), dot(normalize(_pos - m_body->getLocalCenter()), m_body->getLocalCenter()) };
+		// check for destruction
+		
+
+
+
+
+		// check for leverage x
+		float studTorque;
+		float fulcrumX;
+		float fulcrumY;
+		while (true)
+		{
+			// find fulcrum axis
+			// check for destruction
+			// get new brick which axis has the minimum torque increase
+			// add brick to front
+			// check for destruction
+			// ...
+
+			
+			// how to find fulcrum axis??
+			// if force down and connection down then other
+			// if force up and connection down then self
+			// if force down and connection up then self
+			// if force up and connection up then then other
+
+			float torque = cross(vec3(_pos.x - fulcrumX, _pos.y - fulcrumY, 0), _impulse).z;
+			
+			if (torque * (torque + studTorque) > 0)
+			{
+				destroy = true;
+				break;
+			}
+			
+			float minTorque;
+			for (int i = 0; i < front.size(); ++i)
+			{
+				float _fulcrumX;
+				float _fulcrumY;
+
+				// get fulcrum axis
+				if ((impulse.y < 0 ? StudConnection::DOWN : StudConnection::UP) != front[i]->type)
+					_fulcrumX = front[i]->fulcrumX;
+				else
+					_fulcrumX = front[i]->other->fulcrumX;
+				_fulcrumY = front[i]->studs[0].y;
+
+
+
+
+				float sumTorque = 0;
+				for (int j = 0; j < front[i]->numStuds; ++j)
+				{
+					Stud* stud = &front[i]->studs[j];
+					float torque = cross(vec3(stud->x - _fulcrumX, stud->y - _fulcrumY, 0), vec3(0, -STUD_STRENGTH, 0)).z;
+					if (torque)
+				}
+				
+			}
+
+
+			// check for leverage x
+			for (int i = 0; i < front.size(); ++i)
+			{
+				for (int d = -1; d <= 1; d += 2)
+				{
+
+					Stud* stud = nullptr;
+					float max = -FLT_MAX;
+					for (int j = 0; j < front[i]->numStuds; ++j)
+					{
+						if (d * front[i]->studs[j].x > max)
+							stud = front[i]->studs + j, max = d*front[i]->studs[j].x;
+					}
+
+					// check if frustrum is blocked
+					if (d == 1)
+					{
+						if (front[i]->other->brick->pos[0] > front[i]->brick->pos[0])
+						{
+							if (front[i]->brick->block[StudConnection::RIGHT] > 0)
+								continue;
+						}
+						else
+						{
+							if (front[i]->other->brick->block[StudConnection::RIGHT] > 0)
+								continue;
+						}
+					}
+					else if (d == -1)
+					{
+						if (front[i]->other->brick->pos[0] < front[i]->brick->pos[0])
+						{
+							if (front[i]->brick->block[StudConnection::LEFT] > 0)
+								continue;
+						}
+						else
+						{
+							if (front[i]->other->brick->block[StudConnection::LEFT] > 0)
+								continue;
+						}
+					}
+
+
+					// check torques around frustrums
+					float y = front[i]->studs[0].y;
+					float fulcrum = stud->x + (d*0.5f);
+					float torque = cross(vec3(_pos.x - fulcrum, _pos.y - y, 0), _impulse).z;
+					float studTorque = 0;
+
+					float dx = torque > 0 ? 1 : -1;
+
+					for (int j = 0; j < front.size(); ++j)
+					{
+						if (front[j]->type == StudConnection::UP)
+						{
+							studTorque = -dx * FLT_MAX;
+							break;
+						}
+
+						for (int k = 0; k < front[j]->numStuds; ++k)
+						{
+							Stud* stud = front[j]->studs + k;
+							float tX = cross(vec3(stud->x - fulcrum, stud->y - y, 0), vec3(0, -STUD_STRENGTH, 0)).z;
+							// if torque stud and torque impact point in the same direction not valid fulcrum
+							if (torque* tX > 0)
+							{
+								studTorque = -dx * FLT_MAX;
+								break;
+							}
+							else
+							{
+								studTorque += tX;
+							}
+						}
+					}
+
+					if (dx * (torque + studTorque) > 0)
+					{
+						destroy = true;
+						break;
+					}
+				}
+			}
+
+
+			
+
+		}
+
+
 		while (true)
 		{
 			if (front.size() == 0)
 				break;
 
 		
-			// check for destruction
 			{
 				// pure force
 				float studForce = 0.0f;
@@ -337,89 +510,6 @@ public:
 					break;
 				}
 
-				// check for leverage x
-				for (int i = 0; i < front.size(); ++i)
-				{
-					for (int d = -1; d <= 1; d += 2)
-					{
-
-						Stud* stud = nullptr;
-						float max = -FLT_MAX;
-						for (int j = 0; j < front[i]->numStuds; ++j)
-						{
-							if (d * front[i]->studs[j].x > max)
-								stud = front[i]->studs + j, max = d*front[i]->studs[j].x;
-						}
-
-						// check if frustrum is blocked
-						if (d == 1)
-						{
-							if (front[i]->other->brick->pos[0] > front[i]->brick->pos[0])
-							{
-								if (front[i]->brick->block[StudConnection::RIGHT] > 0)
-									continue;
-							}
-							else
-							{
-								if (front[i]->other->brick->block[StudConnection::RIGHT] > 0)
-									continue;
-							}
-						}
-						else if (d == -1)
-						{
-							if (front[i]->other->brick->pos[0] < front[i]->brick->pos[0])
-							{
-								if (front[i]->brick->block[StudConnection::LEFT] > 0)
-									continue;
-							}
-							else
-							{
-								if (front[i]->other->brick->block[StudConnection::LEFT] > 0)
-									continue;
-							}
-						}
-
-
-						// check torques around frustrums
-						float y = front[i]->studs[0].y;
-						float fulcrum = stud->x + (d*0.5f);
-						float torque = cross(vec3(_pos.x - fulcrum, _pos.y - y, 0), _impulse).z;
-						float studTorque = 0;
-
-						float dx = torque > 0 ? 1 : -1;
-
-						for (int j = 0; j < front.size(); ++j)
-						{
-							if (front[j]->type == StudConnection::UP)
-							{
-								studTorque = -dx * FLT_MAX;
-								break;
-							}
-
-							for (int k = 0; k < front[j]->numStuds; ++k)
-							{
-								Stud* stud = front[j]->studs + k;
-								float tX = cross(vec3(stud->x - fulcrum, stud->y - y, 0), vec3(0, -STUD_STRENGTH, 0)).z;
-								// if torque stud and torque impact point in the same direction not valid fulcrum
-								if (torque* tX > 0)
-								{
-									studTorque = -dx * FLT_MAX;
-									break;
-								}
-								else
-								{
-									studTorque += tX;
-								}
-							}
-						}
-						
-						if (dx * (torque + studTorque) > 0)
-						{
-							destroy = true;
-							break;
-						}
-					}
-				}
 				// check for leverage z
 				for (int i = 0; i < front.size(); ++i)
 				{
