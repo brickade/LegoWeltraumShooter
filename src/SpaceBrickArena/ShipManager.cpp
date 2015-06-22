@@ -26,32 +26,47 @@ namespace sba
     // **************************************************************************
     void CShipManager::Load()
     { //Load all sprites and paths from folder
-        TheBrick::CSerializer* serializer = new TheBrick::CSerializer();
         int i = 0;
         PuRe_IWindow* window = sba_Application->GetWindow();
         std::string file = window->GetFileAtIndex(i, this->m_FolderPath.c_str());
         while (file != "")
         {
-            if (file.substr(file.size() - 4) != ".dds")
+            i++;
+            if (file.substr(file.find_last_of(".")+1) != "ship")
             {
+                file = window->GetFileAtIndex(i, this->m_FolderPath.c_str());
                 continue;
             }
+            std::string namePath = file.substr(0, file.find_last_of(".")).insert(0, this->m_FolderPath);
+            std::string previewPath = std::string(namePath).append(".dds");
+
             std::pair<std::string, PuRe_Sprite*> pair;
-            pair.first = std::string(file).insert(0, this->m_FolderPath); //Set Path
-            pair.second = new PuRe_Sprite(sba_Application->GetGraphics(), pair.first); //Load Texture
-            //Get Ship
-            /*TheBrick::CSpaceship* ship = new TheBrick::CSpaceship(*sba_World, ong::vec3(0, 0, 0));
-            serializer->OpenRead(pair.first.c_str());
-            ship->Deserialize(*serializer, *sba_BrickManager, *sba_World);
-            serializer->Close();*/
-            //Set Name
-            //ship->SetNameFromFilename(file);
-            //Register Ship
-            //this->AddShip(ship);
-            //Next
+            pair.first = namePath; //Set Path
+
+            //Check if preview exists
+            std::ifstream preview(previewPath.c_str());
+            if (!preview.good())
+            { //Create new Sprite
+                //Load Ship
+                TheBrick::CSpaceship ship(*sba_World, "");
+                TheBrick::CSerializer* serializer = new TheBrick::CSerializer();
+                serializer->OpenRead(std::string(namePath).append(".ship").c_str());
+                ship.Deserialize(*serializer, sba_BrickManager->GetBrickArray(), *sba_World);
+                serializer->Close();
+                delete serializer;
+                //Create Sprite
+                pair.second = this->GetSpriteFromShip(ship);
+                //Save Sprite
+                pair.second->GetTexture()->SaveTextureToFile(std::string(namePath).append(".dds").c_str());
+            }
+            else
+            { //Load Sprite
+                //Load Texture
+                pair.second = new PuRe_Sprite(sba_Application->GetGraphics(), std::string(pair.first).append(".dds"));
+            }
+            this->m_Sprites.push_back(pair);
             file = window->GetFileAtIndex(i, this->m_FolderPath.c_str());
         }
-        delete serializer;
         if (this->m_Sprites.size() == 0)
         {
             this->AddNewShip("Banana");
@@ -139,8 +154,8 @@ namespace sba
         if (serializer->OpenRead(this->PathFromName(this->m_Sprites[a_Index].first.c_str())))
         {
             ship->Deserialize(*serializer, sba_BrickManager->GetBrickArray(), *sba_World);
+            serializer->Close();
         }
-        serializer->Close();
         delete serializer;
         return ship;
     }

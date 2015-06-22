@@ -102,26 +102,6 @@ namespace sba
 
         //Button
         memset(&this->m_pButtonMapping, 0, sizeof(this->m_pButtonMapping));
-        this->m_pButtonMapping[Input::EButton::MenuClick] =
-        {
-            Input::EGamepadButton::Pad_A,
-            {
-                Input::EKeyboardButton::Enter,
-                Input::EKeyboardButton::Enter,
-                Input::EKeyboardButton::Enter,
-                Input::EKeyboardButton::Enter
-            }
-        };
-        this->m_pButtonMapping[Input::EButton::MenuBack] =
-        {
-            Input::EGamepadButton::Pad_B,
-            {
-                Input::EKeyboardButton::Escape,
-                Input::EKeyboardButton::Escape,
-                Input::EKeyboardButton::Escape,
-                Input::EKeyboardButton::Escape
-            }
-        };
         this->m_pButtonMapping[Input::EButton::EditorPlaceBrick] =
         {
             Input::EGamepadButton::Pad_A,
@@ -262,7 +242,26 @@ namespace sba
                 Input::EKeyboardButton::Num_Five
             }
         };
-
+        this->m_pButtonMapping[Input::EButton::NaviagtionSelect] =
+        {
+            Input::EGamepadButton::Pad_A,
+            {
+                Input::EKeyboardButton::Enter,
+                Input::EKeyboardButton::Enter,
+                Input::EKeyboardButton::Enter,
+                Input::EKeyboardButton::Enter
+            }
+        };
+        this->m_pButtonMapping[Input::EButton::NavigationBack] =
+        {
+            Input::EGamepadButton::Pad_B,
+            {
+                Input::EKeyboardButton::Backspace,
+                Input::EKeyboardButton::Backspace,
+                Input::EKeyboardButton::Backspace,
+                Input::EKeyboardButton::Backspace
+            }
+        };
         this->m_pButtonMapping[Input::EButton::Exit] =
         {
             Input::EGamepadButton::Pad_Back,

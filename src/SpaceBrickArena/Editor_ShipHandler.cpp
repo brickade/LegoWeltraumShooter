@@ -14,6 +14,7 @@ namespace Editor
     {
         this->m_playerIdx = a_playerIdx;
         this->m_pNavigation = new sba::CNavigation();
+        this->m_pCurrentSpaceship = sba_ShipManager->GetShip(0);
     }
 
     // **************************************************************************

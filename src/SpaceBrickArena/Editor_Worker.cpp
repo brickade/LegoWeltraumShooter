@@ -51,7 +51,7 @@ namespace Editor
 
     // **************************************************************************
     // **************************************************************************
-    void CWorker::Update(PuRe_IGraphics& a_pGraphics, PuRe_IWindow& a_pWindow, PuRe_Timer& a_pTimer, PuRe_SoundPlayer& a_pSoundPlayer, TheBrick::CBrick* a_pCurrentBrick, PuRe_Color& a_rCurrentColor)
+    void CWorker::Update(PuRe_IGraphics& a_pGraphics, PuRe_IWindow& a_pWindow, PuRe_Timer& a_pTimer, PuRe_SoundPlayer& a_pSoundPlayer, TheBrick::CBrick* a_pCurrentBrick, PuRe_Color& a_rCurrentColor, CShipHandler& a_rShipHandler)
     {
         this->m_currentBrickColor = a_rCurrentColor;
         if (this->m_pCurrentBrick == nullptr || this->m_pCurrentBrick->m_pBrick != a_pCurrentBrick)
@@ -65,29 +65,29 @@ namespace Editor
         this->m_pCamera->Update(&a_pGraphics, &a_pWindow, &a_pTimer);
         this->UpdateTranslation(this->m_pCamera->GetForward(), a_pTimer.GetElapsedSeconds() * 3.0f);
         this->UpdateRotation();
-        this->UpdateHeight();
+        this->UpdateHeight(a_rShipHandler);
         this->ApplyToCurrentBrick();
-        this->UpdatePlacement();
+        this->UpdatePlacement(a_rShipHandler);
 
         //Safe Ship to file
         if (sba_Input->ButtonPressed(sba_Button::EditorSaveShip, this->m_playerIdx))
         {
-            this->m_pShipWorker->SaveCurrentShip();
+            a_rShipHandler.SaveCurrentShip();
         }
 
         //Reset/Delete Ship
         if (sba_Input->ButtonPressed(sba_Button::EditorResetShip, this->m_playerIdx))
         {
-            this->m_pShipWorker->ResetCurrentShip();
+            a_rShipHandler.ResetCurrentShip();
             this->m_pHistory->Clear();
         }
     }
 
     // **************************************************************************
     // **************************************************************************
-    void CWorker::Render()
+    void CWorker::Render(CShipHandler& a_rShipHandler)
     {
-        TheBrick::CSpaceship& ship = *this->m_pShipWorker->GetCurrentSpaceShip();
+        TheBrick::CSpaceship& ship = *a_rShipHandler.GetCurrentSpaceShip();
         sba_Space->RenderFont(std::to_string(ship.m_pBricks.size()) + "/100 Bricks", PuRe_Vector2F(sba_Width - 300.0f, sba_Height - 50.0f), 18);
         sba_Space->RenderFont("Ship: " + ship.GetName(), PuRe_Vector2F(sba_Width / 2 - 200.0f, sba_Height - 50.0f), 18);
     }
@@ -155,7 +155,7 @@ namespace Editor
 
     // **************************************************************************
     // **************************************************************************
-    void CWorker::UpdateHeight()
+    void CWorker::UpdateHeight(CShipHandler& a_rShipHandler)
     {
         //Update Placement Direction
         if (sba_Input->ButtonPressed(sba_Button::EditorTogglePlacementSide, this->m_playerIdx))
@@ -188,7 +188,7 @@ namespace Editor
         //Get RayCastHit
         std::vector<ong::RayQueryResult> hitResults;
         std::vector<ong::vec3> hitResultRayOrigins;
-        if (!CAssistant::GetClosestHitsFromBrickInstanceNubs(*this->m_pCurrentBrick, *this->m_pShipWorker->GetCurrentSpaceShip(), nubToCastFromShouldBeMale, nubToCastFromDirection, &hitResults, &hitResultRayOrigins))
+        if (!CAssistant::GetClosestHitsFromBrickInstanceNubs(*this->m_pCurrentBrick, *a_rShipHandler.GetCurrentSpaceShip(), nubToCastFromShouldBeMale, nubToCastFromDirection, &hitResults, &hitResultRayOrigins))
         { //Nothing hit
             this->m_currentHeight = 0;
             printf("Nothing hit\n");
@@ -208,7 +208,7 @@ namespace Editor
             {
                 //Check for other Collision
                 ong::vec3 maxCollisionFreeDelta = ong::vec3(0, 0, 0);
-                if (CAssistant::MovementDeltaIsCollisionFree(*this->m_pCurrentBrick, *this->m_pShipWorker->GetCurrentSpaceShip(), hitDelta, TheBrick::CBrick::SEGMENT_HEIGHT, &maxCollisionFreeDelta))
+                if (CAssistant::MovementDeltaIsCollisionFree(*this->m_pCurrentBrick, *a_rShipHandler.GetCurrentSpaceShip(), hitDelta, TheBrick::CBrick::SEGMENT_HEIGHT, &maxCollisionFreeDelta))
                 { //CollisionFree
                     this->m_canPlaceHere = true;
                     this->m_currentHeight = round((hitResultRayOrigins[i].y + maxCollisionFreeDelta.y + (brickTransform.p.y - hitResultRayOrigins[i].y)) / TheBrick::CBrick::SEGMENT_HEIGHT);
@@ -260,7 +260,7 @@ namespace Editor
 
     // **************************************************************************
     // **************************************************************************
-    void CWorker::UpdatePlacement()
+    void CWorker::UpdatePlacement(CShipHandler& a_rShipHandler)
     {
 
         if (sba_Input->ButtonIsPressed(sba_Button::EditorUndoRedoHold, this->m_playerIdx) && sba_Input->ButtonPressed(sba_Button::EditorUndo, this->m_playerIdx))
@@ -276,7 +276,7 @@ namespace Editor
             SHistoryStep* step = this->m_pHistory->Redo();
             if (step != nullptr)
             {
-                step->BrickInstance = new TheBrick::CBrickInstance(*step->Brick, *this->m_pShipWorker->GetCurrentSpaceShip(), *sba_World, step->Color);
+                step->BrickInstance = new TheBrick::CBrickInstance(*step->Brick, *a_rShipHandler.GetCurrentSpaceShip(), *sba_World, step->Color);
                 step->BrickInstance->SetTransform(step->Transform);
             }
         }
@@ -285,12 +285,12 @@ namespace Editor
             return;
         }
 
-        if (sba_Input->ButtonPressed(sba_Button::EditorPlaceBrick, this->m_playerIdx) && this->m_pShipWorker->GetCurrentSpaceShip()->m_pBricks.size() < 100)
+        if (sba_Input->ButtonPressed(sba_Button::EditorPlaceBrick, this->m_playerIdx) && a_rShipHandler.GetCurrentSpaceShip()->m_pBricks.size() < 100)
         { //Place BrickInstance
             this->m_pCurrentBrick->m_Color = this->m_currentBrickColor; //Apply right color
             this->m_pHistory->CutRedos();
             SHistoryStep step;
-            step.BrickInstance = this->m_pShipWorker->AddBrickInstanceToCurrentShip(*this->m_pCurrentBrick); //Add to ship
+            step.BrickInstance = a_rShipHandler.AddBrickInstanceToCurrentShip(*this->m_pCurrentBrick); //Add to ship
             step.Brick = step.BrickInstance->m_pBrick;
             step.Transform = this->m_pCurrentBrick->GetTransform();
             step.Color = this->m_currentBrickColor;

@@ -142,8 +142,8 @@ namespace sba
                 EditorFadeHold,
                 EditorFadeSupervisor,
                 EditorFadeColors,
-                MenuClick,
-                MenuBack,
+                NaviagtionSelect,
+                NavigationBack,
                 Exit,
                 LAST = Exit
             };

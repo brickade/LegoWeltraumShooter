@@ -51,8 +51,6 @@ namespace Editor
         TheBrick::CGameObject* m_pCurrentBrickObject;
         TheBrick::CBrickInstance* m_pCurrentBrick;
 
-        CShipHandler* m_pShipWorker;
-
         PuRe_IMaterial* m_pGridMaterial;
         PuRe_Model* m_pGridBrick;
 
@@ -81,15 +79,15 @@ namespace Editor
         ~CWorker();
 
         void Initialize(PuRe_IGraphics& a_pGraphics);
-        void Update(PuRe_IGraphics& a_pGraphics, PuRe_IWindow& a_pWindow, PuRe_Timer& a_pTimer, PuRe_SoundPlayer& a_pSoundPlayer, TheBrick::CBrick* a_pCurrentBrick, PuRe_Color& a_rCurrentColor);
-        void Render();
+        void Update(PuRe_IGraphics& a_pGraphics, PuRe_IWindow& a_pWindow, PuRe_Timer& a_pTimer, PuRe_SoundPlayer& a_pSoundPlayer, TheBrick::CBrick* a_pCurrentBrick, PuRe_Color& a_rCurrentColor, CShipHandler& a_rShipHandler);
+        void Render(CShipHandler& a_rShipHandler);
 
     private:
         void UpdateTranslation(PuRe_Vector3F a_cameraLook, float a_speed);
         void UpdateRotation();
-        void UpdateHeight();
+        void UpdateHeight(CShipHandler& a_rShipHandler);
         void ApplyToCurrentBrick();
-        void UpdatePlacement();
+        void UpdatePlacement(CShipHandler& a_rShipHandler);
     };
 }
 

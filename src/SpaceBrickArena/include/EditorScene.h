@@ -18,8 +18,19 @@ namespace Editor
 {
     class CEditorScene : public PuRe_IScene
     {
+        struct EEditorState
+        {
+            enum Type
+            {
+                SelectShip,
+                EditShip
+            };
+        };
+
     private:
         int m_PlayerIdx;
+
+        EEditorState::Type m_State;
 
         PuRe_SkyBox* m_pSkyBox;
         PuRe_IMaterial* m_pSkyBoxMaterial;

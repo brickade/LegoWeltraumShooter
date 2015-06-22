@@ -129,14 +129,14 @@ namespace Menu
                 }
             }
         }
-        if (sba_Input->ButtonPressed(sba_Button::MenuClick, a_PlayerIdx))
+        if (sba_Input->ButtonPressed(sba_Button::NaviagtionSelect, a_PlayerIdx))
         {
             if (this->m_pNavigation->GetFocusedElementId() == 3)
                 return 0;
             else
                 this->m_Focus = true;
         }
-        if (sba_Input->ButtonPressed(sba_Button::MenuBack, a_PlayerIdx))
+        if (sba_Input->ButtonPressed(sba_Button::NavigationBack, a_PlayerIdx))
         {
             if (this->m_Focus)
             {

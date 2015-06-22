@@ -39,6 +39,7 @@ namespace sba
     // **************************************************************************
     void Space::Initialize(PuRe_IGraphics& a_pGraphics, PuRe_IInput& a_pInput, PuRe_SoundPlayer& a_pSoundPlayer, PuRe_Application& a_rpApplication)
     {
+        this->Application = &a_rpApplication;
         this->Renderer = new PuRe_Renderer(&a_pGraphics);
         this->m_SSAOMaterial = a_pGraphics.LoadMaterial("../data/effects/SSAO/default");
         this->m_pNoiseTexture = new PuRe_Sprite(&a_pGraphics, "../data/textures/ssao.jpg");
@@ -55,8 +56,6 @@ namespace sba
         this->InputManager->Initialize();
         this->Font = new PuRe_Font(&a_pGraphics, "../data/textures/font.png");
         this->FontMaterial = a_pGraphics.LoadMaterial("../data/effects/font/default");
-
-        this->Application = &a_rpApplication;
     }
 
     // **************************************************************************
