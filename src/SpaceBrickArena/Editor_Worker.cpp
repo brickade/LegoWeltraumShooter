@@ -2,7 +2,7 @@
 
 #include <algorithm>
 #include "TheBrick/BrickInstance.h"
-#include "TheBrick/Spaceship.h"
+#include "include/Spaceship.h"
 #include "include/Space.h"
 #include "include/Editor_History.h"
 #include <TheBrick/Conversion.h>
@@ -87,7 +87,7 @@ namespace Editor
     // **************************************************************************
     void CWorker::Render(CShipHandler& a_rShipHandler)
     {
-        TheBrick::CSpaceship& ship = *a_rShipHandler.GetCurrentSpaceShip();
+        Game::CSpaceship& ship = *a_rShipHandler.GetCurrentSpaceShip();
         sba_Space->RenderFont(std::to_string(ship.m_pBricks.size()) + "/100 Bricks", PuRe_Vector2F(sba_Width - 300.0f, sba_Height - 50.0f), 18);
         sba_Space->RenderFont("Ship: " + ship.GetName(), PuRe_Vector2F(sba_Width / 2 - 200.0f, sba_Height - 50.0f), 18);
     }

@@ -1,16 +1,16 @@
-#include "include/TheBrick/Spaceship.h"
+#include "include/Spaceship.h"
 
-#include "include/TheBrick/Conversion.h"
-#include "include/TheBrick/BrickInstance.h"
-#include "include/TheBrick/Brick.h"
+#include "TheBrick/Conversion.h"
+#include "TheBrick/BrickInstance.h"
+#include "TheBrick/Brick.h"
 
-namespace TheBrick
+namespace Game
 {
     // **************************************************************************
     // **************************************************************************
     CSpaceship::CSpaceship(ong::World& a_rWorld,std::string a_Name) : CGameObject(a_rWorld, nullptr)
     {
-        this->m_Type = EGameObjectType::Ship;
+        this->m_Type = TheBrick::EGameObjectType::Ship;
         this->m_TargetVec = ong::vec3(0.0f, 0.0f, 0.0f);
         this->m_TargetAng = ong::vec3(0.0f, 0.0f, 0.0f);
         this->m_Name = a_Name;
@@ -36,11 +36,11 @@ namespace TheBrick
             other = contact->colliderA;
 
         CGameObject* object = static_cast<CGameObject*>(other->getBody()->getUserData());
-        if (object->m_Type == EGameObjectType::Ship)
+        if (object->m_Type == TheBrick::EGameObjectType::Ship)
         {
             
         }
-        else if (object->m_Type == EGameObjectType::Bullet)
+        else if (object->m_Type == TheBrick::EGameObjectType::Bullet)
         {
             CBullet* bull = static_cast<CBullet*>(object);
             if (!bull->m_Collided)
@@ -84,7 +84,7 @@ namespace TheBrick
 
     // **************************************************************************
     // **************************************************************************
-    void CSpaceship::Shoot(std::vector<CBullet*>& a_rBullets/*, CBrickManager* a_pManager*/)
+    void CSpaceship::Shoot(std::vector<CBullet*>& a_rBullets)
     {
         ong::Body* b = this->m_pBody;
         ong::World* w = b->getWorld();
@@ -92,7 +92,7 @@ namespace TheBrick
         PuRe_Vector3F speed = PuRe_Vector3F::Normalize(TheBrick::OngToPuRe(this->m_pBody->getLinearMomentum()));
         speed *= 100.0f;
         speed += forward*10.0f;
-        a_rBullets.push_back(new TheBrick::CBullet(TheBrick::OngToPuRe(this->GetTransform().p) + PuRe_Vector3F(-0.5f, -0.5f, 0.0f) + forward*10.0f, speed, *w));
+        a_rBullets.push_back(new CBullet(TheBrick::OngToPuRe(this->GetTransform().p) + PuRe_Vector3F(-0.5f, -0.5f, 0.0f) + forward*10.0f, speed, *w));
     }
 
     // **************************************************************************
@@ -124,7 +124,7 @@ namespace TheBrick
     }
     // **************************************************************************
     // **************************************************************************
-/*    void CSpaceship::HandleInput(int a_CID, PuRe_IInput* a_pInput, float a_DeltaTime, std::vector<CBullet*>& a_rBullets, CBrickManager* a_pManager)
+    void CSpaceship::Update(float a_DeltaTime)
     {
         if (this->m_Respawn > 0.0f)
         {
@@ -179,26 +179,26 @@ namespace TheBrick
 
             ong::Transform t = ong::Transform(ong::vec3(0.0f, 0.0f, 0.0f), ong::Quaternion(ong::vec3(0, 0, 0), 1));
         }
-    }*/
+    }
 
     // **************************************************************************
     // **************************************************************************
     // **************************************************************************
-    void CSpaceship::Deserialize(CSerializer& a_pSerializer, BrickArray& a_rBricks, ong::World& a_pWorld)
+    void CSpaceship::Deserialize(TheBrick::CSerializer& a_pSerializer, TheBrick::BrickArray& a_rBricks, ong::World& a_pWorld)
     {
         CGameObject::Deserialize(a_pSerializer, a_rBricks, a_pWorld);
     }
 
     // **************************************************************************
     // **************************************************************************
-    void CSpaceship::Serialize(CSerializer& a_pSerializer)
+    void CSpaceship::Serialize(TheBrick::CSerializer& a_pSerializer)
     {
         CGameObject::Serialize(a_pSerializer);
     }
 
     // **************************************************************************
     // **************************************************************************
-    void CSpaceship::Reset(CBrick& a_rStartBrick, ong::World& a_rWorld)
+    void CSpaceship::Reset(TheBrick::CBrick& a_rStartBrick, ong::World& a_rWorld)
     {
         for (size_t i = 0; i < this->m_pBricks.size(); i++)
         {
@@ -206,7 +206,7 @@ namespace TheBrick
             i--;
         }
         this->SetNameFromFilename("Banana");
-        CBrickInstance* brickInstance = a_rStartBrick.CreateInstance(*this, a_rWorld);
+        TheBrick::CBrickInstance* brickInstance = a_rStartBrick.CreateInstance(*this, a_rWorld);
         brickInstance->SetTransform(ong::Transform(ong::vec3(0, 0, 0), ong::Quaternion(ong::vec3(0, 0, 0), 1)));
         brickInstance->RotateAroundPivotOffset(PuRe_QuaternionF(0.0f, 0.0f, 0.0f));
         brickInstance->m_Color = PuRe_Color(0, 0, 1);

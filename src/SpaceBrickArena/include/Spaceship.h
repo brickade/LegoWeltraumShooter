@@ -6,16 +6,16 @@
 
 #include "Onager/World.h"
 
-#include "GameObject.h"
-#include "DebugDraw.h"
-#include "CSVParser.h"
+#include "TheBrick/GameObject.h"
+#include "TheBrick/DebugDraw.h"
+#include "TheBrick/CSVParser.h"
 #include "Bullet.h"
 
-namespace TheBrick
+namespace Game
 {
     class CBrick;
 
-    class CSpaceship : public CGameObject
+    class CSpaceship : public TheBrick::CGameObject
     {
     private:
         ong::vec3 m_TargetVec;
@@ -57,13 +57,13 @@ namespace TheBrick
         void Thrust(float a_Thrust);
         void Spin(float a_Spin);
         void Move(PuRe_Vector2F a_Move);
-        void Shoot(std::vector<CBullet*>& a_rBullets/*, CBrickManager* a_pManager*/);
+        void Shoot(std::vector<CBullet*>& a_rBullets);
         static void Collision(ong::Collider* thisCollider, ong::Contact* contact);
 
-        void Deserialize(CSerializer& a_pSerializer, BrickArray& a_rBricks, ong::World& a_pWorld) override;
-        void Serialize(CSerializer& a_pSerializer);
+        void Deserialize(TheBrick::CSerializer& a_pSerializer, TheBrick::BrickArray& a_rBricks, ong::World& a_pWorld) override;
+        void Serialize(TheBrick::CSerializer& a_pSerializer);
 
-        void Reset(CBrick& a_rStartBrick, ong::World& a_rWorld);
+        void Reset(TheBrick::CBrick& a_rStartBrick, ong::World& a_rWorld);
     };
 }
 

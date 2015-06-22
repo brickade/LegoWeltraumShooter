@@ -149,9 +149,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="include\TheBrick\Asteroid.h" />
     <ClInclude Include="include\TheBrick\BrickData.h" />
-    <ClInclude Include="include\TheBrick\Bullet.h" />
     <ClInclude Include="include\TheBrick\Brick.h" />
     <ClInclude Include="include\TheBrick\BrickInstance.h" />
     <ClInclude Include="include\TheBrick\ByteBuffer.h" />
@@ -161,12 +159,9 @@
     <ClInclude Include="include\TheBrick\GameObject.h" />
     <ClInclude Include="include\TheBrick\Serializer.h" />
     <ClInclude Include="include\TheBrick\Nub.h" />
-    <ClInclude Include="include\TheBrick\Spaceship.h" />
     <ClInclude Include="include\TheBrick\BrickTimer.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Asteroid.cpp" />
-    <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Brick.cpp" />
     <ClCompile Include="BrickInstance.cpp" />
     <ClCompile Include="ByteBuffer.cpp" />
@@ -174,7 +169,6 @@
     <ClCompile Include="DebugDraw.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Serializer.cpp" />
-    <ClCompile Include="Spaceship.cpp" />
     <ClCompile Include="BrickTimer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

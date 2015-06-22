@@ -16,7 +16,7 @@
 #include "GameCamera.h"
 #include "Minimap.h"
 #include "NetworkHandler.h"
-#include <TheBrick/Asteroid.h>
+#include "Asteroid.h"
 
 // Declare namespace Game
 namespace Game
@@ -79,8 +79,8 @@ namespace Game
 
         std::vector<PuRe_ParticleEmitter*> m_Emitters;
         std::vector<CGameCamera*> m_Cameras;
-        std::vector<TheBrick::CBullet*> m_Bullets;
-        std::vector<TheBrick::CAsteroid*> m_Asteroids;
+        std::vector<Game::CBullet*> m_Bullets;
+        std::vector<Game::CAsteroid*> m_Asteroids;
         /// @brief Engine's Application
         ///
         PuRe_Application* m_pApplication;
@@ -94,7 +94,7 @@ namespace Game
         sba::SInputData HandleInput(int a_PlayerIdx);
         /// @brief Process Input Data
         ///
-        void ProcessInput(TheBrick::CSpaceship* a_Ship, sba::SInputData* a_Input, float a_DeltaTime);
+        void ProcessInput(Game::CSpaceship* a_Ship, sba::SInputData* a_Input, float a_DeltaTime);
         /// @brief Handle Local Data
         ///
         void HandleLocal();

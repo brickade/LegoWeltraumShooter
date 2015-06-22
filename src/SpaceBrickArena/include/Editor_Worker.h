@@ -6,7 +6,7 @@
 #include <Onager/World.h>
 
 #include "TheBrick/GameObject.h"
-#include "TheBrick/Spaceship.h"
+#include "Spaceship.h"
 
 #include "Editor_Camera.h"
 
@@ -16,6 +16,9 @@ namespace TheBrick
 {
     class CGameObject;
     class CBrickInstance;
+}
+namespace Game
+{
     class CSpaceship;
 }
 

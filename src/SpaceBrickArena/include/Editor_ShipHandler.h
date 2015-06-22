@@ -5,7 +5,7 @@
 #include <PuReEngine/Defines.h>
 #include <Onager/World.h>
 
-#include "TheBrick/Spaceship.h"
+#include "Spaceship.h"
 #include "Navigation.h"
 
 #include "include/Space.h"
@@ -27,10 +27,10 @@ namespace Editor
         int m_playerIdx;
 
         sba::CNavigation* m_pNavigation;
-        TheBrick::CSpaceship* m_pCurrentSpaceship;
+        Game::CSpaceship* m_pCurrentSpaceship;
 
     public:
-        TheBrick::CSpaceship* GetCurrentSpaceShip()
+        Game::CSpaceship* GetCurrentSpaceShip()
         {
             return this->m_pCurrentSpaceship;
         }

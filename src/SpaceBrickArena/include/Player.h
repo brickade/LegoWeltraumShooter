@@ -5,7 +5,7 @@
 #include <PuReEngine/Core.h>
 #include <PuReEngine/Defines.h>
 
-#include <TheBrick/SpaceShip.h>
+#include "SpaceShip.h"
 
 namespace sba
 {
@@ -16,7 +16,7 @@ namespace sba
         SOCKET NetworkInformation;
         bool Timeout;
         float m_Points;
-        TheBrick::CSpaceship* Ship;
+        Game::CSpaceship* Ship;
     };
 }
 #endif /* _PLAYER_H_ */

@@ -27,7 +27,7 @@ namespace Game
         this->m_Rotation = PuRe_QuaternionF();
     }
 
-    void CGameCamera::Update(int a_CID, TheBrick::CSpaceship* a_pPlayer, PuRe_IInput* a_pInput, PuRe_Timer* a_pTimer)
+    void CGameCamera::Update(int a_CID, Game::CSpaceship* a_pPlayer, PuRe_IInput* a_pInput, PuRe_Timer* a_pTimer)
     {
         //Seconds for frame independent movement
         float Seconds = a_pTimer->GetElapsedSeconds();

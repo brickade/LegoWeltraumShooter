@@ -1,7 +1,7 @@
 #include "include/Editor_ShipHandler.h"
 
 #include "TheBrick\Serializer.h"
-#include "TheBrick\Spaceship.h"
+#include "include/Spaceship.h"
 #include "TheBrick\BrickInstance.h"
 #include "TheBrick\Brick.h"
 #include "TheBrick/GameObject.h"

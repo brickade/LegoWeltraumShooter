@@ -6,11 +6,11 @@
 
 #include "Onager/World.h"
 
-#include "GameObject.h"
+#include "TheBrick/GameObject.h"
 
-namespace TheBrick
+namespace Game
 {
-    class CBullet : public CGameObject
+    class CBullet : public TheBrick::CGameObject
     {
     public:
         float m_lifeTime;
@@ -19,7 +19,7 @@ namespace TheBrick
     private:
 
     public:
-        CBullet(/*CBrickManager* a_pBrickManager,*/PuRe_Vector3F a_Position, PuRe_Vector3F a_Speed, ong::World& a_rWorld);
+        CBullet(PuRe_Vector3F a_Position, PuRe_Vector3F a_Speed, ong::World& a_rWorld);
         ~CBullet();
         void Update(float a_DeltaTime) override;
     };

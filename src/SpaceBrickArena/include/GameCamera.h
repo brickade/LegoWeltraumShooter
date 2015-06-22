@@ -4,7 +4,7 @@
 #include <PuReEngine/Core.h>
 #include <PuReEngine/Defines.h>
 
-#include "TheBrick/Spaceship.h"
+#include "Spaceship.h"
 
 namespace Game
 {
@@ -23,7 +23,7 @@ namespace Game
     ~CGameCamera();
 
     void Initialize();
-    void Update(int a_CID,TheBrick::CSpaceship* a_pPlayer,PuRe_IInput* a_pInput, PuRe_Timer* a_pTimer);
+    void Update(int a_CID, Game::CSpaceship* a_pPlayer, PuRe_IInput* a_pInput, PuRe_Timer* a_pTimer);
 
 
   };

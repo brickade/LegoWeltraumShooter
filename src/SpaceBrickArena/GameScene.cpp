@@ -129,7 +129,7 @@ namespace Game
 
     // **************************************************************************
     // **************************************************************************
-    void CGameScene::ProcessInput(TheBrick::CSpaceship* a_Ship, sba::SInputData* a_Input, float a_DeltaTime)
+    void CGameScene::ProcessInput(Game::CSpaceship* a_Ship, sba::SInputData* a_Input, float a_DeltaTime)
     {
         if (a_Input->Shoot)
             a_Ship->Shoot(this->m_Bullets);
@@ -417,7 +417,7 @@ namespace Game
         ong::vec3 start(50.0f, 50.0f, 50.0f);
         for (int i = 0; i < 10; i++)
         {
-            TheBrick::CAsteroid* asteroid = new TheBrick::CAsteroid(*sba_World, start + ong::vec3((i % 4)*10.0f, ((i * 5) % 2)*2.0f, i*5.0f));
+            Game::CAsteroid* asteroid = new Game::CAsteroid(*sba_World, start + ong::vec3((i % 4)*10.0f, ((i * 5) % 2)*2.0f, i*5.0f));
             TheBrick::CSerializer serializer;
             serializer.OpenRead("../data/ships/asteroid.object");
             asteroid->Deserialize(serializer, sba_BrickManager->GetBrickArray(), *sba_World);
@@ -555,7 +555,7 @@ namespace Game
             {
                 if (sba_Players[i]->PadID != -1)
                 {
-                    TheBrick::CSpaceship* playerShip;
+                    Game::CSpaceship* playerShip;
                     if (camID == 0 && this->m_Test != -1)
                         playerShip = sba_Players[this->m_Test]->Ship;
                     else
@@ -760,5 +760,6 @@ namespace Game
         // DELETE RENDERER
         SAFE_DELETE(this->m_pMinimap);
         SAFE_DELETE(this->m_pFont);
+        sba_BrickManager->RebuildRenderInstances();
     }
 }

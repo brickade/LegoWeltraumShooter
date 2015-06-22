@@ -78,6 +78,15 @@
     <ClCompile Include="Editor_ShipHandler.cpp">
       <Filter>Editor</Filter>
     </ClCompile>
+    <ClCompile Include="Asteroid.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Bullet.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Spaceship.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Space.h" />
@@ -163,6 +172,15 @@
     <ClInclude Include="include\Editor_ShipHandler.h">
       <Filter>Editor</Filter>
     </ClInclude>
+    <ClInclude Include="include\Asteroid.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Bullet.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Spaceship.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Editor">
@@ -185,6 +203,9 @@
     </Filter>
     <Filter Include="Manager">
       <UniqueIdentifier>{4a5d2d5f-175e-43d1-95e3-26a9daf0c419}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects">
+      <UniqueIdentifier>{6850121a-a426-4883-8919-85ef684ff716}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
