@@ -64,8 +64,8 @@ namespace sba
 }
 #define sba_Space sba::Space::Instance()
 #define sba_Application sba::Space::Instance()->Application
-#define sba_Width sba::Space::Instance()->Application->GetGraphics()->GetDescription().ResolutionWidth
-#define sba_Height sba::Space::Instance()->Application->GetGraphics()->GetDescription().ResolutionHeight
+#define sba_Width 1920
+#define sba_Height 1080
 
 #define sba_Players sba::Space::Instance()->m_Players
 #define sba_Network sba::Space::Instance()->m_pNetworkhandler
