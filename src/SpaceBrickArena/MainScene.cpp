@@ -26,8 +26,7 @@ namespace sba
     // **************************************************************************
     int CMainScene::Update(PuRe_Application* a_pApplication)
     {
-        //Handle ESC Button
-            //Drop update after lag to avoid strange camera movement jumps etc
+        //Drop update after lag to avoid strange camera movement jumps etc
         if (a_pApplication->GetTimer()->GetElapsedMilliseconds() > 200)
             return 1;
 

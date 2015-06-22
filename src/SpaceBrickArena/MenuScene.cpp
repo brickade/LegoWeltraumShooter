@@ -47,6 +47,10 @@ namespace Menu
         switch (this->m_Displayed)
         {
         case Main:
+            if (sba_Input->ButtonPressed(sba_Button::Exit, *this->m_pPlayerIdx))
+            {
+                return 0;
+            }
             result = this->m_pMainMenu->Update(timer, *this->m_pPlayerIdx);
             switch (result)
             {

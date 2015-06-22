@@ -303,7 +303,12 @@ namespace TheBrick
     // **************************************************************************
     void CSpaceship::Reset(CBrick& a_rStartBrick, ong::World& a_rWorld)
     {
-        this->SetNameFromFilename("Banana.ship");
+        for (size_t i = 0; i < this->m_pBricks.size(); i++)
+        {
+            SAFE_DELETE(this->m_pBricks[i]);
+            i--;
+        }
+        this->SetNameFromFilename("Banana");
         CBrickInstance* brickInstance = a_rStartBrick.CreateInstance(*this, a_rWorld);
         brickInstance->SetTransform(ong::Transform(ong::vec3(0, 0, 0), ong::Quaternion(ong::vec3(0, 0, 0), 1)));
         brickInstance->RotateAroundPivotOffset(PuRe_QuaternionF(0.0f, 0.0f, 0.0f));

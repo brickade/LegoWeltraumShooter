@@ -36,7 +36,7 @@ namespace sba
         void SaveShipToFile(TheBrick::CSpaceship& a_rShip); //Save given ship to file
         void DeleteShip(TheBrick::CSpaceship& a_rShip); //Delete given ship from disk and delete sprite and path
         TheBrick::CSpaceship* GetShip(size_t a_Index); //Load actual ship from disk
-        void UpdateSprite(TheBrick::CSpaceship& a_rShip);
+        void UpdateSprite(TheBrick::CSpaceship& a_rShip); //Updates the sprite, does not save it to file
 
     private:
         const char* PathFromShip(TheBrick::CSpaceship& a_rShip) const

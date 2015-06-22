@@ -157,5 +157,6 @@ namespace Editor
         SAFE_DELETE(this->m_pBrickSupervisor);
         SAFE_DELETE(this->m_pSkyBox);
         SAFE_DELETE(this->m_pPostMaterial);
+        sba_BrickManager->RebuildRenderInstances();
     }
 }

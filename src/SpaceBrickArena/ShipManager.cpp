@@ -108,14 +108,15 @@ namespace sba
     void CShipManager::SaveShipToFile(TheBrick::CSpaceship& a_rShip)
     { //Save given ship to file
         TheBrick::CSerializer* serializer = new TheBrick::CSerializer();
-        if (serializer->OpenWrite(this->PathFromShip(a_rShip)))
+        std::string tmp = std::string(this->PathFromShip(a_rShip)).append(".ship");
+        if (serializer->OpenWrite(std::string(this->PathFromShip(a_rShip)).append(".ship").c_str()))
         {
             a_rShip.Serialize(*serializer);
+            serializer->Close();
         }
-        serializer->Close();
         delete serializer;
         std::string spritePath = this->PathFromShip(a_rShip);
-        spritePath = spritePath.substr(0, spritePath.find_last_of(".")).append(".dds");
+        spritePath.append(".dds");
         this->GetSpriteFromShip(a_rShip)->GetTexture()->SaveTextureToFile(spritePath.c_str());
     }
 
@@ -123,12 +124,12 @@ namespace sba
     // **************************************************************************
     void CShipManager::DeleteShip(TheBrick::CSpaceship& a_rShip)
     { //Delete given ship from disk and delete sprite and path
-        if (remove(this->PathFromShip(a_rShip)) != 0)
+        if (remove(std::string(this->PathFromShip(a_rShip)).append(".ship").c_str()) != 0)
         {
             printf("cant delete ship bro");
         }
         std::string spritePath = this->PathFromShip(a_rShip);
-        spritePath = spritePath.substr(0, spritePath.find_last_of(".")).append(".dds");
+        spritePath.append(".dds");
         if (remove(spritePath.c_str()) != 0)
         {
             printf("cant delete dds bro");
@@ -149,9 +150,9 @@ namespace sba
     // **************************************************************************
     TheBrick::CSpaceship* CShipManager::GetShip(size_t a_Index)
     { //Load actual ship from disk
-        TheBrick::CSpaceship* ship = new TheBrick::CSpaceship(*sba_World, "");
+        TheBrick::CSpaceship* ship = new TheBrick::CSpaceship(*sba_World, this->m_Sprites[a_Index].first.substr(this->m_Sprites[a_Index].first.find_last_of("/")+1));
         TheBrick::CSerializer* serializer = new TheBrick::CSerializer();
-        if (serializer->OpenRead(this->PathFromName(this->m_Sprites[a_Index].first.c_str())))
+        if (serializer->OpenRead(std::string(this->m_Sprites[a_Index].first).append(".ship").c_str()))
         {
             ship->Deserialize(*serializer, sba_BrickManager->GetBrickArray(), *sba_World);
             serializer->Close();
