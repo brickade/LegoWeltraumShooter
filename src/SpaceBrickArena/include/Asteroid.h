@@ -9,7 +9,7 @@
 #include "TheBrick/DebugDraw.h"
 #include "TheBrick/CSVParser.h"
 
-namespace Game
+namespace sba
 {
     class CAsteroid : public TheBrick::CGameObject
     {

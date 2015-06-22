@@ -13,7 +13,12 @@ namespace Editor
     CShipHandler::CShipHandler(int a_playerIdx)
     {
         this->m_playerIdx = a_playerIdx;
-        this->m_pNavigation = new sba::CNavigation();
+        int elements = sba_ShipManager->GetShipCount() - 1;
+        if (elements < 0)
+        {
+            elements = 0;
+        }
+        this->m_pNavigation = new sba::CNavigation(1, elements);
         this->m_pCurrentSpaceship = sba_ShipManager->GetShip(0);
     }
 
@@ -29,7 +34,13 @@ namespace Editor
     // **************************************************************************
     void CShipHandler::Update()
     {
-        this->m_pNavigation->Update(*sba_Application->GetTimer(), sba_Input->Direction(sba_Direction::Navigate, this->m_playerIdx));
+        int focus = this->m_pNavigation->GetFocusedElementId();
+        this->m_pNavigation->Update(*sba_Application->GetTimer(), sba_Input->Direction(sba_Direction::Navigate, this->m_playerIdx), false);
+        if (this->m_pNavigation->GetFocusedElementId() != focus)
+        {
+            SAFE_DELETE(this->m_pCurrentSpaceship);
+            this->m_pCurrentSpaceship = sba_ShipManager->GetShip(this->m_pNavigation->GetFocusedElementId());
+        }
     }
 
 

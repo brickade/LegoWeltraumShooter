@@ -3,7 +3,7 @@
 #include "TheBrick/Conversion.h"
 #include "TheBrick/BrickInstance.h"
 
-namespace Game
+namespace sba
 {
     // **************************************************************************
     // **************************************************************************

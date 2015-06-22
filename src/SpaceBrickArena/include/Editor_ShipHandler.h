@@ -27,10 +27,10 @@ namespace Editor
         int m_playerIdx;
 
         sba::CNavigation* m_pNavigation;
-        Game::CSpaceship* m_pCurrentSpaceship;
+        sba::CSpaceship* m_pCurrentSpaceship;
 
     public:
-        Game::CSpaceship* GetCurrentSpaceShip()
+        sba::CSpaceship* GetCurrentSpaceShip()
         {
             return this->m_pCurrentSpaceship;
         }

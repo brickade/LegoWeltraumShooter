@@ -16,7 +16,7 @@ namespace sba
         SOCKET NetworkInformation;
         bool Timeout;
         float m_Points;
-        Game::CSpaceship* Ship;
+        sba::CSpaceship* Ship;
     };
 }
 #endif /* _PLAYER_H_ */

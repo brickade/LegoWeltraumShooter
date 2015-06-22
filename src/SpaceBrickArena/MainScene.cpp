@@ -41,7 +41,7 @@ namespace sba
             this->m_pActiveScene->Exit();
             SAFE_DELETE(this->m_pActiveScene);
 
-            this->m_pGameScene = new Game::CGameScene(a_pApplication, this->m_PlayerIdx, false);
+            this->m_pGameScene = new sba::CGameScene(a_pApplication, this->m_PlayerIdx, false);
             this->m_pGameScene->Initialize(a_pApplication);
             this->m_pActiveScene = this->m_pGameScene;
             return 1;
@@ -50,7 +50,7 @@ namespace sba
             this->m_pActiveScene->Exit();
             SAFE_DELETE(this->m_pActiveScene);
 
-            this->m_pGameScene = new Game::CGameScene(a_pApplication, this->m_PlayerIdx, true);
+            this->m_pGameScene = new sba::CGameScene(a_pApplication, this->m_PlayerIdx, true);
             this->m_pGameScene->Initialize(a_pApplication);
             this->m_pActiveScene = this->m_pGameScene;
             return 1;

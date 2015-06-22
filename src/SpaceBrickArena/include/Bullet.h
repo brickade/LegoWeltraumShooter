@@ -8,7 +8,7 @@
 
 #include "TheBrick/GameObject.h"
 
-namespace Game
+namespace sba
 {
     class CBullet : public TheBrick::CGameObject
     {

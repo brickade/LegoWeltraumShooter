@@ -11,7 +11,7 @@
 #include "TheBrick/CSVParser.h"
 #include "Bullet.h"
 
-namespace Game
+namespace sba
 {
     class CBrick;
 

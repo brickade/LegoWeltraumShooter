@@ -19,7 +19,7 @@
 #include "Asteroid.h"
 
 // Declare namespace Game
-namespace Game
+namespace sba
 {
 
     //#define Skybox
@@ -79,8 +79,8 @@ namespace Game
 
         std::vector<PuRe_ParticleEmitter*> m_Emitters;
         std::vector<CGameCamera*> m_Cameras;
-        std::vector<Game::CBullet*> m_Bullets;
-        std::vector<Game::CAsteroid*> m_Asteroids;
+        std::vector<sba::CBullet*> m_Bullets;
+        std::vector<sba::CAsteroid*> m_Asteroids;
         /// @brief Engine's Application
         ///
         PuRe_Application* m_pApplication;
@@ -94,7 +94,7 @@ namespace Game
         sba::SInputData HandleInput(int a_PlayerIdx);
         /// @brief Process Input Data
         ///
-        void ProcessInput(Game::CSpaceship* a_Ship, sba::SInputData* a_Input, float a_DeltaTime);
+        void ProcessInput(sba::CSpaceship* a_Ship, sba::SInputData* a_Input, float a_DeltaTime);
         /// @brief Handle Local Data
         ///
         void HandleLocal();
