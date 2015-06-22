@@ -673,6 +673,18 @@ namespace ong
 		}
 	}
 
+	void ContactManager::removeContact(Contact* pContact)
+	{
+		for (size_t i = 0; i < m_contacts.size(); ++i)
+		{
+			if (m_contacts[i] == pContact)
+			{
+				removeContact(i);
+				break;
+			}
+		}
+	}
+
 	void ContactManager::removeContact(int contact)
 	{
 		m_contacts[contact]->colliderA->callbackEndContact(m_contacts[contact]);

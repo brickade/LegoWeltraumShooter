@@ -368,4 +368,8 @@ namespace ong
 		m_hGrid.updateBody(proxyID);
 	}
 
+	void World::removeContact(Contact* pContact)
+	{
+		m_contactManager.removeContact(pContact);
+	}
 }
