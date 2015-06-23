@@ -92,8 +92,8 @@ namespace sba
         ong::Body* b = this->m_pBody;
         ong::World* w = b->getWorld();
         PuRe_Vector3F forward = TheBrick::OngToPuRe(ong::rotate(ong::vec3(0, 0, 1), b->getOrientation()));
-        PuRe_Vector3F speed = TheBrick::OngToPuRe(this->m_pBody->getLinearVelocity()) * 10.0f;
-        speed += forward*10.0f;
+        PuRe_Vector3F speed = TheBrick::OngToPuRe(this->m_pBody->getLinearVelocity());
+        speed += forward*100.0f;
         a_rBullets.push_back(new CBullet(TheBrick::OngToPuRe(this->GetTransform().p) + PuRe_Vector3F(-0.5f, -0.5f, 0.0f) + forward*10.0f, speed, *w, a_pOwner));
     }
 

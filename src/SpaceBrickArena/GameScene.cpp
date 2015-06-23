@@ -784,6 +784,7 @@ namespace sba
             SAFE_DELETE(sba_Players[i]->Ship);
             SAFE_DELETE(sba_Players[i]);
         }
+        sba_Players.clear();
         SAFE_DELETE(this->m_pSkyBox);
         SAFE_DELETE(this->m_pPointLight);
         SAFE_DELETE(this->m_pDirectionalLight);
