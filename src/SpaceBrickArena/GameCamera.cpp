@@ -57,6 +57,9 @@ namespace sba
 
         //this->Move(CameraMove);
 
+        PuRe_Vector3F speed = TheBrick::OngToPuRe(a_pPlayer->m_pBody->getLinearVelocity());
+        //printf("X: %f Y: %f Z: %f\n", speed.X, speed.Y, speed.Z);
+
         this->m_ZOffset += a_pInput->GetMouseScroll();
         if (this->m_ZOffset < 10.0f)
             this->m_ZOffset = 10.0f;

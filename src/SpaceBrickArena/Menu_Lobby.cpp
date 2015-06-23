@@ -462,7 +462,8 @@ namespace Menu
             switch (this->m_pNavigation->GetFocusedElementId())
             {
             case 0: //Start
-                if (sba_Players.size() > 1)
+                //change this to 1 for min 2 players
+                if (sba_Players.size() > 0)
                 {
                     if (sba_Network->IsConnected())
                     {
