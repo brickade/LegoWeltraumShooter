@@ -31,31 +31,6 @@ namespace sba
     {
         //Seconds for frame independent movement
         float Seconds = a_pTimer->GetElapsedSeconds();
-        //PuRe_Vector3F CameraMove;
-        //if (a_pInput->MouseIsPressed(a_pInput->LeftClick))
-        //{
-
-        //    PuRe_Vector2F speed = a_pInput->GetRelativeMousePosition();
-        //    speed *= 10.0f;
-        //    PuRe_Vector3F cameraLook = PuRe_Vector3F();
-        //    if (speed.X != 0.0f)
-        //        cameraLook.X += speed.X*Seconds;
-        //    if (speed.Y != 0.0f)
-        //        cameraLook.Y += speed.Y*Seconds;
-        //    this->Rotate(cameraLook.Y, cameraLook.X, cameraLook.Z);
-        //}
-        //float speed = 10.0f*Seconds;
-        ////Handle Movement
-        //if (a_pInput->KeyIsPressed(a_pInput->W))
-        //    CameraMove.Z += speed;
-        //else if (a_pInput->KeyIsPressed(a_pInput->S))
-        //    CameraMove.Z -= speed;
-        //if (a_pInput->KeyIsPressed(a_pInput->D))
-        //    CameraMove.X += speed;
-        //else if (a_pInput->KeyIsPressed(a_pInput->A))
-        //    CameraMove.X -= speed;
-
-        //this->Move(CameraMove);
 
         float speed = TheBrick::OngToPuRe(a_pPlayer->m_pBody->getLinearVelocity()).Length();
 
@@ -73,117 +48,80 @@ namespace sba
         this->SetPosition(TheBrick::OngToPuRe(a_pPlayer->m_pBody->getWorldCenter()));
 
 
-        PuRe_Vector2F rightStick = a_pInput->GetGamepadRightThumb(a_CID);
-        if (rightStick.Length() > 0.2f)
-        {
-            this->m_CamRotation.X += rightStick.Y/50.0f;
-            this->m_CamRotation.Y += rightStick.X / 50.0f;
-            if (this->m_CamRotation.Y > PuRe_PI * 2)
-                this->m_CamRotation.Y = this->m_CamRotation.Y - PuRe_PI * 2;
-            if (this->m_CamRotation.Y < -PuRe_PI * 2)
-                this->m_CamRotation.Y = PuRe_PI * 2 + this->m_CamRotation.Y;
-            if (this->m_CamRotation.X > PuRe_PI * 2)
-                this->m_CamRotation.X = this->m_CamRotation.X - PuRe_PI * 2;
-            if (this->m_CamRotation.X < -PuRe_PI * 2)
-                this->m_CamRotation.X = PuRe_PI * 2 + this->m_CamRotation.X;
-            this->m_TimeToRotate = 3.0f;
-        }
-        else
-        {
-            if (this->m_TimeToRotate <= 0.0f)
-            {
-                float rotSpeed = 0.05f;
-                if (this->m_CamRotation.Y > PuRe_PI)
-                {
-                    this->m_CamRotation.Y += rotSpeed;
-                    if (this->m_CamRotation.Y > PuRe_PI * 2)
-                        this->m_CamRotation.Y = 0.0f;
-                }
-                else if (this->m_CamRotation.Y < -PuRe_PI)
-                {
-                    this->m_CamRotation.Y -= rotSpeed;
-                    if (this->m_CamRotation.Y < -PuRe_PI * 2)
-                        this->m_CamRotation.Y = 0.0f;
-                }
-                else if (this->m_CamRotation.Y > 0.0f)
-                {
-                    this->m_CamRotation.Y -= rotSpeed;
-                    if (this->m_CamRotation.Y < 0.0f)
-                        this->m_CamRotation.Y = 0.0f;
-                }
-                else
-                {
-                    this->m_CamRotation.Y += rotSpeed;
-                    if (this->m_CamRotation.Y > 0.0f)
-                        this->m_CamRotation.Y = 0.0f;
-                }
-
-                if (this->m_CamRotation.X > PuRe_PI)
-                {
-                    this->m_CamRotation.X += rotSpeed;
-                    if (this->m_CamRotation.X > PuRe_PI * 2)
-                        this->m_CamRotation.X = 0.0f;
-                }
-                else if (this->m_CamRotation.X < -PuRe_PI)
-                {
-                    this->m_CamRotation.X -= rotSpeed;
-                    if (this->m_CamRotation.X < -PuRe_PI * 2)
-                        this->m_CamRotation.X = 0.0f;
-                }
-                else if (this->m_CamRotation.X > 0.0f)
-                {
-                    this->m_CamRotation.X -= rotSpeed;
-                    if (this->m_CamRotation.X < 0.0f)
-                        this->m_CamRotation.X = 0.0f;
-                }
-                else
-                {
-                    this->m_CamRotation.X += rotSpeed;
-                    if (this->m_CamRotation.X > 0.0f)
-                        this->m_CamRotation.X = 0.0f;
-                }
-                //PuRe_Vector3F Diff = PuRe_Vector3F() - this->m_CamRotation;
-                //this->m_CamRotation.X += Diff.X/50.0f;
-                //this->m_CamRotation.Y += Diff.Y/50.0f;
-            }
-            else
-                this->m_TimeToRotate -= Seconds;
-        }
-        //std::string Key = a_pPlayer->m_pCSVFile->GetValue("Camera.X");
-        //bool invert = false;
-        //if (Key.substr(0, 1) == "-")
+        //PuRe_Vector2F rightStick = a_pInput->GetGamepadRightThumb(a_CID);
+        //if (rightStick.Length() > 0.2f)
         //{
-        //    Key = Key.substr(1, Key.length());
-        //    invert = true;
+        //    this->m_CamRotation.X += rightStick.Y/50.0f;
+        //    this->m_CamRotation.Y += rightStick.X / 50.0f;
+        //    if (this->m_CamRotation.Y > PuRe_PI * 2)
+        //        this->m_CamRotation.Y = this->m_CamRotation.Y - PuRe_PI * 2;
+        //    if (this->m_CamRotation.Y < -PuRe_PI * 2)
+        //        this->m_CamRotation.Y = PuRe_PI * 2 + this->m_CamRotation.Y;
+        //    if (this->m_CamRotation.X > PuRe_PI * 2)
+        //        this->m_CamRotation.X = this->m_CamRotation.X - PuRe_PI * 2;
+        //    if (this->m_CamRotation.X < -PuRe_PI * 2)
+        //        this->m_CamRotation.X = PuRe_PI * 2 + this->m_CamRotation.X;
+        //    this->m_TimeToRotate = 3.0f;
         //}
-        //if (Key == "LeftThumb.X")
-        //    Cam.X = a_pInput->GetGamepadLeftThumb(a_CID).X;
-        //else if (Key == "RightThumb.X")
-        //    Cam.X = a_pInput->GetGamepadRightThumb(a_CID).X;
-        //else if (Key == "LeftThumb.Y")
-        //    Cam.X = a_pInput->GetGamepadLeftThumb(a_CID).Y;
-        //else if (Key == "RightThumb.Y")
-        //    Cam.X = a_pInput->GetGamepadRightThumb(a_CID).Y;
-        //if (invert)
-        //    Cam.X = -Cam.X;
-
-        //Key = a_pPlayer->m_pCSVFile->GetValue("Camera.Y");
-        //invert = false;
-        //if (Key.substr(0, 1) == "-")
+        //else
         //{
-        //    Key = Key.substr(1, Key.length());
-        //    invert = true;
+        //    if (this->m_TimeToRotate <= 0.0f)
+        //    {
+        //        float rotSpeed = 0.05f;
+        //        if (this->m_CamRotation.Y > PuRe_PI)
+        //        {
+        //            this->m_CamRotation.Y += rotSpeed;
+        //            if (this->m_CamRotation.Y > PuRe_PI * 2)
+        //                this->m_CamRotation.Y = 0.0f;
+        //        }
+        //        else if (this->m_CamRotation.Y < -PuRe_PI)
+        //        {
+        //            this->m_CamRotation.Y -= rotSpeed;
+        //            if (this->m_CamRotation.Y < -PuRe_PI * 2)
+        //                this->m_CamRotation.Y = 0.0f;
+        //        }
+        //        else if (this->m_CamRotation.Y > 0.0f)
+        //        {
+        //            this->m_CamRotation.Y -= rotSpeed;
+        //            if (this->m_CamRotation.Y < 0.0f)
+        //                this->m_CamRotation.Y = 0.0f;
+        //        }
+        //        else
+        //        {
+        //            this->m_CamRotation.Y += rotSpeed;
+        //            if (this->m_CamRotation.Y > 0.0f)
+        //                this->m_CamRotation.Y = 0.0f;
+        //        }
+
+        //        if (this->m_CamRotation.X > PuRe_PI)
+        //        {
+        //            this->m_CamRotation.X += rotSpeed;
+        //            if (this->m_CamRotation.X > PuRe_PI * 2)
+        //                this->m_CamRotation.X = 0.0f;
+        //        }
+        //        else if (this->m_CamRotation.X < -PuRe_PI)
+        //        {
+        //            this->m_CamRotation.X -= rotSpeed;
+        //            if (this->m_CamRotation.X < -PuRe_PI * 2)
+        //                this->m_CamRotation.X = 0.0f;
+        //        }
+        //        else if (this->m_CamRotation.X > 0.0f)
+        //        {
+        //            this->m_CamRotation.X -= rotSpeed;
+        //            if (this->m_CamRotation.X < 0.0f)
+        //                this->m_CamRotation.X = 0.0f;
+        //        }
+        //        else
+        //        {
+        //            this->m_CamRotation.X += rotSpeed;
+        //            if (this->m_CamRotation.X > 0.0f)
+        //                this->m_CamRotation.X = 0.0f;
+        //        }
+        //    }
+        //    else
+        //        this->m_TimeToRotate -= Seconds;
         //}
-        //if (Key == "LeftThumb.X")
-        //    Cam.Y = a_pInput->GetGamepadLeftThumb(a_CID).X;
-        //else if (Key == "RightThumb.X")
-        //    Cam.Y = a_pInput->GetGamepadRightThumb(a_CID).X;
-        //else if (Key == "LeftThumb.Y")
-        //    Cam.Y = a_pInput->GetGamepadLeftThumb(a_CID).Y;
-        //else if (Key == "RightThumb.Y")
-        //    Cam.Y = a_pInput->GetGamepadRightThumb(a_CID).Y;
-        //if (invert)
-        //    Cam.Y = -Cam.Y;
+     
 
         PuRe_QuaternionF quat = TheBrick::OngToPuRe(a_pPlayer->m_pBody->getOrientation());
         if (this->m_QRotation != quat)

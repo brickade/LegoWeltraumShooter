@@ -102,10 +102,10 @@ namespace sba
         sba::SInputData input;
         memset(&input, 0, sizeof(sba::SInputData));
 
-        if (aInput->GamepadPressed(aInput->Pad_A, a_PlayerIdx))
+        if (aInput->GetGamepadRightTrigger(a_PlayerIdx) == 1.0f)
             input.Shoot = true;
 
-        PuRe_Vector2F Move = aInput->GetGamepadLeftThumb(a_PlayerIdx);
+        PuRe_Vector2F Move = aInput->GetGamepadRightThumb(a_PlayerIdx);
         if (Move.X > 0.5f)
             input.MoveX = 1;
         else if (Move.X < -0.5f)
@@ -115,14 +115,14 @@ namespace sba
         else if (Move.Y < -0.5f)
             input.MoveY = 2;
 
-        float Thrust = aInput->GetGamepadRightTrigger(a_PlayerIdx);
-        if (Thrust > 0.2f)
+        float Thrust = aInput->GetGamepadLeftThumb(a_PlayerIdx).Y;
+        if (Thrust > 0.25f)
             input.Thrust = true;
 
-        if (aInput->GamepadIsPressed(aInput->Left_Shoulder, a_PlayerIdx))
-            input.Spin = 2;
-        else if (aInput->GamepadIsPressed(aInput->Right_Shoulder, a_PlayerIdx))
+        if (aInput->GetGamepadLeftThumb(a_PlayerIdx).X < -0.5f)
             input.Spin = 1;
+        else if (aInput->GetGamepadLeftThumb(a_PlayerIdx).X > 0.5f)
+            input.Spin = 2;
 
         return input;
     }
@@ -143,11 +143,20 @@ namespace sba
                     camID++;
             }
         }
-        //PuRe_Vector3F forward = TheBrick::OngToPuRe(ong::rotate(ong::vec3(0, 0, 1), ship->m_pBody->getOrientation()));
-        PuRe_Vector3F forward = PuRe_Vector3F(0.0f,0.0f,1.0f)*this->m_Cameras[camID]->GetAim();
+        PuRe_Vector3F forward = TheBrick::OngToPuRe(ong::rotate(ong::vec3(0, 0, 1), ship->m_pBody->getOrientation()));
+        //PuRe_Vector3F forward = PuRe_Vector3F(0.0f,0.0f,1.0f)*this->m_Cameras[camID]->GetAim();
         PuRe_Vector3F forw = PuRe_Vector3F(forward.X,forward.Y,forward.Z);
-        if (a_Input->Shoot)
+        if (a_pPlayer->m_ShootCooldown == 0.0f&&a_Input->Shoot)
+        {
             ship->Shoot(this->m_Bullets, a_pPlayer, forw);
+            a_pPlayer->m_ShootCooldown = 0.25f;
+        }
+        else if (a_pPlayer->m_ShootCooldown != 0.0f)
+        {
+            a_pPlayer->m_ShootCooldown-= a_DeltaTime;
+            if (a_pPlayer->m_ShootCooldown < 0.0f)
+                a_pPlayer->m_ShootCooldown = 0.0f;
+        }
 
         if (a_Input->Thrust)
             ship->Thrust(1.0f);
@@ -728,7 +737,11 @@ namespace sba
         {
             int minLeft = std::floor(this->m_EndTime / 60);
             int secLeft = this->m_EndTime - minLeft * 60;
-            std::string timeLeft = "Left Time: " + std::to_string(minLeft) + ":" + std::to_string(secLeft);
+            std::string minString = std::to_string(minLeft);
+            std::string secString = std::to_string(secLeft);
+            if (secLeft < 10)
+                secString = "0"+secString;
+            std::string timeLeft = "Left Time: " + minString + ":" + secString;
             size = PuRe_Vector3F(32.0f, 32.0f, 0.0f);
             pos = PuRe_Vector3F(1920.0f / 4.0f, 1080.0f-100.0f, 0.0f);
             sba_Renderer->Draw(2, false, this->m_pFont, this->m_pFontMaterial, timeLeft, pos, PuRe_MatrixF(), size, 32.0f, c);
