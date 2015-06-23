@@ -73,6 +73,7 @@ namespace sba
         PuRe_DirectionalLight* m_pDirectionalLight;
         PuRe_SkyBox* m_pSkyBox;
         PuRe_IMaterial* m_pFontMaterial;
+        PuRe_IMaterial* m_pSpriteMaterial;
         PuRe_IMaterial* m_pUIMaterial;
         PuRe_IMaterial* m_pSkyMaterial;
         PuRe_IMaterial* m_pPostMaterial;
@@ -81,6 +82,7 @@ namespace sba
         PuRe_IMaterial* m_pParticleMaterial;
         CMinimap* m_pMinimap;
         PuRe_Sprite* m_pParticleSprite;
+        PuRe_Sprite* m_pCrossHairSprite;
 
         std::vector<PuRe_ParticleEmitter*> m_Emitters;
         std::vector<CGameCamera*> m_Cameras;

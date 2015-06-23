@@ -144,7 +144,7 @@ namespace sba
             }
         }
         //PuRe_Vector3F forward = TheBrick::OngToPuRe(ong::rotate(ong::vec3(0, 0, 1), ship->m_pBody->getOrientation()));
-        PuRe_Vector3F forward = PuRe_Vector3F(0.0f,0.0f,1.0f)*this->m_Cameras[camID]->GetQuaternion();
+        PuRe_Vector3F forward = PuRe_Vector3F(0.0f,0.0f,1.0f)*this->m_Cameras[camID]->GetAim();
         PuRe_Vector3F forw = PuRe_Vector3F(forward.X,forward.Y,forward.Z);
         if (a_Input->Shoot)
             ship->Shoot(this->m_Bullets, a_pPlayer, forw);
@@ -478,6 +478,7 @@ namespace sba
 
 
 
+        this->m_pSpriteMaterial = a_pApplication->GetGraphics()->LoadMaterial("../data/effects/sprite/default");
         this->m_pFontMaterial = a_pApplication->GetGraphics()->LoadMaterial("../data/effects/font/default");
         this->m_pUIMaterial = a_pApplication->GetGraphics()->LoadMaterial("../data/effects/UI/default");
         this->m_pPostMaterial = a_pApplication->GetGraphics()->LoadMaterial("../data/effects/Post/default");
@@ -489,7 +490,8 @@ namespace sba
         this->m_pDirectionalLight = new PuRe_DirectionalLight(a_pApplication->GetGraphics());
         this->m_pMinimap = new CMinimap(a_pApplication->GetGraphics());
         this->m_pFont = new PuRe_Font(a_pApplication->GetGraphics(), "../data/textures/font.png");
-        this->m_pParticleSprite = new PuRe_Sprite(a_pApplication->GetGraphics(),"../data/textures/dust.png");
+        this->m_pParticleSprite = new PuRe_Sprite(a_pApplication->GetGraphics(), "../data/textures/dust.png");
+        this->m_pCrossHairSprite = new PuRe_Sprite(a_pApplication->GetGraphics(), "../data/textures/crosshair.png");
         this->m_pUICam = new PuRe_Camera(fsize, PuRe_CameraProjection::Orthogonal);
         //Create for each player a camera
         for (int i = 0; i<this->m_LocalPlayers; i++)
@@ -709,6 +711,9 @@ namespace sba
                 sba_Renderer->Draw(1, false, this->m_pFont, this->m_pFontMaterial, "Life: " + std::to_string(sba_Players[i]->Ship->m_Life), pos, PuRe_MatrixF(), size, 36.0f, c, local);
                 pos.Y -= 100.0f;
                 sba_Renderer->Draw(1, false, this->m_pFont, this->m_pFontMaterial, "Points: " + std::to_string(sba_Players[i]->m_Points), pos, PuRe_MatrixF(), size, 36.0f, c, local);
+                pos.X = 1920.0f / 2.0f;
+                pos.Y = 1080.0f / 2.0f;
+                sba_Renderer->Draw(1, false, this->m_pCrossHairSprite, this->m_pSpriteMaterial, pos, PuRe_MatrixF(), PuRe_Vector3F(0.0f, 0.0f, 0.0f), PuRe_Vector3F(0.5f, 0.5f, 0.5f), PuRe_Color(1.0f, 1.0f, 1.0f), PuRe_Vector2F(), PuRe_Vector2F(), local);
                 local++;
             }
         }
@@ -780,10 +785,12 @@ namespace sba
     void CGameScene::Exit()
     {
         this->m_Run = false;
+        SAFE_DELETE(this->m_pCrossHairSprite);
         SAFE_DELETE(this->m_pParticleSprite);
         for (unsigned int i = 0; i < this->m_Emitters.size(); i++)
             SAFE_DELETE(this->m_Emitters[i]);
         // DELETE MATERIALS
+        SAFE_DELETE(this->m_pSpriteMaterial);
         SAFE_DELETE(this->m_pParticleMaterial);
         SAFE_DELETE(this->m_pDirectionalLightMaterial);
         SAFE_DELETE(this->m_pPointLightMaterial);

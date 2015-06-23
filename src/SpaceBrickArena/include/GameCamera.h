@@ -14,6 +14,7 @@ namespace sba
   private:
       float m_ZOffset;
       PuRe_QuaternionF m_QRotation;
+      PuRe_QuaternionF m_QAim;
       PuRe_Vector3F m_CamRotation;
       float m_TimeToRotate;
 
@@ -26,6 +27,8 @@ namespace sba
 
     void Initialize();
     void UpdateData(int a_CID, sba::CSpaceship* a_pPlayer, PuRe_IInput* a_pInput, PuRe_Timer* a_pTimer);
+
+    PuRe_QuaternionF GetAim();
 
 
   };

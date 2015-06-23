@@ -194,9 +194,15 @@ namespace sba
             this->m_QRotation.Z += diff.Z / 5.0f;
             this->m_QRotation.W += diff.W / 5.0f;
         }
-        PuRe_QuaternionF camrot = PuRe_QuaternionF(this->m_CamRotation.X, this->m_CamRotation.Y, 0.0f);
+        PuRe_QuaternionF camrot = PuRe_QuaternionF(this->m_CamRotation.X, this->m_CamRotation.Y, 0.0f) * PuRe_QuaternionF(0.13f,0.0f,0.0f);
         this->SetRotation(this->m_QRotation*camrot);
 
-        this->Move(PuRe_Vector3F(0.0f, 10.0f, -this->m_ZOffset));
+        this->Move(PuRe_Vector3F(0.0f, 8.0f, -this->m_ZOffset));
     }
+
+    PuRe_QuaternionF CGameCamera::GetAim()
+    {
+        return this->m_QRotation * PuRe_QuaternionF(this->m_CamRotation.X, this->m_CamRotation.Y, 0.0f);
+    }
+
 }
