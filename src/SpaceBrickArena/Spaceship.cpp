@@ -40,7 +40,11 @@ namespace sba
         CGameObject* object = static_cast<CGameObject*>(other->getBody()->getUserData());
         if (object->m_Type == TheBrick::EGameObjectType::Ship)
         {
-            
+            CSpaceship* oship = static_cast<CSpaceship*>(object);
+            if (oship->m_Respawn == 0.0f)
+                oship->m_Life -= 10.0f;
+            if (Ship->m_Respawn == 0.0f)
+                Ship->m_Life -= 10.0f;
         }
         else if (object->m_Type == TheBrick::EGameObjectType::Bullet)
         {
@@ -48,8 +52,11 @@ namespace sba
             if (!bull->m_Collided)
             {
                 if (Ship->m_Respawn == 0.0f)
+                {
                     Ship->m_Life -= bull->m_Damage;
-                bull->m_pOwner->m_Points += 10;
+                    if (Ship->m_Life < 0)
+                        bull->m_pOwner->m_Points += 10;
+                }
                 bull->m_Collided = true;
             }
         }
@@ -87,14 +94,15 @@ namespace sba
 
     // **************************************************************************
     // **************************************************************************
-    void CSpaceship::Shoot(std::vector<CBullet*>& a_rBullets, SPlayer* a_pOwner)
+    void CSpaceship::Shoot(std::vector<CBullet*>& a_rBullets, SPlayer* a_pOwner,PuRe_Vector3F a_Forward)
     {
         ong::Body* b = this->m_pBody;
         ong::World* w = b->getWorld();
-        PuRe_Vector3F forward = TheBrick::OngToPuRe(ong::rotate(ong::vec3(0, 0, 1), b->getOrientation()));
-        PuRe_Vector3F speed = TheBrick::OngToPuRe(this->m_pBody->getLinearVelocity());
-        speed += forward*100.0f;
-        a_rBullets.push_back(new CBullet(TheBrick::OngToPuRe(this->GetTransform().p) + PuRe_Vector3F(-0.5f, -0.5f, 0.0f) + forward*10.0f, speed, *w, a_pOwner));
+
+        PuRe_Vector3F speed = a_Forward*100.0f + a_Forward * TheBrick::OngToPuRe(this->m_pBody->getLinearVelocity()).Length();
+
+
+        a_rBullets.push_back(new CBullet(TheBrick::OngToPuRe(this->GetTransform().p) + a_Forward*10.0f, speed, *w, a_pOwner));
     }
 
     // **************************************************************************

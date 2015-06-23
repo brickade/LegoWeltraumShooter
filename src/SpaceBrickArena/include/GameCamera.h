@@ -13,7 +13,9 @@ namespace sba
 
   private:
       float m_ZOffset;
-      PuRe_QuaternionF m_Rotation;
+      PuRe_QuaternionF m_QRotation;
+      PuRe_Vector3F m_CamRotation;
+      float m_TimeToRotate;
 
   public:
 
@@ -23,7 +25,7 @@ namespace sba
     ~CGameCamera();
 
     void Initialize();
-    void Update(int a_CID, sba::CSpaceship* a_pPlayer, PuRe_IInput* a_pInput, PuRe_Timer* a_pTimer);
+    void UpdateData(int a_CID, sba::CSpaceship* a_pPlayer, PuRe_IInput* a_pInput, PuRe_Timer* a_pTimer);
 
 
   };

@@ -34,6 +34,10 @@ namespace sba
         float m_Respawn;
 
     public:
+        float GetMaxSpeed() const
+        {
+            return this->m_MaxSpeed;
+        }
         const std::string& GetName() const
         {
             return this->m_Name;
@@ -58,7 +62,7 @@ namespace sba
         void Thrust(float a_Thrust);
         void Spin(float a_Spin);
         void Move(PuRe_Vector2F a_Move);
-        void Shoot(std::vector<CBullet*>& a_rBullets,SPlayer* a_pOwner);
+        void Shoot(std::vector<CBullet*>& a_rBullets, SPlayer* a_pOwner, PuRe_Vector3F a_Forward);
         static void Collision(ong::Collider* thisCollider, ong::Contact* contact);
 
         void Deserialize(TheBrick::CSerializer& a_pSerializer, TheBrick::BrickArray& a_rBricks, ong::World& a_pWorld) override;

@@ -735,7 +735,7 @@ namespace Menu
                             //aslong as the file is not right
                             while (!right)
                             {
-                                if (!found&&file.substr(0, file.find_last_of(".")) == p->Ship->GetName())
+                                if (!found&&file == p->Ship->GetName()+".ship")
                                 {
                                     //if he has not been found and the file is the current one
                                     working = file;

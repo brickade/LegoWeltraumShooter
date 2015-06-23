@@ -132,8 +132,22 @@ namespace sba
     void CGameScene::ProcessInput(SPlayer* a_pPlayer, sba::SInputData* a_Input, float a_DeltaTime)
     {
         CSpaceship* ship = a_pPlayer->Ship;
+        int camID = 0;
+        for (unsigned int i = 0; i < sba_Players.size(); i++)
+        {
+            if (sba_Players[i]->PadID != -1)
+            {
+                if (sba_Players[i]->Ship == ship)
+                    break;
+                else
+                    camID++;
+            }
+        }
+        //PuRe_Vector3F forward = TheBrick::OngToPuRe(ong::rotate(ong::vec3(0, 0, 1), ship->m_pBody->getOrientation()));
+        PuRe_Vector3F forward = PuRe_Vector3F(0.0f,0.0f,1.0f)*this->m_Cameras[camID]->GetQuaternion();
+        PuRe_Vector3F forw = PuRe_Vector3F(forward.X,forward.Y,forward.Z);
         if (a_Input->Shoot)
-            ship->Shoot(this->m_Bullets, a_pPlayer);
+            ship->Shoot(this->m_Bullets, a_pPlayer, forw);
 
         if (a_Input->Thrust)
             ship->Thrust(1.0f);
@@ -426,7 +440,7 @@ namespace sba
             serializer.Close();
         }
         this->gameStart = true;
-        this->m_TimeLimit = 1.0f;
+        this->m_TimeLimit = 5.0f;
         this->m_EndTime = 60.0f*this->m_TimeLimit; //seconds * Minutes
         sba_BrickManager->RebuildRenderInstances(); //Update RenderInstances
 
@@ -562,7 +576,7 @@ namespace sba
                         playerShip = sba_Players[this->m_Test]->Ship;
                     else
                         playerShip = sba_Players[i]->Ship;
-                    this->m_Cameras[camID]->Update(0, playerShip, a_pApplication->GetInput(), a_pApplication->GetTimer());
+                    this->m_Cameras[camID]->UpdateData(sba_Players[i]->PadID, playerShip, a_pApplication->GetInput(), a_pApplication->GetTimer());
                     PuRe_QuaternionF rotation = this->m_Cameras[camID]->GetQuaternion();
 
                     if (this->m_Emitters[camID]->GetAmount() < 200)
@@ -685,13 +699,16 @@ namespace sba
         /////////////  DRAW FONT  ///////////////////////
         PuRe_Color c = PuRe_Color(1.0f,1.0f,1.0f,1.0f);
         PuRe_Vector3F size = PuRe_Vector3F(32.0f,32.0f,0.0f);
-        PuRe_Vector3F pos = PuRe_Vector3F(100.0f, 1080 - 100.0f, 0.0f);
+        PuRe_Vector3F pos = PuRe_Vector3F(100.0f, 1080.0f - 100.0f, 0.0f);
         int local = 0;
         for (unsigned int i=0;i<sba_Players.size();i++)
         {
             if (sba_Players[i]->PadID != -1)
             {
+                pos.Y = 1080.0f - 100.0f;
                 sba_Renderer->Draw(1, false, this->m_pFont, this->m_pFontMaterial, "Life: " + std::to_string(sba_Players[i]->Ship->m_Life), pos, PuRe_MatrixF(), size, 36.0f, c, local);
+                pos.Y -= 100.0f;
+                sba_Renderer->Draw(1, false, this->m_pFont, this->m_pFontMaterial, "Points: " + std::to_string(sba_Players[i]->m_Points), pos, PuRe_MatrixF(), size, 36.0f, c, local);
                 local++;
             }
         }
