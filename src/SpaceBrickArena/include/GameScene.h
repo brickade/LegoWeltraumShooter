@@ -39,8 +39,13 @@ namespace sba
     class CGameScene : public PuRe_IScene
     {
     private:
-        int m_WinID;
+        
+        bool m_Won;
+        int m_WonID;
+        int m_WonIndex;
         float m_TimeLimit;
+
+        float m_EndTime;
         int m_Test;
         float m_Timeout;
         bool m_Run;
@@ -94,7 +99,7 @@ namespace sba
         sba::SInputData HandleInput(int a_PlayerIdx);
         /// @brief Process Input Data
         ///
-        void ProcessInput(sba::CSpaceship* a_Ship, sba::SInputData* a_Input, float a_DeltaTime);
+        void ProcessInput(SPlayer* a_pPlayer, sba::SInputData* a_Input, float a_DeltaTime);
         /// @brief Handle Local Data
         ///
         void HandleLocal();

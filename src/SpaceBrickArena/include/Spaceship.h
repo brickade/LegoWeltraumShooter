@@ -27,6 +27,7 @@ namespace sba
         PuRe_Vector3F m_RotationAcceleration; //X = Roll, Y = Yaw, Z = Pitch
         float m_MaxSpeed;
         float m_SpeedAcceleration;
+
     public:
         int m_Life;
         int m_MaxLife;
@@ -57,7 +58,7 @@ namespace sba
         void Thrust(float a_Thrust);
         void Spin(float a_Spin);
         void Move(PuRe_Vector2F a_Move);
-        void Shoot(std::vector<CBullet*>& a_rBullets);
+        void Shoot(std::vector<CBullet*>& a_rBullets,SPlayer* a_pOwner);
         static void Collision(ong::Collider* thisCollider, ong::Contact* contact);
 
         void Deserialize(TheBrick::CSerializer& a_pSerializer, TheBrick::BrickArray& a_rBricks, ong::World& a_pWorld) override;

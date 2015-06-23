@@ -5,7 +5,7 @@
 #include <PuReEngine/Core.h>
 #include <PuReEngine/Defines.h>
 
-#include "SpaceShip.h"
+#include "Spaceship.h"
 
 namespace sba
 {
@@ -15,8 +15,8 @@ namespace sba
         char PadID;
         SOCKET NetworkInformation;
         bool Timeout;
-        float m_Points;
-        sba::CSpaceship* Ship;
+        int m_Points;
+        CSpaceship* Ship;
     };
 }
 #endif /* _PLAYER_H_ */

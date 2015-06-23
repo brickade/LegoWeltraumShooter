@@ -23,6 +23,18 @@ namespace Menu
         //this->m_pSkyBox = new PuRe_SkyBox(graphics, "../data/textures/cube/");
         this->m_pFont = new PuRe_Font(graphics, "../data/textures/font.png");
 
+        //Camera
+        sba_Renderer->DeleteTargets();
+        for (int i = 0; i < 3; i++)
+        {
+            sba_Renderer->AddTarget(PuRe_Vector2I(graphics->GetDescription().ResolutionWidth, graphics->GetDescription().ResolutionHeight));
+        }
+        if (sba::CIniReader::Instance()->GetValue("SSAO") == "On")
+        {
+            sba_Renderer->SetSSAO(0, sba_Space->m_SSAOMaterial, sba_Space->m_pNoiseTexture);
+            sba_Renderer->SetSSAO(1, sba_Space->m_SSAOMaterial, sba_Space->m_pNoiseTexture);
+        }
+
         this->m_pSceneCamera = new PuRe_Camera(PuRe_Vector2F((float)1920, (float)1080), PuRe_CameraProjection::Perspective);
         this->m_pUICamera = new PuRe_Camera(PuRe_Vector2F((float)1920, (float)1080), PuRe_CameraProjection::Orthogonal);
 

@@ -129,13 +129,14 @@ namespace sba
 
     // **************************************************************************
     // **************************************************************************
-    void CGameScene::ProcessInput(sba::CSpaceship* a_Ship, sba::SInputData* a_Input, float a_DeltaTime)
+    void CGameScene::ProcessInput(SPlayer* a_pPlayer, sba::SInputData* a_Input, float a_DeltaTime)
     {
+        CSpaceship* ship = a_pPlayer->Ship;
         if (a_Input->Shoot)
-            a_Ship->Shoot(this->m_Bullets);
+            ship->Shoot(this->m_Bullets, a_pPlayer);
 
         if (a_Input->Thrust)
-            a_Ship->Thrust(1.0f);
+            ship->Thrust(1.0f);
 
         PuRe_Vector2F Move = PuRe_Vector2F(0.0f, 0.0f);
         if (a_Input->MoveX == 1)
@@ -147,14 +148,14 @@ namespace sba
         else if (a_Input->MoveY == 2)
             Move.Y = -1.0f;
         if (Move.Length() > 0.2f)
-            a_Ship->Move(Move);
+            ship->Move(Move);
 
         if (a_Input->Spin == 1)
-            a_Ship->Spin(1.0f);
+            ship->Spin(1.0f);
         else if (a_Input->Spin == 2)
-            a_Ship->Spin(-1.0f);
+            ship->Spin(-1.0f);
 
-        a_Ship->Update(a_DeltaTime);
+        ship->Update(a_DeltaTime);
     }
 
     // **************************************************************************
@@ -166,10 +167,10 @@ namespace sba
         for (unsigned int i = 0; i < sba_Players.size(); i++)
         {
             sba::SInputData input = this->HandleInput(sba_Players[i]->PadID);
-            this->ProcessInput(sba_Players[i]->Ship, &input, aTimer->GetElapsedSeconds());
+            this->ProcessInput(sba_Players[i], &input, aTimer->GetElapsedSeconds());
         }
         sba::Space::Instance()->UpdatePhysics(aTimer);
-        this->m_TimeLimit -= aTimer->GetElapsedSeconds();
+        this->m_EndTime -= aTimer->GetElapsedSeconds();
     }
 
     // **************************************************************************
@@ -281,7 +282,7 @@ namespace sba
                         if (sba_Players[j]->ID == id)
                         {
                             input = &buffer->Inputs[i];
-                            this->ProcessInput(sba_Players[j]->Ship,input,1/60.0f);
+                            this->ProcessInput(sba_Players[j],input,1/60.0f);
                             break;
                         }
                     }
@@ -303,7 +304,7 @@ namespace sba
                 this->m_PhysicTime -= 1.0f / 60.0f;
                 printf("Physic: %i\n", this->m_PhysicFrame);
                 this->m_PhysicFrame++;
-                this->m_TimeLimit -= 1.0f/60.0f;
+                this->m_EndTime -= 1.0f/60.0f;
                 assert(this->m_PhysicFrame != 2147483647);
                 sba_BrickManager->RebuildRenderInstances(); //Update RenderInstances
             } //if input exists
@@ -425,7 +426,8 @@ namespace sba
             serializer.Close();
         }
         this->gameStart = true;
-        this->m_TimeLimit = 60.0f*10.0f; //seconds * Minutes
+        this->m_TimeLimit = 1.0f;
+        this->m_EndTime = 60.0f*this->m_TimeLimit; //seconds * Minutes
         sba_BrickManager->RebuildRenderInstances(); //Update RenderInstances
 
     }
@@ -510,7 +512,7 @@ namespace sba
         m_Timeout += timer->GetElapsedSeconds();
 
         //Handle ESC Button
-        if (this->m_Timeout+10.0f < 0.0f||a_pApplication->GetInput()->KeyPressed(a_pApplication->GetInput()->ESC))
+        if (this->m_EndTime+10.0f < 0.0f||a_pApplication->GetInput()->KeyPressed(a_pApplication->GetInput()->ESC))
         {
             if (sba_Network->IsConnected())
             {
@@ -630,6 +632,24 @@ namespace sba
             }
         }
 
+        if (!this->m_Won&&this->m_EndTime < 0.0f)
+        {
+            float points = 0.0f;
+            this->m_WonIndex = 0;
+            this->m_WonID = 0;
+            for (unsigned int i = 0; i < sba_Players.size(); i++)
+            {
+                if (sba_Players[i]->m_Points > sba_Players[this->m_WonIndex]->m_Points)
+                {
+                    this->m_WonIndex = i;
+                    this->m_WonID = sba_Players[i]->ID;
+                    points = sba_Players[i]->m_Points;
+                    
+                }
+            }
+            this->m_Won = true;
+        }
+
 
         return 1;
     }
@@ -676,14 +696,21 @@ namespace sba
             }
         }
 
-        if (this->m_Timeout + 10.0f > 0.0f)
+        if (this->m_EndTime < 0.0f)
         {
             size = PuRe_Vector3F(64.0f, 64.0f, 0.0f);
-            pos = PuRe_Vector3F(1920.0f/2.0f - 200.0f,1080.0f/2.0f, 0.0f);
-            sba_Renderer->Draw(2, false, this->m_pFont, this->m_pFontMaterial, "Player "+std::to_string(this->m_WinID)+" won!", pos, PuRe_MatrixF(), size, 72.0f, c, local);
+            pos = PuRe_Vector3F(1920.0f/4.0f,1080.0f/2.0f, 0.0f);
+            sba_Renderer->Draw(2, false, this->m_pFont, this->m_pFontMaterial, "Player "+std::to_string(this->m_WonID)+" won!", pos, PuRe_MatrixF(), size, 72.0f, c);
         }
-        ////////////////////////////////////////////////////
-
+        else
+        {
+            int minLeft = std::floor(this->m_EndTime / 60);
+            int secLeft = this->m_EndTime - minLeft * 60;
+            std::string timeLeft = "Left Time: " + std::to_string(minLeft) + ":" + std::to_string(secLeft);
+            size = PuRe_Vector3F(32.0f, 32.0f, 0.0f);
+            pos = PuRe_Vector3F(1920.0f / 4.0f, 1080.0f-100.0f, 0.0f);
+            sba_Renderer->Draw(2, false, this->m_pFont, this->m_pFontMaterial, timeLeft, pos, PuRe_MatrixF(), size, 32.0f, c);
+        }
 
         //////////////////// POST SCREEN ////////////////////////////////
         sba_Renderer->Set(0, (float)this->m_TextureID, "textureID");
@@ -722,6 +749,8 @@ namespace sba
             sba_Renderer->Set(0, PuRe_Vector3F(0.1f, 0.1f, 0.1f), "ambient");
             sba_Renderer->Render(0,0, this->m_Cameras[3], this->m_pPostMaterial, size);
         }
+        size.X = 0.0f;
+        size.Y = 0.0f;
         sba_Renderer->Render(0, 2, this->m_pUICam, this->m_pUIMaterial, size);
         sba_Renderer->End();
         ////////////////////////////////////////////////////
@@ -750,6 +779,12 @@ namespace sba
             SAFE_DELETE(this->m_Bullets[i]);
         for (unsigned int i = 0; i < this->m_Asteroids.size(); i++)
             SAFE_DELETE(this->m_Asteroids[i]);
+        for (unsigned int i = 0; i < sba_Players.size(); i++)
+        {
+            SAFE_DELETE(sba_Players[i]->Ship);
+            SAFE_DELETE(sba_Players[i]);
+        }
+        sba_Players.clear();
         SAFE_DELETE(this->m_pSkyBox);
         SAFE_DELETE(this->m_pPointLight);
         SAFE_DELETE(this->m_pDirectionalLight);

@@ -10,16 +10,18 @@
 
 namespace sba
 {
+    struct SPlayer;
+
     class CBullet : public TheBrick::CGameObject
     {
     public:
         float m_lifeTime;
         int m_Damage;
         bool m_Collided;
-    private:
+        SPlayer* m_pOwner;
 
     public:
-        CBullet(PuRe_Vector3F a_Position, PuRe_Vector3F a_Speed, ong::World& a_rWorld);
+        CBullet(PuRe_Vector3F a_Position, PuRe_Vector3F a_Speed, ong::World& a_rWorld,SPlayer* a_pOwner);
         ~CBullet();
         void Update(float a_DeltaTime) override;
     };

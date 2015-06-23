@@ -3,13 +3,18 @@
 #include "TheBrick/Conversion.h"
 #include "TheBrick/BrickInstance.h"
 
+#include "include/Player.h"
+#include "include/Space.h"
+
 namespace sba
 {
     // **************************************************************************
     // **************************************************************************
-    CBullet::CBullet(PuRe_Vector3F a_Position, PuRe_Vector3F a_Speed, ong::World& a_rWorld) : CGameObject(a_rWorld, nullptr)
+    CBullet::CBullet(PuRe_Vector3F a_Position, PuRe_Vector3F a_Speed, ong::World& a_rWorld,SPlayer* a_pOwner) : CGameObject(a_rWorld, nullptr)
     {
+        this->m_pOwner = a_pOwner;
         this->m_Type = TheBrick::EGameObjectType::Bullet;
+        TheBrick::CBrickInstance* brick = new TheBrick::CBrickInstance(*sba_BrickManager->GetBrickArray()[0], *this, *sba_World);
         this->m_pBody->setPosition(TheBrick::PuReToOng(a_Position));
         this->m_pBody->applyImpulse(TheBrick::PuReToOng(a_Speed));
 

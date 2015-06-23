@@ -4,6 +4,8 @@
 #include "TheBrick/BrickInstance.h"
 #include "TheBrick/Brick.h"
 
+#include "include/Player.h"
+
 namespace sba
 {
     // **************************************************************************
@@ -47,6 +49,7 @@ namespace sba
             {
                 if (Ship->m_Respawn == 0.0f)
                     Ship->m_Life -= bull->m_Damage;
+                bull->m_pOwner->m_Points += 10;
                 bull->m_Collided = true;
             }
         }
@@ -84,15 +87,14 @@ namespace sba
 
     // **************************************************************************
     // **************************************************************************
-    void CSpaceship::Shoot(std::vector<CBullet*>& a_rBullets)
+    void CSpaceship::Shoot(std::vector<CBullet*>& a_rBullets, SPlayer* a_pOwner)
     {
         ong::Body* b = this->m_pBody;
         ong::World* w = b->getWorld();
         PuRe_Vector3F forward = TheBrick::OngToPuRe(ong::rotate(ong::vec3(0, 0, 1), b->getOrientation()));
-        PuRe_Vector3F speed = PuRe_Vector3F::Normalize(TheBrick::OngToPuRe(this->m_pBody->getLinearMomentum()));
-        speed *= 100.0f;
-        speed += forward*10.0f;
-        a_rBullets.push_back(new CBullet(TheBrick::OngToPuRe(this->GetTransform().p) + PuRe_Vector3F(-0.5f, -0.5f, 0.0f) + forward*10.0f, speed, *w));
+        PuRe_Vector3F speed = TheBrick::OngToPuRe(this->m_pBody->getLinearVelocity());
+        speed += forward*100.0f;
+        a_rBullets.push_back(new CBullet(TheBrick::OngToPuRe(this->GetTransform().p) + PuRe_Vector3F(-0.5f, -0.5f, 0.0f) + forward*10.0f, speed, *w, a_pOwner));
     }
 
     // **************************************************************************
