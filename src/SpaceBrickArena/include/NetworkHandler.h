@@ -12,7 +12,7 @@
 // Declare namespace Game
 namespace sba
 {
-    enum { MaxPlayers = 10, Delay = 10, BroadcastPort =13370, MaxName=12, MaxLength=15, MaxBricks=100};
+    enum { MaxPlayers = 10, Delay = 10, BroadcastPort =13370, MaxName=12, MaxLength=15, MaxBricks=200};
 
     enum EPacket { Broadcast, Join, User, IAm,WhoamI, Left,LobbyEnd,Brick,Start,Init,Map, STick, CTick };
 

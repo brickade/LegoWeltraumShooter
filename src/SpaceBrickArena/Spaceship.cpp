@@ -85,7 +85,7 @@ namespace sba
         this->m_RotationAcceleration = PuRe_Vector3F(mass*10.0f, mass*20.0f, mass*20.0f);
         this->m_SpeedAcceleration = mass*20.0f;
         this->m_MaxRotationSpeed = PuRe_Vector3F(5.0f, 5.0f, 5.0f);
-        this->m_MaxSpeed = 10.0f*(200.0f/mass);
+        this->m_MaxSpeed = 10.0f*(20.0f/mass);
         this->m_MaxLife = (int)(mass*10.0f);
         this->m_Life = this->m_MaxLife;
 
@@ -108,9 +108,10 @@ namespace sba
         ong::Body* b = this->m_pBody;
         ong::World* w = b->getWorld();
 
-        PuRe_Vector3F speed = a_Forward*100.0f + a_Forward * TheBrick::OngToPuRe(this->m_pBody->getLinearVelocity()).Length();
+        float len = TheBrick::OngToPuRe(this->m_pBody->getLinearVelocity()).Length();
+        PuRe_Vector3F speed = a_Forward*100.0f + a_Forward * len;
 
-
+        speed *= 1.0f/100.0f;
         a_rBullets.push_back(new CBullet(TheBrick::OngToPuRe(this->GetTransform().p) + a_Forward*10.0f, speed, *w, a_pOwner));
     }
 
