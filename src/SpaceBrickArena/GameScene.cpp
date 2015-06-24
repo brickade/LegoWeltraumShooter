@@ -20,10 +20,15 @@ namespace sba
         sba::SInputData input;
         memset(&input, 0, sizeof(sba::SInputData));
 
-        if (a_pInput->GetGamepadRightTrigger(a_PlayerIdx) == 1.0f)
+        float fShoot = sba_Input->Axis(Input::EAxis::Type::GameShoot, a_PlayerIdx);
+        bool bShoot = false;
+        if (a_PlayerIdx == 0)
+            bShoot = sba_Input->ButtonIsPressed(Input::EButton::Type::GameShoot,a_PlayerIdx);
+
+        if (bShoot||fShoot == 1.0f)
             input.Shoot = true;
 
-        PuRe_Vector2F Move = a_pInput->GetGamepadRightThumb(a_PlayerIdx);
+        PuRe_Vector2F Move = sba_Input->Direction(Input::EDirection::Type::GameMove,a_PlayerIdx);
         if (Move.X > 0.5f)
             input.MoveX = 1;
         else if (Move.X < -0.5f)
@@ -33,13 +38,20 @@ namespace sba
         else if (Move.Y < -0.5f)
             input.MoveY = 2;
 
-        float Thrust = a_pInput->GetGamepadLeftThumb(a_PlayerIdx).Y;
-        if (Thrust > 0.25f)
+
+
+        float fThrust = sba_Input->Axis(Input::EAxis::Type::GameThrust, a_PlayerIdx);
+        bool bThrust = false;
+        if (a_PlayerIdx == 0)
+            bThrust = sba_Input->ButtonIsPressed(Input::EButton::Type::GameThrust, a_PlayerIdx);
+
+        if (fThrust || fThrust == 1.0f)
             input.Thrust = true;
 
-        if (a_pInput->GetGamepadLeftThumb(a_PlayerIdx).X < -0.5f)
+        float Spin = sba_Input->Axis(Input::EAxis::Type::GameSpin, a_PlayerIdx);
+        if (Spin < -0.5f)
             input.Spin = 1;
-        else if (a_pInput->GetGamepadLeftThumb(a_PlayerIdx).X > 0.5f)
+        else if (Spin > 0.5f)
             input.Spin = 2;
 
         return input;
@@ -131,20 +143,14 @@ namespace sba
         for (unsigned int i = 0; i < sba_Players.size(); i++)
         {
             sba_Players[i]->Ship->CalculateData();
-            ong::vec3 pos = ong::vec3(10.0f, 10.0f, 10.0f);
+            ong::vec3 pos = ong::vec3(0.0f, 0.0f, 0.0f);
             pos.x += sba_Players[i]->ID*10.0f;
             sba_Players[i]->Ship->m_pBody->setPosition(pos);
         }
-        ong::vec3 start(50.0f, 50.0f, 50.0f);
-        for (int i = 0; i < 10; i++)
-        {
-            sba::CAsteroid* asteroid = new sba::CAsteroid(*sba_World, start + ong::vec3((i % 4)*10.0f, ((i * 5) % 2)*2.0f, i*5.0f));
-            TheBrick::CSerializer serializer;
-            serializer.OpenRead("../data/objects/asteroid.object");
-            asteroid->Deserialize(serializer, sba_BrickManager->GetBrickArray(), *sba_World);
-            this->m_Asteroids.push_back(asteroid);
-            serializer.Close();
-        }
+
+        if (!sba_Map->GetMapData(this->m_Asteroids)) //Map doesn't exist!! we end here
+            this->m_EndTime = -1000;
+
         this->m_TimeLimit = 5.0f;
         this->m_EndTime = 60.0f*this->m_TimeLimit; //seconds * Minutes
         sba_BrickManager->RebuildRenderInstances(); //Update RenderInstances
@@ -219,7 +225,7 @@ namespace sba
         this->m_TextureID = 0;
 
         #ifdef Skybox
-            this->m_pSkyBox = new PuRe_SkyBox(graphics, "../data/textures/cube/");
+            this->m_pSkyBox = new PuRe_SkyBox(graphics, sba_Map->GetSkybox());
         #endif
 
             if (sba_Network->IsConnected())

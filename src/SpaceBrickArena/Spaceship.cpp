@@ -151,9 +151,9 @@ namespace sba
             if (this->m_Respawn < 0.0f)
             {
                 this->m_Respawn = 0.0f;
-                float x = (float)(std::rand() % 100);
-                float y = (float)(std::rand() % 100);
-                float z = (float)(std::rand() % 100);
+                float x = (this->m_pBricks.size() % 10) * 10.0f;
+                float y = (this->m_pBricks.size() % 5) * 10.0f;
+                float z = (this->m_pBricks.size() % 8) * 10.0f;
                 this->m_pBody->setPosition(ong::vec3(x, y, z));
                 this->m_Life = this->m_MaxLife;
             }

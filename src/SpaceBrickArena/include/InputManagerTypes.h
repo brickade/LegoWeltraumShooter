@@ -110,7 +110,8 @@ namespace sba
                 EditorMoveBrick,
                 EditorChooseElement,
                 Navigate,
-                LAST = Navigate
+                GameMove,
+                LAST = GameMove
             };
         };
 
@@ -120,7 +121,10 @@ namespace sba
             {
                 EditorCameraZoom,
                 EditorColorSlider,
-                LAST = EditorColorSlider
+                GameShoot,
+                GameThrust,
+                GameSpin,
+                LAST = GameSpin
             };
         };
 
@@ -144,6 +148,8 @@ namespace sba
                 EditorFadeColors,
                 NaviagtionSelect,
                 NavigationBack,
+                GameShoot,
+                GameThrust,
                 Exit,
                 LAST = Exit
             };

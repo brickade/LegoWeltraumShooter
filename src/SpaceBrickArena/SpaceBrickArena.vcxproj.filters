@@ -93,6 +93,9 @@
     <ClCompile Include="Game_Network.cpp">
       <Filter>Game</Filter>
     </ClCompile>
+    <ClCompile Include="GameMap.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Space.h" />
@@ -192,6 +195,9 @@
     </ClInclude>
     <ClInclude Include="include\Game_Network.h">
       <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GameMap.h">
+      <Filter>Utilities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

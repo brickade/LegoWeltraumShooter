@@ -14,6 +14,7 @@ namespace sba
         this->BrickManager = new sba::CBrickManager("../data/bricks/");
         this->ShipManager = new sba::CShipManager("../data/ships/");
         this->m_pNetworkhandler = new sba::CNetworkHandler();
+        this->m_pMap = new sba::CGameMap();
     }
 
     // **************************************************************************
@@ -26,6 +27,7 @@ namespace sba
             SAFE_DELETE(this->m_Players[i]);
         }
         this->m_Players.clear();
+        SAFE_DELETE(this->m_pMap);
         SAFE_DELETE(this->Renderer);
         SAFE_DELETE(this->m_SSAOMaterial);
         SAFE_DELETE(this->ShipManager);

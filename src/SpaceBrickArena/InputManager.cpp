@@ -36,6 +36,16 @@ namespace sba
     {
         //Direction
         memset(&this->m_pDirectionMapping, 0, sizeof(this->m_pDirectionMapping));
+        this->m_pDirectionMapping[Input::EDirection::GameMove] =
+        {
+            Input::EGamepadDirection::RightThumb,
+            {
+                Input::EKeyboardDirection::Mouse,
+                Input::EKeyboardDirection::ArrowKeys,
+                Input::EKeyboardDirection::ArrowKeys,
+                Input::EKeyboardDirection::ArrowKeys
+            }
+        };
         this->m_pDirectionMapping[Input::EDirection::Navigate] =
         {
             Input::EGamepadDirection::LeftThumb,
@@ -97,6 +107,36 @@ namespace sba
                 Input::EKeyboardAxis::RF,
                 Input::EKeyboardAxis::RF,
                 Input::EKeyboardAxis::RF
+            }
+        };
+        this->m_pAxisMapping[Input::EAxis::GameShoot] =
+        {
+            Input::EGamepadAxis::RightTrigger,
+            {
+                Input::EKeyboardAxis::MouseScroll,
+                Input::EKeyboardAxis::MouseScroll,
+                Input::EKeyboardAxis::MouseScroll,
+                Input::EKeyboardAxis::MouseScroll
+            }
+        };
+        this->m_pAxisMapping[Input::EAxis::GameThrust] =
+        {
+            Input::EGamepadAxis::LeftThumbY,
+            {
+                Input::EKeyboardAxis::WS,
+                Input::EKeyboardAxis::ArrowUD,
+                Input::EKeyboardAxis::ArrowUD,
+                Input::EKeyboardAxis::ArrowUD
+            }
+        };
+        this->m_pAxisMapping[Input::EAxis::GameSpin] =
+        {
+            Input::EGamepadAxis::LeftThumbX,
+            {
+                Input::EKeyboardAxis::AD,
+                Input::EKeyboardAxis::ArrowUD,
+                Input::EKeyboardAxis::ArrowUD,
+                Input::EKeyboardAxis::ArrowUD
             }
         };
 
@@ -260,6 +300,26 @@ namespace sba
                 Input::EKeyboardButton::Backspace,
                 Input::EKeyboardButton::Backspace,
                 Input::EKeyboardButton::Backspace
+            }
+        };
+        this->m_pButtonMapping[Input::EButton::GameShoot] =
+        {
+            Input::EGamepadButton::Pad_A,
+            {
+                Input::EKeyboardButton::MouseLeft,
+                Input::EKeyboardButton::MouseLeft,
+                Input::EKeyboardButton::MouseLeft,
+                Input::EKeyboardButton::MouseLeft
+            }
+        };
+        this->m_pButtonMapping[Input::EButton::GameThrust] =
+        {
+            Input::EGamepadButton::DPAD_Up,
+            {
+                Input::EKeyboardButton::W,
+                Input::EKeyboardButton::W,
+                Input::EKeyboardButton::W,
+                Input::EKeyboardButton::W
             }
         };
         this->m_pButtonMapping[Input::EButton::Exit] =
