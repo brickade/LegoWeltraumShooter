@@ -13,6 +13,7 @@
 #include "INIReader.h"
 #include "Player.h"
 #include "NetworkHandler.h"
+#include "GameMap.h"
 
 namespace sba
 {
@@ -41,6 +42,7 @@ namespace sba
         PuRe_Sprite* m_pNoiseTexture;
         std::vector<SPlayer*> m_Players;
         CNetworkHandler* m_pNetworkhandler;
+        CGameMap* m_pMap;
 
     private:
         static Space* g_pInstance;
@@ -70,6 +72,7 @@ namespace sba
 
 #define sba_Players sba::Space::Instance()->m_Players
 #define sba_Network sba::Space::Instance()->m_pNetworkhandler
+#define sba_Map sba::Space::Instance()->m_pMap
 
 #define sba_World sba::Space::Instance()->World
 #define sba_Renderer sba::Space::Instance()->Renderer

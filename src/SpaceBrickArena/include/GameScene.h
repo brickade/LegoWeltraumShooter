@@ -14,59 +14,38 @@
 #include <mutex>
 
 #include "GameCamera.h"
-#include "Minimap.h"
 #include "NetworkHandler.h"
 #include "Asteroid.h"
+#include "Game_UI.h"
+#include "Game_Network.h"
 
 // Declare namespace Game
 namespace sba
 {
 
-    //#define Skybox
-
-    enum { BufferSize = 32 };
-    struct PlayOutBuffer
-    {
-        int Frame;
-        sba::SInputData Inputs[sba::MaxPlayers]; //frame saved in here
-    };
-    struct GotBuffer
-    {
-        bool Player[sba::MaxPlayers];
-    };
     /// @brief MainScene where the game functions are in, inherits from the Scene interface
     ///
     class CGameScene : public PuRe_IScene
     {
     private:
-        
+        int m_Test;
+        CGameNetwork* m_pNetwork;
+        //Determinate who won and save him even when others are still playing
         bool m_Won;
         int m_WonID;
         int m_WonIndex;
+        //End time
         float m_TimeLimit;
-
         float m_EndTime;
-        int m_Test;
-        float m_Timeout;
-        bool m_Run;
-        std::mutex m_Mutex;
-        //host only
-        unsigned int m_numReceived[BufferSize];
-        GotBuffer m_numGot[BufferSize];
-        bool m_send[BufferSize];
-        //All players
-        PlayOutBuffer m_buffer[BufferSize];
-        sba::SInputPacket m_inputs[sba::Delay];
         //used for networking
-        float m_PhysicTime;
-        int m_ID;
         int m_LocalPlayers;
-        int m_PhysicFrame;
         //multiple players
         PuRe_Camera* m_pUICam;
         //whether we are still in menu or not
-        bool gameStart;
         int m_TextureID;
+
+        //Game UI
+        CGUI* m_pUI;
 
         PuRe_Font* m_pFont;
         PuRe_PointLight* m_pPointLight;
@@ -79,7 +58,6 @@ namespace sba
         PuRe_IMaterial* m_pPointLightMaterial;
         PuRe_IMaterial* m_pDirectionalLightMaterial;
         PuRe_IMaterial* m_pParticleMaterial;
-        CMinimap* m_pMinimap;
         PuRe_Sprite* m_pParticleSprite;
 
         std::vector<PuRe_ParticleEmitter*> m_Emitters;
@@ -96,10 +74,10 @@ namespace sba
     public:
         /// @brief Handle Input Data
         ///
-        sba::SInputData HandleInput(int a_PlayerIdx);
+        static sba::SInputData HandleInput(int a_PlayerIdx, PuRe_IInput* a_pInput);
         /// @brief Process Input Data
         ///
-        void ProcessInput(SPlayer* a_pPlayer, sba::SInputData* a_Input, float a_DeltaTime);
+        static void ProcessInput(std::vector<CBullet*>& a_rBullets, SPlayer* a_pPlayer, sba::SInputData* a_Input, float a_DeltaTime);
         /// @brief Handle Local Data
         ///
         void HandleLocal();

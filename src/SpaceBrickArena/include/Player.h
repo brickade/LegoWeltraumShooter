@@ -16,6 +16,7 @@ namespace sba
         SOCKET NetworkInformation;
         bool Timeout;
         int m_Points;
+        float m_ShootCooldown;
         CSpaceship* Ship;
     };
 }

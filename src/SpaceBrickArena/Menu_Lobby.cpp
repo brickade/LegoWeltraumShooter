@@ -5,9 +5,10 @@ namespace Menu
 
     CLobby::CLobby(PuRe_IWindow* a_pWindow) : m_pWindow(a_pWindow)
     {
-        this->m_pNavigation = new sba::CNavigation(1, 1);
+        this->m_pNavigation = new sba::CNavigation(1, 2);
         this->m_GameEnd = false;
         this->m_Start = false;
+        this->m_Focus = false;
     }
 
     CLobby::~CLobby()
@@ -110,6 +111,7 @@ namespace Menu
                         iam.Head.Type = sba::EPacket::IAm;
                         iam.ID = ID;
                         iam.Pad = 0;
+                        memcpy(iam.Map, sba_Map->GetName().c_str(), sba::MaxName);
                         sba_Network->Send((char*)&iam, sizeof(sba::SIamPacket), s, true);
                         printf("IAm Packet send to ID %i!\n",ID);
 
@@ -187,7 +189,14 @@ namespace Menu
             {
                 sba::SReceivePacket* rpacket = (sba::SReceivePacket*)buffer2;
                 packetSize = 0;
-                if (rpacket->Head.Type == sba::EPacket::Left&&leftData >= sizeof(sba::SLeftPacket))
+                if (rpacket->Head.Type == sba::EPacket::Map&&leftData >= sizeof(sba::SMapPacket))
+                {
+                    sba::SMapPacket* smap = (sba::SMapPacket*)rpacket;
+                    printf("Map changed to %s!\n",smap->Name);
+                    sba_Map->SetMap(smap->Name);
+                    packetSize = sizeof(sba::SMapPacket);
+                }
+                else if (rpacket->Head.Type == sba::EPacket::Left&&leftData >= sizeof(sba::SLeftPacket))
                 {
                     sba::SLeftPacket* sleft = (sba::SLeftPacket*)rpacket;
                     printf("%i left\n",sleft->Who);
@@ -354,6 +363,9 @@ namespace Menu
                 {
                     //Data received for clients only when the Server accepted him
                     sba::SIamPacket* iam = (sba::SIamPacket*)rpacket;
+
+                    sba_Map->SetMap(iam->Map);
+
                     printf("Got who I am: %i!\n", iam->ID);
                     sba::SPlayer* p;
                     sba_Space->CreatePlayer(iam->Pad, this->m_pWindow);
@@ -456,7 +468,95 @@ namespace Menu
             this->m_Threads.clear();
             return 2;
         }
-        this->m_pNavigation->Update(*a_pTimer, sba_Input->Direction(sba_Direction::Navigate, a_PlayerIdx));
+        PuRe_Vector2F Navigate = sba_Input->Direction(sba_Direction::Navigate, a_PlayerIdx);
+
+        if (!this->m_Focus)
+            this->m_pNavigation->Update(*a_pTimer, Navigate);
+
+        if (this->m_pNavigation->GetFocusedElementId() == 1&&this->m_Focus)
+        {
+            bool canchange = true;
+            if (sba_Network->IsConnected())
+                if (!sba_Network->GetHost())
+                    canchange = false;
+            if (canchange)
+            {
+                bool leftPress = false;
+                bool rightPress = false;
+                if (Navigate.X > 0.5f)
+                    rightPress = true;
+                else if (Navigate.X < -0.5f)
+                    leftPress = true;
+                if (leftPress||rightPress)
+                {
+                    std::string file = a_pWindow->GetFileAtIndex(0, "../data/maps/");
+                    std::string lastFile = file;
+                    std::string working = sba_Map->GetName();
+                    bool found = false;
+                    bool right = false;
+                    int s = 0;
+                    //aslong as the file is not right
+                    while (!right)
+                    {
+                        if (!found&&file == working+".map")
+                            found = true; //current one found
+                        else if (found)
+                        {
+                            //if he has been found
+                            if (file.substr(file.find_last_of(".") + 1) == "map")
+                            {
+                                //this is a map, take it!
+                                working = file.substr(0, file.find_last_of("."));
+                                break;
+                            }
+                        }
+                        if (!found || rightPress)
+                            s++;
+                        else if (leftPress)
+                            s--;
+                        if (s >= 0)
+                            file = a_pWindow->GetFileAtIndex(s, "../data/maps/");
+                        if (s < 0 || lastFile == file)
+                        {
+                            file = working;
+                            break;
+                        }
+                        else
+                            lastFile = file;
+                    }
+                    sba_Map->SetMap(working.c_str());
+                    if (sba_Network->IsConnected())
+                    {
+                        sba::SMapPacket mp;
+                        memset(&mp, 0, sizeof(sba::SMapPacket));
+                        mp.Head.Type = sba::EPacket::Map;
+                        memcpy(mp.Name, working.c_str(), sizeof(char)*working.length());
+                        std::vector<SOCKET> sendSockets; //to who we already send it
+                        for (unsigned int m = 0; m < sba_Players.size(); m++)
+                        {
+                            if (sba_Players[m]->PadID == -1)
+                            {
+                                bool send = false;
+                                for (unsigned n = 0; n < sendSockets.size(); n++)
+                                {
+                                    if (sba_Players[m]->NetworkInformation == sendSockets[n])
+                                    {
+                                        send = true;
+                                        break;
+                                    }
+                                }
+                                if (!send)
+                                {
+                                    sba_Network->Send((char*)&mp, sizeof(sba::SMapPacket), sba_Players[m]->NetworkInformation, true);
+                                    sendSockets.push_back(sba_Players[m]->NetworkInformation);
+                                }
+                            }
+                        }
+                        sendSockets.clear();
+                    }
+                }
+            }
+        }
         if (sba_Input->ButtonPressed(sba_Button::NaviagtionSelect, a_PlayerIdx))
         {
             switch (this->m_pNavigation->GetFocusedElementId())
@@ -503,7 +603,16 @@ namespace Menu
                         this->m_Start = true;
                 }
                 break;
-            case 1: //Back
+            case 1: //Map
+                if (sba_Network->IsConnected())
+                {
+                    if (sba_Network->GetHost())
+                        this->m_Focus = true;
+                }
+                else
+                    this->m_Focus = true;
+                break;
+            case 2: //Back
                 if (sba_Network->IsConnected())
                 {
                     sba_Network->m_Mutex.lock();
@@ -543,6 +652,8 @@ namespace Menu
                 break;
             }
         }
+        else if (sba_Input->ButtonPressed(sba_Button::NavigationBack, a_PlayerIdx))
+            this->m_Focus = false;
 
         for (int i = 1; i < 4; i++)
         {
@@ -735,7 +846,7 @@ namespace Menu
                             //aslong as the file is not right
                             while (!right)
                             {
-                                if (!found&&file.substr(0, file.find_last_of(".")) == p->Ship->GetName())
+                                if (!found&&file == p->Ship->GetName()+".ship")
                                 {
                                     //if he has not been found and the file is the current one
                                     working = file;
@@ -864,6 +975,21 @@ namespace Menu
         a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "Start", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(36.0f, 36.0f, 0.0f), 32.0f, color);
 
         if (this->m_pNavigation->GetFocusedElementId() == 1)
+            color = PuRe_Color(1.0f, 0.0f, 0.0f);
+        else
+            color = PuRe_Color(1.0f, 1.0f, 1.0f);
+        Position.Y -= 100.0f;
+        a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "Map: ", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(36.0f, 36.0f, 0.0f), 32.0f, color);
+        Position.X += 200.0f;
+        if (this->m_pNavigation->GetFocusedElementId() == 1&&this->m_Focus)
+            color = PuRe_Color(1.0f, 0.0f, 0.0f);
+        else
+            color = PuRe_Color(1.0f, 1.0f, 1.0f);
+        a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, sba_Map->GetName().c_str(), Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(36.0f, 36.0f, 0.0f), 32.0f, color);
+
+        Position.Y = 100.0f;
+        Position.X = 100.0f;
+        if (this->m_pNavigation->GetFocusedElementId() == 2)
             color = PuRe_Color(1.0f, 0.0f, 0.0f);
         else
             color = PuRe_Color(1.0f, 1.0f, 1.0f);

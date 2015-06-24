@@ -20,6 +20,7 @@ namespace Menu
         std::vector<std::thread*> m_Threads;
         PuRe_IWindow* m_pWindow;
         bool m_GameEnd;
+        bool m_Focus;
     public:
         /// @brief Constructor
         ///

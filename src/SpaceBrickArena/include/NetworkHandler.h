@@ -14,7 +14,7 @@ namespace sba
 {
     enum { MaxPlayers = 10, Delay = 10, BroadcastPort =13370, MaxName=12, MaxLength=15, MaxBricks=100};
 
-    enum EPacket { Broadcast, Join, User, IAm,WhoamI, Left,LobbyEnd,Brick,Start,Init, STick, CTick };
+    enum EPacket { Broadcast, Join, User, IAm,WhoamI, Left,LobbyEnd,Brick,Start,Init,Map, STick, CTick };
 
     /// @brief Struct which handles the Input one Player does
     ///
@@ -42,6 +42,14 @@ namespace sba
         SHeadPacket Head;
         char* Buffer;
     };
+    /// @brief Map packet
+    ///
+    struct SMapPacket
+    {
+        SHeadPacket Head;
+        char Name[MaxName];
+
+    };
     /// @brief Packet send over broadcast
     ///
     struct SBroadcastPacket
@@ -66,6 +74,7 @@ namespace sba
         SHeadPacket Head;
         int ID;
         int Pad;
+        char Map[MaxName];
     };
     /// @brief UserData's packet
     ///
