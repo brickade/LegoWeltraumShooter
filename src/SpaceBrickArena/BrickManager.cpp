@@ -35,15 +35,17 @@ namespace sba
         std::string file = sba_Application->GetWindow()->GetFileAtIndex(i, this->m_FolderPath.c_str());
         while (file != "")
         {
-            TheBrick::CBrick* brick = new TheBrick::CBrick(*this->GetBrickMaterial());
-            file.insert(0, this->m_FolderPath);
-            
-            serializer->OpenRead(file.c_str());
-            brick->Deserialize(*serializer, *sba_Application->GetGraphics(), *sba_World);
-            serializer->Close();
-            
-            this->m_bricks[brick->GetBrickId()] = brick;
-            
+            if (file.substr(file.find_last_of(".")) == ".brick")
+            {
+                TheBrick::CBrick* brick = new TheBrick::CBrick(*this->GetBrickMaterial());
+                file.insert(0, this->m_FolderPath);
+
+                serializer->OpenRead(file.c_str());
+                brick->Deserialize(*serializer, *sba_Application->GetGraphics(), *sba_World);
+                serializer->Close();
+
+                this->m_bricks[brick->GetBrickId()] = brick;
+            }
             i++;
             file = sba_Application->GetWindow()->GetFileAtIndex(i, this->m_FolderPath.c_str());
         }
