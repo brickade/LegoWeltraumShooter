@@ -415,13 +415,13 @@ namespace sba
     {
         Input::SAxisMapping& mapping = this->m_pAxisMapping[a_Axis];
         float result = 0;
-        switch (a_Axis)
+        /*switch (a_Axis)
         {
-        default:
+        default:*/
             result += this->GetGamepadAxis(mapping.Gamepad, a_PlayerIndex, a_GamepadThreshold);
             result += this->GetKeyboardAxis(mapping.Keyboard[a_PlayerIndex]);
-            break;
-        }
+            /*break;
+        }*/
         return result;
     }
 
@@ -430,7 +430,9 @@ namespace sba
     bool CInputManager::ButtonPressed(Input::EButton::Type a_Button, int a_PlayerIndex)
     {
         Input::SButtonMapping& mapping = this->m_pButtonMapping[a_Button];
-        return this->GetGamepadButtonPressed(mapping.Gamepad, a_PlayerIndex) + this->GetKeyboardButtonPressed(mapping.Keyboard[a_PlayerIndex]);
+        bool gamepad = this->GetGamepadButtonPressed(mapping.Gamepad, a_PlayerIndex);
+        bool keyboard = this->GetKeyboardButtonPressed(mapping.Keyboard[a_PlayerIndex]);
+        return gamepad | keyboard;
     }
 
     // **************************************************************************
@@ -438,7 +440,9 @@ namespace sba
     bool CInputManager::ButtonIsPressed(Input::EButton::Type a_Button, int a_PlayerIndex)
     {
         Input::SButtonMapping& mapping = this->m_pButtonMapping[a_Button];
-        return this->GetGamepadButtonIsPressed(mapping.Gamepad, a_PlayerIndex) + this->GetKeyboardButtonIsPressed(mapping.Keyboard[a_PlayerIndex]);
+        bool gamepad = this->GetGamepadButtonIsPressed(mapping.Gamepad, a_PlayerIndex);
+        bool keyboard = this->GetKeyboardButtonIsPressed(mapping.Keyboard[a_PlayerIndex]);
+        return gamepad | keyboard;
     }
 
     // **************************************************************************
@@ -615,12 +619,12 @@ namespace sba
         }
         else
         {
-            switch (a_Button)
+            /*switch (a_Button)
             {
-            default:
+            default:*/
                 //Nothing added yet
                 result = false;
-            }
+            /*}*/
         }
         return this->CheckLastInputIsGamepad(result);
     }
@@ -666,12 +670,12 @@ namespace sba
         }
         else
         {
-            switch (a_Button)
+            /*switch (a_Button)
             {
-            default:
+            default:*/
                 //Nothing added yet
                 result = false;
-            }
+            /*}*/
         }
         return this->CheckLastInputIsGamepad(result);
     }

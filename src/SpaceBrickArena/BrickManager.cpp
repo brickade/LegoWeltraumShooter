@@ -91,16 +91,16 @@ namespace sba
             {
                 assert(false);
             }
-        #else
-            return *this->m_bricks[a_BrickId];
         #endif
+            return *this->m_bricks[a_BrickId];
+        
     }
 
     // **************************************************************************
     // **************************************************************************
     TheBrick::CBrick** CBrickManager::GetCategoryStart(int a_CategoryId)
     {
-#ifdef _DEBUG
+        #ifdef _DEBUG
             try //Bounds checking
             {
                 return &this->m_bricks.at(a_CategoryId * 100);
@@ -109,9 +109,8 @@ namespace sba
             {
                 assert(false);
             }
-        #else
-            return &this->m_bricks[a_CategoryId * 100];
         #endif
+            return &this->m_bricks[a_CategoryId * 100];
     }
 
     // **************************************************************************

@@ -2,7 +2,6 @@
 
 #include <algorithm>
 #include "TheBrick/BrickInstance.h"
-#include "include/Spaceship.h"
 #include "include/Space.h"
 #include "include/Editor_History.h"
 #include <TheBrick/Conversion.h>
@@ -88,7 +87,7 @@ namespace Editor
     void CWorker::Render(CShipHandler& a_rShipHandler)
     {
         sba::CSpaceship& ship = *a_rShipHandler.GetCurrentSpaceShip();
-        sba_Space->RenderFont(std::to_string(ship.m_pBricks.size()) + "/200 Bricks", PuRe_Vector2F(sba_Width - 300.0f, sba_Height - 50.0f), 18);
+        sba_Space->RenderFont(std::to_string(ship.m_pBricks.size()) + "/" + std::to_string(sba::CSpaceship::MAX_BRICK_COUNT) + " Bricks", PuRe_Vector2F(sba_Width - 300.0f, sba_Height - 50.0f), 18);
         sba_Space->RenderFont("Ship: " + ship.GetName(), PuRe_Vector2F(sba_Width / 2 - 200.0f, sba_Height - 50.0f), 18);
     }
 
@@ -134,7 +133,7 @@ namespace Editor
         this->m_currentPosition.X = PuRe_clamp(this->m_currentPosition.X, -this->m_maxBrickDistance, this->m_maxBrickDistance);
         this->m_currentPosition.Y = PuRe_clamp(this->m_currentPosition.Y, -this->m_maxBrickDistance, this->m_maxBrickDistance);
 
-        this->m_currentBrickPosition = PuRe_Vector2I(round(this->m_currentPosition.X), round(this->m_currentPosition.Y)); //Snap to grid
+        this->m_currentBrickPosition = PuRe_Vector2I((int)round(this->m_currentPosition.X), (int)round(this->m_currentPosition.Y)); //Snap to grid
     }
 
     // **************************************************************************
@@ -211,19 +210,19 @@ namespace Editor
                 if (CAssistant::MovementDeltaIsCollisionFree(*this->m_pCurrentBrick, *a_rShipHandler.GetCurrentSpaceShip(), hitDelta, TheBrick::CBrick::SEGMENT_HEIGHT, &maxCollisionFreeDelta))
                 { //CollisionFree
                     this->m_canPlaceHere = true;
-                    this->m_currentHeight = round((hitResultRayOrigins[i].y + maxCollisionFreeDelta.y + (brickTransform.p.y - hitResultRayOrigins[i].y)) / TheBrick::CBrick::SEGMENT_HEIGHT);
+                    this->m_currentHeight = (int)round((hitResultRayOrigins[i].y + maxCollisionFreeDelta.y + (brickTransform.p.y - hitResultRayOrigins[i].y)) / TheBrick::CBrick::SEGMENT_HEIGHT);
                     printf("Collision free: delta(%f, %f, %f)\n", maxCollisionFreeDelta.x, maxCollisionFreeDelta.y, maxCollisionFreeDelta.z);
                     return;
                 }
                 //Handle docking test success but not collision free
-                this->m_currentHeight = round((hitResultRayOrigins[i].y + maxCollisionFreeDelta.y + (brickTransform.p.y - hitResultRayOrigins[i].y)) / TheBrick::CBrick::SEGMENT_HEIGHT);
+                this->m_currentHeight = (int)round((hitResultRayOrigins[i].y + maxCollisionFreeDelta.y + (brickTransform.p.y - hitResultRayOrigins[i].y)) / TheBrick::CBrick::SEGMENT_HEIGHT);
                 printf("NOT Collision free: delta(%f, %f, %f)\n", maxCollisionFreeDelta.x, maxCollisionFreeDelta.y, maxCollisionFreeDelta.z);
                 return;
             }
         }
         //Can't dock
         printf("Can't dock\n");
-        this->m_currentHeight = round((hitResults[0].point.y + (brickTransform.p.y - hitResultRayOrigins[0].y)) / TheBrick::CBrick::SEGMENT_HEIGHT);
+        this->m_currentHeight = (int)round((hitResults[0].point.y + (brickTransform.p.y - hitResultRayOrigins[0].y)) / TheBrick::CBrick::SEGMENT_HEIGHT);
     }
 
     // **************************************************************************
@@ -285,7 +284,7 @@ namespace Editor
             return;
         }
 
-        if (sba_Input->ButtonPressed(sba_Button::EditorPlaceBrick, this->m_playerIdx) && a_rShipHandler.GetCurrentSpaceShip()->m_pBricks.size() < 200)
+        if (sba_Input->ButtonPressed(sba_Button::EditorPlaceBrick, this->m_playerIdx) && a_rShipHandler.GetCurrentSpaceShip()->m_pBricks.size() < (size_t)sba::CSpaceship::MAX_BRICK_COUNT)
         { //Place BrickInstance
             this->m_pCurrentBrick->m_Color = this->m_currentBrickColor; //Apply right color
             this->m_pHistory->CutRedos();

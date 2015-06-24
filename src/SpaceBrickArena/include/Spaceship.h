@@ -17,6 +17,11 @@ namespace sba
 
     class CSpaceship : public TheBrick::CGameObject
     {
+    public:
+        static const int MAX_BRICK_COUNT;
+        static const int MAX_BRICK_WIDTH;
+        static const int MAX_BRICK_HEIGHT;
+
     private:
         ong::vec3 m_TargetVec;
         ong::vec3 m_TargetAng;

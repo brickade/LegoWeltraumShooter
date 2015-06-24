@@ -40,7 +40,7 @@ namespace Editor
     {
         for (int i = 0; i <= this->m_pNavigation->GetLastElementId(); i++)
         {
-            PuRe_Vector2F listPos = PuRe_Vector2F(i % this->m_pNavigation->GetElementsCountPerLine(), floor(i / this->m_pNavigation->GetElementsCountPerLine()));
+            PuRe_Vector2F listPos = PuRe_Vector2F((float)(i % this->m_pNavigation->GetElementsCountPerLine()), floorf(i / (float)this->m_pNavigation->GetElementsCountPerLine()));
             PuRe_Vector3F pos = PuRe_Vector3F(this->m_ListStart + this->m_ListStep * listPos, 0);
             pos.Y = a_pGraphics.GetDescription().ResolutionHeight - pos.Y; //Invert Y
             pos.X -= (1.0f - a_Visibility) * (this->m_pNavigation->GetElementsCountPerLine() * this->m_ListStep.X + this->m_ListStart.X);
@@ -65,7 +65,7 @@ namespace Editor
     // **************************************************************************
     void CBrickCategory::RenderTab(PuRe_IGraphics& a_pGraphics, float a_TabRotation, bool a_IsSelected, float a_Visibility)
     {
-        PuRe_Vector3F pos = PuRe_Vector3F(this->m_TabStart + this->m_TabStep * this->m_Id, 0);
+        PuRe_Vector3F pos = PuRe_Vector3F(this->m_TabStart + this->m_TabStep * (float)this->m_Id, 0);
         pos.Y = a_pGraphics.GetDescription().ResolutionHeight - pos.Y; //Invert Y
         pos.X -= (1.0f - a_Visibility) * (this->m_pNavigation->GetElementsCountPerLine() * this->m_ListStep.X + this->m_ListStart.X);
 

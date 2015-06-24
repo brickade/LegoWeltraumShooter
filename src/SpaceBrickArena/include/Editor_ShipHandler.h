@@ -10,9 +10,13 @@
 
 #include "include/Space.h"
 
-namespace TheBrick
+namespace sba
 {
     class CSpaceship;
+}
+
+namespace TheBrick
+{
     class CBrickInstance;
 }
 

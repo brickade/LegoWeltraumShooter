@@ -564,7 +564,7 @@ namespace Content
 						if (other->getUserData() == &SELECTED)
 						{
 							std::vector<ong::vec3>* hullPoints = (std::vector<ong::vec3>*)userData;
-							for (int i = 0; i < hullPoints->size(); ++i)
+							for (size_t i = 0; i < hullPoints->size(); ++i)
 							{
 								if ((*hullPoints)[i] == other->getTransform().p)
 								{

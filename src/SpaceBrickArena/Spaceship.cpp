@@ -8,6 +8,10 @@
 
 namespace sba
 {
+    const int CSpaceship::MAX_BRICK_COUNT = 200;
+    const int CSpaceship::MAX_BRICK_WIDTH = 20;
+    const int CSpaceship::MAX_BRICK_HEIGHT = 15 * 3;
+
     // **************************************************************************
     // **************************************************************************
     CSpaceship::CSpaceship(ong::World& a_rWorld,std::string a_Name) : CGameObject(a_rWorld, nullptr)
@@ -42,9 +46,9 @@ namespace sba
         {
             CSpaceship* oship = static_cast<CSpaceship*>(object);
             if (oship->m_Respawn == 0.0f)
-                oship->m_Life -= 10.0f;
+                oship->m_Life -= 10;
             if (Ship->m_Respawn == 0.0f)
-                Ship->m_Life -= 10.0f;
+                Ship->m_Life -= 10;
 
             ong::vec3 diff = oship->m_pBody->getWorldCenter() - Ship->m_pBody->getWorldCenter(); //from oship to ship
             ong::vec3 impactVector = contact->manifold.normal;
