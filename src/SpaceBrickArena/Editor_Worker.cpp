@@ -88,7 +88,7 @@ namespace Editor
     void CWorker::Render(CShipHandler& a_rShipHandler)
     {
         sba::CSpaceship& ship = *a_rShipHandler.GetCurrentSpaceShip();
-        sba_Space->RenderFont(std::to_string(ship.m_pBricks.size()) + "/100 Bricks", PuRe_Vector2F(sba_Width - 300.0f, sba_Height - 50.0f), 18);
+        sba_Space->RenderFont(std::to_string(ship.m_pBricks.size()) + "/200 Bricks", PuRe_Vector2F(sba_Width - 300.0f, sba_Height - 50.0f), 18);
         sba_Space->RenderFont("Ship: " + ship.GetName(), PuRe_Vector2F(sba_Width / 2 - 200.0f, sba_Height - 50.0f), 18);
     }
 
@@ -285,7 +285,7 @@ namespace Editor
             return;
         }
 
-        if (sba_Input->ButtonPressed(sba_Button::EditorPlaceBrick, this->m_playerIdx) && a_rShipHandler.GetCurrentSpaceShip()->m_pBricks.size() < 100)
+        if (sba_Input->ButtonPressed(sba_Button::EditorPlaceBrick, this->m_playerIdx) && a_rShipHandler.GetCurrentSpaceShip()->m_pBricks.size() < 200)
         { //Place BrickInstance
             this->m_pCurrentBrick->m_Color = this->m_currentBrickColor; //Apply right color
             this->m_pHistory->CutRedos();
