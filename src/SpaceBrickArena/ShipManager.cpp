@@ -193,10 +193,33 @@ namespace sba
     // **************************************************************************
     PuRe_Sprite* CShipManager::GetSpriteFromShip(sba::CSpaceship& a_rShip) const
     {   
+        struct local
+        {
+            static void SetRes(int x, int y)
+            {
+                PuRe_Renderer& renderer = *sba_Renderer;
+                PuRe_Vector2I size = PuRe_Vector2I(x, y);
+                sba_Application->GetGraphics()->ChangeResolution(size);
+
+                renderer.DeleteTargets();
+                for (int i = 0; i < 3; i++)
+                {
+                    renderer.AddTarget(size);
+                }
+                if (true) //TODO: Muss hier aus Options wissen ob SSAO gesetzt ist
+                {
+                    renderer.SetSSAO(0, sba::Space::Instance()->m_SSAOMaterial, sba::Space::Instance()->m_pNoiseTexture);
+                    renderer.SetSSAO(1, sba::Space::Instance()->m_SSAOMaterial, sba::Space::Instance()->m_pNoiseTexture);
+                }
+            }
+        };
+        local::SetRes(960, 540);
         sba_BrickManager->RebuildRenderInstances();
         Editor::CEditorScene::PreRender(this->m_pDirectionalLight, this->m_pDirectionalLightMaterial, nullptr, nullptr);
         sba_BrickManager->Render();
         Editor::CEditorScene::PostRender(this->m_pCamera, nullptr, this->m_pPostMaterial);
-        return new PuRe_Sprite(sba_Application->GetGraphics(), sba_Renderer->GetTexture(0, 0), true);
+        PuRe_Sprite* sprite = new PuRe_Sprite(sba_Application->GetGraphics(), sba_Renderer->GetTexture(0, 0), true);
+        local::SetRes(1920, 1080);
+        return sprite;
     }
 }
