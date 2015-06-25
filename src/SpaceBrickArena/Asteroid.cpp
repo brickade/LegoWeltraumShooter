@@ -7,10 +7,12 @@ namespace sba
 {
     // **************************************************************************
     // **************************************************************************
-    CAsteroid::CAsteroid(ong::World& a_rWorld, ong::vec3 a_Position) : CGameObject(a_rWorld, nullptr)
+    CAsteroid::CAsteroid(ong::World& a_rWorld, ong::vec3 a_Position, ong::vec3 a_Velocity, ong::vec3 a_Rotation) : CGameObject(a_rWorld, nullptr)
     {
         this->m_Type = TheBrick::EGameObjectType::Object;
         this->m_pBody->setPosition(a_Position);
+        this->m_pBody->applyImpulse(a_Velocity);
+        this->m_pBody->applyAngularImpulse(a_Rotation);
     }
 
     // **************************************************************************

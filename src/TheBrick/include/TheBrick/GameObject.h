@@ -14,7 +14,7 @@ namespace TheBrick
 {
     class CBrickInstance;
     class CSerializer;
-    enum EGameObjectType {Ship, Bullet, Object};
+    enum EGameObjectType {Ship, Bullet, Object, Item};
     class CGameObject
     {
     public:

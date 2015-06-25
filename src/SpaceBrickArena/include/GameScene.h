@@ -9,13 +9,10 @@
 
 #include "Space.h"
 
-#include <math.h>
-#include <algorithm>
-#include <mutex>
-
 #include "GameCamera.h"
 #include "NetworkHandler.h"
 #include "Asteroid.h"
+#include "Item.h"
 #include "Game_UI.h"
 #include "Game_Network.h"
 
@@ -64,6 +61,7 @@ namespace sba
         std::vector<CGameCamera*> m_Cameras;
         std::vector<sba::CBullet*> m_Bullets;
         std::vector<sba::CAsteroid*> m_Asteroids;
+        std::vector<sba::CItem*> m_Items;
         /// @brief Engine's Application
         ///
         PuRe_Application* m_pApplication;
@@ -78,6 +76,9 @@ namespace sba
         /// @brief Process Input Data
         ///
         static void ProcessInput(std::vector<CBullet*>& a_rBullets, SPlayer* a_pPlayer, sba::SInputData* a_Input, float a_DeltaTime);
+        /// @brief Update a Game
+        ///
+        static void UpdateGame(std::vector<CBullet*>& a_rBullets, std::vector<CItem*>& a_rItems, float a_Deltatime);
         /// @brief Handle Local Data
         ///
         void HandleLocal();

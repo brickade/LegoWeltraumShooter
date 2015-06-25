@@ -14,7 +14,7 @@ namespace sba
     class CAsteroid : public TheBrick::CGameObject
     {
     public:
-        CAsteroid(/*CBrickManager* a_pBrickManager, */ong::World& a_rWorld, ong::vec3 a_Position);
+        CAsteroid(ong::World& a_rWorld, ong::vec3 a_Position, ong::vec3 a_Velocity, ong::vec3 a_Rotation);
         ~CAsteroid();
 
         void Update(float a_DeltaTime) override;
