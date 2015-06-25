@@ -136,28 +136,28 @@ public:
 				if (dx >= 0 && dx < 4)
 				{
 					minX = dx, maxX = 3;
-					a->fulcrumX = minX;
-					b->fulcrumX = maxX;
+					a->fulcrumX = brick->pos[0] + maxX - 1.0f;
+					b->fulcrumX = brick2->pos[0] + minX - dx - 2.0;
 				}
 				else
 				{
 					minX = 0, maxX = 3 + dx;
-					a->fulcrumX = maxX;
-					b->fulcrumX = minX;
+					a->fulcrumX = brick->pos[0] + minX - 2.0f;
+					b->fulcrumX = brick2->pos[0] + maxX - dx - 1.0f;
 				}
 
 				int minZ = 0, maxZ = 0;
 				if (dz >= 0 && dz < 2)
 				{
 					minZ = dz, maxZ = 1;
-					a->fulcrumX = minZ;
-					b->fulcrumX = maxZ;
+					a->fulcrumZ = brick->pos[2] + maxZ - 0.0f;
+					b->fulcrumZ = brick2->pos[2] + minZ - dz - 1.0f;
 				}
 				else
 				{
 					minZ = 0, maxZ = 1 + dz;
-					a->fulcrumX = maxZ;
-					b->fulcrumX = minZ;
+					a->fulcrumZ = brick->pos[2] + minZ - 1.0f;
+					b->fulcrumZ = brick2->pos[2] + maxZ - dz - 0.0f;
 				}
 
 				a->brick = brick;
@@ -297,9 +297,264 @@ public:
 	}
 
 
+	bool checkFrontForConnection(Brick* brick, Brick* base, int tick, int selectionTick)
+	{
+		if (brick == base)
+			return true;
+
+		brick->lastVisited = tick;
+
+		for (int i = 0; i < brick->numConnections; ++i)
+		{
+			if (brick->connections[i].numStuds > 0 && brick->connections[i].other->brick->lastVisited != tick &&
+				brick->connections[i].other->brick->lastVisited != selectionTick)
+			{
+				if (checkFrontForConnection(brick->connections[i].other->brick, base, tick, selectionTick))
+				{
+					return true;
+				}
+			}
+		}
+
+		return false;
+	};
+
+
+	bool checkLeverage(vec3 _impulse, vec3 _pos, Brick* brick,  int axis)
+	{
+		std::vector<Brick*> selection;
+		std::vector<StudConnection*> front;
+
+		int tick = g_tick++;
+		Plane cmPlane = { normalize(_pos - m_body->getLocalCenter()), dot(normalize(_pos - m_body->getLocalCenter()), m_body->getLocalCenter()) };
+
+		bool destroy = false;
+
+		while (true)
+		{
+			int expansion = -2;
+			float minTorque = -FLT_MAX;
+			for (int f = (front.size() > 0 ? 0 : -1); f < front.size(); ++f)
+			{
+				Brick* newBrick = front[f]->other->brick;
+				if (f == -1)
+					newBrick = brick;
+
+
+				if (distPointFatPlane(transformVec3(newBrick->collider->getMassData().cm, newBrick->collider->getTransform()), cmPlane, FLT_EPSILON) <= 0.0f)
+					continue;
+
+
+				int tick = g_tick++;
+
+				for (int i = 0; i < selection.size(); ++i)
+				{
+					selection[i]->lastVisited = tick;
+				}
+
+				for (int j = 0; j < newBrick->numConnections; ++j)
+				{
+					if (newBrick->connections[j].numStuds > 0 && newBrick->connections[j].other->brick->lastVisited != tick)
+						front.push_back(newBrick->connections + j);
+				}
+
+
+				Brick* base = m_base;
+				if (newBrick == m_base)
+				{
+					for (int i = 0; i < newBrick->numConnections; ++i)
+					{
+						if (newBrick->connections[i].numStuds > 0 && newBrick->connections[i].other->brick->lastVisited != tick)
+						{
+							base = newBrick->connections[i].other->brick;
+							break;
+						}
+					}
+				}
+
+
+
+
+				for (int i = 0; i < front.size(); ++i)
+				{
+					if (!checkFrontForConnection(front[i]->other->brick, base, g_tick++, tick))
+					{
+						front[i]->other->brick->lastVisited = tick;
+					}
+				}
+
+
+				for (int i = 0; i < front.size(); ++i)
+				{
+
+					float studTorque = 0;
+
+					Stud* stud = nullptr;
+					float fulcrum;
+					bool blocked = false;
+					
+					if ((_impulse.y < 0 ? StudConnection::DOWN : StudConnection::UP) != front[i]->type)
+					{
+						fulcrum = front[i]->fulcrumX;
+
+						if ((fulcrum > _pos.x && front[i]->brick->block[StudConnection::RIGHT])
+							|| (fulcrum < _pos.x && front[i]->brick->block[StudConnection::LEFT]))
+						{
+							blocked = true;
+						}
+					}
+					else
+					{
+						fulcrum = front[i]->other->fulcrumX;
+						if ((fulcrum > _pos.x && front[i]->other->brick->block[StudConnection::LEFT]) ||
+							(fulcrum < _pos.x && front[i]->other->brick->block[StudConnection::RIGHT]))
+						{
+							blocked = true;
+						}
+					}
+
+
+					// check torques around frustrums
+					float y = front[i]->studs[0].y;
+					float torque = cross(vec3(_pos.x - fulcrum, _pos.y - y, 0), _impulse).z;
+
+					float dx = torque > 0 ? 1 : -1;
+
+					if (blocked)
+						studTorque += -dx * 100.0f * STUD_STRENGTH;
+
+
+					for (int j = 0; j < front.size(); ++j)
+					{
+						// front which we currently try to expand
+						if (j == f || front[j]->other->brick == newBrick || front[j]->other->brick->lastVisited == tick)
+							continue;
+
+						if (front[j]->type == StudConnection::UP)
+						{
+							blocked = true;
+							break;
+						}
+
+						for (int k = 0; k < front[j]->numStuds; ++k)
+						{
+							Stud* stud = front[j]->studs + k;
+							float tX = cross(vec3(stud->x - fulcrum, stud->y - y, 0), vec3(0, -STUD_STRENGTH, 0)).z;
+							// if torque stud and torque impact point in the same direction not valid fulcrum
+							if (torque* tX > 0)
+							{
+								blocked = true;
+								studTorque += -dx * 100.0f * STUD_STRENGTH;
+								break;
+							}
+							else
+							{
+								studTorque += tX;
+							}
+						}
+					}
+
+
+					float torqueDiff = dx*(torque + studTorque);
+					if (torqueDiff > 0 && !blocked)
+					{
+						destroy = true;
+						break;
+					}
+
+					if (torqueDiff > minTorque)
+					{
+						expansion = f;
+						minTorque = torqueDiff;
+					}
+				}
+
+				for (int j = 0; j < newBrick->numConnections; ++j)
+				{
+					if (newBrick->connections[j].numStuds > 0 && newBrick->connections[j].other->brick->lastVisited != tick)
+						front.pop_back();
+				}
+
+				if (destroy)
+					break;
+			}
+
+			if (expansion == -2)
+				return false;
+
+			Brick* newBrick;
+			if (expansion == -1)
+			{
+				newBrick = brick;
+			}
+			else
+			{
+				newBrick = front[expansion]->other->brick;
+				front[expansion] = front.back();
+				front.pop_back();
+			}
+
+
+
+			if (newBrick == m_base)
+			{
+				for (int i = 0; i < newBrick->numConnections; ++i)
+				{
+					if (newBrick->connections[i].numStuds > 0 && newBrick->connections[i].other->brick->lastVisited != tick)
+					{
+						m_base = newBrick->connections[i].other->brick;
+						break;
+					}
+				}
+			}
+
+			assert(newBrick->lastVisited != tick);
+			newBrick->lastVisited = tick;
+			selection.push_back(newBrick);
+
+			for (int j = 0; j < newBrick->numConnections; ++j)
+			{
+				if (newBrick->connections[j].numStuds > 0 && newBrick->connections[j].other->brick->lastVisited != tick)
+				{
+					front.push_back(&newBrick->connections[j]);
+				}
+			}
+
+			for (int i = 0; i < front.size(); ++i)
+			{
+
+				if (!checkFrontForConnection(front[i]->other->brick, m_base, g_tick++, tick))
+				{
+					front[i]->other->brick->lastVisited = tick;
+					selection.push_back(front[i]->other->brick);
+
+					front[i] = front.back();
+					front.pop_back();
+					--i;
+				}
+
+			}
+
+			for (int i = 0; i < front.size(); ++i)
+			{
+
+				if (front[i]->other->brick->lastVisited == tick)
+				{
+					front[i] = front.back();
+					front.pop_back();
+					--i;
+				}
+			}
+
+			if (destroy)
+				return true;
+
+		}
+	}
+
+	static const float STUD_STRENGTH = 20.0f;
 	bool addImpulse(Brick* brick, vec3 pos, vec3 impulse)
 	{
-		static const float STUD_STRENGTH = 20.0f;
 		bool destroy = false;
 
 		//Transform t = invTransformTransform(invTransform(m_body->getTransform()), brick->collider->getTransform);
@@ -310,7 +565,6 @@ public:
 		std::vector<Brick*> selection;
 		std::vector<StudConnection*> front;
 		int tick = g_tick++;
-
 		int frontSize = 0;
 
 		selection.push_back(brick);
@@ -333,116 +587,75 @@ public:
 
 
 		// check for leverage x
-		float studTorque;
-		float fulcrumX;
-		float fulcrumY;
 		while (true)
 		{
-			// find fulcrum axis
-			// check for destruction
-			// get new brick which axis has the minimum torque increase
-			// add brick to front
-			// check for destruction
-			// ...
-
-			
-			// how to find fulcrum axis??
-			// if force down and connection down then other
-			// if force up and connection down then self
-			// if force down and connection up then self
-			// if force up and connection up then then other
-
-			float torque = cross(vec3(_pos.x - fulcrumX, _pos.y - fulcrumY, 0), _impulse).z;
-			
-			if (torque * (torque + studTorque) > 0)
+			int expansion = -1;
+			float minTorque = -FLT_MAX;
+			for (int f = 0; f < front.size(); ++f)
 			{
-				destroy = true;
-				break;
-			}
-			
-			float minTorque;
-			for (int i = 0; i < front.size(); ++i)
-			{
-				float _fulcrumX;
-				float _fulcrumY;
 
-				// get fulcrum axis
-				if ((impulse.y < 0 ? StudConnection::DOWN : StudConnection::UP) != front[i]->type)
-					_fulcrumX = front[i]->fulcrumX;
-				else
-					_fulcrumX = front[i]->other->fulcrumX;
-				_fulcrumY = front[i]->studs[0].y;
+				Brick* newBrick = front[f]->other->brick;
+				if (distPointFatPlane(transformVec3(newBrick->collider->getMassData().cm, newBrick->collider->getTransform()), cmPlane, FLT_EPSILON) <= 0.0f)
+					continue;
 
 
-
-
-				float sumTorque = 0;
-				for (int j = 0; j < front[i]->numStuds; ++j)
+				for (int j = 0; j < newBrick->numConnections; ++j)
 				{
-					Stud* stud = &front[i]->studs[j];
-					float torque = cross(vec3(stud->x - _fulcrumX, stud->y - _fulcrumY, 0), vec3(0, -STUD_STRENGTH, 0)).z;
-					if (torque)
+					if (newBrick->connections[j].numStuds > 0 && newBrick->connections[j].other->brick->lastVisited != tick)
+						front.push_back(newBrick->connections + j);
 				}
-				
-			}
 
 
-			// check for leverage x
-			for (int i = 0; i < front.size(); ++i)
-			{
-				for (int d = -1; d <= 1; d += 2)
+
+				for (int i = 0; i < front.size(); ++i)
 				{
+					float studTorque = 0;
 
 					Stud* stud = nullptr;
-					float max = -FLT_MAX;
-					for (int j = 0; j < front[i]->numStuds; ++j)
+					float fulcrum;
+					bool blocked = false;
+					if ((impulse.y < 0 ? StudConnection::DOWN : StudConnection::UP) != front[i]->type)
 					{
-						if (d * front[i]->studs[j].x > max)
-							stud = front[i]->studs + j, max = d*front[i]->studs[j].x;
-					}
+						fulcrum = front[i]->fulcrumX;
 
-					// check if frustrum is blocked
-					if (d == 1)
-					{
-						if (front[i]->other->brick->pos[0] > front[i]->brick->pos[0])
+						if ((fulcrum > _pos.x && front[i]->brick->block[StudConnection::RIGHT])
+							|| (fulcrum < _pos.x && front[i]->brick->block[StudConnection::LEFT]))
 						{
-							if (front[i]->brick->block[StudConnection::RIGHT] > 0)
-								continue;
-						}
-						else
-						{
-							if (front[i]->other->brick->block[StudConnection::RIGHT] > 0)
-								continue;
+							blocked = true;
 						}
 					}
-					else if (d == -1)
+					else
 					{
-						if (front[i]->other->brick->pos[0] < front[i]->brick->pos[0])
+						fulcrum = front[i]->other->fulcrumX;
+						if ((fulcrum > _pos.x && front[i]->other->brick->block[StudConnection::RIGHT]) ||
+							(fulcrum < _pos.x && front[i]->other->brick->block[StudConnection::LEFT]))
 						{
-							if (front[i]->brick->block[StudConnection::LEFT] > 0)
-								continue;
-						}
-						else
-						{
-							if (front[i]->other->brick->block[StudConnection::LEFT] > 0)
-								continue;
+							blocked = true;
 						}
 					}
 
 
 					// check torques around frustrums
 					float y = front[i]->studs[0].y;
-					float fulcrum = stud->x + (d*0.5f);
 					float torque = cross(vec3(_pos.x - fulcrum, _pos.y - y, 0), _impulse).z;
-					float studTorque = 0;
 
 					float dx = torque > 0 ? 1 : -1;
 
+					if (blocked)
+						studTorque += -dx * 100.0f * STUD_STRENGTH;
+
+
 					for (int j = 0; j < front.size(); ++j)
 					{
+						// front which we currently try to expand
+						if (j == f || front[j]->other->brick == newBrick)
+							continue;
+
+						
+
 						if (front[j]->type == StudConnection::UP)
 						{
-							studTorque = -dx * FLT_MAX;
+							blocked = true;
 							break;
 						}
 
@@ -453,7 +666,8 @@ public:
 							// if torque stud and torque impact point in the same direction not valid fulcrum
 							if (torque* tX > 0)
 							{
-								studTorque = -dx * FLT_MAX;
+								blocked = true;
+								studTorque += -dx * 100.0f * STUD_STRENGTH;
 								break;
 							}
 							else
@@ -463,165 +677,37 @@ public:
 						}
 					}
 
-					if (dx * (torque + studTorque) > 0)
+	
+					float torqueDiff = dx*(torque + studTorque);
+					if (torqueDiff > 0 && !blocked)
 					{
 						destroy = true;
 						break;
 					}
-				}
-			}
 
-
-			
-
-		}
-
-
-		while (true)
-		{
-			if (front.size() == 0)
-				break;
-
-		
-			{
-				// pure force
-				float studForce = 0.0f;
-
-				for (int i = 0; i < front.size(); ++i)
-				{
-					if ((_impulse.y > 0 && front[i]->type == StudConnection::UP) ||
-						(_impulse.y < 0 && front[i]->type == StudConnection::DOWN))
+					if (torqueDiff > minTorque)
 					{
-						studForce = FLT_MAX;
-						break;
+						expansion = f;
+						minTorque = torqueDiff;
 					}
-					else
-					{
-						for (int j = 0; j < front[i]->numStuds; ++j)
-						{
-							studForce += STUD_STRENGTH;
-						}
-					}
+
 				}
 
-				if (abs(_impulse.y) > studForce)
+
+
+				for (int j = 0; j < newBrick->numConnections; ++j)
 				{
-					destroy = true;
-					break;
+					if (newBrick->connections[j].numStuds > 0 && newBrick->connections[j].other->brick->lastVisited != tick)
+						front.pop_back();
 				}
 
-				// check for leverage z
-				for (int i = 0; i < front.size(); ++i)
-				{
-					for (int d = -1; d <= 1; d += 2)
-					{
-
-						Stud* stud = nullptr;
-						float max = -FLT_MAX;
-						for (int j = 0; j < front[i]->numStuds; ++j)
-						{
-							if (d * front[i]->studs[j].z > max)
-								stud = front[i]->studs + j, max = d*front[i]->studs[j].z;
-						}
-
-						// check if frustrum is blocked
-						if (d == 1)
-						{
-							if (front[i]->other->brick->pos[2] > front[i]->brick->pos[2])
-							{
-								if (front[i]->brick->block[StudConnection::BACK] > 0)
-									continue;
-							}
-							else
-							{
-								if (front[i]->other->brick->block[StudConnection::BACK] > 0)
-									continue;
-							}
-						}
-						else if (d == -1)
-						{
-							if (front[i]->other->brick->pos[0] < front[i]->brick->pos[0])
-							{
-								if (front[i]->brick->block[StudConnection::FRONT] > 0)
-									continue;
-							}
-							else
-							{
-								if (front[i]->other->brick->block[StudConnection::FRONT] > 0)
-									continue;
-							}
-						}
-
-
-						// check torques around frustrums
-						float y = front[i]->studs[0].y;
-						float fulcrum = stud->y + (d*0.5f);
-						float torque = cross(vec3(0, _pos.y - y, _pos.z - fulcrum), _impulse).x;
-						float studTorque = 0;
-
-						float dz = torque > 0 ? 1 : -1;
-
-						for (int j = 0; j < front.size(); ++j)
-						{
-							if (front[j]->type == StudConnection::UP)
-							{
-								studTorque = -dz * FLT_MAX;
-								break;
-							}
-
-							for (int k = 0; k < front[j]->numStuds; ++k)
-							{
-								Stud* stud = front[j]->studs + k;
-								float tz = cross(vec3(0, stud->y - y, stud->z - fulcrum), vec3(0, -STUD_STRENGTH, 0)).x;
-								// if torque stud and torque impact point in the same direction not valid fulcrum
-								if (torque* tz > 0)
-								{
-									studTorque = -dz * FLT_MAX;
-									break;
-								}
-								else
-								{
-									studTorque += tz;
-								}
-							}
-						}
-
-						if (dz * (torque + studTorque) > 0)
-						{
-							printf("torque: %f\n", studTorque);
-							destroy = true;
-							break;
-						}
-					}
-				}		
-				
 				if (destroy)
 					break;
 
 			}
-			// expand the selection with the front with the smallest increase in size
-			int expansion = -1;
-			float minSize = FLT_MAX;
-			for (int i = 0; i < front.size(); ++i)
-			{
-				int newSize = frontSize - front[i]->numStuds;
-				Brick* newBrick = front[i]->other->brick;
-				// check if new brick is past center of mass
-				if (distPointFatPlane(transformVec3(newBrick->collider->getMassData().cm, newBrick->collider->getTransform()), cmPlane, FLT_EPSILON) <= 0.0f)
-					continue;
-				for (int j = 0; j < brick->numConnections; ++j)
-				{
-					if (newBrick->connections[j].numStuds > 0 && newBrick->connections[j].other->brick->lastVisited != tick)
-					{
-						newSize += newBrick->connections[j].numStuds;
-					}
-				}
-				if (newSize < minSize)
-				{
-					minSize = newSize;
-					expansion = i;
-				}
-			}
+
+			if (destroy)
+				break;
 
 			if (expansion == -1)
 				break;
@@ -629,7 +715,17 @@ public:
 			Brick* newBrick = front[expansion]->other->brick;
 			front[expansion] = front.back();
 			front.pop_back();
-			frontSize = minSize;
+
+			if (newBrick == m_base)
+			{
+				for (int i = 0; i < newBrick->numConnections; ++i)
+				{
+					if (newBrick->connections[i].numStuds > 0 && newBrick->connections[i].other->brick->lastVisited != tick)
+					{
+						m_base = newBrick->connections[i].other->brick;
+					}
+				}
+			}
 
 			assert(newBrick->lastVisited != tick);
 			newBrick->lastVisited = tick;
@@ -644,6 +740,7 @@ public:
 			}
 
 			// check for outdated connection
+			// see if rest of front still connected to base
 			for (int i = 0; i < front.size(); ++i)
 			{
 				if (front[i]->other->brick->lastVisited == tick)
@@ -652,9 +749,280 @@ public:
 					front.pop_back();
 					--i;
 				}
+				else if (!checkFrontForConnection(front[i]->other->brick, m_base, g_tick++, tick))
+				{
+					front[i]->other->brick->lastVisited = tick;
+					selection.push_back(front[i]->other->brick);
+
+					front[i] = front.back();
+					front.pop_back();
+					--i;
+				}
+
+			}
+			
+
+
+			// destroy?
+			{
+
+				for (int i = 0; i < front.size(); ++i)
+				{
+
+					float studTorque = 0;
+					float fulcrum;
+					bool blocked = false;
+					if ((impulse.y < 0 ? StudConnection::DOWN : StudConnection::UP) != front[i]->type)
+					{
+						fulcrum = front[i]->fulcrumX;
+
+						if ((fulcrum > _pos.x && front[i]->brick->block[StudConnection::RIGHT])
+							|| (fulcrum < _pos.x && front[i]->brick->block[StudConnection::LEFT]))
+						{
+							blocked = true;
+						}
+					}
+					else
+					{
+						fulcrum = front[i]->other->fulcrumX;
+						if ((fulcrum > _pos.x && front[i]->other->brick->block[StudConnection::RIGHT]) ||
+							(fulcrum < _pos.x && front[i]->other->brick->block[StudConnection::LEFT]))
+						{
+							blocked = true;
+						}
+					}
+
+
+					// check torques around frustrums
+					float y = front[i]->studs[0].y;
+					float torque = cross(vec3(_pos.x - fulcrum, _pos.y - y, 0), _impulse).z;
+
+					float dx = torque > 0 ? 1 : -1;
+
+					if (blocked)
+						studTorque += -dx * 100.0f * STUD_STRENGTH;
+
+
+					for (int j = 0; j < front.size(); ++j)
+					{
+						if (front[j]->type == StudConnection::UP)
+						{
+							blocked = true;
+							break;
+						}
+
+						for (int k = 0; k < front[j]->numStuds; ++k)
+						{
+							Stud* stud = front[j]->studs + k;
+							float tX = cross(vec3(stud->x - fulcrum, stud->y - y, 0), vec3(0, -STUD_STRENGTH, 0)).z;
+							// if torque stud and torque impact point in the same direction not valid fulcrum
+							if (torque* tX > 0)
+							{
+								blocked = true;
+								studTorque += -dx * 100.0f * STUD_STRENGTH;
+								break;
+							}
+							else
+							{
+								studTorque += tX;
+							}
+						}
+					}
+
+
+					float torqueDiff = dx*(torque + studTorque);
+					if (torqueDiff > 0 && !blocked)
+					{
+						destroy = true;
+						break;
+					}
+
+				}
 			}
 
+			if (destroy)
+				break;
 		}
+
+
+		//while (true)
+		//{
+		//	if (front.size() == 0)
+		//		break;
+
+		//
+		//	{
+		//		// pure force
+		//		float studForce = 0.0f;
+
+		//		for (int i = 0; i < front.size(); ++i)
+		//		{
+		//			if ((_impulse.y > 0 && front[i]->type == StudConnection::UP) ||
+		//				(_impulse.y < 0 && front[i]->type == StudConnection::DOWN))
+		//			{
+		//				studForce = FLT_MAX;
+		//				break;
+		//			}
+		//			else
+		//			{
+		//				for (int j = 0; j < front[i]->numStuds; ++j)
+		//				{
+		//					studForce += STUD_STRENGTH;
+		//				}
+		//			}
+		//		}
+
+		//		if (abs(_impulse.y) > studForce)
+		//		{
+		//			destroy = true;
+		//			break;
+		//		}
+
+		//		// check for leverage z
+		//		for (int i = 0; i < front.size(); ++i)
+		//		{
+		//			for (int d = -1; d <= 1; d += 2)
+		//			{
+
+		//				Stud* stud = nullptr;
+		//				float max = -FLT_MAX;
+		//				for (int j = 0; j < front[i]->numStuds; ++j)
+		//				{
+		//					if (d * front[i]->studs[j].z > max)
+		//						stud = front[i]->studs + j, max = d*front[i]->studs[j].z;
+		//				}
+
+		//				// check if frustrum is blocked
+		//				if (d == 1)
+		//				{
+		//					if (front[i]->other->brick->pos[2] > front[i]->brick->pos[2])
+		//					{
+		//						if (front[i]->brick->block[StudConnection::BACK] > 0)
+		//							continue;
+		//					}
+		//					else
+		//					{
+		//						if (front[i]->other->brick->block[StudConnection::BACK] > 0)
+		//							continue;
+		//					}
+		//				}
+		//				else if (d == -1)
+		//				{
+		//					if (front[i]->other->brick->pos[0] < front[i]->brick->pos[0])
+		//					{
+		//						if (front[i]->brick->block[StudConnection::FRONT] > 0)
+		//							continue;
+		//					}
+		//					else
+		//					{
+		//						if (front[i]->other->brick->block[StudConnection::FRONT] > 0)
+		//							continue;
+		//					}
+		//				}
+
+
+		//				// check torques around frustrums
+		//				float y = front[i]->studs[0].y;
+		//				float fulcrum = stud->y + (d*0.5f);
+		//				float torque = cross(vec3(0, _pos.y - y, _pos.z - fulcrum), _impulse).x;
+		//				float studTorque = 0;
+
+		//				float dz = torque > 0 ? 1 : -1;
+
+		//				for (int j = 0; j < front.size(); ++j)
+		//				{
+		//					if (front[j]->type == StudConnection::UP)
+		//					{
+		//						studTorque = -dz * FLT_MAX;
+		//						break;
+		//					}
+
+		//					for (int k = 0; k < front[j]->numStuds; ++k)
+		//					{
+		//						Stud* stud = front[j]->studs + k;
+		//						float tz = cross(vec3(0, stud->y - y, stud->z - fulcrum), vec3(0, -STUD_STRENGTH, 0)).x;
+		//						// if torque stud and torque impact point in the same direction not valid fulcrum
+		//						if (torque* tz > 0)
+		//						{
+		//							studTorque = -dz * FLT_MAX;
+		//							break;
+		//						}
+		//						else
+		//						{
+		//							studTorque += tz;
+		//						}
+		//					}
+		//				}
+
+		//				if (dz * (torque + studTorque) > 0)
+		//				{
+		//					printf("torque: %f\n", studTorque);
+		//					destroy = true;
+		//					break;
+		//				}
+		//			}
+		//		}		
+		//		
+		//		if (destroy)
+		//			break;
+
+		//	}
+		//	// expand the selection with the front with the smallest increase in size
+		//	int expansion = -1;
+		//	float minSize = FLT_MAX;
+		//	for (int i = 0; i < front.size(); ++i)
+		//	{
+		//		int newSize = frontSize - front[i]->numStuds;
+		//		Brick* newBrick = front[i]->other->brick;
+		//		// check if new brick is past center of mass
+		//		if (distPointFatPlane(transformVec3(newBrick->collider->getMassData().cm, newBrick->collider->getTransform()), cmPlane, FLT_EPSILON) <= 0.0f)
+		//			continue;
+		//		for (int j = 0; j < brick->numConnections; ++j)
+		//		{
+		//			if (newBrick->connections[j].numStuds > 0 && newBrick->connections[j].other->brick->lastVisited != tick)
+		//			{
+		//				newSize += newBrick->connections[j].numStuds;
+		//			}
+		//		}
+		//		if (newSize < minSize)
+		//		{
+		//			minSize = newSize;
+		//			expansion = i;
+		//		}
+		//	}
+
+		//	if (expansion == -1)
+		//		break;
+		//	
+		//	Brick* newBrick = front[expansion]->other->brick;
+		//	front[expansion] = front.back();
+		//	front.pop_back();
+		//	frontSize = minSize;
+
+		//	assert(newBrick->lastVisited != tick);
+		//	newBrick->lastVisited = tick;
+		//	selection.push_back(newBrick);
+
+		//	for (int j = 0; j < newBrick->numConnections; ++j)
+		//	{
+		//		if (newBrick->connections[j].numStuds > 0 && newBrick->connections[j].other->brick->lastVisited != tick)
+		//		{
+		//			front.push_back(&newBrick->connections[j]);
+		//		}
+		//	}
+
+		//	// check for outdated connection
+		//	for (int i = 0; i < front.size(); ++i)
+		//	{
+		//		if (front[i]->other->brick->lastVisited == tick)
+		//		{
+		//			front[i] = front.back();
+		//			front.pop_back();
+		//			--i;
+		//		}
+		//	}
+
+		//}
 
 		if (destroy)
 		{
@@ -723,7 +1091,15 @@ public:
 					glVertex3f(stud->x, stud->y - 0.1f, stud->z);
 
 				glEnd();
+
+
+
 			}
+
+			glBegin(GL_LINES);
+			glVertex3f(brick->connections[i].fulcrumX, brick->connections[i].studs[0].y, brick->connections[i].studs[0].z - 0.5f);
+			glVertex3f(brick->connections[i].fulcrumX, brick->connections[i].studs[0].y, brick->connections[i].studs[0].z + 0.5f);
+			glEnd();
 
 			if (brick->connections[i].other->brick->lastVisited != tick)
 				renderBrick(brick->connections[i].other->brick, tick);
