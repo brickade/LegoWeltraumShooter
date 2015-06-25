@@ -10,7 +10,6 @@
 
 namespace sba
 {
-//#define SPRITE_WORKAROUND
     // **************************************************************************
     // **************************************************************************
     CShipManager::CShipManager(const char* a_pFolder)
@@ -66,23 +65,15 @@ namespace sba
                 //Create & Save Sprite
                 PuRe_Sprite* newSprite = this->GetSpriteFromShip(*ship);
                 newSprite->GetTexture()->SaveTextureToFile(std::string(namePath).append(".dds").c_str());
-#ifdef SPRITE_WORKAROUND
-                delete newSprite;
-#else
                 pair.second = newSprite;
-#endif
                 delete ship;
                 i++; //Dont load file twice: .dds is positioned before .ship
             }
-#ifndef SPRITE_WORKAROUND
             else
             {
-#endif
                 //Load Sprite
                 pair.second = new PuRe_Sprite(sba_Application->GetGraphics(), std::string(pair.first).append(".dds")); //Load Texture
-#ifndef SPRITE_WORKAROUND
             }
-#endif
             this->m_Sprites.push_back(pair);
             file = window->GetFileAtIndex(i, this->m_FolderPath.c_str());
         }

@@ -16,7 +16,7 @@ namespace sba
 
         Space::Instance()->Initialize(*a_pApplication->GetGraphics(), *a_pApplication->GetInput(), *a_pApplication->GetSoundPlayer(), *a_pApplication);
         sba_BrickManager->Load();
-        
+        sba_ShipManager->Load();
 
         this->m_pMenuScene->Initialize(a_pApplication);
         this->m_pActiveScene = this->m_pMenuScene;
@@ -26,11 +26,6 @@ namespace sba
     // **************************************************************************
     int CMainScene::Update(PuRe_Application* a_pApplication)
     {
-        if (first)
-        {
-            sba_ShipManager->Load();
-            first = false;
-        }
         //Drop update after lag to avoid strange camera movement jumps etc
         if (a_pApplication->GetTimer()->GetElapsedMilliseconds() > 200)
             return 1;
