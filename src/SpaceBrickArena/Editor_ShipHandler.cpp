@@ -56,8 +56,10 @@ namespace Editor
             sba_Renderer->Draw(1, false, (*sba_ShipManager)[focus - 1], sba_Space->SpriteMaterial, PuRe_Vector3F(0 + this->m_OuterPreviewInset, center.Y + this->m_OuterPreviewYOffset, 0), PuRe_MatrixF::Identity(), PuRe_Vector3F((*sba_ShipManager)[focus]->GetSize() * 0.5f, 0), PuRe_Vector3F(this->m_OuterPreviewSize, this->m_OuterPreviewSize, this->m_OuterPreviewSize));
         }
         //Center
-        sba_Space->RenderFont("Name:" + this->m_pCurrentSpaceship->GetName(), center + this->m_TextOffset + this->m_TextStep * 0, 18);
-        sba_Space->RenderFont("Bricks:" + std::to_string(this->m_pCurrentSpaceship->m_pBricks.size()), center + this->m_TextOffset + this->m_TextStep * 1, 18);
+        sba_Space->RenderFont("Ship " + std::to_string(focus + 1) + "/" + std::to_string(sba_ShipManager->GetShipCount()), center + this->m_TextOffset + this->m_TextStep * 0, 18);
+        sba_Space->RenderFont("\"" + this->m_pCurrentSpaceship->GetName() + "\"", center + this->m_TextOffset + this->m_TextStep * 1, 18);
+        sba_Space->RenderFont(std::to_string(this->m_pCurrentSpaceship->m_pBricks.size()) + " Bricks", center + this->m_TextOffset + this->m_TextStep * 2, 18);
+        
         sba_Renderer->Draw(1, false, (*sba_ShipManager)[focus], sba_Space->SpriteMaterial, PuRe_Vector3F(center + this->m_PreviewOffset, 0), PuRe_MatrixF::Identity(), PuRe_Vector3F((*sba_ShipManager)[focus]->GetSize() * 0.5f, 0));
         //Right
         if (focus < this->m_pNavigation->GetLastElementId())
