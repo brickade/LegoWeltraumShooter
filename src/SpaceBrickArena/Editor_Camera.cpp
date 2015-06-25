@@ -30,7 +30,7 @@ namespace Editor
         this->Move(PuRe_Vector3F(0, 0, this->m_distance = a_InitDistance));
     }
 
-    void CCamera::Update(PuRe_IGraphics* a_pGraphics, PuRe_IWindow* a_pWindow, PuRe_Timer* a_pTimer)
+    void CCamera::Update(PuRe_IGraphics* a_pGraphics, PuRe_IWindow* a_pWindow, PuRe_Timer* a_pTimer, bool a_IgnoreInput)
     {   
         float speed = a_pTimer->GetElapsedSeconds() * 100;
         float zoomSpeed = speed * 0.5f;
@@ -40,6 +40,12 @@ namespace Editor
 
         //Zoom
         this->m_distance += sba_Input->Axis(sba_Axis::EditorCameraZoom, this->m_playerIdx) * zoomSpeed * -1.0f;
+
+        if (a_IgnoreInput)
+        {
+            MoveInput = PuRe_Vector2F::Zero();
+            this->m_distance = this->m_MinDistance + (this->m_MaxDistance - this->m_MinDistance) * 0.5f;
+        }
 
         //----------Apply
         this->SetPosition(PuRe_Vector3F(0, 0, 0));

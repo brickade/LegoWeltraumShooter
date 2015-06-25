@@ -26,7 +26,7 @@ namespace sba
         /// @brief Engine's Application
         ///
         PuRe_Application* m_pApplication;
-
+        bool first = true;
     public:
         /// @brief Constructor to Initialize the MainScene
         ///

@@ -33,10 +33,12 @@ namespace Editor
         sba::CNavigation* m_pNavigation;
         sba::CSpaceship* m_pCurrentSpaceship;
 
-        PuRe_Vector2F m_PreviewOffset = PuRe_Vector2F(200.0f, 0.0f);
-        PuRe_Vector2F m_TextOffset = PuRe_Vector2F(-400.0f, -100.0f);
-        PuRe_Vector2F m_TextStep = PuRe_Vector2F(0.0f, -50.0f);
+        PuRe_Vector2F m_PreviewOffset = PuRe_Vector2F(0.0f, -50.0f);
+        PuRe_Vector2F m_TextOffset = PuRe_Vector2F(-200.0f, 450.0f);
+        PuRe_Vector2F m_TextStep = PuRe_Vector2F(250.0f, 0.0f);
         float m_OuterPreviewInset = 100;
+        float m_OuterPreviewYOffset = 50;
+        float m_OuterPreviewSize = 0.5f;
 
 
     public:

@@ -21,6 +21,7 @@ namespace TheBrick
 
 namespace Editor
 {
+    class CEditorScene;
     class CHistory;
     class CShipHandler;
 

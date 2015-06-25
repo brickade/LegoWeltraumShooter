@@ -5,9 +5,12 @@
 #include "include/BrickManager.h"
 
 #include "include/Space.h"
+#include "include/EditorScene.h"
+#include "include/Editor_Camera.h"
 
 namespace sba
 {
+//#define SPRITE_WORKAROUND
     // **************************************************************************
     // **************************************************************************
     CShipManager::CShipManager(const char* a_pFolder)
@@ -26,6 +29,12 @@ namespace sba
     // **************************************************************************
     void CShipManager::Load()
     { //Load all sprites and paths from folder
+        Editor::CEditorScene::InitCommonRenderComponents(&this->m_pPostMaterial, &this->m_pDirectionalLight, &this->m_pDirectionalLightMaterial); //Load everything for rendering
+        PuRe_GraphicsDescription gdesc = sba_Application->GetGraphics()->GetDescription();
+        this->m_pCamera = new Editor::CCamera(PuRe_Vector2F((float)gdesc.ResolutionWidth, (float)gdesc.ResolutionHeight), PuRe_Camera_Perspective, 0);
+        this->m_pCamera->Initialize(PuRe_Vector3F(20, 135, 0), PuRe_Vector3F(-1, 0, 0));
+        this->m_pCamera->Update(sba_Application->GetGraphics(), sba_Application->GetWindow(), sba_Application->GetTimer(), true);
+
         int i = 0;
         PuRe_IWindow* window = sba_Application->GetWindow();
         std::string file = window->GetFileAtIndex(i, this->m_FolderPath.c_str());
@@ -46,24 +55,34 @@ namespace sba
             //Check if preview exists
             std::ifstream preview(previewPath.c_str());
             if (!preview.good())
-            { //Create new Sprite
+            { //Create new Sprite on disk
                 //Load Ship
-                sba::CSpaceship ship(*sba_World, "");
+                sba::CSpaceship* ship = new sba::CSpaceship(*sba_World, "");
                 TheBrick::CSerializer* serializer = new TheBrick::CSerializer();
                 serializer->OpenRead(std::string(namePath).append(".ship").c_str());
-                ship.Deserialize(*serializer, sba_BrickManager->GetBrickArray(), *sba_World);
+                ship->Deserialize(*serializer, sba_BrickManager->GetBrickArray(), *sba_World);
                 serializer->Close();
                 delete serializer;
-                //Create Sprite
-                pair.second = this->GetSpriteFromShip(ship);
-                //Save Sprite
-                pair.second->GetTexture()->SaveTextureToFile(std::string(namePath).append(".dds").c_str());
+                //Create & Save Sprite
+                PuRe_Sprite* newSprite = this->GetSpriteFromShip(*ship);
+                newSprite->GetTexture()->SaveTextureToFile(std::string(namePath).append(".dds").c_str());
+#ifdef SPRITE_WORKAROUND
+                delete newSprite;
+#else
+                pair.second = newSprite;
+#endif
+                delete ship;
+                i++; //Dont load file twice: .dds is positioned before .ship
             }
+#ifndef SPRITE_WORKAROUND
             else
-            { //Load Sprite
-                //Load Texture
-                pair.second = new PuRe_Sprite(sba_Application->GetGraphics(), std::string(pair.first).append(".dds"));
+            {
+#endif
+                //Load Sprite
+                pair.second = new PuRe_Sprite(sba_Application->GetGraphics(), std::string(pair.first).append(".dds")); //Load Texture
+#ifndef SPRITE_WORKAROUND
             }
+#endif
             this->m_Sprites.push_back(pair);
             file = window->GetFileAtIndex(i, this->m_FolderPath.c_str());
         }
@@ -71,6 +90,7 @@ namespace sba
         {
             this->AddNewShip("Banana");
         }
+        sba_BrickManager->RebuildRenderInstances();
     }
 
 
@@ -86,13 +106,15 @@ namespace sba
     // **************************************************************************
     void CShipManager::AddNewShip(const char* a_pName)
     { //Add default ship with specified name
-        sba::CSpaceship ship = sba::CSpaceship(*sba_World, a_pName);
+        sba::CSpaceship* ship = new sba::CSpaceship(*sba_World, a_pName);
         //Register
-        this->m_Sprites.push_back(std::make_pair(std::string(ship.GetName()).insert(0, this->m_FolderPath), this->GetSpriteFromShip(ship)));
+        this->m_Sprites.push_back(std::make_pair(std::string(ship->GetName()).insert(0, this->m_FolderPath), this->GetSpriteFromShip(*ship)));
         //Set to default
-        this->ResetShip(ship);
+        this->ResetShip(*ship);
         //Save to file
-        this->SaveShipToFile(ship);
+        this->SaveShipToFile(*ship);
+        delete ship;
+
     }
 
     // **************************************************************************
@@ -179,10 +201,11 @@ namespace sba
     // **************************************************************************
     // **************************************************************************
     PuRe_Sprite* CShipManager::GetSpriteFromShip(sba::CSpaceship& a_rShip) const
-    {
-        PuRe_Sprite* sprite = new PuRe_Sprite(sba_Application->GetGraphics(), "");
-        //TODO: implement
-        
-        return sprite;
+    {   
+        sba_BrickManager->RebuildRenderInstances();
+        Editor::CEditorScene::PreRender(this->m_pDirectionalLight, this->m_pDirectionalLightMaterial, nullptr, nullptr);
+        sba_BrickManager->Render();
+        Editor::CEditorScene::PostRender(this->m_pCamera, nullptr, this->m_pPostMaterial);
+        return new PuRe_Sprite(sba_Application->GetGraphics(), sba_Renderer->GetTexture(0, 0));
     }
 }

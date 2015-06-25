@@ -6,6 +6,12 @@
 
 #include "Spaceship.h"
 
+namespace Editor
+{
+    class CEditorScene;
+    class CCamera;
+}
+
 namespace sba
 {
     class CShipManager
@@ -13,6 +19,13 @@ namespace sba
     private:
         std::vector<std::pair<std::string, PuRe_Sprite*>> m_Sprites;
         std::string m_FolderPath = "";
+
+        PuRe_IMaterial* m_pPostMaterial;
+        PuRe_PointLight* m_pPointLight;
+        PuRe_IMaterial* m_pPointLightMaterial;
+        PuRe_DirectionalLight* m_pDirectionalLight;
+        PuRe_IMaterial* m_pDirectionalLightMaterial;
+        Editor::CCamera* m_pCamera;
 
     public:
         PuRe_Sprite* operator[](size_t a_Index)
