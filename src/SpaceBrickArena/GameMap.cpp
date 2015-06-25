@@ -41,7 +41,7 @@ namespace sba
 
     // **************************************************************************
     // **************************************************************************
-    bool CGameMap::GetMapData(std::vector<CAsteroid*>& a_rObjects)
+    bool CGameMap::GetMapData(std::vector<CAsteroid*>& a_rObjects,std::vector<CItem*>& a_rItems)
     {
         FILE* pFile;
         std::string mapPath = "../data/maps/" + this->m_Name + ".map";
@@ -58,32 +58,49 @@ namespace sba
 
             //allocate buffer and copy file data into it
             buffer = (char*)malloc(sizeof(char)*size);
+            memset(buffer,0,size);
             fread(buffer, 1, size, pFile);
             //close file
             fclose(pFile);
 
-            std::string objectName;
-            PuRe_Vector3F pos, vel, rot;
             enum read { Name, Pos, Vel, Rot };
             enum readC { One, Two };
+            enum Type { Object, Item };
+
+            std::string objectName;
+            ong::vec3 pos, vel, rot;
+            Type otype;
 
             std::string buff = "";
             read readWhere = Name;
             readC readCount = One;
-            PuRe_Vector3F* changed = NULL;
+            ong::vec3* changed = NULL;
             for (int i = 0; i <= size; i++)
             {
                 if (i == size||buffer[i] == '\n')
                 {
-                    changed->Z = std::stof(buff);
+                    changed->z = std::stof(buff);
                     if (objectName != "")
                     {
-                        sba::CAsteroid* asteroid = new sba::CAsteroid(*sba_World, TheBrick::PuReToOng(pos));
-                        TheBrick::CSerializer serializer;
-                        serializer.OpenRead(objectName.c_str());
-                        asteroid->Deserialize(serializer, sba_BrickManager->GetBrickArray(), *sba_World);
-                        a_rObjects.push_back(asteroid);
-                        serializer.Close();
+                        if (otype == Type::Object)
+                        {
+                            sba::CAsteroid* asteroid = new sba::CAsteroid(*sba_World, pos,vel,rot);
+                            TheBrick::CSerializer serializer;
+                            serializer.OpenRead(objectName.c_str());
+                            asteroid->Deserialize(serializer, sba_BrickManager->GetBrickArray(), *sba_World);
+                            a_rObjects.push_back(asteroid);
+                            serializer.Close();
+                        }
+                        else if (otype == Type::Item)
+                        {
+                            EItemType itype;
+                            if (objectName == "repair")
+                                itype = EItemType::Repair;
+                            else if (objectName == "shield")
+                                itype = EItemType::Shield;
+                            sba::CItem* item = new sba::CItem(*sba_World,itype,pos,vel,rot);
+                            a_rItems.push_back(item);
+                        }
                     }
                     readWhere = read::Name;
                     readCount = readC::One;
@@ -96,19 +113,28 @@ namespace sba
                     switch (readWhere)
                     {
                     case read::Name:
-                        objectName = "../data/objects/" + buff + ".object";
+                        if (buff.substr(0, buff.find_last_of("@")) == "object")
+                        {
+                            otype = Type::Object;
+                            objectName = "../data/objects/" + buff.substr(buff.find_last_of("@") + 1) + ".object";
+                        }
+                        else if (buff.substr(0, buff.find_last_of("@")) == "item")
+                        {
+                            otype = Type::Item;
+                            objectName = buff.substr(buff.find_last_of("@") + 1);
+                        }
                         readWhere = read::Pos;
                         readCount = readC::One;
                         changed = &pos;
                         break;
                     case read::Pos:
-                        changed->Z = std::stof(buff);
+                        changed->z = std::stof(buff);
                         readWhere = read::Vel;
                         readCount = readC::One;
                         changed = &vel;
                         break;
                     case read::Vel:
-                        changed->Z = std::stof(buff);
+                        changed->z = std::stof(buff);
                         readWhere = read::Rot;
                         readCount = readC::One;
                         changed = &rot;
@@ -125,11 +151,11 @@ namespace sba
                         switch (readCount)
                         {
                         case readC::One:
-                            changed->X = std::stof(buff);
+                            changed->x = std::stof(buff);
                             readCount = readC::Two;
                             break;
                         case readC::Two:
-                            changed->Y = std::stof(buff);
+                            changed->y = std::stof(buff);
                             break;
                         }
                         buff = "";

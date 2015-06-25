@@ -96,6 +96,9 @@
     <ClCompile Include="GameMap.cpp">
       <Filter>Utilities</Filter>
     </ClCompile>
+    <ClCompile Include="Item.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Space.h" />
@@ -198,6 +201,9 @@
     </ClInclude>
     <ClInclude Include="include\GameMap.h">
       <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Item.h">
+      <Filter>Objects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

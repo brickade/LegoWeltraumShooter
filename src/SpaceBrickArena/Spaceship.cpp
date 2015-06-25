@@ -55,6 +55,27 @@ namespace sba
             Ship->m_pBody->applyImpulse(-diff);
             oship->m_pBody->applyImpulse(diff);
         }
+        else if (object->m_Type == TheBrick::EGameObjectType::Item)
+        {
+            CItem* item = static_cast<CItem*>(object);
+            if (!item->m_Collided)
+            {
+                switch (item->GetType())
+                {
+                    case sba::EItemType::Repair:
+                        Ship->m_Life += 10.0f;
+                        if (Ship->m_Life  > Ship->m_MaxLife)
+                            Ship->m_Life = Ship->m_MaxLife;
+                        break;
+                    case sba::EItemType::Shield:
+                        Ship->m_Shield += 10.0f;
+                        if (Ship->m_Shield  > 100.0f)
+                            Ship->m_Shield = 100.0f;
+                        break;
+                }
+                item->m_Collided = true;
+            }
+        }
         else if (object->m_Type == TheBrick::EGameObjectType::Bullet)
         {
             CBullet* bull = static_cast<CBullet*>(object);
@@ -88,6 +109,7 @@ namespace sba
         this->m_MaxSpeed = 10.0f*(20.0f/mass);
         this->m_MaxLife = (int)(mass*10.0f);
         this->m_Life = this->m_MaxLife;
+        this->m_Shield = 0;
 
 
         ong::Collider* c = this->m_pBody->getCollider();

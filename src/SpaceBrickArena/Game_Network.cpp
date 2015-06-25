@@ -90,7 +90,7 @@ namespace sba
 
     // **************************************************************************
     // **************************************************************************
-    void CGameNetwork::UpdateNetwork(std::vector<CBullet*>& a_rBullets, PuRe_IInput* a_pInput, float a_DeltaTime, float& a_rEndTime, hInput hInput, pInput pInput)
+    void CGameNetwork::UpdateNetwork(std::vector<CBullet*>& a_rBullets,std::vector<CItem*>& a_rItems, PuRe_IInput* a_pInput, float a_DeltaTime, float& a_rEndTime, hInput hInput, pInput pInput, gUpdate gUpdate)
     {
         sba_Network->m_Mutex.lock();
         if (sba_Network->GetHost())
@@ -183,6 +183,8 @@ namespace sba
                     }
                 }
 
+                gUpdate(a_rBullets, a_rItems, 1.0f / 60.0f);
+
                 //Now handle input
 
                 PlayOutBuffer* buffer = &this->m_buffer[0];
@@ -220,6 +222,7 @@ namespace sba
                 this->m_PhysicFrame++;
                 a_rEndTime -= 1.0f / 60.0f;
                 assert(this->m_PhysicFrame != 2147483647);
+
                 sba_BrickManager->RebuildRenderInstances(); //Update RenderInstances
             } //if input exists
 

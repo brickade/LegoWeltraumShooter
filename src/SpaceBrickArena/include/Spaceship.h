@@ -10,6 +10,7 @@
 #include "TheBrick/DebugDraw.h"
 #include "TheBrick/CSVParser.h"
 #include "Bullet.h"
+#include "Item.h"
 
 namespace sba
 {
@@ -29,6 +30,7 @@ namespace sba
         float m_SpeedAcceleration;
 
     public:
+        int m_Shield;
         int m_Life;
         int m_MaxLife;
         float m_Respawn;

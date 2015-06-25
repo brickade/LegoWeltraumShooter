@@ -152,6 +152,7 @@
     <ClInclude Include="include\INIReader.h" />
     <ClInclude Include="include\InputManager.h" />
     <ClInclude Include="include\InputManagerTypes.h" />
+    <ClInclude Include="include\Item.h" />
     <ClInclude Include="include\MenuScene.h" />
     <ClInclude Include="include\Menu_Lobby.h" />
     <ClInclude Include="include\Menu_Main.h" />
@@ -187,6 +188,7 @@
     <ClCompile Include="Game_UI.cpp" />
     <ClCompile Include="INIReader.cpp" />
     <ClCompile Include="InputManager.cpp" />
+    <ClCompile Include="Item.cpp" />
     <ClCompile Include="MenuScene.cpp" />
     <ClCompile Include="Editor_ColorFields.cpp" />
     <ClCompile Include="Menu_Lobby.cpp" />

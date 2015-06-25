@@ -111,26 +111,68 @@ namespace sba
         ship->Update(a_DeltaTime);
     }
 
+    void CGameScene::UpdateGame(std::vector<CBullet*>& a_rBullets, std::vector<CItem*>& a_rItems, float a_Deltatime)
+    {
+        //Update Bullets
+        for (unsigned int i = 0; i < a_rBullets.size(); i++)
+        {
+            a_rBullets[i]->Update(a_Deltatime);
+
+            if (a_rBullets[i]->m_Collided || a_rBullets[i]->m_lifeTime > 5.0f)
+            {
+                SAFE_DELETE(a_rBullets[i]);
+                if (a_rBullets.begin() + i < a_rBullets.end())
+                    a_rBullets.erase(a_rBullets.begin() + i);
+                i--;
+            }
+        }
+        //Update Items
+        for (unsigned int i = 0; i < a_rItems.size(); i++)
+        {
+            a_rItems[i]->Update(a_Deltatime);
+
+            if (a_rItems[i]->m_Collided)
+            {
+                SAFE_DELETE(a_rItems[i]);
+                if (a_rItems.begin() + i < a_rItems.end())
+                    a_rItems.erase(a_rItems.begin() + i);
+                i--;
+            }
+        }
+
+        //Set Player Respawn
+        for (unsigned int i = 0; i < sba_Players.size(); i++)
+        {
+            if (sba_Players[i]->Ship->m_Respawn == 0 && sba_Players[i]->Ship->m_Life <= 0)
+            {
+                sba_Players[i]->Ship->m_Respawn = 5.0f;
+                sba_Players[i]->Ship->m_Life = 0;
+            }
+        }
+    }
+
     // **************************************************************************
     // **************************************************************************
     void CGameScene::HandleLocal()
     {
         PuRe_IInput* aInput = this->m_pApplication->GetInput();
         PuRe_Timer* aTimer = this->m_pApplication->GetTimer();
+        float seconds = aTimer->GetElapsedSeconds();
+        this->UpdateGame(this->m_Bullets, this->m_Items, seconds);
         for (unsigned int i = 0; i < sba_Players.size(); i++)
         {
             sba::SInputData input = this->HandleInput(sba_Players[i]->PadID,aInput);
-            this->ProcessInput(this->m_Bullets,sba_Players[i], &input, aTimer->GetElapsedSeconds());
+            this->ProcessInput(this->m_Bullets, sba_Players[i], &input, seconds);
         }
         sba::Space::Instance()->UpdatePhysics(aTimer);
-        this->m_EndTime -= aTimer->GetElapsedSeconds();
+        this->m_EndTime -= seconds;
     }
 
     // **************************************************************************
     // **************************************************************************
     void CGameScene::HandleNetwork()
     {
-        this->m_pNetwork->UpdateNetwork(this->m_Bullets,this->m_pApplication->GetInput(), this->m_pApplication->GetTimer()->GetElapsedSeconds(), this->m_EndTime, &CGameScene::HandleInput, &CGameScene::ProcessInput);
+        this->m_pNetwork->UpdateNetwork(this->m_Bullets, this->m_Items,this->m_pApplication->GetInput(), this->m_pApplication->GetTimer()->GetElapsedSeconds(), this->m_EndTime, &CGameScene::HandleInput, &CGameScene::ProcessInput, &CGameScene::UpdateGame);
     }
 
     // **************************************************************************
@@ -148,7 +190,7 @@ namespace sba
             sba_Players[i]->Ship->m_pBody->setPosition(pos);
         }
 
-        if (!sba_Map->GetMapData(this->m_Asteroids)) //Map doesn't exist!! we end here
+        if (!sba_Map->GetMapData(this->m_Asteroids,this->m_Items) ) //Map doesn't exist!! we end here
             this->m_EndTime = -1000;
 
         this->m_TimeLimit = 5.0f;
@@ -338,29 +380,7 @@ namespace sba
             this->m_Cameras[3]->Move(PuRe_Vector3F(0.0f, 0.0f, -100.0f));
         }
 
-        for (unsigned int i = 0; i < this->m_Bullets.size(); i++)
-        {
-            this->m_Bullets[i]->Update(a_pApplication->GetTimer()->GetElapsedSeconds());
 
-            if (this->m_Bullets[i]->m_Collided||this->m_Bullets[i]->m_lifeTime > 5.0f)
-            {
-                SAFE_DELETE(this->m_Bullets[i]);
-                if (this->m_Bullets.begin() + i < this->m_Bullets.end())
-                    this->m_Bullets.erase(this->m_Bullets.begin() + i);
-                i--;
-            }
-        }
-
-
-
-        for (unsigned int i = 0; i < sba_Players.size(); i++)
-        {
-            if (sba_Players[i]->Ship->m_Respawn == 0&&sba_Players[i]->Ship->m_Life <= 0)
-            {
-                sba_Players[i]->Ship->m_Respawn = 5.0f;
-                sba_Players[i]->Ship->m_Life = 0;
-            }
-        }
 
         if (!this->m_Won&&this->m_EndTime < 0.0f)
         {
@@ -374,12 +394,11 @@ namespace sba
                     this->m_WonIndex = i;
                     this->m_WonID = sba_Players[i]->ID;
                     points = sba_Players[i]->m_Points;
-                    
+
                 }
             }
             this->m_Won = true;
         }
-
 
         return 1;
     }
@@ -481,6 +500,8 @@ namespace sba
         SAFE_DELETE(this->m_pSkyMaterial);
         SAFE_DELETE(this->m_pUIMaterial);
         // DELETE OBJECTS
+        for (unsigned int i = 0; i < this->m_Items.size(); i++)
+            SAFE_DELETE(this->m_Items[i]);
         for (unsigned int i = 0; i < this->m_Bullets.size(); i++)
             SAFE_DELETE(this->m_Bullets[i]);
         for (unsigned int i = 0; i < this->m_Asteroids.size(); i++)

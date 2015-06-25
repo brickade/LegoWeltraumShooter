@@ -25,6 +25,8 @@ namespace sba
                 pos.Y = 1080.0f - 100.0f;
                 sba_Renderer->Draw(1, false, a_pFont, a_pFontMaterial, "Life: " + std::to_string(sba_Players[i]->Ship->m_Life), pos, PuRe_MatrixF(), size, 36.0f, c, local);
                 pos.Y -= 100.0f;
+                sba_Renderer->Draw(1, false, a_pFont, a_pFontMaterial, "Shield: " + std::to_string(sba_Players[i]->Ship->m_Shield), pos, PuRe_MatrixF(), size, 36.0f, c, local);
+                pos.Y -= 100.0f;
                 sba_Renderer->Draw(1, false, a_pFont, a_pFontMaterial, "Points: " + std::to_string(sba_Players[i]->m_Points), pos, PuRe_MatrixF(), size, 36.0f, c, local);
                 pos.X = 1920.0f / 2.0f;
                 pos.Y = 1080.0f / 2.0f;
