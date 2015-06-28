@@ -40,6 +40,9 @@ struct StudConnection
 	Stud studs[2 * 4];
 	float fulcrumX;
 	float fulcrumZ;
+
+	float capacity;
+	float flow;
 };
 
 
@@ -51,6 +54,7 @@ struct Brick
 	Collider* collider;
 	Ship* ship;
 	int lastVisited = -1;
+	int numBlock;
 	uint8 block[6];
 };
 
@@ -82,6 +86,24 @@ public:
 			sDescr.hullFromBox.e = vec3(2, 0.5, 1);
 			brickShape = m_world->createShape(sDescr);
 		}
+	}
+
+	void calcBase()
+	{
+		// set base
+		Collider* c = m_body->getCollider();
+		float min = FLT_MAX;
+		while (c)
+		{
+			if (lengthSq(c->getTransform().p - m_body->getLocalCenter()) < min)
+			{
+				min = lengthSq(c->getTransform().p - m_body->getLocalCenter());
+				m_base = (Brick*)c->getUserData();
+			}
+
+			c = c->getNext();
+		}
+
 	}
 
 	void addBrick(int x, int y, int z)
@@ -214,14 +236,14 @@ public:
 			brick->block[StudConnection::LEFT]++;
 			brick2->block[StudConnection::RIGHT]++;
 
-			StudConnection* a = &brick->connections[brick->numConnections++];
-			StudConnection* b = &brick2->connections[brick2->numConnections++];
-			a->other = b;
-			a->brick = brick;
-			b->other = a;
-			b->brick = brick2;
-			a->type = StudConnection::LEFT;
-			b->type = StudConnection::RIGHT;
+			//StudConnection* a = &brick->connections[brick->numConnections++];
+			//StudConnection* b = &brick2->connections[brick2->numConnections++];
+			//a->other = b;
+			//a->brick = brick;
+			//b->other = a;
+			//b->brick = brick2;
+			//a->type = StudConnection::LEFT;
+			//b->type = StudConnection::RIGHT;
 
 			return true;
 		};
@@ -232,14 +254,14 @@ public:
 			brick->block[StudConnection::RIGHT]++;
 			brick2->block[StudConnection::LEFT]++;
 
-			StudConnection* a = &brick->connections[brick->numConnections++];
-			StudConnection* b = &brick2->connections[brick2->numConnections++];
-			a->other = b;
-			a->brick = brick;
-			b->other = a;
-			b->brick = brick2;
-			a->type = StudConnection::RIGHT;
-			b->type = StudConnection::LEFT;
+			//StudConnection* a = &brick->connections[brick->numConnections++];
+			//StudConnection* b = &brick2->connections[brick2->numConnections++];
+			//a->other = b;
+			//a->brick = brick;
+			//b->other = a;
+			//b->brick = brick2;
+			//a->type = StudConnection::RIGHT;
+			//b->type = StudConnection::LEFT;
 			return true;
 		};
 		ShapeQueryCallBack frontBlockCallback = [](Collider* other, void* userData){
@@ -249,14 +271,14 @@ public:
 			brick->block[StudConnection::FRONT]++;
 			brick2->block[StudConnection::BACK]++;
 			
-			StudConnection* a = &brick->connections[brick->numConnections++];
-			StudConnection* b = &brick2->connections[brick2->numConnections++];
-			a->other = b;
-			a->brick = brick;
-			b->other = a;
-			b->brick = brick2;
-			a->type = StudConnection::FRONT;
-			b->type = StudConnection::BACK;
+			//StudConnection* a = &brick->connections[brick->numConnections++];
+			//StudConnection* b = &brick2->connections[brick2->numConnections++];
+			//a->other = b;
+			//a->brick = brick;
+			//b->other = a;
+			//b->brick = brick2;
+			//a->type = StudConnection::FRONT;
+			//b->type = StudConnection::BACK;
 			return true;		
 		};
 		ShapeQueryCallBack backBlockCallback = [](Collider* other, void* userData){
@@ -266,14 +288,14 @@ public:
 			brick->block[StudConnection::BACK]++;
 			brick2->block[StudConnection::FRONT]++;
 
-			StudConnection* a = &brick->connections[brick->numConnections++];
-			StudConnection* b = &brick2->connections[brick2->numConnections++];
-			a->other = b;
-			a->brick = brick;
-			b->other = a;
-			b->brick = brick2;
-			a->type = StudConnection::BACK;
-			b->type = StudConnection::FRONT;
+			//StudConnection* a = &brick->connections[brick->numConnections++];
+			//StudConnection* b = &brick2->connections[brick2->numConnections++];
+			//a->other = b;
+			//a->brick = brick;
+			//b->other = a;
+			//b->brick = brick2;
+			//a->type = StudConnection::BACK;
+			//b->type = StudConnection::FRONT;
 			return true;
 		};
 
@@ -291,9 +313,57 @@ public:
 		//back
 		m_body->queryShape(brickShape, transformTransform(Transform(vec3(x, y, z-0.1), Quaternion(vec3(0, 0, 0), 1)), m_body->getTransform()), backBlockCallback, brick);
 
-
-
 		m_body->addCollider(collider);
+
+		calcBase();
+	}
+
+	void destroy(Brick* brick, std::vector<Brick*>& selection, std::vector<StudConnection*> front)
+	{
+
+		// dissassembly front
+		for (int i = 0; i < front.size(); ++i)
+		{
+			//todo blocking neighbours
+			StudConnection* a = front[i];
+			StudConnection* b = front[i]->other;
+			*a = a->brick->connections[--a->brick->numConnections];
+			*b = b->brick->connections[--b->brick->numConnections];
+
+			//if (!connected(b->brick, m_base, g_tick++))
+			//{
+			//	Ship* ship = createShip(b->brick, brick->ship->getBody()->getTransform(), BodyType::Dynamic);
+			//	setShip(b->brick, ship, g_tick++);
+			//}
+		}
+
+		// seperate selection
+		Ship* newShip = createShip(brick, m_body->getTransform(), BodyType::Dynamic);
+
+		// todo new base
+		for (int i = 0; i < selection.size(); ++i)
+		{
+			for (int j = 0; j < selection[i]->numConnections; ++j)
+			{
+				if (selection[i]->connections[j].other->brick->lastVisited != selection[i]->lastVisited)
+				{
+					StudConnection* a = &selection[i]->connections[j];
+					StudConnection* b = a->other;
+					a->brick->block[a->type]--;
+					b->brick->block[b->type]--;
+					*a = a->brick->connections[--a->brick->numConnections];
+					*b = b->brick->connections[--b->brick->numConnections];
+				}
+				
+			}
+
+
+			m_body->removeCollider(selection[i]->collider);
+			selection[i]->ship = newShip;
+			newShip->m_body->addCollider(selection[i]->collider);
+		}
+
+
 	}
 
 
@@ -334,12 +404,13 @@ public:
 		{
 			int expansion = -2;
 			float minTorque = -FLT_MAX;
-			for (int f = (front.size() > 0 ? 0 : -1); f < front.size(); ++f)
+			for (int f = (front.size() > 0 ? 0 : -1); f < (int)front.size(); ++f)
 			{
-				Brick* newBrick = front[f]->other->brick;
+				Brick* newBrick;
 				if (f == -1)
 					newBrick = brick;
-
+				else
+					newBrick = front[f]->other->brick;
 
 				if (distPointFatPlane(transformVec3(newBrick->collider->getMassData().cm, newBrick->collider->getTransform()), cmPlane, FLT_EPSILON) <= 0.0f)
 					continue;
@@ -347,15 +418,16 @@ public:
 
 				int tick = g_tick++;
 
+				newBrick->lastVisited = tick;
 				for (int i = 0; i < selection.size(); ++i)
 				{
 					selection[i]->lastVisited = tick;
 				}
 
-				for (int j = 0; j < newBrick->numConnections; ++j)
+				for (int i = 0; i < newBrick->numConnections; ++i)
 				{
-					if (newBrick->connections[j].numStuds > 0 && newBrick->connections[j].other->brick->lastVisited != tick)
-						front.push_back(newBrick->connections + j);
+					if (newBrick->connections[i].numStuds > 0 && newBrick->connections[i].other->brick->lastVisited != tick)
+						front.push_back(newBrick->connections + i);
 				}
 
 
@@ -377,7 +449,7 @@ public:
 
 				for (int i = 0; i < front.size(); ++i)
 				{
-					if (!checkFrontForConnection(front[i]->other->brick, base, g_tick++, tick))
+					if (front[i]->other->brick->lastVisited != tick && !checkFrontForConnection(front[i]->other->brick, base, g_tick++, tick))
 					{
 						front[i]->other->brick->lastVisited = tick;
 					}
@@ -387,41 +459,72 @@ public:
 				for (int i = 0; i < front.size(); ++i)
 				{
 
-					float studTorque = 0;
+					float sumStudTorque = 0;
 
 					Stud* stud = nullptr;
-					float fulcrum;
+					float fulcrum = 0;
 					bool blocked = false;
-					
-					if ((_impulse.y < 0 ? StudConnection::DOWN : StudConnection::UP) != front[i]->type)
-					{
-						fulcrum = front[i]->fulcrumX;
 
-						if ((fulcrum > _pos.x && front[i]->brick->block[StudConnection::RIGHT])
-							|| (fulcrum < _pos.x && front[i]->brick->block[StudConnection::LEFT]))
+					//if (i == 0)
+					//{
+						if ((_impulse.y < 0 ? StudConnection::DOWN : StudConnection::UP) != front[i]->type)
 						{
-							blocked = true;
+							if (axis == 0)
+							{
+								fulcrum = front[i]->fulcrumX;
+								if ((fulcrum > _pos.x && front[i]->brick->block[StudConnection::RIGHT])
+									|| (fulcrum < _pos.x && front[i]->brick->block[StudConnection::LEFT]))
+								{
+									blocked = true;
+								}
+							}
+							else if (axis == 2)
+							{
+								fulcrum = front[i]->fulcrumZ;
+								if ((fulcrum > _pos.z && front[i]->brick->block[StudConnection::FRONT])
+									|| (fulcrum < _pos.z && front[i]->brick->block[StudConnection::BACK]))
+								{
+									blocked = true;
+								}
+							}
 						}
-					}
-					else
-					{
-						fulcrum = front[i]->other->fulcrumX;
-						if ((fulcrum > _pos.x && front[i]->other->brick->block[StudConnection::LEFT]) ||
-							(fulcrum < _pos.x && front[i]->other->brick->block[StudConnection::RIGHT]))
+						else
 						{
-							blocked = true;
+							if (axis == 0)
+							{
+								fulcrum = front[i]->other->fulcrumX;
+								if ((fulcrum > _pos.x && front[i]->other->brick->block[StudConnection::LEFT]) ||
+									(fulcrum < _pos.x && front[i]->other->brick->block[StudConnection::RIGHT]))
+								{
+									blocked = true;
+								}
+							}
+							else if (axis == 2)
+							{
+								fulcrum = front[i]->other->fulcrumZ;
+								if ((fulcrum > _pos.z && front[i]->other->brick->block[StudConnection::BACK]) ||
+									(fulcrum < _pos.z && front[i]->other->brick->block[StudConnection::FRONT]))
+								{
+									blocked = true;
+								}
+							}
 						}
-					}
+					//}
+
 
 
 					// check torques around frustrums
 					float y = front[i]->studs[0].y;
-					float torque = cross(vec3(_pos.x - fulcrum, _pos.y - y, 0), _impulse).z;
+					float torque;
+					if (axis == 0)
+						torque = cross(vec3(_pos.x - fulcrum, _pos.y - y, 0), _impulse).z;
+					else if (axis == 2)
+						torque = cross(vec3(0, _pos.y - y, _pos.z - fulcrum), _impulse).x;
 
-					float dx = torque > 0 ? 1 : -1;
+					float d = torque > 0 ? 1 : -1;
 
 					if (blocked)
-						studTorque += -dx * 100.0f * STUD_STRENGTH;
+						sumStudTorque += -d * 100.0f * STUD_STRENGTH;
 
 
 					for (int j = 0; j < front.size(); ++j)
@@ -430,7 +533,7 @@ public:
 						if (j == f || front[j]->other->brick == newBrick || front[j]->other->brick->lastVisited == tick)
 							continue;
 
-						if (front[j]->type == StudConnection::UP)
+						if (front[j]->type == StudConnection::UP && j != i)
 						{
 							blocked = true;
 							break;
@@ -439,33 +542,40 @@ public:
 						for (int k = 0; k < front[j]->numStuds; ++k)
 						{
 							Stud* stud = front[j]->studs + k;
-							float tX = cross(vec3(stud->x - fulcrum, stud->y - y, 0), vec3(0, -STUD_STRENGTH, 0)).z;
+							float studTorque;
+							if (axis == 0)
+								studTorque = cross(vec3(stud->x - fulcrum, stud->y - y, 0), vec3(0, (front[j]->type == StudConnection::DOWN ? -1 : 1) * STUD_STRENGTH, 0)).z;
+							else if (axis == 2)
+								studTorque = cross(vec3(0, stud->y - y, stud->z - fulcrum), vec3(0, (front[j]->type == StudConnection::DOWN ? -1 : 1) * STUD_STRENGTH, 0)).x;
 							// if torque stud and torque impact point in the same direction not valid fulcrum
-							if (torque* tX > 0)
+							if (torque* studTorque> 0)
 							{
 								blocked = true;
-								studTorque += -dx * 100.0f * STUD_STRENGTH;
+								sumStudTorque += -d * 100.0f * STUD_STRENGTH;
 								break;
 							}
 							else
 							{
-								studTorque += tX;
+								sumStudTorque += studTorque;
 							}
 						}
 					}
 
 
-					float torqueDiff = dx*(torque + studTorque);
-					if (torqueDiff > 0 && !blocked)
-					{
-						destroy = true;
-						break;
-					}
+					float torqueDiff = d*(torque + sumStudTorque);
 
 					if (torqueDiff > minTorque)
 					{
 						expansion = f;
 						minTorque = torqueDiff;
+					}
+
+					if (torqueDiff > 0 && !blocked)
+					{
+						expansion = f;
+						minTorque = torqueDiff;
+						destroy = true;
+						break;
 					}
 				}
 
@@ -494,6 +604,14 @@ public:
 				front.pop_back();
 			}
 
+			assert(newBrick->lastVisited != tick);
+			selection.push_back(newBrick);
+
+			for (int i = 0; i < selection.size(); ++i)
+			{
+				selection[i]->lastVisited = tick;
+			}
+
 
 
 			if (newBrick == m_base)
@@ -508,9 +626,6 @@ public:
 				}
 			}
 
-			assert(newBrick->lastVisited != tick);
-			newBrick->lastVisited = tick;
-			selection.push_back(newBrick);
 
 			for (int j = 0; j < newBrick->numConnections; ++j)
 			{
@@ -523,7 +638,7 @@ public:
 			for (int i = 0; i < front.size(); ++i)
 			{
 
-				if (!checkFrontForConnection(front[i]->other->brick, m_base, g_tick++, tick))
+				if (front[i]->other->brick->lastVisited != tick && !checkFrontForConnection(front[i]->other->brick, m_base, g_tick++, tick))
 				{
 					front[i]->other->brick->lastVisited = tick;
 					selection.push_back(front[i]->other->brick);
@@ -547,12 +662,159 @@ public:
 			}
 
 			if (destroy)
+			{
+				Ship::destroy(brick, selection, front);
 				return true;
+
+			}
 
 		}
 	}
 
-	static const float STUD_STRENGTH = 20.0f;
+
+	void setCapacity(Brick* brick, vec3 impulse, vec3 pos, int axis, int tick)
+	{
+		brick->lastVisited = tick;
+		for (int i = 0; i < brick->numConnections; ++i)
+		{
+			brick->connections[i].capacity = 0;
+
+			if (axis == 0)
+			{
+				if ((brick->connections[i].fulcrumX < brick->pos[0] && brick->block[StudConnection::LEFT])
+					|| (brick->connections[i].fulcrumX > brick->pos[0] && brick->block[StudConnection::RIGHT]))
+				{
+					brick->connections[i].capacity = 1;
+				}
+				else
+				{
+					for (int j = 0; j < brick->connections[i].numStuds; ++j)
+						brick->connections[i].capacity += STUD_STRENGTH * (brick->connections[i].fulcrumX - brick->connections[i].studs[j].x);
+
+					brick->connections[i].capacity = abs(brick->connections[i].capacity) / abs((brick->connections[i].fulcrumX - pos.x) * impulse.y - (brick->connections[i].studs->y - pos.y) * impulse.x);
+				}
+			}
+			else if (axis == 2)
+			{
+				if ((brick->connections[i].fulcrumZ < brick->pos[2] && brick->block[StudConnection::FRONT])
+					|| (brick->connections[i].fulcrumZ > brick->pos[2] && brick->block[StudConnection::BACK]))
+				{
+					brick->connections[i].capacity = 1;
+				}
+				else
+				{
+					for (int j = 0; j < brick->connections[i].numStuds; ++j)
+						brick->connections[i].capacity += STUD_STRENGTH * (brick->connections[i].fulcrumZ - brick->connections[i].studs[j].z);
+
+					brick->connections[i].capacity = abs(brick->connections[i].capacity) / abs((brick->connections[i].fulcrumZ - pos.z) * impulse.y - (brick->connections[i].studs->y - pos.y) * impulse.z);
+				}
+			}
+			brick->connections[i].capacity = ong_MIN(1.0f, brick->connections[i].capacity);
+
+
+			brick->connections[i].flow = 0;
+			if (brick->connections[i].other->brick->lastVisited != tick)
+			{
+				setCapacity(brick->connections[i].other->brick, impulse, pos,axis, tick);
+			}
+		}
+	}
+
+	bool findAugmentedPath(Brick* brick, float* minCapacity, std::vector<StudConnection*>& path, int tick)
+	{
+		if (brick == m_base)
+			return true;
+
+		brick->lastVisited = tick;
+		for (int i = 0; i < brick->numConnections; ++i)
+		{
+			if (brick->connections[i].other->brick->lastVisited != tick &&
+				brick->connections[i].capacity - brick->connections[i].flow  > 0)
+			{
+				path.push_back(brick->connections + i);
+				if (findAugmentedPath(brick->connections[i].other->brick, minCapacity, path, tick))
+				{
+					if (brick->connections[i].capacity - brick->connections[i].flow < *minCapacity)
+						*minCapacity = brick->connections[i].capacity - brick->connections[i].flow;
+					return true;
+				}
+				else
+				{
+					path.pop_back();
+				}
+			}
+		}
+				
+		return false;
+	}
+
+	void maxFlow(vec3 impulse, vec3 pos, Brick* brick, int axis)
+	{
+		setCapacity(brick, impulse, pos,axis, g_tick++);
+
+		std::vector<StudConnection*> augmentedPath;
+		while (true)
+		{
+			augmentedPath.clear();
+			float minCapacity = FLT_MAX;
+			if (!findAugmentedPath(brick, &minCapacity, augmentedPath, g_tick++))
+				break;
+			for (auto connection : augmentedPath)
+			{
+				connection->flow += minCapacity;
+				connection->other->flow -= minCapacity;
+			}
+		}
+	}
+
+	void breakGraph(Brick* brick, float maxFlow, std::vector<Brick*>& selection, std::vector<StudConnection*>& front, int tick)
+	{
+		brick->lastVisited = tick;
+		selection.push_back(brick);
+		for (int i = 0; i < brick->numConnections; ++i)
+		{
+			if (brick->connections[i].other->brick->lastVisited != tick)
+			{
+				if (brick->connections[i].capacity >= brick->connections[i].flow / maxFlow)
+				{
+					breakGraph(brick->connections[i].other->brick, maxFlow, selection, front, tick);
+				}
+				else
+				{
+					front.push_back(brick->connections + i);
+				}
+			}
+		}
+	}
+
+	bool networkFlow(vec3 _impulse, vec3 _pos, Brick* brick, int axis)
+	{
+		if (brick == m_base)
+			return false;
+
+		maxFlow(_impulse, _pos, brick, axis);
+
+		float maxFlow = 0;
+		for (int i = 0; i < brick->numConnections; ++i)
+		{
+			maxFlow += brick->connections[i].flow;
+		}
+
+		if (maxFlow < 1.0)
+		{
+			// destroy
+			std::vector<Brick*> selection;
+			std::vector<StudConnection*> front;
+			breakGraph(brick, maxFlow, selection, front, g_tick++);
+			destroy(brick, selection, front);
+			return true;
+		}
+
+		return false;
+	}
+
+
+	static const float STUD_STRENGTH;
 	bool addImpulse(Brick* brick, vec3 pos, vec3 impulse)
 	{
 		bool destroy = false;
@@ -562,288 +824,15 @@ public:
 		vec3 _pos = transformVec3(pos, t);
 		vec3 _impulse = rotate(impulse, t.q);
 
-		std::vector<Brick*> selection;
-		std::vector<StudConnection*> front;
-		int tick = g_tick++;
-		int frontSize = 0;
+		//destroy = checkLeverage(_impulse, _pos, brick, 0);
 
-		selection.push_back(brick);
-		brick->lastVisited = tick;
+		destroy = networkFlow(_impulse, _pos, brick, 0);
 
-		for (int i = 0; i < brick->numConnections; ++i)
-		{
-			if (brick->connections[i].numStuds > 0)
-			{
-				front.push_back(&brick->connections[i]);
-				frontSize += brick->connections[i].numStuds;
-			}
-		}
+		//if (!destroy)
+		//	destroy = networkFlow(_impulse, _pos, brick, 2);
 
-		Plane cmPlane = { normalize(_pos - m_body->getLocalCenter()), dot(normalize(_pos - m_body->getLocalCenter()), m_body->getLocalCenter()) };
-		// check for destruction
-		
-
-
-
-
-		// check for leverage x
-		while (true)
-		{
-			int expansion = -1;
-			float minTorque = -FLT_MAX;
-			for (int f = 0; f < front.size(); ++f)
-			{
-
-				Brick* newBrick = front[f]->other->brick;
-				if (distPointFatPlane(transformVec3(newBrick->collider->getMassData().cm, newBrick->collider->getTransform()), cmPlane, FLT_EPSILON) <= 0.0f)
-					continue;
-
-
-				for (int j = 0; j < newBrick->numConnections; ++j)
-				{
-					if (newBrick->connections[j].numStuds > 0 && newBrick->connections[j].other->brick->lastVisited != tick)
-						front.push_back(newBrick->connections + j);
-				}
-
-
-
-				for (int i = 0; i < front.size(); ++i)
-				{
-					float studTorque = 0;
-
-					Stud* stud = nullptr;
-					float fulcrum;
-					bool blocked = false;
-					if ((impulse.y < 0 ? StudConnection::DOWN : StudConnection::UP) != front[i]->type)
-					{
-						fulcrum = front[i]->fulcrumX;
-
-						if ((fulcrum > _pos.x && front[i]->brick->block[StudConnection::RIGHT])
-							|| (fulcrum < _pos.x && front[i]->brick->block[StudConnection::LEFT]))
-						{
-							blocked = true;
-						}
-					}
-					else
-					{
-						fulcrum = front[i]->other->fulcrumX;
-						if ((fulcrum > _pos.x && front[i]->other->brick->block[StudConnection::RIGHT]) ||
-							(fulcrum < _pos.x && front[i]->other->brick->block[StudConnection::LEFT]))
-						{
-							blocked = true;
-						}
-					}
-
-
-					// check torques around frustrums
-					float y = front[i]->studs[0].y;
-					float torque = cross(vec3(_pos.x - fulcrum, _pos.y - y, 0), _impulse).z;
-
-					float dx = torque > 0 ? 1 : -1;
-
-					if (blocked)
-						studTorque += -dx * 100.0f * STUD_STRENGTH;
-
-
-					for (int j = 0; j < front.size(); ++j)
-					{
-						// front which we currently try to expand
-						if (j == f || front[j]->other->brick == newBrick)
-							continue;
-
-						
-
-						if (front[j]->type == StudConnection::UP)
-						{
-							blocked = true;
-							break;
-						}
-
-						for (int k = 0; k < front[j]->numStuds; ++k)
-						{
-							Stud* stud = front[j]->studs + k;
-							float tX = cross(vec3(stud->x - fulcrum, stud->y - y, 0), vec3(0, -STUD_STRENGTH, 0)).z;
-							// if torque stud and torque impact point in the same direction not valid fulcrum
-							if (torque* tX > 0)
-							{
-								blocked = true;
-								studTorque += -dx * 100.0f * STUD_STRENGTH;
-								break;
-							}
-							else
-							{
-								studTorque += tX;
-							}
-						}
-					}
-
-	
-					float torqueDiff = dx*(torque + studTorque);
-					if (torqueDiff > 0 && !blocked)
-					{
-						destroy = true;
-						break;
-					}
-
-					if (torqueDiff > minTorque)
-					{
-						expansion = f;
-						minTorque = torqueDiff;
-					}
-
-				}
-
-
-
-				for (int j = 0; j < newBrick->numConnections; ++j)
-				{
-					if (newBrick->connections[j].numStuds > 0 && newBrick->connections[j].other->brick->lastVisited != tick)
-						front.pop_back();
-				}
-
-				if (destroy)
-					break;
-
-			}
-
-			if (destroy)
-				break;
-
-			if (expansion == -1)
-				break;
-			
-			Brick* newBrick = front[expansion]->other->brick;
-			front[expansion] = front.back();
-			front.pop_back();
-
-			if (newBrick == m_base)
-			{
-				for (int i = 0; i < newBrick->numConnections; ++i)
-				{
-					if (newBrick->connections[i].numStuds > 0 && newBrick->connections[i].other->brick->lastVisited != tick)
-					{
-						m_base = newBrick->connections[i].other->brick;
-					}
-				}
-			}
-
-			assert(newBrick->lastVisited != tick);
-			newBrick->lastVisited = tick;
-			selection.push_back(newBrick);
-
-			for (int j = 0; j < newBrick->numConnections; ++j)
-			{
-				if (newBrick->connections[j].numStuds > 0 && newBrick->connections[j].other->brick->lastVisited != tick)
-				{
-					front.push_back(&newBrick->connections[j]);
-				}
-			}
-
-			// check for outdated connection
-			// see if rest of front still connected to base
-			for (int i = 0; i < front.size(); ++i)
-			{
-				if (front[i]->other->brick->lastVisited == tick)
-				{
-					front[i] = front.back();
-					front.pop_back();
-					--i;
-				}
-				else if (!checkFrontForConnection(front[i]->other->brick, m_base, g_tick++, tick))
-				{
-					front[i]->other->brick->lastVisited = tick;
-					selection.push_back(front[i]->other->brick);
-
-					front[i] = front.back();
-					front.pop_back();
-					--i;
-				}
-
-			}
-			
-
-
-			// destroy?
-			{
-
-				for (int i = 0; i < front.size(); ++i)
-				{
-
-					float studTorque = 0;
-					float fulcrum;
-					bool blocked = false;
-					if ((impulse.y < 0 ? StudConnection::DOWN : StudConnection::UP) != front[i]->type)
-					{
-						fulcrum = front[i]->fulcrumX;
-
-						if ((fulcrum > _pos.x && front[i]->brick->block[StudConnection::RIGHT])
-							|| (fulcrum < _pos.x && front[i]->brick->block[StudConnection::LEFT]))
-						{
-							blocked = true;
-						}
-					}
-					else
-					{
-						fulcrum = front[i]->other->fulcrumX;
-						if ((fulcrum > _pos.x && front[i]->other->brick->block[StudConnection::RIGHT]) ||
-							(fulcrum < _pos.x && front[i]->other->brick->block[StudConnection::LEFT]))
-						{
-							blocked = true;
-						}
-					}
-
-
-					// check torques around frustrums
-					float y = front[i]->studs[0].y;
-					float torque = cross(vec3(_pos.x - fulcrum, _pos.y - y, 0), _impulse).z;
-
-					float dx = torque > 0 ? 1 : -1;
-
-					if (blocked)
-						studTorque += -dx * 100.0f * STUD_STRENGTH;
-
-
-					for (int j = 0; j < front.size(); ++j)
-					{
-						if (front[j]->type == StudConnection::UP)
-						{
-							blocked = true;
-							break;
-						}
-
-						for (int k = 0; k < front[j]->numStuds; ++k)
-						{
-							Stud* stud = front[j]->studs + k;
-							float tX = cross(vec3(stud->x - fulcrum, stud->y - y, 0), vec3(0, -STUD_STRENGTH, 0)).z;
-							// if torque stud and torque impact point in the same direction not valid fulcrum
-							if (torque* tX > 0)
-							{
-								blocked = true;
-								studTorque += -dx * 100.0f * STUD_STRENGTH;
-								break;
-							}
-							else
-							{
-								studTorque += tX;
-							}
-						}
-					}
-
-
-					float torqueDiff = dx*(torque + studTorque);
-					if (torqueDiff > 0 && !blocked)
-					{
-						destroy = true;
-						break;
-					}
-
-				}
-			}
-
-			if (destroy)
-				break;
-		}
-
+		//if (!destroy)
+		//	destroy = checkLeverage(_impulse, _pos, brick, 2);
 
 		//while (true)
 		//{
@@ -1027,43 +1016,8 @@ public:
 		if (destroy)
 		{
 			//destroyBrick(brick);
-
-
-			if (m_base->lastVisited == tick)
-			{
-				assert(front.size() > 0);
-				m_base = front[0]->other->brick;
-			}
-
-			// dissassembly front
-			for (int i = 0; i < front.size(); ++i)
-			{
-				//todo blocking neighbours
-				StudConnection* a = front[i];
-				StudConnection* b = front[i]->other;
-				*a = a->brick->connections[--a->brick->numConnections];
-				*b = b->brick->connections[--b->brick->numConnections];
-
-				if (!connected(b->brick, m_base, g_tick++))
-				{
-					Ship* ship = createShip(b->brick, brick->ship->getBody()->getTransform(), BodyType::Dynamic);
-					setShip(b->brick, ship, g_tick++);
-				}
-			}
-
-			// seperate selection
-			Ship* newShip = createShip(brick, m_body->getTransform(), BodyType::Dynamic);
-
-			// todo new base
-			for (int i = 0; i < selection.size(); ++i)
-			{
-				m_body->removeCollider(selection[i]->collider);
-				selection[i]->ship = newShip;
-				newShip->m_body->addCollider(selection[i]->collider);
-			}
-
-
-			newShip->getBody()->applyImpulse(impulse, pos);
+			calcBase();
+			brick->ship->getBody()->applyImpulse(impulse, pos);
 		}
 		else
 		{
@@ -1073,14 +1027,24 @@ public:
 		return destroy;
 	}
 
-	void renderBrick(Brick* brick, int tick)
+	void renderBrick(Brick* brick, GLuint colorLocation, int tick)
 	{
 		brick->lastVisited = tick;
 		for (int i = 0; i < brick->numConnections; ++i)
 		{
+			if (brick->connections[i].flow != 0)
+			{
+				glLineWidth(10.0f * brick->connections[i].flow);
+				glBegin(GL_LINES);
+				glVertex3f(brick->pos[0], brick->pos[1], brick->pos[2]);
+				glVertex3f(brick->connections[i].other->brick->pos[0], brick->connections[i].other->brick->pos[1], brick->connections[i].other->brick->pos[2]);
+				glEnd();
+				glLineWidth(1);
+			}
+			glLineWidth(brick->connections[i].capacity * 10.0f);
 			for (int j = 0; j < brick->connections[i].numStuds; ++j)
 			{
-
+				
 				Stud* stud = &brick->connections[i].studs[j];
 				glBegin(GL_LINES);
 
@@ -1091,9 +1055,22 @@ public:
 					glVertex3f(stud->x, stud->y - 0.1f, stud->z);
 
 				glEnd();
+			}
+			glLineWidth(1);
 
-
-
+			if (brick->connections[i].type == StudConnection::LEFT)
+			{
+				glBegin(GL_LINES);
+				glVertex3f(brick->collider->getTransform().p.x, brick->collider->getTransform().p.y, brick->collider->getTransform().p.z);
+				glVertex3f(brick->collider->getTransform().p.x-2, brick->collider->getTransform().p.y, brick->collider->getTransform().p.z);
+				glEnd();
+			}
+			else if (brick->connections[i].type == StudConnection::RIGHT)
+			{
+				glBegin(GL_LINES);
+				glVertex3f(brick->collider->getTransform().p.x, brick->collider->getTransform().p.y, brick->collider->getTransform().p.z);
+				glVertex3f(brick->collider->getTransform().p.x + 2, brick->collider->getTransform().p.y, brick->collider->getTransform().p.z);
+				glEnd();
 			}
 
 			glBegin(GL_LINES);
@@ -1102,8 +1079,20 @@ public:
 			glEnd();
 
 			if (brick->connections[i].other->brick->lastVisited != tick)
-				renderBrick(brick->connections[i].other->brick, tick);
+				renderBrick(brick->connections[i].other->brick, colorLocation, tick);
 		}
+
+		if (brick == m_base)
+		{
+			glUniform3f(colorLocation, 1, 0, 1);
+			glPointSize(10.0f);
+			glBegin(GL_POINTS);
+			glVertex3f(brick->pos[0], brick->pos[1], brick->pos[2]);
+			glEnd();
+			glPointSize(1.0f);
+			glUniform3f(colorLocation, 0, 1, 1);
+		}
+
 	}
 
 
@@ -1128,7 +1117,7 @@ public:
 		glMultMatrixf(rot);
 
 		glUniform3f(colorLocation, 0, 1, 1);
-		renderBrick(m_base, g_tick++);
+		renderBrick(m_base, colorLocation, g_tick++);
 
 
 		glPopMatrix();
@@ -1137,7 +1126,7 @@ public:
 
 };
 ShapePtr Ship::brickShape;
-
+const float Ship::STUD_STRENGTH = 20.0f;
 
 
 Ship* createShip(Brick* base, Transform t, BodyType::Type type)
@@ -1258,6 +1247,7 @@ void DestructionTest::init()
 	g_entities = &m_entities;
 	
 	Ship* ship = createShip(0, Transform(vec3(0, 0, 15), Quaternion(vec3(0,0,0),1)), BodyType::Static);
+	ship->addBrick(2, -1, 0);
 	ship->addBrick(-4, 0, 0);
 	ship->addBrick(0, 0, 0);
 	ship->addBrick(4, 0, 0);
