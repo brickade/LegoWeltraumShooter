@@ -107,10 +107,10 @@ namespace sba
     void CSpaceship::CalculateData()
     {
         float mass = 1.0f/this->m_pBody->getInverseMass();
-        this->m_RotationAcceleration = PuRe_Vector3F(mass*10.0f, mass*20.0f, mass*20.0f);
-        this->m_SpeedAcceleration = mass*20.0f;
-        this->m_MaxRotationSpeed = PuRe_Vector3F(5.0f, 5.0f, 5.0f);
-        this->m_MaxSpeed = 10.0f*(20.0f/mass);
+        this->m_RotationAcceleration = PuRe_Vector3F(mass*50.0f, mass*100.0f, mass*100.0f);
+        this->m_SpeedAcceleration = mass*30.0f;
+        this->m_MaxRotationSpeed = PuRe_Vector3F(2.0f, 2.0f, 2.0f);
+        this->m_MaxSpeed = 15.0f*(20.0f/mass);
         this->m_MaxLife = (int)(mass*10.0f);
         this->m_Life = this->m_MaxLife;
         this->m_Shield = 0;
