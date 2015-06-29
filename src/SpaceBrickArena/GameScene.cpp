@@ -186,7 +186,7 @@ namespace sba
         {
             sba_Players[i]->Ship->CalculateData();
             ong::vec3 pos = ong::vec3(0.0f, 0.0f, 0.0f);
-            pos.x += sba_Players[i]->ID*10.0f;
+            pos.x += sba_Players[i]->ID*30.0f;
             sba_Players[i]->Ship->m_pBody->setPosition(pos);
         }
 

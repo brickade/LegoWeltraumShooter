@@ -131,14 +131,17 @@ namespace sba
     // **************************************************************************
     void CSpaceship::Shoot(std::vector<CBullet*>& a_rBullets, SPlayer* a_pOwner,PuRe_Vector3F a_Forward)
     {
-        ong::Body* b = this->m_pBody;
-        ong::World* w = b->getWorld();
+        if (this->m_Life > 0)
+        {
+            ong::Body* b = this->m_pBody;
+            ong::World* w = b->getWorld();
 
-        float len = TheBrick::OngToPuRe(this->m_pBody->getLinearVelocity()).Length();
-        PuRe_Vector3F speed = a_Forward*100.0f + a_Forward * len;
+            float len = TheBrick::OngToPuRe(this->m_pBody->getLinearVelocity()).Length();
+            PuRe_Vector3F speed = a_Forward*100.0f + a_Forward * len;
 
-        speed *= 1.0f/100.0f;
-        a_rBullets.push_back(new CBullet(TheBrick::OngToPuRe(this->GetTransform().p) + a_Forward*10.0f, speed, *w, a_pOwner));
+            speed *= 1.0f/100.0f;
+            a_rBullets.push_back(new CBullet(TheBrick::OngToPuRe(this->GetTransform().p) + a_Forward*10.0f, speed, *w, a_pOwner));
+        }
     }
 
     // **************************************************************************
