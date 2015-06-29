@@ -302,6 +302,16 @@ namespace sba
                 Input::EKeyboardButton::F3
             }
         };
+        this->m_pButtonMapping[Input::EButton::EditorDeleteShip] =
+        {
+            Input::EGamepadButton::Left_Thumb,
+            {
+                Input::EKeyboardButton::Delete,
+                Input::EKeyboardButton::Delete,
+                Input::EKeyboardButton::Delete,
+                Input::EKeyboardButton::Delete
+            }
+        };
         this->m_pButtonMapping[Input::EButton::NavigationSelect] =
         {
             Input::EGamepadButton::Pad_A,
