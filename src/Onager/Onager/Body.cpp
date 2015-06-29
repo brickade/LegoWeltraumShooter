@@ -355,7 +355,7 @@ namespace ong
 
 		result->t = tmin;
 		result->point = origin + tmin*dir;
-		result->normal = rotate(result->normal, t.q);
+		result->normal = normalize(rotate(result->normal, t.q));
 
 		return (result->collider != nullptr);
 	}
