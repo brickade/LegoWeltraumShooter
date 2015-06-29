@@ -27,7 +27,7 @@ namespace sba
     int CMainScene::Update(PuRe_Application* a_pApplication)
     {
         //Drop update after lag to avoid strange camera movement jumps etc
-        if (a_pApplication->GetTimer()->GetElapsedMilliseconds() > 200)
+        if (a_pApplication->GetTimer()->GetElapsedMilliseconds() > 200 && this->m_pActiveScene != this->m_pGameScene)
             return 1;
 
         //Update Active Scene

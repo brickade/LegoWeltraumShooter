@@ -147,19 +147,19 @@ namespace sba
             Input::EGamepadButton::Pad_A,
             {
                 Input::EKeyboardButton::Space,
-                Input::EKeyboardButton::Enter,
-                Input::EKeyboardButton::Enter,
-                Input::EKeyboardButton::Enter
+                Input::EKeyboardButton::Space,
+                Input::EKeyboardButton::Space,
+                Input::EKeyboardButton::Space
             }
         };
         this->m_pButtonMapping[Input::EButton::EditorTogglePlacementSide] =
         {
             Input::EGamepadButton::Pad_B,
             {
-                Input::EKeyboardButton::Space,
-                Input::EKeyboardButton::Space,
-                Input::EKeyboardButton::Space,
-                Input::EKeyboardButton::Space
+                Input::EKeyboardButton::V,
+                Input::EKeyboardButton::V,
+                Input::EKeyboardButton::V,
+                Input::EKeyboardButton::V
             }
         };
         this->m_pButtonMapping[Input::EButton::EditorUndoRedoHold] =
