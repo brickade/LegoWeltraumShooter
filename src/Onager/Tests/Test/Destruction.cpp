@@ -12,26 +12,12 @@ enum
 static ShapePtr g_brickShape = {};
 static Material g_material = { 1, 0, 1 };
 static int g_numJoints;
-static JointData g_joints[256];
+static JointData g_joints[128];
 static int g_numBricks;
-static Brick g_bricks[256];
+static Brick g_bricks[32];
 static int g_tick = 0;
 
-void initDestruction(World* world)
-{
-	ShapeDescription sDescr;
-	sDescr.constructionType = ShapeConstruction::HULL_FROM_BOX;
-	sDescr.hullFromBox.c = vec3(0, 0, 0);
-	sDescr.hullFromBox.e = vec3(2, 0.5, 1);
-	g_brickShape = world->createShape(sDescr);
 
-	g_numJoints = 0;
-	g_numBricks = 0;
-
-	memset(g_bricks, 0, sizeof(g_bricks));
-	memset(g_joints, 0, sizeof(g_joints));
-
-}
 
 Ship* createShip(World* world, std::vector<Entity*>* entities, BodyDescription descr, vec3 color)
 {
@@ -403,10 +389,96 @@ bool checkForConnectivity(Brick* brick, Brick* base, int selectionTick, int tick
 }
 
 
+bool checkShip(Brick* brick, int tick, Ship* ship)
+{
+	brick->tick = tick;
+
+	assert(brick->ship == ship);
+	if (brick->ship != ship)
+		return false;
+	for (int i = 0; i < brick->numConnections; ++i)
+	{
+		if (brick->connections[i].other->tick != tick)
+			if (!checkShip(brick->connections[i].other, tick, ship))
+				return false;
+	}
+	return true;
+}
+
+
+struct Trace
+{
+	int numBricks = 0;
+	Brick bricks[32];
+	int numJoints = 0;
+	JointData joints[128];
+	
+	std::vector<Joint*> front;
+	std::vector<Brick*> selection;
+};
+
+std::vector<Trace> g_traces;
+
+void makeTrace(std::vector<Joint*>& front, std::vector<Brick*>& selection)
+{
+
+	g_traces.push_back(Trace());
+
+	Trace& trace = g_traces.back();
+	trace.numBricks = g_numBricks;
+	trace.numJoints = g_numJoints;
+
+	memcpy(trace.bricks, g_bricks, sizeof(g_bricks));
+	memcpy(trace.joints, g_joints, sizeof(g_joints));
+
+
+	for (int i = 0; i < trace.numBricks; ++i)
+	{ 
+		Brick* brickSrc = g_bricks + i;
+		Brick* brickDst = trace.bricks + i;
+
+		for (int j = 0; j < g_bricks[i].numConnections; ++j)
+		{
+			Connection* connectionSrc = brickSrc->connections + j;
+			Connection* connectionDst = brickDst->connections + j;
+
+			connectionDst->brick = (connectionSrc->brick - g_bricks) + trace.bricks;
+			connectionDst->other = (connectionSrc->other - g_bricks) + trace.bricks;
+			for (int d = X; d < Z; ++d)
+			{
+				for (int k = 0; k < 2; ++k)
+				{
+					Joint* jointSrc = connectionSrc->joints[d] + k;
+					Joint* jointDst = connectionDst->joints[d] + k;
+
+					jointDst->data = (jointSrc->data - g_joints) + trace.joints;
+					jointDst->connection = connectionDst;
+					//jointDst->twin;
+				}
+			}
+
+		}
+	}
+
+	for (int i = 0; i < front.size(); ++i)
+	{
+		Brick* brick = (front[i]->connection->brick - g_bricks) + trace.bricks;
+		Connection* connection = brick->connections + (front[i]->connection - front[i]->connection->brick->connections);
+		Joint* joint = (Joint*)connection->joints + (front[i] - (Joint*)front[i]->connection->joints);
+		trace.front.push_back(joint);
+	}
+
+	for (int i = 0; i < selection.size(); ++i)
+	{
+		Brick* brick = (selection[i] - g_bricks) + trace.bricks;
+		trace.selection.push_back(brick);
+	}
+}
 
 
 void Ship::destroy(std::vector<Brick*>* selection, std::vector<Joint*>* front, vec3 impulse, vec3 pos, int axis, int tick)
 {
+	makeTrace(*front, *selection);
 
 	for (int i = 0; i < selection->size(); ++i)
 	{
@@ -424,7 +496,7 @@ void Ship::destroy(std::vector<Brick*>* selection, std::vector<Joint*>* front, v
 		Connection* a = (*front)[i]->connection;
 		Connection* b = (*front)[i]->twin->connection;
 
-		if ((*front)[i]->capacity < minCapacity && axis != Y)
+ 		if ((*front)[i]->capacity < minCapacity && axis != Y)
 		{
 			Joint* opposite = a->joints[axis] == (*front)[i] ? a->joints[axis] + 1 : a->joints[axis];
 			minFulcrum.y = opposite->data->y;
@@ -435,6 +507,8 @@ void Ship::destroy(std::vector<Brick*>* selection, std::vector<Joint*>* front, v
 
 			minCapacity = (*front)[i]->capacity;
 		}
+
+
 
 
 		*a = a->brick->connections[--a->brick->numConnections];
@@ -479,8 +553,12 @@ void Ship::destroy(std::vector<Brick*>* selection, std::vector<Joint*>* front, v
 	BodyDescription descr;
 	descr.transform = m_body->getTransform();
 	descr.type = BodyType::Dynamic;
-	descr.linearMomentum = impulse;
-	descr.angularMomentum = angularMomentum;
+	descr.linearMomentum = impulse + m_body->getLinearMomentum();
+	descr.angularMomentum = angularMomentum + m_body->getAngularMomentum();
+
+	////
+	descr.linearMomentum = vec3(0, 0, 0);
+	descr.angularMomentum = vec3(0, 0, 0);
 
 	Ship* newShip = createShip(m_world, m_entities, descr, vec3(0,0,1));
 	
@@ -503,8 +581,13 @@ void Ship::destroy(std::vector<Brick*>* selection, std::vector<Joint*>* front, v
 		newShip->m_body->addCollider(brick->collider);
 	}
 	
+	//
+
 	newShip->calcBase();
 	calcBase();
+
+	assert(checkShip(newShip->m_base, g_tick++, newShip));
+	assert(checkShip(m_base, g_tick++, this));
 
 	checkForInvalidBlock(m_base, tick , g_tick++);
 }
@@ -525,12 +608,14 @@ bool breakGraph(Brick* brick,Brick* base, float maxFlow, int axis, std::vector<B
 				{
 					if (connection->joints[axis][j].capacity >= connection->joints[axis][j].flow / maxFlow)
 					{
-						breakGraph(connection->other, base, maxFlow, axis, selection, front, tick);
+						if (!breakGraph(connection->other, base, maxFlow, axis, selection, front, tick))
+							return false;
 					}
 					else
 					{
 						front->push_back(connection->joints[axis] + j);
 					}
+					break;
 				}
 				else
 				{
@@ -723,6 +808,11 @@ bool Ship::addImpulse(Brick* brick, vec3 pos, vec3 impulse)
 	//if (!destroy)
 	//	destroy = checkVertical(brick, abs(_impulse.y), impulse, pos);
 
+	if (destroy)
+	{
+		m_body->applyImpulse(-impulse, pos);
+	}
+
 	return destroy;
 }
 
@@ -870,4 +960,23 @@ void Ship::update(float dt)
 	}
 
 	m_impulses.clear();
+}
+
+
+void initDestruction(World* world)
+{
+	ShapeDescription sDescr;
+	sDescr.constructionType = ShapeConstruction::HULL_FROM_BOX;
+	sDescr.hullFromBox.c = vec3(0, 0, 0);
+	sDescr.hullFromBox.e = vec3(2, 0.5, 1);
+	g_brickShape = world->createShape(sDescr);
+
+	g_numJoints = 0;
+	g_numBricks = 0;
+
+	memset(g_bricks, 0, sizeof(g_bricks));
+	memset(g_joints, 0, sizeof(g_joints));
+
+	g_traces.clear();
+	g_traces.reserve(64);
 }

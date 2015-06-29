@@ -13,13 +13,14 @@ DestructionTest::DestructionTest()
 }
 void DestructionTest::init()
 {
-	m_world = new World(vec3(0, -50, 0));
+	m_world = new World(vec3(0, -30, 0));
 	
 	initDestruction(m_world);
 
 	BodyDescription descr;
 	descr.transform.p = vec3(0, 10, 0);
-	descr.transform.q = QuatFromAxisAngle(vec3(1, 0.2, 0.8), ong_PI);
+	descr.transform.q = QuatFromAxisAngle(normalize(vec3(rand(), rand(), rand())), rand());
+	descr.transform.q = Quaternion(vec3(-0.308242381, -0.0624808222, -0.267928302), -0.910657585);
 	descr.linearMomentum = vec3(0, 0, 0);
 	descr.angularMomentum = vec3(0, 0, 0);
 	descr.type = BodyType::Dynamic;
@@ -107,24 +108,25 @@ int DestructionTest::impulse()
 	dir.y = -tan(_y*fovY) * 0.1f;
 	dir.x = tan(_x*fovX) * 0.1f;
 
-	dir = normalize(rotate(dir, m_eye.q));
-	RayQueryResult result = { 0 };
-	if (m_world->queryRay(m_eye.p, dir, &result) && result.collider != 0)
-	{
-		Brick* brick = (Brick*)result.collider->getUserData();
-		if (brick->ship->addImpulse(brick, result.point, m_force * dir))
-		{
-			return 1;
-		}
-		else
-		{
-			return 0;
-		}
-	}
-	else
-	{
-		return -1;
-	}
+	//dir = normalize(rotate(dir, m_eye.q));
+	//RayQueryResult result = { 0 };
+	//if (m_world->queryRay(m_eye.p, dir, &result) && result.collider != 0)
+	//{
+	//	Brick* brick = (Brick*)result.collider->getUserData();
+	//	if (brick->ship->addImpulse(brick, result.point, m_force * dir))
+	//	{
+	//		return 1;
+	//	}
+	//	else
+	//	{
+	//		return 0;
+	//	}
+	//}
+	//else
+	//{
+	//	return -1;
+	//}
+	return -1;
 }
 
 void DestructionTest::render()
