@@ -13,8 +13,10 @@ DestructionTest::DestructionTest()
 }
 void DestructionTest::init()
 {
-	m_world = new World();
+	m_world = new World(vec3(0, 0,0));
 	
+	initDestruction(m_world);
+
 	BodyDescription descr;
 	descr.transform.p = vec3(0, 0, 15);
 	descr.transform.q = Quaternion(vec3(0, 0, 0), 1);
@@ -22,7 +24,7 @@ void DestructionTest::init()
 	descr.angularMomentum = vec3(0, 0, 0);
 	descr.type = BodyType::Static;
 	
-	Ship* ship = createShip(m_world, &m_entities, descr);
+	Ship* ship = createShip(m_world, &m_entities, descr, vec3(1,0,0));
 	ship->addBrick(2, -1, 0);
 	ship->addBrick(-4, 0, 0);
 	ship->addBrick(0, 0, 0);
@@ -37,6 +39,8 @@ void DestructionTest::init()
 	ship->addBrick(3, 3, 0);
 	ship->addBrick(7, 3, 0);
 	ship->addBrick(5, 4, 0);
+
+	ship->build();
 
 	m_stepping = false;
 }

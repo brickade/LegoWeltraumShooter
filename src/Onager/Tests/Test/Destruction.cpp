@@ -11,13 +11,30 @@ enum
 static ShapePtr g_brickShape = {};
 static Material g_material = { 1, 1, 1 };
 static int g_numJoints;
-static Joint g_joints[256];
+static JointData g_joints[256];
+static int g_numBricks;
 static Brick g_bricks[256];
 static int g_tick = 0;
 
-Ship* createShip(World* world, std::vector<Entity*>* entities, BodyDescription descr)
+void initDestruction(World* world)
 {
-	Ship* ship = new Ship(entities, world, world->createBody(descr), vec3(1, 0, 0));
+	ShapeDescription sDescr;
+	sDescr.constructionType = ShapeConstruction::HULL_FROM_BOX;
+	sDescr.hullFromBox.c = vec3(0, 0, 0);
+	sDescr.hullFromBox.e = vec3(2, 0.5, 1);
+	g_brickShape = world->createShape(sDescr);
+
+	g_numJoints = 0;
+	g_numBricks = 0;
+
+	memset(g_bricks, 0, sizeof(g_bricks));
+	memset(g_joints, 0, sizeof(g_joints));
+
+}
+
+Ship* createShip(World* world, std::vector<Entity*>* entities, BodyDescription descr, vec3 color)
+{
+	Ship* ship = new Ship(entities, world, world->createBody(descr), color);
 	entities->push_back(ship);
 	return ship;
 }
@@ -27,28 +44,23 @@ Ship::Ship(std::vector<Entity*>* entities, World* world, Body* body, vec3 color)
 	m_world(world),
 	m_entities(entities)
 {  
-	if (!g_brickShape)
-	{
-		ShapeDescription sDescr;
-		sDescr.constructionType = ShapeConstruction::HULL_FROM_BOX;
-		sDescr.hullFromBox.c = vec3(0, 0, 0);
-		sDescr.hullFromBox.e = vec3(2, 0.5, 1);
-		g_brickShape = m_world->createShape(sDescr);
-	}
 }
 
 bool studCallback(Collider* other, void* userData)
 {
 	Brick* brick = (Brick*)userData;
 	Brick* brick2 = (Brick*)other->getUserData();
+	
+	if (brick == brick2 || brick > brick2)
+		return true;
 
 	int dx = abs(brick2->pos[0] - brick->pos[0]);
 	int dz = abs(brick2->pos[2] - brick->pos[2]);
 
-	Joint* jointX0 = g_joints + g_numJoints++;
-	Joint* jointX1 = g_joints + g_numJoints++;
-	Joint* jointZ0 = g_joints + g_numJoints++;
-	Joint* jointZ1 = g_joints + g_numJoints++;
+	JointData* jointX0 = g_joints + g_numJoints++;
+	JointData* jointX1 = g_joints + g_numJoints++;
+	JointData* jointZ0 = g_joints + g_numJoints++;
+	JointData* jointZ1 = g_joints + g_numJoints++;
 
 	int numStuds = 0;
 	vec3 studs[8];
@@ -63,8 +75,8 @@ bool studCallback(Collider* other, void* userData)
 
 	jointX0->fulcrum = ong_MIN(brick->pos[0], brick2->pos[0]) - 2 + dx;
 	jointX1->fulcrum = ong_MAX(brick->pos[0], brick2->pos[0]) + 2 - dx;
-	jointZ0->fulcrum = ong_MIN(brick->pos[2], brick2->pos[2]) - 2 + dz;
-	jointZ1->fulcrum = ong_MAX(brick->pos[2], brick2->pos[2]) + 2 - dz;
+	jointZ0->fulcrum = ong_MIN(brick->pos[2], brick2->pos[2]) - 1 + dz;
+	jointZ1->fulcrum = ong_MAX(brick->pos[2], brick2->pos[2]) + 1 - dz;
 
 	jointX0->y = jointX1->y = jointZ0->y = jointZ1->y = (float)ong_MIN(brick->pos[1], brick2->pos[1]) + 0.5f;
 	
@@ -76,46 +88,43 @@ bool studCallback(Collider* other, void* userData)
 		jointZ1->baseCapacity -= (studs[i].z - jointZ1->fulcrum) * -STUD_STRENGTH;
 	}
 	
-	Connection* connectionX0 = brick->connections[X] + brick->numConnections[X]++;
-	Connection* connectionX1 = brick->connections[X] + brick->numConnections[X]++;
-	Connection* connectionZ0 = brick->connections[Z] + brick->numConnections[Z]++;
-	Connection* connectionZ1 = brick->connections[Z] + brick->numConnections[Z]++;
-
-	Connection* connection2X0 = brick2->connections[X] + brick2->numConnections[X]++;
-	Connection* connection2X1 = brick2->connections[X] + brick2->numConnections[X]++;
-	Connection* connection2Z0 = brick2->connections[Z] + brick2->numConnections[Z]++;
-	Connection* connection2Z1 = brick2->connections[Z] + brick2->numConnections[Z]++;
-
-	connectionX0->joint = connection2X0->joint = jointX0;
-	connectionX1->joint = connection2X1->joint = jointX1;
-	connectionZ0->joint = connection2Z0->joint = jointZ0;
-	connectionZ1->joint = connection2Z1->joint = jointZ1;
+	Connection* connection = brick->connections + brick->numConnections++;
+	Connection* connection2 = brick2->connections + brick2->numConnections++;
 	
-	connectionX0->brick = connectionX1->brick = connectionZ0->brick = connectionZ1->brick = brick;
-	connection2X0->brick = connection2X1->brick = connection2Z0->brick = connection2Z1->brick = brick2;
+	for (int i = 0; i < 2; ++i)
+	{
+		for (int j = 0; j < 2; ++j)
+		{
+			connection->joints[i][j].connection = connection;
+			connection2->joints[i][j].connection = connection2;
 
-	connectionX0->other = connectionX1->other = connectionZ0->other = connectionZ1->other = brick2;
-	connection2X0->other = connection2X1->other = connection2Z0->other = connection2Z1->other = brick;
+			connection->joints[i][j].twin = connection2->joints[i] + j;
+			connection2->joints[i][j].twin = connection->joints[i] + j;
+		}
+	}
 
-	connectionX0->twin = connection2X0;
-	connection2X0->twin = connectionX0;
-	connectionX1->twin = connection2X1;
-	connection2X1->twin = connectionX1;
+	connection->joints[X][0].data = connection2->joints[X][0].data = jointX0;
+	connection->joints[X][1].data = connection2->joints[X][1].data = jointX1;
+	connection->joints[Z][0].data = connection2->joints[Z][0].data = jointZ0;
+	connection->joints[Z][1].data = connection2->joints[Z][1].data = jointZ1;
 
-	connectionZ0->twin = connection2Z0;
-	connection2Z0->twin = connectionZ0;
-	connectionZ1->twin = connection2Z1;
-	connection2Z1->twin = connectionZ1;
+	if (brick->pos[1] > brick2->pos[1])
+	{
+		connection->dir = 1;
+		connection2->dir = -1;
+	}
+	else
+	{
+		connection->dir = -1;
+		connection2->dir = 1;
+	}
+	
+	connection->brick = brick;
+	connection2->brick = brick2;
+	
+	connection->other = brick2;
+	connection2->other = brick;
 
-	connectionX0->opposite = connectionX1;
-	connectionX1->opposite = connectionX0;
-	connectionZ0->opposite = connectionZ1;
-	connectionZ1->opposite = connectionZ0;
-
-	connection2X0->opposite = connection2X1;
-	connection2X1->opposite = connection2X0;
-	connection2Z0->opposite = connection2Z1;
-	connection2Z1->opposite = connection2Z0;
 	return true;
 }
 
@@ -124,52 +133,68 @@ bool blockCallback(Collider* other, void* userData)
 	Brick* brick = (Brick*)userData;
 	Brick* brick2 = (Brick*)other->getUserData();
 
+	if (brick == brick2)
+		return true;
 
-	for (int i = 0; i < brick->numConnections[X]; ++i)
+	for (int i = 0; i < brick->numConnections; ++i)
 	{	
-		if (brick2->pos[1] - 0.5f == brick->connections[X][i].joint->y &&
-			(brick2->pos[0] - 2.0f == brick->connections[X][i].joint->fulcrum ||
-			brick2->pos[0] + 2.0f == brick->connections[X][i].joint->fulcrum))
+		for (int j = 0; j < 2; ++j)
 		{
-			++brick->connections[X][i].opposite->joint->blocked;
-			brick2->blocking[brick2->numBlocking++] = brick->connections[X] + i;
+			if ((brick2->pos[1] - 0.5f == brick->connections[i].joints[X][j].data->y ||
+				brick2->pos[1] + 0.5f == brick->connections[i].joints[X][j].data->y) &&
+				(brick2->pos[0] - 2.0f == brick->connections[i].joints[X][j].data->fulcrum ||
+				brick2->pos[0] + 2.0f == brick->connections[i].joints[X][j].data->fulcrum))
+			{
+				++brick->connections[i].joints[X][!j].data->blocked;
+				brick2->blocking[brick2->numBlocking++] = brick->connections[i].joints[X] + !j;
+			}
 		}
 	}
 	
 
-	for (int i = 0; i < brick->numConnections[Z]; ++i)
+	for (int i = 0; i < brick->numConnections; ++i)
 	{
-		if (brick2->pos[1] - 0.5f == brick->connections[Z][i].joint->y &&
-			(brick2->pos[2] - 2.0f == brick->connections[Z][i].joint->fulcrum ||
-			brick2->pos[2] + 2.0f == brick->connections[Z][i].joint->fulcrum))
+		for (int j = 0; j < 2; ++j)
 		{
-			++brick->connections[Z][i].opposite->joint->blocked;
-			brick2->blocking[brick2->numBlocking++] = brick->connections[Z] + i;
+			if ((brick2->pos[1] - 0.5f == brick->connections[i].joints[X][j].data->y ||
+				brick2->pos[1] + 0.5f == brick->connections[i].joints[X][j].data->y) &&
+				(brick2->pos[2] - 2.0f == brick->connections[i].joints[Z][j].data->fulcrum ||
+				brick2->pos[2] + 2.0f == brick->connections[i].joints[Z][j].data->fulcrum))
+			{
+				++brick->connections[i].joints[Z][!j].data->blocked;
+				brick2->blocking[brick2->numBlocking++] = brick->connections[i].joints[Z] + !j;
+			}
 		}
 	}
 
-	for (int i = 0; i < brick2->numConnections[X]; ++i)
-	{
-		if (brick->pos[1] - 0.5f == brick2->connections[X][i].joint->y &&
-			(brick->pos[0] - 2.0f == brick2->connections[X][i].joint->fulcrum ||
-			brick->pos[0] + 2.0f == brick2->connections[X][i].joint->fulcrum))
-		{
-			++brick2->connections[X][i].opposite->joint->blocked;
-			brick->blocking[brick->numBlocking++] = brick2->connections[Z] + i;
-		}
-	}
+	//for (int i = 0; i < brick2->numConnections; ++i)
+	//{
+	//	for (int j = 0; j < 2; ++j)
+	//	{
+	//		if (brick->pos[1] - 0.5f == brick2->connections[i].joints[X][j].data->y &&
+	//			(brick->pos[0] - 2.0f == brick2->connections[i].joints[X][j].data->fulcrum ||
+	//			brick->pos[0] + 2.0f == brick2->connections[i].joints[X][j].data->fulcrum))
+	//		{
+	//			++brick2->connections[i].joints[X][!j].data->blocked;
+	//			brick->blocking[brick->numBlocking++] = brick2->connections[i].joints[X] + !j;
+	//		}
+	//	}
+	//}
 
 
-	for (int i = 0; i < brick2->numConnections[Z]; ++i)
-	{
-		if (brick->pos[1] - 0.5f == brick2->connections[Z][i].joint->y &&
-			(brick->pos[2] - 2.0f == brick2->connections[Z][i].joint->fulcrum ||
-			brick->pos[2] + 2.0f == brick2->connections[Z][i].joint->fulcrum))
-		{
-			++brick2->connections[Z][i].opposite->joint->blocked;
-			brick->blocking[brick->numBlocking++] = brick2->connections[Z]+ i;
-		}
-	}
+	//for (int i = 0; i < brick2->numConnections; ++i)
+	//{
+	//	for (int j = 0; j < 2; ++j)
+	//	{
+	//		if (brick->pos[1] - 0.5f == brick2->connections[i].joints[Z][j].data->y &&
+	//			(brick->pos[2] - 2.0f == brick2->connections[i].joints[Z][j].data->fulcrum ||
+	//			brick->pos[2] + 2.0f == brick2->connections[i].joints[Z][j].data->fulcrum))
+	//		{
+	//			++brick2->connections[i].joints[Z][!j].data->blocked;
+	//			brick->blocking[brick->numBlocking++] = brick2->connections[i].joints[Z] + !j;
+	//		}
+	//	}
+	//}
 
 	return true;
 }
@@ -190,7 +215,7 @@ void Ship::addBrick(int x, int y, int z)
 
 	Collider* collider = m_world->createCollider(cDescr);
 
-	Brick* brick = m_bricks + m_numBricks++;
+	Brick* brick = g_bricks + g_numBricks++;
 	brick->pos[0] = x;
 	brick->pos[1] = y;
 	brick->pos[2] = z;
@@ -199,41 +224,69 @@ void Ship::addBrick(int x, int y, int z)
 	brick->collider->setUserData(brick);
 	brick->ship = this;
 
-	m_body->queryShape(g_brickShape, transformTransform(Transform(vec3(x, y + 0.1, z), Quaternion(vec3(0, 0, 0), 1)), m_body->getTransform()), studCallback, brick);
-	m_body->queryShape(g_brickShape, transformTransform(Transform(vec3(x, y - 0.1, z), Quaternion(vec3(0, 0, 0), 1)), m_body->getTransform()), studCallback, brick);
-
-	m_body->queryShape(g_brickShape, transformTransform(Transform(vec3(x - 0.1, y, z), Quaternion(vec3(0, 0, 0), 1)), m_body->getTransform()), blockCallback, brick);
-	m_body->queryShape(g_brickShape, transformTransform(Transform(vec3(x + 0.1, y, z), Quaternion(vec3(0, 0, 0), 1)), m_body->getTransform()), blockCallback, brick);
-	m_body->queryShape(g_brickShape, transformTransform(Transform(vec3(x, y, z + 0.1), Quaternion(vec3(0, 0, 0), 1)), m_body->getTransform()), blockCallback, brick);
-	m_body->queryShape(g_brickShape, transformTransform(Transform(vec3(x, y, z - 0.1), Quaternion(vec3(0, 0, 0), 1)), m_body->getTransform()), blockCallback, brick);
-
 	m_body->addCollider(collider);
+
+	
+}
+
+void Ship::build()
+{
+	Collider* c = m_body->getCollider();
+	while (c)
+	{
+		Brick* brick = (Brick*)c->getUserData();
+
+		m_body->queryShape(g_brickShape, transformTransform(Transform(vec3(brick->pos[0], brick->pos[1] + 0.1, brick->pos[2]), Quaternion(vec3(0, 0, 0), 1)), m_body->getTransform()), studCallback, brick);
+		m_body->queryShape(g_brickShape, transformTransform(Transform(vec3(brick->pos[0], brick->pos[1] - 0.1, brick->pos[2]), Quaternion(vec3(0, 0, 0), 1)), m_body->getTransform()), studCallback, brick);
+
+		c = c->getNext();
+	}
+
+
+	c = m_body->getCollider();
+	while (c)
+	{
+		Brick* brick = (Brick*)c->getUserData();
+
+		m_body->queryShape(g_brickShape, transformTransform(Transform(vec3(brick->pos[0] - 0.1, brick->pos[1], brick->pos[2]), Quaternion(vec3(0, 0, 0), 1)), m_body->getTransform()), blockCallback, brick);
+		m_body->queryShape(g_brickShape, transformTransform(Transform(vec3(brick->pos[0] + 0.1, brick->pos[1], brick->pos[2]), Quaternion(vec3(0, 0, 0), 1)), m_body->getTransform()), blockCallback, brick);
+		m_body->queryShape(g_brickShape, transformTransform(Transform(vec3(brick->pos[0], brick->pos[1], brick->pos[2] + 0.1), Quaternion(vec3(0, 0, 0), 1)), m_body->getTransform()), blockCallback, brick);
+		m_body->queryShape(g_brickShape, transformTransform(Transform(vec3(brick->pos[0], brick->pos[1], brick->pos[2] - 0.1), Quaternion(vec3(0, 0, 0), 1)), m_body->getTransform()), blockCallback, brick);
+
+		c = c->getNext();
+	}
+
+
 
 	calcBase();
 }
 
-bool findAugmentedPath(Brick* brick, Brick* sink, int axis, float* minCapacity, std::vector<Connection*>* path, int tick)
+bool findAugmentedPath(Brick* brick, Brick* sink, int axis, float* minCapacity, std::vector<Joint*>* path, int tick)
 {
 	if (brick == sink)
 		return true;
 
 	brick->tick = tick;
-	for (int i = 0; i < brick->numConnections[axis]; ++i)
+	for (int i = 0; i < brick->numConnections; ++i)
 	{
-		Connection* connection = brick->connections[axis] + i;
-		if (connection->other->tick != tick &&
-			connection->joint->capacity - connection->flow > 0)
+		for (int j = 0; j < 2; ++j)
 		{
-			path->push_back(connection);
-			if (findAugmentedPath(connection->other, sink, axis, minCapacity, path, tick))
+			Connection* connection = brick->connections + i;
+			Joint* joint = brick->connections[i].joints[axis] + j;
+			if (connection->other->tick != tick &&
+				joint->data->capacity - joint->flow > 0)
 			{
-				if (connection->joint->capacity - connection->flow < *minCapacity)
-					*minCapacity = connection->joint->capacity - connection->flow;
-				return true;
-			}
-			else
-			{
-				path->pop_back();
+				path->push_back(joint);
+				if (findAugmentedPath(connection->other, sink, axis, minCapacity, path, tick))
+				{
+					if (joint->data->capacity - joint->flow < *minCapacity)
+						*minCapacity = joint->data->capacity - joint->flow;
+					return true;
+				}
+				else
+				{
+					path->pop_back();
+				}
 			}
 		}
 	}
@@ -241,7 +294,7 @@ bool findAugmentedPath(Brick* brick, Brick* sink, int axis, float* minCapacity, 
 }
 float maxFlow(Brick* source, Brick* sink, int axis)
 {
-	std::vector<Connection*> augmentedPath;
+	std::vector<Joint*> augmentedPath;
 	while (true)
 	{
 		float minCapacity = FLT_MAX;
@@ -256,51 +309,114 @@ float maxFlow(Brick* source, Brick* sink, int axis)
 	}
 
 	float maxFlow = 0;
-	for (int i = 0; i < source->numConnections[axis]; ++i)
+	for (int i = 0; i < source->numConnections; ++i)
 	{
-		maxFlow += source->connections[axis][i].flow;
+		for (int j = 0; j < 2; ++j)
+		{
+			maxFlow += source->connections[i].joints[axis][j].flow;
+		}
 	}
 
 	return maxFlow;
 }
 
-void breakGraph(Brick* brick, float maxFlow, int axis, std::vector<Brick*>* selection, std::vector<Connection*>* front, int tick)
+
+
+void checkForInvalidBlock(Brick* brick, int selectionTick, int tick)
 {
 	brick->tick = tick;
-	selection->push_back(brick);
-	for (int i = 0; i < brick->numConnections[axis]; ++i)
+
+	for (int i = 0; i < brick->numBlocking; ++i)
 	{
-		Connection* connection = brick->connections[axis] + i;
-		if (connection->other->tick != tick)
+		if (brick->blocking[i]->connection->brick->tick == selectionTick ||
+			brick->blocking[i]->connection->other->tick == selectionTick)
 		{
-			if (connection->joint->capacity >= connection->flow / maxFlow)
-			{
-				if (connection->flow > 0)
-					breakGraph(connection->other, maxFlow, axis, selection, front, tick);
-			}
-			else
-			{
-				front->push_back(connection);
-			}
+			brick->blocking[i]->data->blocked--;
+			brick->blocking[i] = brick->blocking[--brick->numBlocking];
 		}
 	}
+
+	for (int i = 0; i < brick->numConnections; ++i)
+	{
+		if (brick->connections[i].other->tick != tick)
+		{
+			checkForInvalidBlock(brick->connections[i].other, selectionTick, tick);
+		}
+	}
+
 }
 
-void Ship::destroy(std::vector<Brick*>* selection, std::vector<Connection*>* front, vec3 impulse, vec3 pos, int axis, int tick)
+bool checkForConnectivity(Brick* brick, Brick* base, int selectionTick, int tick)
 {
+	brick->tick = tick;
+	for (int i = 0; i < brick->numConnections; ++i)
+	{
+		if (brick->connections[i].other == base)
+			return true;
+
+		if (brick->connections[i].other->tick != selectionTick && brick->connections[i].other->tick != tick)
+		{
+			if (checkForConnectivity(brick->connections[i].other, base, selectionTick, tick))
+				return true;
+		}
+	}
+
+	return false;
+}
+
+
+
+
+void Ship::destroy(std::vector<Brick*>* selection, std::vector<Joint*>* front, vec3 impulse, vec3 pos, int axis, int tick)
+{
+
+	for (int i = 0; i < selection->size(); ++i)
+	{
+		selection->at(i)->tick = tick;
+	}
+
+
 	//break front
 	for (int i = 0; i < front->size(); ++i)
 	{
-		Connection* a = (*front)[i];
-		Connection* b = a->twin;
-		Connection* at = a->opposite;
-		Connection* bt = b->opposite;
+		Connection* a = (*front)[i]->connection;
+		Connection* b = (*front)[i]->twin->connection;
+		assert(a->brick->numConnections > 0 && b->brick->numConnections > 0);
+		*a = a->brick->connections[--a->brick->numConnections];
+		
+		for (int d = X; d <= Z; ++d)
+		{
+			for (int i = 0; i < 2; ++i)
+			{
+				a->joints[d][i].connection = a;
+				a->joints[d][i].twin->twin = a->joints[d] + i;
+			}
+		}
 
-		*a = a->brick->connections[axis][--a->brick->numConnections[axis]];
-		*b = b->brick->connections[axis][--b->brick->numConnections[axis]];
 
-		*at = at->brick->connections[axis][--at->brick->numConnections[axis]];
-		*bt = bt->brick->connections[axis][--bt->brick->numConnections[axis]];
+		*b = b->brick->connections[--b->brick->numConnections];
+
+		for (int d = X; d <= Z; ++d)
+		{
+			for (int i = 0; i < 2; ++i)
+			{
+				b->joints[d][i].connection = b;
+				b->joints[d][i].twin->twin = b->joints[d] + i;
+			}
+		}
+
+		//if (checkForConnectivity(a->other, m_base, tick, g_tick++))
+		//{
+		//	*a = a->brick->connections[--a->brick->numConnections];
+		//	*b = b->brick->connections[--b->brick->numConnections];
+		//}
+		//else
+		//{
+		//	a->other->tick = tick;
+		//	selection->push_back(a->other);
+		//}
+
+
 	}
 
 	BodyDescription descr;
@@ -309,13 +425,10 @@ void Ship::destroy(std::vector<Brick*>* selection, std::vector<Connection*>* fro
 	descr.linearMomentum = impulse;
 	descr.angularMomentum = vec3(0, 0, 0);
 
-	Ship* newShip = createShip(m_world, m_entities, descr);
+	Ship* newShip = createShip(m_world, m_entities, descr, vec3(0,0,1));
 	
 
-	for (int i = 0; i < selection->size(); ++i)
-	{
-		selection->at(i)->tick = tick;
-	}
+	
 
 	// seperate selection
 	for (int i = 0; i < selection->size(); ++i)
@@ -324,9 +437,9 @@ void Ship::destroy(std::vector<Brick*>* selection, std::vector<Connection*>* fro
 		// free blocks
 		for (int i = 0; i < brick->numBlocking; ++i)
 		{
-			if (brick->blocking[i]->brick->tick != tick)
+			if (brick->blocking[i]->connection->brick->tick != tick)
 			{
-				brick->blocking[i]->joint->blocked--;
+				brick->blocking[i]->data->blocked--;
 				brick->blocking[i] = brick->blocking[--brick->numBlocking];
 			}
 		}
@@ -334,7 +447,87 @@ void Ship::destroy(std::vector<Brick*>* selection, std::vector<Connection*>* fro
 		brick->ship = newShip;
 		newShip->m_body->addCollider(brick->collider);
 	}
+	
 	newShip->calcBase();
+	calcBase();
+
+	checkForInvalidBlock(m_base, tick , g_tick++);
+}
+
+bool breakGraph(Brick* brick,Brick* base, float maxFlow, int axis, std::vector<Brick*>* selection, std::vector<Joint*>* front, int tick)
+{
+	if (brick == base)
+		return true;
+
+	brick->tick = tick;
+	selection->push_back(brick);
+	for (int i = 0; i < brick->numConnections; ++i)
+	{
+		Connection* connection = brick->connections + i;
+		if (connection->other->tick != tick)
+		{
+			for (int j = 0; j < 2; ++j)
+			{
+				if (connection->joints[axis][j].data->capacity > 0)
+				{
+					if (connection->joints[axis][j].data->capacity >= connection->joints[axis][j].flow / maxFlow)
+					{
+						if (breakGraph(connection->other, base, maxFlow, axis, selection, front, tick))
+							return true;
+
+					}
+					else
+					{
+						assert(connection->joints[axis][j].data != nullptr);
+						front->push_back(connection->joints[axis] + j);
+					}
+				}
+			}
+		}
+	}
+
+	return false;
+}
+
+
+void clearFlowNetwork(Brick* brick, vec3 impulse, vec3 pos, int tick)
+{
+	brick->tick = tick;
+	for (int i = 0; i < brick->numConnections; ++i)
+	{
+		//if (brick->connections[i].other->tick == tick)
+		//	continue;
+
+		for (int d = X; d <= Z; ++d)
+		{
+			for (int j = 0; j < 2; ++j)
+			{
+				Joint* joint = brick->connections[i].joints[d]+ j;
+				joint->flow = 0;
+
+
+				if (d== X)
+					joint->data->capacity =
+					brick->connections[i].dir * joint->data->baseCapacity / ((pos.x - joint->data->fulcrum) * impulse.y - (pos.y - joint->data->y) *impulse.x);
+				else if (d == Z)
+					joint->data->capacity =
+					brick->connections[i].dir * joint->data->baseCapacity / ((pos.y - joint->data->y) * impulse.z - (pos.z - joint->data->fulcrum) * impulse.y);
+
+				if (joint->data->blocked && joint->data->capacity > 0)
+				{
+					joint->data->capacity = 1.0f;
+				}
+				else
+				{
+					joint->data->capacity = ong_MIN(1.0f, ong_MAX(0.0f, joint->data->capacity));
+				}
+			}
+		}
+		if (brick->connections[i].other->tick != tick)
+		{
+			clearFlowNetwork(brick->connections[i].other, impulse, pos, tick);
+		}
+	}
 }
 
 
@@ -342,62 +535,61 @@ bool Ship::checkAxis(Brick* brick, vec3 impulse, vec3 pos, int axis)
 {
 	float max = maxFlow(brick, m_base, axis);
 
-	if (max < 1.0f)
+	if (max > 0 && max < 1.0f)
 	{
 		std::vector<Brick*> selection;
-		std::vector<Connection*> front;
-		breakGraph(brick, max, axis, &selection, &front, g_tick++);
+		std::vector<Joint*> front;
+
+		int selectionTick = g_tick++;
+		breakGraph(brick, m_base, max, axis, &selection, &front, selectionTick);
+
+		for (int i = 0; i < front.size(); ++i)
+		{
+			Brick* brick = front[i]->connection->brick;
+			int numUp = 0;
+			int numDown = 0;
+			for (int j = 0; j < brick->numConnections; ++j)
+			{
+				Brick* other = brick->connections[j].other;
+				if (other->tick != selectionTick)
+				{
+					if (other->pos[1] > brick->pos[1])
+						numUp++;
+					else if (other->pos[1] < brick->pos[1])
+						numDown++;
+				}
+				if (numUp > 0 && numDown > 0)
+					return false;
+
+			}
+
+		}
+
+
 		destroy(&selection, &front, impulse, pos, axis, g_tick++);
 		return true;
 	}
 	return false;
 }
 
-bool Ship::addImpulse(Brick* brick, vec3 impulse, vec3 pos)
+bool Ship::addImpulse(Brick* brick, vec3 pos, vec3 impulse)
 {
+	if (brick == m_base)
+		return false;
+
 	Transform t = invTransform(m_body->getTransform());
 	vec3 _pos = transformVec3(pos, t);
 	vec3 _impulse = rotate(impulse, t.q);
 
 	// clear flow network
-	for (int i = 0; i < m_numBricks; ++i)
-	{
-		for (int axis = X; axis <= Z; ++axis)
-		{
-			for (int j = 0; j < m_bricks[i].numConnections[axis]; ++j)
-			{
-				Connection* connection = m_bricks[i].connections[axis] + j;
-				//clear flow
-				connection->flow = 0.0f;
-
-				//set capacity
-				if (axis == X)
-					connection->joint->capacity =
-					-connection->joint->baseCapacity / ((_pos.x - connection->joint->fulcrum) * _impulse.y - (_pos.y - connection->joint->y) * _impulse.x);
-				else if (axis == Z)
-					connection->joint->capacity =
-					-connection->joint->baseCapacity / ((_pos.y - connection->joint->y) * _impulse.z - (_pos.z - connection->joint->fulcrum) * _impulse.y);
-
-				if (connection->joint->blocked && connection->joint->capacity > 0)
-				{
-					connection->joint->capacity = 1.0f;
-				}
-				else
-				{
-					connection->joint->capacity = ong_MIN(1.0f, ong_MAX(0.0f, connection->joint->capacity));
-				}
-			}
-
-		}
-	}
+	clearFlowNetwork(brick, _impulse, _pos, g_tick++);
 
 
 	bool destroy = checkAxis(brick, impulse, pos, X);
+
 	if (!destroy)
 		destroy = checkAxis(brick, impulse, pos, Z);
 
-	if (destroy)
-		calcBase();
 
 	return destroy;
 }
@@ -426,60 +618,71 @@ void renderBrick(Brick* brick, Brick* base, GLuint colorLocation, int tick)
 {
 	brick->tick = tick;
 
-	for (int axis = X; axis <= Z; ++axis)
+	for (int j = 0; j < brick->numConnections; ++j)
 	{
-		for (int i = 0; i < brick->numConnections[axis]; ++i)
+		for (int axis = X; axis < Z; ++axis)
 		{
-			Connection* connection = brick->connections[axis] + i;
-
-			if (connection->flow != 0)
+			for (int i = 0; i < 2; ++i)
 			{
-				glLineWidth(10.0f * connection->flow);
-				glBegin(GL_LINES);
-				glVertex3f(brick->pos[0], brick->pos[1], brick->pos[2]);
-				glVertex3f(connection->other->pos[0], connection->other->pos[1], connection->other->pos[2]);
-				glEnd();
-				glLineWidth(1);
-			}
+				Connection* connection = brick->connections + j;
+				Joint* joint = connection->joints[axis] + i;
 
-
-			//glLineWidth(connection->joint->capacity * 10.0f);
-			//glBegin(GL_LINES);
-			//glVertex3f(0.5f * (brick->pos[0] + connection->other->pos[0]), 0.5f*(brick->pos[1] + connection->other->pos[1]), 0.5f * (brick->pos[2] + connection->other->pos[2]));
-			//glVertex3f(0.5f * (brick->pos[0] + connection->other->pos[0]), brick->pos[1] , 0.5f * (brick->pos[2] + connection->other->pos[2]));
-			//glEnd();
-			//glLineWidth(1);
-
-			for (int i = 0; i < brick->numBlocking; ++i)
-			{
-				glBegin(GL_LINES);
-				glVertex3f(brick->pos[0], brick->pos[1], brick->pos[2]);
-				glVertex3f(brick->blocking[i]->brick->pos[0], brick->blocking[i]->brick->pos[1], brick->blocking[i]->brick->pos[2]);
-				glEnd();
-			}
-
-			if (connection->joint->capacity > 0)
-			{
-				glLineWidth(connection->joint->capacity * 10.0f);
-				glBegin(GL_LINES);
-				if (axis == X)
+				if (joint->flow != 0)
 				{
-					glVertex3f(connection->joint->fulcrum, connection->joint->y, brick->pos[2] - 0.5f);
-					glVertex3f(connection->joint->fulcrum, connection->joint->y, brick->pos[2] + 0.5f);
+					glLineWidth(10.0f * joint->flow);
+					glBegin(GL_LINES);
+					glVertex3f(brick->pos[0], brick->pos[1], brick->pos[2]);
+					glVertex3f(connection->other->pos[0], connection->other->pos[1], connection->other->pos[2]);
+					glEnd();
+					glLineWidth(1);
 				}
-				else if (axis == Z)
-				{
-					//glVertex3f(brick->pos[0] - 0.5f, connection->joint->y, connection->joint->fulcrum);
-					//glVertex3f(brick->pos[0] + 0.5f, connection->joint->y, connection->joint->fulcrum);
-				}
-				glEnd();
-				glLineWidth(1);
-			}
 
-			if (connection->other->tick != tick)
-				renderBrick(connection->other, base, colorLocation, tick);
+
+				//glLineWidth(connection->joint->capacity * 10.0f);
+				//glBegin(GL_LINES);
+				//glVertex3f(0.5f * (brick->pos[0] + connection->other->pos[0]), 0.5f*(brick->pos[1] + connection->other->pos[1]), 0.5f * (brick->pos[2] + connection->other->pos[2]));
+				//glVertex3f(0.5f * (brick->pos[0] + connection->other->pos[0]), brick->pos[1] , 0.5f * (brick->pos[2] + connection->other->pos[2]));
+				//glEnd();
+				//glLineWidth(1);
+
+				for (int i = 0; i < brick->numBlocking; ++i)
+				{
+					glBegin(GL_LINES);
+					glVertex3f(brick->pos[0], brick->pos[1], brick->pos[2]);
+					glVertex3f(brick->blocking[i]->connection->brick->pos[0], brick->blocking[i]->connection->brick->pos[1], brick->blocking[i]->connection->brick->pos[2]);
+					glEnd();
+				}
+
+				if (joint->data->capacity > 0)
+				{
+					glLineWidth(joint->data->capacity * 5.0f);
+					glBegin(GL_LINES);
+					if (axis == X)
+					{
+						int min = ong_MIN(brick->pos[2], joint->connection->other->pos[2]) - 1 + abs(brick->pos[2] - joint->connection->other->pos[2]);
+						int max = ong_MAX(brick->pos[2], joint->connection->other->pos[2]) + 1 - abs(brick->pos[2] - joint->connection->other->pos[2]);
+
+						glVertex3f(joint->data->fulcrum, joint->data->y, min);
+						glVertex3f(joint->data->fulcrum, joint->data->y, max);
+					}
+					else if (axis == Z)
+					{
+						int min = ong_MIN(brick->pos[0], joint->connection->other->pos[0]) - 2 + abs(brick->pos[0] - joint->connection->other->pos[0]);
+						int max = ong_MAX(brick->pos[0], joint->connection->other->pos[0]) + 2 - abs(brick->pos[0] - joint->connection->other->pos[0]);
+
+						glVertex3f(min, joint->data->y, joint->data->fulcrum);
+						glVertex3f(max, joint->data->y, joint->data->fulcrum);
+					}
+					glEnd();
+					glLineWidth(1);
+				}
+
+				if (connection->other->tick != tick)
+					renderBrick(connection->other, base, colorLocation, tick);
+			}
 		}
 	}
+
 	if (brick == base)
 	{
 		glUniform3f(colorLocation, 1, 0, 1);
