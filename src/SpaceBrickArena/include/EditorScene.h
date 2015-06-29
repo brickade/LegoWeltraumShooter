@@ -9,6 +9,7 @@
 #include "Space.h"
 
 #include "Editor_Worker.h"
+#include "Editor_ShipHandler.h"
 #include "Editor_BrickSupervisor.h"
 #include "Editor_ColorFields.h"
 #include "UIElementFader.h"
@@ -17,8 +18,19 @@ namespace Editor
 {
     class CEditorScene : public PuRe_IScene
     {
+        struct EEditorState
+        {
+            enum Type
+            {
+                SelectShip,
+                EditShip
+            };
+        };
+
     private:
         int m_PlayerIdx;
+
+        EEditorState::Type m_State;
 
         PuRe_SkyBox* m_pSkyBox;
         PuRe_IMaterial* m_pSkyBoxMaterial;
@@ -34,6 +46,7 @@ namespace Editor
         
         Editor::CBrickSupervisor* m_pBrickSupervisor;
         Editor::CWorker* m_pWorker;
+        Editor::CShipHandler* m_pShipHandler;
         Editor::CColorFields* m_pColorFields;
         sba::CUIElementFader* m_pBrickSupervisorFader;
         sba::CUIElementFader* m_pColorFieldsFader;
@@ -65,6 +78,11 @@ namespace Editor
         /// @param graphics The graphics interface.
         ///
         void Render(PuRe_Application* a_pApplication);
+
+        static void PreRender(PuRe_DirectionalLight* a_pDirectionalLight, PuRe_IMaterial* a_pDirectionalLightMaterial, PuRe_SkyBox* a_pSkyBox, PuRe_IMaterial* a_pSkyBoxMaterial);
+        static void PostRender(Editor::CCamera* a_pSceneCamera, PuRe_Camera* a_pUICamera, PuRe_IMaterial* a_pPostMaterial);
+        //To make sure the Ship Previews get rendered the same way as in the Editor itself. Therefore more overhead, which is bad but its only at initialization, so i guess its worth it so we have no duplicated code and forget to update both parts... The only indipendent part is currently the Editor::CCamera which has its default setup in its own functions.
+        static void InitCommonRenderComponents(PuRe_IMaterial** a_ppPostMaterial = nullptr, PuRe_DirectionalLight** a_ppDirectionalLight = nullptr, PuRe_IMaterial** a_ppDirectionalLightMaterial = nullptr, PuRe_PointLight** a_ppPointLight = nullptr, PuRe_IMaterial** a_ppPointLightMaterial = nullptr, PuRe_SkyBox** a_ppSkyBox = nullptr, PuRe_IMaterial** a_ppSkyBoxMaterial = nullptr, PuRe_Camera** a_ppUICamera = nullptr);
 
         /// @brief Exists the scene.
         ///

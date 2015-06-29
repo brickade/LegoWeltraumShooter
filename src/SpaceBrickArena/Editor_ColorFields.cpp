@@ -137,7 +137,7 @@ namespace Editor
     {
         for (int i = 0; i <= this->m_pNavigation->GetLastElementId(); i++)
         {
-            PuRe_Vector2F listPos = PuRe_Vector2F(i % this->m_pNavigation->GetElementsCountPerLine(), floor(i / this->m_pNavigation->GetElementsCountPerLine()));
+            PuRe_Vector2F listPos = PuRe_Vector2F((float)(i % this->m_pNavigation->GetElementsCountPerLine()), floorf((float)i / (float)this->m_pNavigation->GetElementsCountPerLine()));
             PuRe_Vector3F pos = PuRe_Vector3F(this->m_ListStart + this->m_ListStep * listPos, 0);
             pos.Y -= (1.0f - a_Visibility) * this->m_ListStart.Y - this->m_ListStep.Y;
 

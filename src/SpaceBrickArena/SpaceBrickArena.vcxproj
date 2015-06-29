@@ -139,18 +139,26 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\Asteroid.h" />
+    <ClInclude Include="include\BrickManager.h" />
+    <ClInclude Include="include\Bullet.h" />
     <ClInclude Include="include\Editor_BrickCategory.h" />
     <ClInclude Include="include\Editor_BrickSupervisor.h" />
     <ClInclude Include="include\Editor_Assistant.h" />
     <ClInclude Include="include\Editor_ColorFields.h" />
+    <ClInclude Include="include\GameMap.h" />
+    <ClInclude Include="include\Game_Network.h" />
+    <ClInclude Include="include\Game_UI.h" />
     <ClInclude Include="include\INIReader.h" />
     <ClInclude Include="include\InputManager.h" />
     <ClInclude Include="include\InputManagerTypes.h" />
+    <ClInclude Include="include\Item.h" />
     <ClInclude Include="include\MenuScene.h" />
     <ClInclude Include="include\Menu_Lobby.h" />
     <ClInclude Include="include\Menu_Main.h" />
     <ClInclude Include="include\Menu_Network.h" />
     <ClInclude Include="include\Menu_Options.h" />
+    <ClInclude Include="include\ShipManager.h" />
     <ClInclude Include="include\Menu_Server.h" />
     <ClInclude Include="include\Player.h" />
     <ClInclude Include="include\Space.h" />
@@ -164,21 +172,30 @@
     <ClInclude Include="include\Minimap.h" />
     <ClInclude Include="include\Navigation.h" />
     <ClInclude Include="include\NetworkHandler.h" />
-    <ClInclude Include="include\Editor_ShipWorker.h" />
+    <ClInclude Include="include\Editor_ShipHandler.h" />
+    <ClInclude Include="include\Spaceship.h" />
     <ClInclude Include="include\UIElementFader.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Asteroid.cpp" />
+    <ClCompile Include="BrickManager.cpp" />
+    <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Editor_BrickCategory.cpp" />
     <ClCompile Include="Editor_BrickSupervisor.cpp" />
     <ClCompile Include="Editor_Assistant.cpp" />
+    <ClCompile Include="GameMap.cpp" />
+    <ClCompile Include="Game_Network.cpp" />
+    <ClCompile Include="Game_UI.cpp" />
     <ClCompile Include="INIReader.cpp" />
     <ClCompile Include="InputManager.cpp" />
+    <ClCompile Include="Item.cpp" />
     <ClCompile Include="MenuScene.cpp" />
     <ClCompile Include="Editor_ColorFields.cpp" />
     <ClCompile Include="Menu_Lobby.cpp" />
     <ClCompile Include="Menu_Main.cpp" />
     <ClCompile Include="Menu_Network.cpp" />
     <ClCompile Include="Menu_Options.cpp" />
+    <ClCompile Include="ShipManager.cpp" />
     <ClCompile Include="Space.cpp" />
     <ClCompile Include="Editor_Camera.cpp" />
     <ClCompile Include="Editor_Worker.cpp" />
@@ -191,7 +208,8 @@
     <ClCompile Include="Minimap.cpp" />
     <ClCompile Include="Navigation.cpp" />
     <ClCompile Include="NetworkHandler.cpp" />
-    <ClCompile Include="Editor_ShipWorker.cpp" />
+    <ClCompile Include="Editor_ShipHandler.cpp" />
+    <ClCompile Include="Spaceship.cpp" />
     <ClCompile Include="UIElementFader.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -1,24 +1,19 @@
 #ifndef _SPACE_H_
 #define _SPACE_H_
 
-//####################################################################################################
-//####################################################################################################
-                                    /*COMMENT OUT FOR GAME SCENE*/
-                                            #define MENU
-//####################################################################################################
-//####################################################################################################
 // Framework specific includes
 #include <PuReEngine/Core.h>
 #include <PuReEngine/Defines.h>
 
 #include <Onager/World.h>
-
-#include <TheBrick/BrickManager.h>
 #include <TheBrick/Serializer.h>
 #include "InputManager.h"
+#include "BrickManager.h"
+#include "ShipManager.h"
 #include "INIReader.h"
 #include "Player.h"
 #include "NetworkHandler.h"
+#include "GameMap.h"
 
 namespace sba
 {
@@ -35,16 +30,19 @@ namespace sba
         }
 
         PuRe_Application* Application;
-        TheBrick::CBrickManager* BrickManager;
         ong::World* World;
         PuRe_Renderer* Renderer;
         sba::CInputManager* InputManager;
+        sba::CBrickManager* BrickManager;
+        sba::CShipManager* ShipManager;
         PuRe_Font* Font;
+        PuRe_IMaterial* SpriteMaterial;
         PuRe_IMaterial* FontMaterial;
         PuRe_IMaterial* m_SSAOMaterial;
         PuRe_Sprite* m_pNoiseTexture;
         std::vector<SPlayer*> m_Players;
         CNetworkHandler* m_pNetworkhandler;
+        CGameMap* m_pMap;
 
     private:
         static Space* g_pInstance;
@@ -58,6 +56,7 @@ namespace sba
 
         void RenderFont(std::string a_Text, PuRe_Vector2F a_Position, float a_Size = 24, float a_Width = 1, unsigned int a_RendertargetIndex = 2);
 
+        bool CheckShip(PuRe_IWindow* a_pWindow);
         void CreatePlayer(int a_Pad, PuRe_IWindow* a_pWindow);
         void DeletePlayer(unsigned int a_Index);
 
@@ -68,14 +67,16 @@ namespace sba
 }
 #define sba_Space sba::Space::Instance()
 #define sba_Application sba::Space::Instance()->Application
-#define sba_Width sba::Space::Instance()->Application->GetGraphics()->GetDescription().ResolutionWidth
-#define sba_Height sba::Space::Instance()->Application->GetGraphics()->GetDescription().ResolutionHeight
+#define sba_Width 1920
+#define sba_Height 1080
 
 #define sba_Players sba::Space::Instance()->m_Players
 #define sba_Network sba::Space::Instance()->m_pNetworkhandler
+#define sba_Map sba::Space::Instance()->m_pMap
 
-#define sba_BrickManager sba::Space::Instance()->BrickManager
 #define sba_World sba::Space::Instance()->World
 #define sba_Renderer sba::Space::Instance()->Renderer
 #define sba_Input sba::Space::Instance()->InputManager
+#define sba_BrickManager sba::Space::Instance()->BrickManager
+#define sba_ShipManager sba::Space::Instance()->ShipManager
 #endif /* _SPACE_H_ */

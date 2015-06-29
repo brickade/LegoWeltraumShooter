@@ -21,9 +21,6 @@
     <ClCompile Include="Editor_History.cpp">
       <Filter>Editor</Filter>
     </ClCompile>
-    <ClCompile Include="Editor_ShipWorker.cpp">
-      <Filter>Editor</Filter>
-    </ClCompile>
     <ClCompile Include="Editor_Worker.cpp">
       <Filter>Editor</Filter>
     </ClCompile>
@@ -37,9 +34,6 @@
       <Filter>Scenes</Filter>
     </ClCompile>
     <ClCompile Include="INIReader.cpp">
-      <Filter>Utilities</Filter>
-    </ClCompile>
-    <ClCompile Include="InputManager.cpp">
       <Filter>Utilities</Filter>
     </ClCompile>
     <ClCompile Include="MainScene.cpp">
@@ -72,6 +66,39 @@
     <ClCompile Include="Menu_Network.cpp">
       <Filter>Menu</Filter>
     </ClCompile>
+    <ClCompile Include="InputManager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="BrickManager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="ShipManager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor_ShipHandler.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Asteroid.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Bullet.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Spaceship.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Game_UI.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Game_Network.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="GameMap.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Item.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Space.h" />
@@ -93,9 +120,6 @@
     <ClInclude Include="include\Editor_History.h">
       <Filter>Editor</Filter>
     </ClInclude>
-    <ClInclude Include="include\Editor_ShipWorker.h">
-      <Filter>Editor</Filter>
-    </ClInclude>
     <ClInclude Include="include\Editor_Worker.h">
       <Filter>Editor</Filter>
     </ClInclude>
@@ -109,12 +133,6 @@
       <Filter>Scenes</Filter>
     </ClInclude>
     <ClInclude Include="include\INIReader.h">
-      <Filter>Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="include\InputManager.h">
-      <Filter>Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="include\InputManagerTypes.h">
       <Filter>Utilities</Filter>
     </ClInclude>
     <ClInclude Include="include\MainScene.h">
@@ -151,6 +169,42 @@
     <ClInclude Include="include\Menu_Server.h">
       <Filter>Menu</Filter>
     </ClInclude>
+    <ClInclude Include="include\InputManager.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="include\InputManagerTypes.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="include\BrickManager.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ShipManager.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Editor_ShipHandler.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Asteroid.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Bullet.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Spaceship.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Game_UI.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Game_Network.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GameMap.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Item.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Editor">
@@ -170,6 +224,12 @@
     </Filter>
     <Filter Include="Menu">
       <UniqueIdentifier>{87fb103d-c303-4ce4-aeca-4df476054666}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Manager">
+      <UniqueIdentifier>{4a5d2d5f-175e-43d1-95e3-26a9daf0c419}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects">
+      <UniqueIdentifier>{6850121a-a426-4883-8919-85ef684ff716}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

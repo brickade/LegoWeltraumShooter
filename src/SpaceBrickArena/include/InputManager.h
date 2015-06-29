@@ -54,7 +54,7 @@ namespace sba
         CInputManager();
         ~CInputManager();
 
-        void Initialize(PuRe_IInput* a_pInput);
+        void Initialize();
         void Reset();
         void Load(const char*a_pFile);
         void Save(const char* a_pFile);

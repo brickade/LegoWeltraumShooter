@@ -12,6 +12,7 @@ namespace Menu
         std::string Name;
         std::string Port;
         std::string IP;
+        unsigned int Players;
         float LastUpdate; 
     };
 

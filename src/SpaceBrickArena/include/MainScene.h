@@ -21,7 +21,7 @@ namespace sba
         int m_PlayerIdx;
         Editor::CEditorScene* m_pEditorScene;
         Menu::CMenuScene* m_pMenuScene;
-        Game::CGameScene* m_pGameScene;
+        sba::CGameScene* m_pGameScene;
         PuRe_IScene* m_pActiveScene;
         /// @brief Engine's Application
         ///

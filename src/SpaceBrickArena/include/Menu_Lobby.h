@@ -16,12 +16,15 @@ namespace Menu
         sba::CNavigation* m_pNavigation;
         int m_LocalPlayers;
         bool m_Run;
-        std::thread m_LoadThread;
-        std::thread m_ReceiveThread;
+        bool m_Start;
+        std::vector<std::thread*> m_Threads;
+        PuRe_IWindow* m_pWindow;
+        bool m_GameEnd;
+        bool m_Focus;
     public:
         /// @brief Constructor
         ///
-        CLobby();
+        CLobby(PuRe_IWindow* a_pWindow);
         /// @brief Destructor
         ~CLobby();
     public:

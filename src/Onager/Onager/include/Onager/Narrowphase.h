@@ -26,6 +26,7 @@ namespace ong
 
 		void generateContacts(Pair* pairs, int numPairs, int maxContacts);
 		void removeBody(Body* body);
+		void removeContact(Contact* pContact);
 
 		Contact** getContacts(int* numContacts);
 

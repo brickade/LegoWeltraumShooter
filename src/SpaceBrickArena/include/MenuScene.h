@@ -5,7 +5,7 @@
 #include <PuReEngine/Core.h>
 #include <PuReEngine/Defines.h>
 
-#include "TheBrick/Spaceship.h"
+#include "Spaceship.h"
 #include "TheBrick/Serializer.h"
 #include "TheBrick/Conversion.h"
 #include "Space.h"

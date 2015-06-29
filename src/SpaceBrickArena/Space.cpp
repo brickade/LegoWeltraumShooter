@@ -9,10 +9,12 @@ namespace sba
     // **************************************************************************
     Space::Space()
     {
-        this->BrickManager = new TheBrick::CBrickManager();
         this->World = new ong::World();
         this->InputManager = new sba::CInputManager();
+        this->BrickManager = new sba::CBrickManager("../data/bricks/");
+        this->ShipManager = new sba::CShipManager("../data/ships/");
         this->m_pNetworkhandler = new sba::CNetworkHandler();
+        this->m_pMap = new sba::CGameMap();
     }
 
     // **************************************************************************
@@ -25,9 +27,12 @@ namespace sba
             SAFE_DELETE(this->m_Players[i]);
         }
         this->m_Players.clear();
+        SAFE_DELETE(this->m_pMap);
         SAFE_DELETE(this->Renderer);
         SAFE_DELETE(this->m_SSAOMaterial);
+        SAFE_DELETE(this->ShipManager);
         SAFE_DELETE(this->BrickManager);
+        SAFE_DELETE(this->InputManager);
         SAFE_DELETE(this->World);
         SAFE_DELETE(this->m_pNetworkhandler);
     }
@@ -36,6 +41,7 @@ namespace sba
     // **************************************************************************
     void Space::Initialize(PuRe_IGraphics& a_pGraphics, PuRe_IInput& a_pInput, PuRe_SoundPlayer& a_pSoundPlayer, PuRe_Application& a_rpApplication)
     {
+        this->Application = &a_rpApplication;
         this->Renderer = new PuRe_Renderer(&a_pGraphics);
         this->m_SSAOMaterial = a_pGraphics.LoadMaterial("../data/effects/SSAO/default");
         this->m_pNoiseTexture = new PuRe_Sprite(&a_pGraphics, "../data/textures/ssao.jpg");
@@ -48,12 +54,11 @@ namespace sba
             this->Renderer->SetSSAO(0, this->m_SSAOMaterial, this->m_pNoiseTexture);
             this->Renderer->SetSSAO(1, this->m_SSAOMaterial, this->m_pNoiseTexture);
         }
-        this->BrickManager->Initialize(a_pGraphics, a_pSoundPlayer);
-        this->InputManager->Initialize(&a_pInput);
+        this->BrickManager->Initialize();
+        this->InputManager->Initialize();
         this->Font = new PuRe_Font(&a_pGraphics, "../data/textures/font.png");
         this->FontMaterial = a_pGraphics.LoadMaterial("../data/effects/font/default");
-
-        this->Application = &a_rpApplication;
+        this->SpriteMaterial = a_pGraphics.LoadMaterial("../data/effects/sprite/default");
     }
 
     // **************************************************************************
@@ -81,6 +86,34 @@ namespace sba
             SAFE_DELETE(this->m_Players[a_Index]);
             this->m_Players.erase(this->m_Players.begin()+a_Index);
         }
+    }
+
+    // **************************************************************************
+    // **************************************************************************
+    bool Space::CheckShip(PuRe_IWindow* a_pWindow)
+    {
+        int i = 0;
+        const char* path = "../data/ships/";
+        bool right = false;
+
+        std::string file = a_pWindow->GetFileAtIndex(i, path);
+        std::string lastFile = file;
+        
+        while (!right)
+        {
+            if (file.substr(file.find_last_of(".") + 1) == "ship")
+                return true;
+            else
+            {
+                i++;
+                file = a_pWindow->GetFileAtIndex(i, path);
+                if (lastFile == file)
+                    return false;
+                else
+                    lastFile = file;
+            }
+        }
+        return true;
     }
 
     // **************************************************************************
@@ -128,8 +161,8 @@ namespace sba
         TheBrick::CSerializer serializer;
         serializer.OpenRead(file.c_str());
         ong::vec3 pos = ong::vec3(0.0f, 0.0f, 0.0f);
-        p->Ship = new TheBrick::CSpaceship(*sba_World, name);
-        p->Ship->Deserialize(serializer, *sba_BrickManager, *sba_World);
+        p->Ship = new sba::CSpaceship(*sba_World, name);
+        p->Ship->Deserialize(serializer, sba_BrickManager->GetBrickArray(), *sba_World);
         serializer.Close();
         sba_Players.push_back(p);
     }

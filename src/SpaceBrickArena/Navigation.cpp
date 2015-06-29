@@ -26,14 +26,14 @@ namespace sba
 
     // **************************************************************************
     // **************************************************************************
-    void CNavigation::Update(PuRe_Timer& a_pTimer, PuRe_Vector2F a_InputVector)
+    void CNavigation::Update(PuRe_Timer& a_pTimer, PuRe_Vector2F a_InputVector, bool a_LinkEnds)
     {
         EDirection::Type a_NewDirection = this->DirectionFromInputVector(a_InputVector);
         if (a_NewDirection != this->m_PreviousState)
         {
             if (a_NewDirection != EDirection::None)
             {
-                this->Navigate(a_NewDirection); //Navigate before scrolling
+                this->Navigate(a_NewDirection, a_LinkEnds); //Navigate before scrolling
             }
             this->m_FocusPosition = PuRe_Vector2F::Zero(); //Stop/reset scrolling
             this->m_pTimer->Reset();
@@ -47,7 +47,7 @@ namespace sba
 
     // **************************************************************************
     // **************************************************************************
-    void CNavigation::Navigate(EDirection::Type a_Direction)
+    void CNavigation::Navigate(EDirection::Type a_Direction, bool a_LinkEnds)
     {
         switch (a_Direction)
         {
@@ -68,7 +68,7 @@ namespace sba
             }
             break;
         }
-        this->ClampFocus(true);
+        this->ClampFocus(a_LinkEnds);
     }
 
     // **************************************************************************
@@ -168,7 +168,7 @@ namespace sba
     void CNavigation::RemoveElement(int a_Position)
     {
         this->m_LastElement--;
-        if (a_Position != -1 && a_Position < this->m_FocusedElement)
+        if (a_Position != -1 && a_Position <= this->m_FocusedElement)
         {
             this->m_FocusedElement--;
         }
@@ -187,7 +187,7 @@ namespace sba
     void CNavigation::RemoveLine(int a_Position)
     {
         this->m_LastElement -= this->m_ElementsPerLine;
-        if (a_Position != -1 && a_Position < this->m_FocusedElement)
+        if (a_Position != -1 && a_Position <= this->m_FocusedElement)
         {
             this->m_FocusedElement -= this->m_ElementsPerLine;
         }

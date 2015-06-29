@@ -6,10 +6,10 @@
 #include <Onager/World.h>
 
 #include "TheBrick/GameObject.h"
-#include "TheBrick/Spaceship.h"
+
+#include "Spaceship.h"
 
 #include "Editor_Camera.h"
-#include "Editor_ShipWorker.h"
 
 #include "TheBrick/Brick.h"
 
@@ -17,13 +17,13 @@ namespace TheBrick
 {
     class CGameObject;
     class CBrickInstance;
-    class CSpaceship;
 }
 
 namespace Editor
 {
+    class CEditorScene;
     class CHistory;
-    class CShipWorker;
+    class CShipHandler;
 
     class CWorker
     {
@@ -52,8 +52,6 @@ namespace Editor
         TheBrick::CGameObject* m_pCurrentBrickObject;
         TheBrick::CBrickInstance* m_pCurrentBrick;
 
-        CShipWorker* m_pShipWorker;
-
         PuRe_IMaterial* m_pGridMaterial;
         PuRe_Model* m_pGridBrick;
 
@@ -61,11 +59,6 @@ namespace Editor
         CCamera* GetCamera() const
         {
             return this->m_pCamera;
-        }
-        void DrawDebug(PuRe_IGraphics* a_pGraphics)
-        {
-            m_pCurrentBrickObject->Draw(a_pGraphics, m_pCamera);
-            this->m_pShipWorker->GetCurrentSpaceShip()->Draw(a_pGraphics, this->m_pCamera);
         }
 
         float GetCurrentBrickRotation()
@@ -82,15 +75,15 @@ namespace Editor
         ~CWorker();
 
         void Initialize(PuRe_IGraphics& a_pGraphics);
-        void Update(PuRe_IGraphics& a_pGraphics, PuRe_IWindow& a_pWindow, PuRe_Timer& a_pTimer, PuRe_SoundPlayer& a_pSoundPlayer, TheBrick::CBrick* a_pCurrentBrick, PuRe_Color& a_rCurrentColor);
-        void Render();
+        void Update(PuRe_IGraphics& a_pGraphics, PuRe_IWindow& a_pWindow, PuRe_Timer& a_pTimer, PuRe_SoundPlayer& a_pSoundPlayer, TheBrick::CBrick* a_pCurrentBrick, PuRe_Color& a_rCurrentColor, CShipHandler& a_rShipHandler);
+        void Render(CShipHandler& a_rShipHandler);
 
     private:
         void UpdateTranslation(PuRe_Vector3F a_cameraLook, float a_speed);
         void UpdateRotation();
-        void UpdateHeight();
+        void UpdateHeight(CShipHandler& a_rShipHandler);
         void ApplyToCurrentBrick();
-        void UpdatePlacement();
+        void UpdatePlacement(CShipHandler& a_rShipHandler);
     };
 }
 

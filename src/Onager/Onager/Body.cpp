@@ -71,6 +71,17 @@ namespace ong
 
 		if (m_pCollider == collider)
 			m_pCollider = collider->getNext();
+		
+		// remove contacts
+		ContactIter* iter = m_pContacts;
+		while (iter)
+		{
+			if (iter->contact->colliderA == collider || iter->contact->colliderB == collider)
+			{
+				m_pWorld->removeContact(iter->contact);
+			}
+			iter = iter->next;
+		}
 
 		collider->setBody(nullptr);
 

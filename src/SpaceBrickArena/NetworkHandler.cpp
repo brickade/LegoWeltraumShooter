@@ -16,6 +16,8 @@ namespace sba
     // **************************************************************************
     CNetworkHandler::~CNetworkHandler()
     {
+        if (this->m_Connected)
+            this->Disconnect();
         SAFE_DELETE(this->m_pBSocket);
         SAFE_DELETE(this->m_pSocket);
 
@@ -94,19 +96,21 @@ namespace sba
     SOCKET CNetworkHandler::Accept()
     {
         SOCKADDR_IN clientData;
-        SOCKET s = this->m_pSocket->Accept(&clientData);
-        if (s != 4294967295)
-            return s;
-        else
-            return NULL;
+        if (this->m_pSocket->Select(this->m_pSocket->GetSocket(),PuRe_SocketSelect::Read,1000))
+        {
+            SOCKET s = this->m_pSocket->Accept(&clientData);
+            if (s != 4294967295)
+                return s;
+        }
+        return NULL;
     }
 
     // **************************************************************************
     // **************************************************************************
-    void CNetworkHandler::SetBlockMode(bool a_Block)
+    void CNetworkHandler::SetBlockMode(SOCKET s,bool a_Block)
     {
         if (this->m_pSocket->IsWorking())
-            this->m_pSocket->SetMode(a_Block);
+            this->m_pSocket->SetMode(s, a_Block);
     }
 
     // **************************************************************************
@@ -140,31 +144,96 @@ namespace sba
 
     // **************************************************************************
     // **************************************************************************
-    long CNetworkHandler::Receive(char* a_pBuffer, int a_Size, SOCKET a_pSender)
+    long CNetworkHandler::Receive(char* a_pBuffer, int a_Size, SOCKET a_pSender,bool a_Select)
     {
-        long error = this->m_pSocket->Receive(a_pSender, a_pBuffer, a_Size);
-        //printf("Received Data with result %d\n", error);
-        return error;
+        long result = 0;
+        //wait for socket to be ready to get data
+        if (a_Select)
+        {
+            long selerror = 0;
+            while (selerror == 0)
+                selerror = this->m_pSocket->Select(a_pSender, PuRe_SocketSelect::Read, 1000);
+            //if he is ready, check if he really is ready or if he got an error
+            if (selerror > 0)
+            {
+                //ready, receive
+                a_Select = false;
+            }
+            else
+            {
+                //got an error, print it
+                int err = this->m_pSocket->GetError();
+                printf("Error Receiving Select: %i\n", this->m_pSocket->GetError());
+            }
+        }
+        if (!a_Select)
+        {
+            result = this->m_pSocket->Receive(a_pSender, a_pBuffer, a_Size);
+            if (result > -1)
+                printf("Received Data with result %d\n", result); //received
+            else
+            {
+                //nope, receive got error, print it
+                int err = this->m_pSocket->GetError();
+                if (err != 10035)
+                    printf("Error Receiving: %i\n", this->m_pSocket->GetError());
+                else
+                    return 0;
+            }
+        }
+        return result;
     }
 
 
     // **************************************************************************
     // **************************************************************************
-    void CNetworkHandler::SendHost(char* a_pBuffer, int a_Size)
+    void CNetworkHandler::SendHost(char* a_pBuffer, int a_Size, bool a_Select)
     {
         if (this->m_pSocket != NULL)
-            this->Send(a_pBuffer, a_Size,this->m_pSocket->GetSocket());
+            this->Send(a_pBuffer, a_Size, this->m_pSocket->GetSocket(), a_Select);
     }
 
 
     // **************************************************************************
     // **************************************************************************
-    void CNetworkHandler::Send(char* a_pBuffer, int a_Size, SOCKET a_Receiver)
+    void CNetworkHandler::Send(char* a_pBuffer, int a_Size, SOCKET a_Receiver, bool a_Select)
     {
         if (this->m_pSocket != NULL)
         {
-            long error = this->m_pSocket->Send(a_Receiver,a_pBuffer,a_Size);
-            printf("Send Data with result %d\n",error);
+
+            long result = 0;
+            //wait for socket to be ready to send data
+            if (a_Select)
+            {
+                long selerror = 0;
+                while (selerror == 0)
+                    selerror = this->m_pSocket->Select(a_Receiver, PuRe_SocketSelect::Write, 1000);
+                //if he is ready, check if he really is ready or if he got an error
+                if (selerror > 0)
+                {
+                    //ready, send
+                    a_Select = false;
+                }
+                else
+                {
+                    //got an error, print it
+                    int err = this->m_pSocket->GetError();
+                    printf("Error Send Select: %i\n", this->m_pSocket->GetError());
+                }
+            }
+            if (!a_Select)
+            {
+                //ready, receive
+                result = this->m_pSocket->Send(a_Receiver, a_pBuffer, a_Size);
+                if (result > -1)
+                    printf("Send Data with result %d\n", result); //received
+                else
+                {
+                    //nope, receive got error, print it
+                    int err = this->m_pSocket->GetError();
+                    printf("Error Send: %i\n", this->m_pSocket->GetError());
+                }
+            }
         }
     }
 

@@ -1,58 +1,48 @@
 #ifndef _GAMESCENE_H_
 #define _GAMESCENE_H_
 
+#define Skybox
+
 // Framework specific includes
 #include <PuReEngine/Core.h>
 #include <PuReEngine/Defines.h>
 
 #include "Space.h"
 
-#include <math.h>
-#include <algorithm>
-#include <mutex>
-
 #include "GameCamera.h"
-#include "Minimap.h"
 #include "NetworkHandler.h"
+#include "Asteroid.h"
+#include "Item.h"
+#include "Game_UI.h"
+#include "Game_Network.h"
 
 // Declare namespace Game
-namespace Game
+namespace sba
 {
 
-    #define Skybox
-
-    enum { BufferSize = 32 };
-    struct PlayOutBuffer
-    {
-        int Frame;
-        sba::SInputData Inputs[sba::MaxPlayers]; //frame saved in here
-    };
     /// @brief MainScene where the game functions are in, inherits from the Scene interface
     ///
     class CGameScene : public PuRe_IScene
     {
     private:
-        bool m_Network;
-
-        bool m_Run;
-        std::mutex m_Mutex;
-        //host only
-        unsigned int m_numReceived[BufferSize];
-        bool m_send[BufferSize];
-        //All players
-        PlayOutBuffer m_buffer[BufferSize];
-        sba::SInputPacket m_inputs[sba::Delay];
+        int m_Test;
+        CGameNetwork* m_pNetwork;
+        //Determinate who won and save him even when others are still playing
+        bool m_Won;
+        int m_WonID;
+        int m_WonIndex;
+        //End time
+        float m_TimeLimit;
+        float m_EndTime;
         //used for networking
-        float m_PhysicTime;
-        int m_ID;
         int m_LocalPlayers;
-        int m_PhysicFrame;
         //multiple players
         PuRe_Camera* m_pUICam;
         //whether we are still in menu or not
-        bool gameStart;
         int m_TextureID;
-        sba::CNetworkHandler* m_pNetwork;
+
+        //Game UI
+        CGUI* m_pUI;
 
         PuRe_Font* m_pFont;
         PuRe_PointLight* m_pPointLight;
@@ -65,13 +55,13 @@ namespace Game
         PuRe_IMaterial* m_pPointLightMaterial;
         PuRe_IMaterial* m_pDirectionalLightMaterial;
         PuRe_IMaterial* m_pParticleMaterial;
-        CMinimap* m_pMinimap;
         PuRe_Sprite* m_pParticleSprite;
 
         std::vector<PuRe_ParticleEmitter*> m_Emitters;
         std::vector<CGameCamera*> m_Cameras;
-        std::vector<TheBrick::CBullet*> m_Bullets;
-        std::vector<TheBrick::CAsteroid*> m_Asteroids;
+        std::vector<sba::CBullet*> m_Bullets;
+        std::vector<sba::CAsteroid*> m_Asteroids;
+        std::vector<sba::CItem*> m_Items;
         /// @brief Engine's Application
         ///
         PuRe_Application* m_pApplication;
@@ -82,24 +72,22 @@ namespace Game
     public:
         /// @brief Handle Input Data
         ///
-        sba::SInputData HandleInput(int a_PlayerIdx);
+        static sba::SInputData HandleInput(int a_PlayerIdx, PuRe_IInput* a_pInput);
         /// @brief Process Input Data
         ///
-        void ProcessInput(TheBrick::CSpaceship* a_Ship, sba::SInputData* a_Input, float a_DeltaTime);
+        static void ProcessInput(std::vector<CBullet*>& a_rBullets, SPlayer* a_pPlayer, sba::SInputData* a_Input, float a_DeltaTime);
+        /// @brief Update a Game
+        ///
+        static void UpdateGame(std::vector<CBullet*>& a_rBullets, std::vector<CItem*>& a_rItems, float a_Deltatime);
         /// @brief Handle Local Data
         ///
         void HandleLocal();
         /// @brief Handle Network Data
         ///
         void HandleNetwork();
-        /// @brief Function to handle  before the Game started
-        ///
-        void GameSetup();
         /// @brief Start the Game
         ///
         void StartGame();
-
-        void ListenLoop();
         /// @brief Receives Data which were send via Network.
         ///
         void ReceiveData(SOCKET s);

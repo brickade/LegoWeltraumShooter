@@ -108,6 +108,7 @@ namespace ong
 		//	--MANIPULATORS--
 
 		void updateProxy(const ProxyID* proxyID);
+		void removeContact(Contact* pContact);
 
 		//	--ACCESSORS--
 

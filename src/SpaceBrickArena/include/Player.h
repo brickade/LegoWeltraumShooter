@@ -5,16 +5,19 @@
 #include <PuReEngine/Core.h>
 #include <PuReEngine/Defines.h>
 
-#include <TheBrick/SpaceShip.h>
+#include "Spaceship.h"
 
 namespace sba
 {
     struct SPlayer
     {
         unsigned char ID;
-        unsigned char PadID;
+        char PadID;
         SOCKET NetworkInformation;
-        TheBrick::CSpaceship* Ship;
+        bool Timeout;
+        int m_Points;
+        float m_ShootCooldown;
+        CSpaceship* Ship;
     };
 }
 #endif /* _PLAYER_H_ */

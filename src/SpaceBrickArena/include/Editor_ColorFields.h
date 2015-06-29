@@ -7,13 +7,13 @@
 namespace sba
 {
     class CNavigation;
+    class CSpaceship;
 }
 
 namespace TheBrick
 {
     class CGameObject;
     class CBrickInstance;
-    class CSpaceship;
 }
 
 namespace Editor

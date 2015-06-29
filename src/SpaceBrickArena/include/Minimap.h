@@ -4,7 +4,7 @@
 #include <PuReEngine/Core.h>
 #include <PuReEngine/Defines.h>
 
-namespace Game
+namespace sba
 {
     class CMinimap
     {

@@ -4,10 +4,10 @@
 // Framework specific includess
 #include <PuReEngine/Core.h>
 #include <PuReEngine/Defines.h>
-#include <TheBrick/TheBrick.h>
 #include <Onager\World.h>
 
 #include "CommandQueue.h"
+#include <TheBrick/Brick.h>
 
 
 namespace Content

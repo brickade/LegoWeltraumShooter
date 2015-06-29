@@ -31,16 +31,7 @@
     <ClInclude Include="include\TheBrick\Serializer.h">
       <Filter>Quelldateien</Filter>
     </ClInclude>
-    <ClInclude Include="include\TheBrick\Asteroid.h">
-      <Filter>Quelldateien\GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="include\TheBrick\Bullet.h">
-      <Filter>Quelldateien\GameObject</Filter>
-    </ClInclude>
     <ClInclude Include="include\TheBrick\GameObject.h">
-      <Filter>Quelldateien\GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="include\TheBrick\Spaceship.h">
       <Filter>Quelldateien\GameObject</Filter>
     </ClInclude>
     <ClInclude Include="include\TheBrick\Brick.h">
@@ -49,10 +40,10 @@
     <ClInclude Include="include\TheBrick\BrickInstance.h">
       <Filter>Quelldateien\Brick</Filter>
     </ClInclude>
-    <ClInclude Include="include\TheBrick\BrickManager.h">
+    <ClInclude Include="include\TheBrick\Nub.h">
       <Filter>Quelldateien\Brick</Filter>
     </ClInclude>
-    <ClInclude Include="include\TheBrick\Nub.h">
+    <ClInclude Include="include\TheBrick\BrickData.h">
       <Filter>Quelldateien\Brick</Filter>
     </ClInclude>
   </ItemGroup>
@@ -63,16 +54,7 @@
     <ClCompile Include="BrickInstance.cpp">
       <Filter>Quelldateien\Brick</Filter>
     </ClCompile>
-    <ClCompile Include="BrickManager.cpp">
-      <Filter>Quelldateien\Brick</Filter>
-    </ClCompile>
     <ClCompile Include="GameObject.cpp">
-      <Filter>Quelldateien\GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="Spaceship.cpp">
-      <Filter>Quelldateien\GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="Bullet.cpp">
       <Filter>Quelldateien\GameObject</Filter>
     </ClCompile>
     <ClCompile Include="Serializer.cpp">
@@ -89,9 +71,6 @@
     </ClCompile>
     <ClCompile Include="CSVParser.cpp">
       <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Asteroid.cpp">
-      <Filter>Quelldateien\GameObject</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
