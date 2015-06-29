@@ -32,18 +32,21 @@ struct Connection
 	Brick* brick;
 	Brick* other;
 	int dir;
-	//Connection* twin;
 	Joint joints[2][2];
+	Joint verticalJoint;
 };
 
 static const int MAX_CONNECTIONS = 8;
 struct Brick
 {
+	int pos[3];
+
 	int numConnections;
 	Connection connections[MAX_CONNECTIONS];
+
 	int numBlocking;
 	Joint* blocking[MAX_CONNECTIONS];
-	int pos[3];
+
 	Collider* collider;
 	Ship* ship;
 	int tick;
@@ -63,7 +66,9 @@ public:
 
 private:
 	bool checkAxis(Brick * brick, vec3 impulse, vec3 pos, int axis);
+	bool checkVertical(Brick* brick,float verticalImpulse, vec3 impulse, vec3 pos);
 	void destroy(std::vector<Brick*>* selection, std::vector<Joint*>* front,vec3 impulse, vec3 pos, int axis, int tick);
+
 	void calcBase();
 	void renderBrick(Brick* brick, Brick* base, GLuint colorLocation, int tick);
 
