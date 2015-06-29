@@ -32,7 +32,7 @@ namespace sba
         //Add character
         if (this->m_Value.length() < this->m_MaxLength)
         {
-            if (this->m_AllowedInputs & InputTypes::NUMBERS)
+            if ((this->m_AllowedInputs & InputTypes::NUMBERS) && !a_rInput.KeyIsPressed(a_rInput.Shift))
             {
                 //Numbers
                 if (a_rInput.KeyPressed(a_rInput.Zero) || a_rInput.KeyPressed(a_rInput.Num_Zero))
@@ -103,10 +103,10 @@ namespace sba
                 this->m_Value += '.';
             }
 
-            if ((this->m_AllowedInputs & InputTypes::UNDERLINE) && a_rInput.KeyPressed(a_rInput.Minus))
+            if ((this->m_AllowedInputs & InputTypes::UNDERLINE) && (a_rInput.KeyPressed(a_rInput.Minus) || a_rInput.KeyPressed(a_rInput.Space)))
             {
                 //Underline
-                this->m_Value += '_'; //Who needs minus when you can map all to underline?!? muhahahahahahaha.
+                this->m_Value += '_'; //Who needs minus or space when you can map all to underline?!? muhahahahahahaha.
             }
         }
 

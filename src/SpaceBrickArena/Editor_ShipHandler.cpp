@@ -50,6 +50,10 @@ namespace Editor
             if (this->m_pInputField->Update(*sba_Application->GetInput()))
             { //Close Rename
                 this->m_RenameShip = false;
+                if (this->m_pInputField->GetValue().size() == 0)
+                {
+                    this->m_pInputField->SetValue("GiveMeAName_Idiot");
+                }
             }
             this->m_pCurrentSpaceship->SetName(this->m_pInputField->GetValue()); //Update Name
             if (!this->m_RenameShip && this->m_pCurrentSpaceship->GetName() != this->m_OldShipName)
@@ -65,6 +69,13 @@ namespace Editor
             {
                 SAFE_DELETE(this->m_pCurrentSpaceship);
                 this->m_pCurrentSpaceship = sba_ShipManager->GetShip(this->m_pNavigation->GetFocusedElementId());
+            }
+            if (sba_Input->ButtonPressed(sba_Button::EditorAddNewShip, this->m_playerIdx))
+            {
+                this->AddShip("Banana");
+                this->m_RenameShip = true;
+                this->m_OldShipName = this->m_pCurrentSpaceship->GetName();
+                this->m_pInputField->SetValue(this->m_OldShipName);
             }
         }
     }
@@ -98,8 +109,11 @@ namespace Editor
     // **************************************************************************
     void CShipHandler::AddShip(const char* a_pName)
     {
+        SAFE_DELETE(this->m_pCurrentSpaceship);
         sba_ShipManager->AddNewShip(a_pName);
-        this->m_pNavigation->AddElement(0);
+        this->m_pNavigation->AddElement();
+        this->m_pNavigation->SetFocusedElementId(this->m_pNavigation->GetLastElementId());
+        this->m_pCurrentSpaceship = sba_ShipManager->GetShip(this->m_pNavigation->GetFocusedElementId());
     }
 
     // **************************************************************************

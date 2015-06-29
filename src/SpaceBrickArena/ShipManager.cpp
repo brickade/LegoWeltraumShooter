@@ -97,9 +97,25 @@ namespace sba
     // **************************************************************************
     void CShipManager::AddNewShip(const char* a_pName)
     { //Add default ship with specified name
-        sba::CSpaceship* ship = new sba::CSpaceship(*sba_World, a_pName);
+        std::string name = a_pName;
+        bool unique = false;
+        while (!unique)
+        {
+            unique = true;
+            std::string path = this->PathFromName(name.c_str());
+            for (std::vector<std::pair<std::string, PuRe_Sprite*>>::iterator it = this->m_Sprites.begin(); it != this->m_Sprites.end(); ++it)
+            {
+                if ((*it).first.compare(path) == 0)
+                {
+                    unique = false;
+                    name += "_";
+                    break;
+                }
+            }
+        }
+        sba::CSpaceship* ship = new sba::CSpaceship(*sba_World, name.c_str());
         //Register
-        this->m_Sprites.push_back(std::make_pair(std::string(ship->GetName()).insert(0, this->m_FolderPath), this->GetSpriteFromShip(*ship)));
+        this->m_Sprites.push_back(std::make_pair(this->PathFromShip(*ship), this->GetSpriteFromShip(*ship)));
         //Set to default
         this->ResetShip(*ship);
         //Save to file

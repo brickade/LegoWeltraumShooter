@@ -147,6 +147,7 @@ namespace sba
                 EditorFadeSupervisor,
                 EditorFadeColors,
                 EditorRenameShip,
+                EditorAddNewShip,
                 NavigationSelect,
                 NavigationBack,
                 GameShoot,

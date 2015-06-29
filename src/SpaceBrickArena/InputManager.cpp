@@ -292,6 +292,16 @@ namespace sba
                 Input::EKeyboardButton::F2
             }
         };
+        this->m_pButtonMapping[Input::EButton::EditorAddNewShip] =
+        {
+            Input::EGamepadButton::Right_Thumb,
+            {
+                Input::EKeyboardButton::F3,
+                Input::EKeyboardButton::F3,
+                Input::EKeyboardButton::F3,
+                Input::EKeyboardButton::F3
+            }
+        };
         this->m_pButtonMapping[Input::EButton::NavigationSelect] =
         {
             Input::EGamepadButton::Pad_A,
