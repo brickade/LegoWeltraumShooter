@@ -16,7 +16,7 @@ namespace Menu
     int CMain::Update(PuRe_Timer* a_pTimer, int a_PlayerIdx)
     {
         this->m_pNavigation->Update(*a_pTimer, sba_Input->Direction(sba_Direction::Navigate, a_PlayerIdx));
-        if (sba_Input->ButtonPressed(sba_Button::NaviagtionSelect, a_PlayerIdx))
+        if (sba_Input->ButtonPressed(sba_Button::NavigationSelect, a_PlayerIdx))
         {
             switch (this->m_pNavigation->GetFocusedElementId())
             {

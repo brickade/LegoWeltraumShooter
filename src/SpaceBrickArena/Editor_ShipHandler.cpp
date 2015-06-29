@@ -20,6 +20,8 @@ namespace Editor
         }
         this->m_pNavigation = new sba::CNavigation(1, elements);
         this->m_pCurrentSpaceship = sba_ShipManager->GetShip(0);
+        this->m_RenameShip = false;
+        this->m_pInputField = new sba::CInputField((sba::CInputField::InputTypes::Type)(sba::CInputField::InputTypes::NUMBERS | sba::CInputField::InputTypes::LETTERS_UPPERCASE | sba::CInputField::InputTypes::LETTERS_LOWERCASE | sba::CInputField::InputTypes::UNDERLINE));
     }
 
     // **************************************************************************
@@ -34,12 +36,36 @@ namespace Editor
     // **************************************************************************
     void CShipHandler::Update()
     {
-        int focus = this->m_pNavigation->GetFocusedElementId();
-        this->m_pNavigation->Update(*sba_Application->GetTimer(), sba_Input->Direction(sba_Direction::Navigate, this->m_playerIdx), false);
-        if (this->m_pNavigation->GetFocusedElementId() != focus)
+        if (sba_Input->ButtonPressed(sba_Button::EditorRenameShip, this->m_playerIdx))
         {
-            SAFE_DELETE(this->m_pCurrentSpaceship);
-            this->m_pCurrentSpaceship = sba_ShipManager->GetShip(this->m_pNavigation->GetFocusedElementId());
+            this->m_RenameShip = !this->m_RenameShip;
+            if (this->m_RenameShip)
+            {
+                this->m_OldShipName = this->m_pCurrentSpaceship->GetName();
+                this->m_pInputField->SetValue(this->m_OldShipName);
+            }
+        }
+        if (this->m_RenameShip)
+        {
+            if (this->m_pInputField->Update(*sba_Application->GetInput()))
+            { //Close Rename
+                this->m_RenameShip = false;
+            }
+            this->m_pCurrentSpaceship->SetName(this->m_pInputField->GetValue()); //Update Name
+            if (!this->m_RenameShip && this->m_pCurrentSpaceship->GetName() != this->m_OldShipName)
+            { //Ship was renamed
+                this->UpdateCurrentShipName(); //Save to disk
+            }
+        }
+        else
+        {
+            int focus = this->m_pNavigation->GetFocusedElementId();
+            this->m_pNavigation->Update(*sba_Application->GetTimer(), sba_Input->Direction(sba_Direction::Navigate, this->m_playerIdx), false);
+            if (this->m_pNavigation->GetFocusedElementId() != focus)
+            {
+                SAFE_DELETE(this->m_pCurrentSpaceship);
+                this->m_pCurrentSpaceship = sba_ShipManager->GetShip(this->m_pNavigation->GetFocusedElementId());
+            }
         }
     }
 
@@ -57,7 +83,7 @@ namespace Editor
         }
         //Center
         sba_Space->RenderFont("Ship " + std::to_string(focus + 1) + "/" + std::to_string(sba_ShipManager->GetShipCount()), center + this->m_TextOffset + this->m_TextStep * 0, 18);
-        sba_Space->RenderFont("\"" + this->m_pCurrentSpaceship->GetName() + "\"", center + this->m_TextOffset + this->m_TextStep * 1, 18);
+        sba_Space->RenderFont("\"" + this->m_pCurrentSpaceship->GetName() + "\"", center + this->m_TextOffset + this->m_TextStep * 1, this->m_RenameShip ? 24 : 18);
         sba_Space->RenderFont(std::to_string(this->m_pCurrentSpaceship->m_pBricks.size()) + " Bricks", center + this->m_TextOffset + this->m_TextStep * 2, 18);
         
         sba_Renderer->Draw(1, false, (*sba_ShipManager)[focus], sba_Space->SpriteMaterial, PuRe_Vector3F(center + this->m_PreviewOffset, 0), PuRe_MatrixF::Identity(), PuRe_Vector3F((*sba_ShipManager)[focus]->GetSize() * 0.5f, 0));
@@ -113,5 +139,12 @@ namespace Editor
     void CShipHandler::UpdateCurrentShipPreview()
     {
         sba_ShipManager->UpdateSprite(*this->GetCurrentSpaceShip());
+    }
+
+    // **************************************************************************
+    // **************************************************************************
+    void CShipHandler::UpdateCurrentShipName()
+    {
+        sba_ShipManager->UpdateShipName(*this->GetCurrentSpaceShip(), this->m_OldShipName);
     }
 }

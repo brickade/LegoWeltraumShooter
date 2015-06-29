@@ -99,6 +99,9 @@
     <ClCompile Include="Item.cpp">
       <Filter>Objects</Filter>
     </ClCompile>
+    <ClCompile Include="InputField.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Space.h" />
@@ -204,6 +207,9 @@
     </ClInclude>
     <ClInclude Include="include\Item.h">
       <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="include\InputField.h">
+      <Filter>Utilities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

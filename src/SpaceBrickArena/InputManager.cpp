@@ -282,7 +282,17 @@ namespace sba
                 Input::EKeyboardButton::Num_Five
             }
         };
-        this->m_pButtonMapping[Input::EButton::NaviagtionSelect] =
+        this->m_pButtonMapping[Input::EButton::EditorRenameShip] =
+        {
+            Input::EGamepadButton::Pad_Y,
+            {
+                Input::EKeyboardButton::F2,
+                Input::EKeyboardButton::F2,
+                Input::EKeyboardButton::F2,
+                Input::EKeyboardButton::F2
+            }
+        };
+        this->m_pButtonMapping[Input::EButton::NavigationSelect] =
         {
             Input::EGamepadButton::Pad_A,
             {

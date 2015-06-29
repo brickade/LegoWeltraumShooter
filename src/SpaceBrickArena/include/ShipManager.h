@@ -56,6 +56,8 @@ namespace sba
         sba::CSpaceship* GetShip(size_t a_Index); //Load actual ship from disk
         void UpdateSprite(sba::CSpaceship& a_rShip); //Updates the sprite, does not save it to file
 
+        void UpdateShipName(sba::CSpaceship& a_rShip, std::string& a_rOldShipName); //Update Ship and sprite name on disk and path in m_Sprites
+
     private:
         const char* PathFromShip(sba::CSpaceship& a_rShip) const
         {

@@ -222,4 +222,32 @@ namespace sba
         local::SetRes(1920, 1080);
         return sprite;
     }
+
+    // **************************************************************************
+    // **************************************************************************
+    void CShipManager::UpdateShipName(sba::CSpaceship& a_rShip, std::string& a_rOldShipName)
+    {
+        std::string oldPath = this->PathFromName(a_rOldShipName.c_str());
+        std::string newPath = this->PathFromShip(a_rShip);
+        if (rename(std::string(oldPath).append(".ship").c_str(), std::string(newPath).append(".ship").c_str()) != 0)
+        {
+            printf("cant rename ship bro");
+        }
+        if (rename(std::string(oldPath).append(".dds").c_str(), std::string(newPath).append(".dds").c_str()) != 0)
+        {
+            printf("cant rename dds bro");
+        }
+        
+        for (std::vector<std::pair<std::string, PuRe_Sprite*>>::iterator it = this->m_Sprites.begin(); it != this->m_Sprites.end(); ++it)
+        {
+            if ((*it).first.compare(oldPath) == 0)
+            {
+                it->first = newPath;
+                break;
+            }
+        }
+        //!!!#####!!!
+        //###Texture Path in PuRe_Sprite in m_Sprites.second is now invalid. Currently doesnt matter. When someone uses that info, he needs to reload the sprite here!
+        //!!!#####!!!
+    }
 }

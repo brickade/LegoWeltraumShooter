@@ -44,7 +44,7 @@ namespace Editor
             {
                 this->m_State = EEditorState::SelectShip;
             }
-            else
+            else if (!this->m_pShipHandler->Renaming())
             {
                 return 5;
             }
@@ -56,7 +56,7 @@ namespace Editor
             //------------------------------
             // Select
             //------------------------------
-            if (sba_Input->ButtonPressed(sba_Button::NaviagtionSelect, this->m_PlayerIdx))
+            if (sba_Input->ButtonPressed(sba_Button::NavigationSelect, this->m_PlayerIdx) && !this->m_pShipHandler->Renaming())
             {
                 this->m_State = EEditorState::EditShip;
                 break;
