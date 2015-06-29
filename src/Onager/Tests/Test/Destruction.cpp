@@ -9,7 +9,7 @@ enum
 
 
 static ShapePtr g_brickShape = {};
-static Material g_material = { 1, 1, 1 };
+static Material g_material = { 1, 0, 1 };
 static int g_numJoints;
 static JointData g_joints[256];
 static int g_numBricks;
@@ -274,13 +274,13 @@ bool findAugmentedPath(Brick* brick, Brick* sink, int axis, float* minCapacity, 
 			Connection* connection = brick->connections + i;
 			Joint* joint = brick->connections[i].joints[axis] + j;
 			if (connection->other->tick != tick &&
-				joint->data->capacity - joint->flow > 0)
+				joint->capacity - joint->flow > 0)
 			{
 				path->push_back(joint);
 				if (findAugmentedPath(connection->other, sink, axis, minCapacity, path, tick))
 				{
-					if (joint->data->capacity - joint->flow < *minCapacity)
-						*minCapacity = joint->data->capacity - joint->flow;
+					if (joint->capacity - joint->flow < *minCapacity)
+						*minCapacity = joint->capacity - joint->flow;
 					return true;
 				}
 				else
@@ -377,11 +377,28 @@ void Ship::destroy(std::vector<Brick*>* selection, std::vector<Joint*>* front, v
 
 
 	//break front
+
+	vec3 minFulcrum = vec3(0,0,0);
+	float minCapacity = FLT_MAX;
+
 	for (int i = 0; i < front->size(); ++i)
 	{
 		Connection* a = (*front)[i]->connection;
 		Connection* b = (*front)[i]->twin->connection;
-		assert(a->brick->numConnections > 0 && b->brick->numConnections > 0);
+
+		if ((*front)[i]->capacity < minCapacity)
+		{
+			Joint* opposite = a->joints[axis] == (*front)[i] ? a->joints[axis] + 1 : a->joints[axis];
+			minFulcrum.y = opposite->data->y;
+			if (axis == X)
+				minFulcrum.x = opposite->data->fulcrum;
+			else if (axis == Z)
+				minFulcrum.z = opposite->data->fulcrum;
+
+			minCapacity = (*front)[i]->capacity;
+		}
+
+
 		*a = a->brick->connections[--a->brick->numConnections];
 		
 		for (int d = X; d <= Z; ++d)
@@ -404,30 +421,24 @@ void Ship::destroy(std::vector<Brick*>* selection, std::vector<Joint*>* front, v
 				b->joints[d][i].twin->twin = b->joints[d] + i;
 			}
 		}
-
-		//if (checkForConnectivity(a->other, m_base, tick, g_tick++))
-		//{
-		//	*a = a->brick->connections[--a->brick->numConnections];
-		//	*b = b->brick->connections[--b->brick->numConnections];
-		//}
-		//else
-		//{
-		//	a->other->tick = tick;
-		//	selection->push_back(a->other);
-		//}
-
-
 	}
+
+
+	vec3 fulcrum = transformVec3(minFulcrum, m_body->getTransform());
+	vec3 r(0,0,0);
+	r.y = pos.y -  fulcrum.y;
+	if (axis == X)
+		r.x = pos.x - fulcrum.x;
+	else if (axis == Z)
+		r.z = pos.z - fulcrum.z;
 
 	BodyDescription descr;
 	descr.transform = m_body->getTransform();
 	descr.type = BodyType::Dynamic;
 	descr.linearMomentum = impulse;
-	descr.angularMomentum = vec3(0, 0, 0);
+	descr.angularMomentum = cross(r, impulse);
 
 	Ship* newShip = createShip(m_world, m_entities, descr, vec3(0,0,1));
-	
-
 	
 
 	// seperate selection
@@ -456,9 +467,6 @@ void Ship::destroy(std::vector<Brick*>* selection, std::vector<Joint*>* front, v
 
 bool breakGraph(Brick* brick,Brick* base, float maxFlow, int axis, std::vector<Brick*>* selection, std::vector<Joint*>* front, int tick)
 {
-	if (brick == base)
-		return true;
-
 	brick->tick = tick;
 	selection->push_back(brick);
 	for (int i = 0; i < brick->numConnections; ++i)
@@ -466,27 +474,32 @@ bool breakGraph(Brick* brick,Brick* base, float maxFlow, int axis, std::vector<B
 		Connection* connection = brick->connections + i;
 		if (connection->other->tick != tick)
 		{
+			int valid = 0;
 			for (int j = 0; j < 2; ++j)
 			{
-				if (connection->joints[axis][j].data->capacity > 0)
+				if (connection->joints[axis][j].capacity > 0)
 				{
-					if (connection->joints[axis][j].data->capacity >= connection->joints[axis][j].flow / maxFlow)
+					if (connection->joints[axis][j].capacity >= connection->joints[axis][j].flow / maxFlow)
 					{
-						if (breakGraph(connection->other, base, maxFlow, axis, selection, front, tick))
-							return true;
-
+						breakGraph(connection->other, base, maxFlow, axis, selection, front, tick);
 					}
 					else
 					{
-						assert(connection->joints[axis][j].data != nullptr);
 						front->push_back(connection->joints[axis] + j);
 					}
 				}
+				else
+				{
+					valid++;
+				}
 			}
+
+			if (valid >= 2)
+				return false;
 		}
 	}
 
-	return false;
+	return true;
 }
 
 
@@ -495,8 +508,6 @@ void clearFlowNetwork(Brick* brick, vec3 impulse, vec3 pos, int tick)
 	brick->tick = tick;
 	for (int i = 0; i < brick->numConnections; ++i)
 	{
-		//if (brick->connections[i].other->tick == tick)
-		//	continue;
 
 		for (int d = X; d <= Z; ++d)
 		{
@@ -507,19 +518,19 @@ void clearFlowNetwork(Brick* brick, vec3 impulse, vec3 pos, int tick)
 
 
 				if (d== X)
-					joint->data->capacity =
+					joint->capacity =
 					brick->connections[i].dir * joint->data->baseCapacity / ((pos.x - joint->data->fulcrum) * impulse.y - (pos.y - joint->data->y) *impulse.x);
 				else if (d == Z)
-					joint->data->capacity =
-					brick->connections[i].dir * joint->data->baseCapacity / ((pos.y - joint->data->y) * impulse.z - (pos.z - joint->data->fulcrum) * impulse.y);
+					joint->capacity =
+					-brick->connections[i].dir * joint->data->baseCapacity / ((pos.y - joint->data->y) * impulse.z - (pos.z - joint->data->fulcrum) * impulse.y);
 
-				if (joint->data->blocked && joint->data->capacity > 0)
+				if (joint->data->blocked && joint->capacity > 0)
 				{
-					joint->data->capacity = 1.0f;
+					joint->capacity = 1.0f;
 				}
 				else
 				{
-					joint->data->capacity = ong_MIN(1.0f, ong_MAX(0.0f, joint->data->capacity));
+					joint->capacity = ong_MIN(1.0f, ong_MAX(0.0f, joint->capacity));
 				}
 			}
 		}
@@ -541,7 +552,8 @@ bool Ship::checkAxis(Brick* brick, vec3 impulse, vec3 pos, int axis)
 		std::vector<Joint*> front;
 
 		int selectionTick = g_tick++;
-		breakGraph(brick, m_base, max, axis, &selection, &front, selectionTick);
+		if (!breakGraph(brick, m_base, max, axis, &selection, &front, selectionTick))
+			return false;
 
 		for (int i = 0; i < front.size(); ++i)
 		{
@@ -560,8 +572,8 @@ bool Ship::checkAxis(Brick* brick, vec3 impulse, vec3 pos, int axis)
 				}
 				if (numUp > 0 && numDown > 0)
 					return false;
-
 			}
+
 
 		}
 
@@ -580,6 +592,8 @@ bool Ship::addImpulse(Brick* brick, vec3 pos, vec3 impulse)
 	Transform t = invTransform(m_body->getTransform());
 	vec3 _pos = transformVec3(pos, t);
 	vec3 _impulse = rotate(impulse, t.q);
+
+	m_minAxis = abs(_impulse.x) > abs(_impulse.z) ? X : Z;
 
 	// clear flow network
 	clearFlowNetwork(brick, _impulse, _pos, g_tick++);
@@ -614,14 +628,17 @@ void Ship::calcBase()
 
 }
 
-void renderBrick(Brick* brick, Brick* base, GLuint colorLocation, int tick)
+void Ship::renderBrick(Brick* brick, Brick* base, GLuint colorLocation, int tick)
 {
 	brick->tick = tick;
 
 	for (int j = 0; j < brick->numConnections; ++j)
 	{
-		for (int axis = X; axis < Z; ++axis)
+		//for (int axis = Z; axis <= Z; ++axis)
 		{
+			int axis = m_minAxis;
+
+
 			for (int i = 0; i < 2; ++i)
 			{
 				Connection* connection = brick->connections + j;
@@ -653,9 +670,9 @@ void renderBrick(Brick* brick, Brick* base, GLuint colorLocation, int tick)
 					glEnd();
 				}
 
-				if (joint->data->capacity > 0)
+				if (joint->capacity > 0)
 				{
-					glLineWidth(joint->data->capacity * 5.0f);
+					glLineWidth(joint->capacity * 5.0f);
 					glBegin(GL_LINES);
 					if (axis == X)
 					{

@@ -15,7 +15,6 @@ struct JointData
 	float fulcrum;
 	float y;
 	float baseCapacity;
-	float capacity;
 	int blocked;
 };
 
@@ -24,6 +23,7 @@ struct Joint
 	JointData* data;
 	Connection* connection;
 	Joint* twin;
+	float capacity;
 	float flow;
 };
 
@@ -65,7 +65,9 @@ private:
 	bool checkAxis(Brick * brick, vec3 impulse, vec3 pos, int axis);
 	void destroy(std::vector<Brick*>* selection, std::vector<Joint*>* front,vec3 impulse, vec3 pos, int axis, int tick);
 	void calcBase();
+	void renderBrick(Brick* brick, Brick* base, GLuint colorLocation, int tick);
 
+	int m_minAxis;
 
 	Brick* m_base;
 	World* m_world;
