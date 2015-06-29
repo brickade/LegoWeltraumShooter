@@ -630,6 +630,11 @@ void Test::run()
 				{
 					m_entities.clear();
 					delete m_world;
+					gBox = ShapePtr();
+					gCapsule = ShapePtr();
+					gFloor = ShapePtr();
+					gSlope = ShapePtr();
+					gSphere = ShapePtr();
 					init();
 				}
 				else if (event.key.keysym.scancode == SDL_SCANCODE_V)

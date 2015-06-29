@@ -234,6 +234,11 @@ void Ship::addBrick(int x, int y, int z)
 	brick->collider->setUserData(brick);
 	brick->ship = this;
 
+	ColliderCallbacks callbacks;
+	callbacks.postSolve = collisionCallback;
+
+	collider->setCallbacks(callbacks);
+
 	m_body->addCollider(collider);
 
 	
@@ -513,8 +518,6 @@ bool breakGraph(Brick* brick,Brick* base, float maxFlow, int axis, std::vector<B
 		Connection* connection = brick->connections + i;
 		if (connection->other->tick != tick)
 		{
-
-
 			int valid = 0;
 			for (int j = 0; j < 2; ++j)
 			{
@@ -855,4 +858,16 @@ void Ship::render(GLuint colorLocation)
 
 
 	glPopMatrix();
+}
+
+
+void Ship::update(float dt)
+{
+
+	for (int i = 0; i < m_impulses.size(); ++i)
+	{
+		m_impulses[i].brick->ship->addImpulse(m_impulses[i].brick, m_impulses[i].pos, m_impulses[i].impulse);
+	}
+
+	m_impulses.clear();
 }

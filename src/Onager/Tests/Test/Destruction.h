@@ -54,6 +54,7 @@ struct Brick
 
 Ship* createShip(World* world, std::vector<Entity*>* entities, BodyDescription descr, vec3 color);
 
+
 class Ship : public Entity
 {
 public:
@@ -62,9 +63,20 @@ public:
 	void build();
 	bool addImpulse(Brick* brick, vec3 impulse, vec3 pos);
 
+	void update(float dt) override;
+
 	void render(GLuint colorLocation) override;
 
 private:
+	friend void collisionCallback(Collider* collider, Contact* contact);
+
+	struct Impulse
+	{
+		Brick* brick;
+		vec3 pos;
+		vec3 impulse;
+	};
+
 	bool checkAxis(Brick * brick, vec3 impulse, vec3 pos, int axis);
 	bool checkVertical(Brick* brick,float verticalImpulse, vec3 impulse, vec3 pos);
 	void destroy(std::vector<Brick*>* selection, std::vector<Joint*>* front,vec3 impulse, vec3 pos, int axis, int tick);
@@ -77,6 +89,17 @@ private:
 	Brick* m_base;
 	World* m_world;
 	std::vector<Entity*>* m_entities;
+	std::vector<Impulse> m_impulses;
+
 };
 
-
+inline void collisionCallback(Collider* collider, Contact* contact)
+{
+	Brick* brick = (Brick*)collider->getUserData();
+	int d = contact->colliderA == collider ? -1 : 1;
+	
+	for (int i = 0; i < contact->manifold.numPoints; ++i)
+	{
+		brick->ship->m_impulses.push_back(Ship::Impulse{ brick, contact->manifold.points[i].position, d * contact->accImpulseN[i] * contact->manifold.normal});
+	}
+};
