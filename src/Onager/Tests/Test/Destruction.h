@@ -96,16 +96,17 @@ private:
 
 inline void collisionCallback(Collider* collider, Contact* contact)
 {
-	Brick* brick = (Brick*)collider->getUserData();
-	int d = contact->colliderA == collider ? -1 : 1;
 	
-	vec3 pos = vec3(0,0,0);
-	vec3 impulse = vec3(0,0,0);
+	//Brick* brick = (Brick*)collider->getUserData();
+	//int d = contact->colliderA == collider ? -1 : 1;
+	//
+	//vec3 pos = vec3(0,0,0);
+	//vec3 impulse = vec3(0,0,0);
 	for (int i = 0; i < contact->manifold.numPoints; ++i)
 	{
-		pos += contact->manifold.points[i].position;
-		impulse += d * contact->accImpulseN[i] * contact->manifold.normal;
+		//pos += contact->manifold.points[i].position;
+		//impulse += d * contact->accImpulseN[i] * contact->manifold.normal;
 	}
 
-	brick->ship->m_impulses.push_back({ brick, 1.0f / contact->manifold.numPoints * pos, 1.0f / contact->manifold.numPoints * impulse });
+	//brick->ship->m_impulses.push_back({ brick, 1.0f / contact->manifold.numPoints * pos, 1.0f / contact->manifold.numPoints * impulse });
 };
