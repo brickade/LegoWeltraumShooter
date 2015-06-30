@@ -25,14 +25,21 @@ namespace Editor
 {
     class CShipHandler
     {
-
     public:
+        struct ShipDataCache
+        {
+            int Weapons = 0;
+            int Engines = 0;
+            int Cockpits = 0;
+        };
 
     private:
         int m_playerIdx;
 
         sba::CNavigation* m_pNavigation;
         sba::CSpaceship* m_pCurrentSpaceship;
+
+        ShipDataCache m_pCurrentShipDataCache;
 
         bool m_RenameShip;
         sba::CInputField* m_pInputField;
@@ -56,6 +63,11 @@ namespace Editor
             return this->m_RenameShip;
         }
 
+        const ShipDataCache& GetCurrentShipData() const
+        {
+            return this->m_pCurrentShipDataCache;
+        }
+
     public:
         CShipHandler(int a_playerIdx);
         ~CShipHandler();
@@ -72,6 +84,8 @@ namespace Editor
 
         void UpdateCurrentShipPreview();
         void UpdateCurrentShipName();
+
+        void UpdateCurrentShipData();
     };
 }
 

@@ -79,4 +79,5 @@ namespace sba
 #define sba_Input sba::Space::Instance()->InputManager
 #define sba_BrickManager sba::Space::Instance()->BrickManager
 #define sba_ShipManager sba::Space::Instance()->ShipManager
+
 #endif /* _SPACE_H_ */

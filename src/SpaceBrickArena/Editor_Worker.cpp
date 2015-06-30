@@ -9,6 +9,7 @@
 
 #include "TheBrick/DebugDraw.h"
 #include "include/Editor_Assistant.h"
+#include "include/Editor_BrickCategory.h"
 
 namespace Editor
 {
@@ -60,6 +61,7 @@ namespace Editor
                 SAFE_DELETE(this->m_pCurrentBrick);
             }
             this->m_pCurrentBrick = a_pCurrentBrick->CreateInstance(*this->m_pCurrentBrickObject, *sba_World); //Create Instance
+            a_rShipHandler.UpdateCurrentShipData();
         }
         this->m_pCamera->Update(&a_pGraphics, &a_pWindow, &a_pTimer);
         this->UpdateTranslation(this->m_pCamera->GetForward(), a_pTimer.GetElapsedSeconds() * 3.0f);
@@ -79,6 +81,7 @@ namespace Editor
         {
             a_rShipHandler.ResetCurrentShip();
             this->m_pHistory->Clear();
+            a_rShipHandler.UpdateCurrentShipData();
         }
     }
 
@@ -89,6 +92,10 @@ namespace Editor
         sba::CSpaceship& ship = *a_rShipHandler.GetCurrentSpaceShip();
         sba_Space->RenderFont(std::to_string(ship.m_pBricks.size()) + "/" + std::to_string(sba::CSpaceship::MAX_BRICK_COUNT) + " Bricks", PuRe_Vector2F(sba_Width - 300.0f, sba_Height - 50.0f), 18);
         sba_Space->RenderFont("Ship: " + ship.GetName(), PuRe_Vector2F(sba_Width / 2 - 200.0f, sba_Height - 50.0f), 18);
+        const CShipHandler::ShipDataCache& shipData = a_rShipHandler.GetCurrentShipData();
+        sba_Space->RenderFont(std::to_string(shipData.Cockpits) + " Cockpits [1-2]", PuRe_Vector2F(sba_Width - 300.0f, sba_Height - 100.0f), 14);
+        sba_Space->RenderFont(std::to_string(shipData.Engines) + " Engines [1-5]", PuRe_Vector2F(sba_Width - 300.0f, sba_Height - 140.0f), 14);
+        sba_Space->RenderFont(std::to_string(shipData.Weapons) + " Weapons [1-5]", PuRe_Vector2F(sba_Width - 300.0f, sba_Height - 180.0f), 14);
     }
 
     // **************************************************************************
@@ -140,6 +147,11 @@ namespace Editor
     // **************************************************************************
     void CWorker::UpdateRotation()
     {
+        if (this->m_pCurrentBrick->m_pBrick->GetCategoryId() == CBrickCategory::CATEGORY_ENGINES)
+        {
+            this->m_currentBrickRotation = 0;
+            return;
+        }
         if (sba_Input->ButtonPressed(sba_Button::EditorRotateBrickRight, this->m_playerIdx))
         {
             this->m_currentBrickRotation++;
@@ -190,7 +202,9 @@ namespace Editor
         if (!CAssistant::GetClosestHitsFromBrickInstanceNubs(*this->m_pCurrentBrick, *a_rShipHandler.GetCurrentSpaceShip(), nubToCastFromShouldBeMale, nubToCastFromDirection, &hitResults, &hitResultRayOrigins))
         { //Nothing hit
             this->m_currentHeight = 0;
+#ifdef EDITOR_DEBUG
             printf("Nothing hit\n");
+#endif
             return;
         }
         assert(hitResults.size() == hitResultRayOrigins.size());
@@ -211,17 +225,23 @@ namespace Editor
                 { //CollisionFree
                     this->m_canPlaceHere = true;
                     this->m_currentHeight = (int)round((hitResultRayOrigins[i].y + maxCollisionFreeDelta.y + (brickTransform.p.y - hitResultRayOrigins[i].y)) / TheBrick::CBrick::SEGMENT_HEIGHT);
+#ifdef EDITOR_DEBUG
                     printf("Collision free: delta(%f, %f, %f)\n", maxCollisionFreeDelta.x, maxCollisionFreeDelta.y, maxCollisionFreeDelta.z);
+#endif
                     return;
                 }
                 //Handle docking test success but not collision free
                 this->m_currentHeight = (int)round((hitResultRayOrigins[i].y + maxCollisionFreeDelta.y + (brickTransform.p.y - hitResultRayOrigins[i].y)) / TheBrick::CBrick::SEGMENT_HEIGHT);
+#ifdef EDITOR_DEBUG
                 printf("NOT Collision free: delta(%f, %f, %f)\n", maxCollisionFreeDelta.x, maxCollisionFreeDelta.y, maxCollisionFreeDelta.z);
+#endif
                 return;
             }
         }
         //Can't dock
+#ifdef EDITOR_DEBUG
         printf("Can't dock\n");
+#endif
         this->m_currentHeight = (int)round((hitResults[0].point.y + (brickTransform.p.y - hitResultRayOrigins[0].y)) / TheBrick::CBrick::SEGMENT_HEIGHT);
     }
 
@@ -268,6 +288,7 @@ namespace Editor
             if (step != nullptr)
             {
                 delete step->BrickInstance;
+                a_rShipHandler.UpdateCurrentShipData();
             }
         }
         else if (sba_Input->ButtonIsPressed(sba_Button::EditorUndoRedoHold, this->m_playerIdx) && sba_Input->ButtonPressed(sba_Button::EditorRedo, this->m_playerIdx))
@@ -277,9 +298,19 @@ namespace Editor
             {
                 step->BrickInstance = new TheBrick::CBrickInstance(*step->Brick, *a_rShipHandler.GetCurrentSpaceShip(), *sba_World, step->Color);
                 step->BrickInstance->SetTransform(step->Transform);
+                a_rShipHandler.UpdateCurrentShipData();
             }
         }
         if (!this->m_canPlaceHere)
+        {
+            return;
+        }
+
+        //Check for max special bricks count
+        const CShipHandler::ShipDataCache& shipData = a_rShipHandler.GetCurrentShipData();
+        if ((this->m_pCurrentBrick->m_pBrick->GetCategoryId() == CBrickCategory::CATEGORY_COCKPITS && shipData.Cockpits >= 2)
+            || (this->m_pCurrentBrick->m_pBrick->GetCategoryId() == CBrickCategory::CATEGORY_WEAPONS && shipData.Weapons >= 5)
+            || (this->m_pCurrentBrick->m_pBrick->GetCategoryId() == CBrickCategory::CATEGORY_ENGINES && shipData.Engines >= 5))
         {
             return;
         }
@@ -294,6 +325,7 @@ namespace Editor
             step.Transform = this->m_pCurrentBrick->GetTransform();
             step.Color = this->m_currentBrickColor;
             this->m_pHistory->AddStep(step); //Add History step
+            a_rShipHandler.UpdateCurrentShipData();
         }
     }
 }

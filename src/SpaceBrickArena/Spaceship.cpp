@@ -5,6 +5,7 @@
 #include "TheBrick/Brick.h"
 
 #include "include/Player.h"
+#include "include/Editor_BrickCategory.h"
 
 namespace sba
 {
@@ -258,5 +259,44 @@ namespace sba
         brickInstance->SetTransform(ong::Transform(ong::vec3(0, 0, 0), ong::Quaternion(ong::vec3(0, 0, 0), 1)));
         brickInstance->RotateAroundPivotOffset(PuRe_QuaternionF(0.0f, 0.0f, 0.0f));
         brickInstance->m_Color = PuRe_Color(0, 0, 1);
+    }
+
+    // **************************************************************************
+    // **************************************************************************
+    void CSpaceship::GetWeapons(std::vector<TheBrick::CBrickInstance**>& a_rOutVector)
+    {
+        for (std::vector<TheBrick::CBrickInstance*>::iterator it = this->m_pBricks.begin(); it != this->m_pBricks.end(); ++it)
+        {
+            if ((*it)->m_pBrick->GetCategoryId() == Editor::CBrickCategory::CATEGORY_WEAPONS)
+            {
+                a_rOutVector.push_back(&(*it));
+            }
+        }
+    }
+
+    // **************************************************************************
+    // **************************************************************************
+    void CSpaceship::GetEngines(std::vector<TheBrick::CBrickInstance**>& a_rOutVector)
+    {
+        for (std::vector<TheBrick::CBrickInstance*>::iterator it = this->m_pBricks.begin(); it != this->m_pBricks.end(); ++it)
+        {
+            if ((*it)->m_pBrick->GetCategoryId() == Editor::CBrickCategory::CATEGORY_ENGINES)
+            {
+                a_rOutVector.push_back(&(*it));
+            }
+        }
+    }
+
+    // **************************************************************************
+    // **************************************************************************
+    void CSpaceship::GetCockpits(std::vector<TheBrick::CBrickInstance**>& a_rOutVector)
+    {
+        for (std::vector<TheBrick::CBrickInstance*>::iterator it = this->m_pBricks.begin(); it != this->m_pBricks.end(); ++it)
+        {
+            if ((*it)->m_pBrick->GetCategoryId() == Editor::CBrickCategory::CATEGORY_COCKPITS)
+            {
+                a_rOutVector.push_back(&(*it));
+            }
+        }
     }
 }

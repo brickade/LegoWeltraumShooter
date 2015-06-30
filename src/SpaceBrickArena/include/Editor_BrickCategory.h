@@ -14,6 +14,12 @@ namespace Editor
     {
 
     public:
+        static const int CATEGORY_WEAPONS;
+        static const int CATEGORY_ENGINES;
+        static const int CATEGORY_COCKPITS;
+
+
+
         int m_Id;
         TheBrick::CBrick** m_Bricks;
         sba::CNavigation* m_pNavigation;

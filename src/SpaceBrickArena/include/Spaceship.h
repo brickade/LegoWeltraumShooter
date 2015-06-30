@@ -76,6 +76,11 @@ namespace sba
         void Serialize(TheBrick::CSerializer& a_pSerializer);
 
         void Reset(TheBrick::CBrick& a_rStartBrick, ong::World& a_rWorld);
+
+        //Dont use raw pointer to avoid destructor call with std::vector clear/erase
+        void GetWeapons(std::vector<TheBrick::CBrickInstance**>& a_rOutVector);
+        void GetEngines(std::vector<TheBrick::CBrickInstance**>& a_rOutVector);
+        void GetCockpits(std::vector<TheBrick::CBrickInstance**>& a_rOutVector);
     };
 }
 

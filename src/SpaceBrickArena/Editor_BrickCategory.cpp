@@ -4,6 +4,10 @@
 
 namespace Editor
 {
+    const int CBrickCategory::CATEGORY_WEAPONS = 8;
+    const int CBrickCategory::CATEGORY_ENGINES = 7;
+    const int CBrickCategory::CATEGORY_COCKPITS = 2;
+
     // **************************************************************************
     // **************************************************************************
     CBrickCategory::CBrickCategory(int a_Id)
