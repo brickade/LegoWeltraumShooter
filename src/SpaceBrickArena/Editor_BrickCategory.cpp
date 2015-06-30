@@ -44,7 +44,6 @@ namespace Editor
             PuRe_Vector3F pos = PuRe_Vector3F(this->m_ListStart + this->m_ListStep * listPos, 0);
             pos.Y = a_pGraphics.GetDescription().ResolutionHeight - pos.Y; //Invert Y
             pos.X -= (1.0f - a_Visibility) * (this->m_pNavigation->GetElementsCountPerLine() * this->m_ListStep.X + this->m_ListStart.X);
-
             assert(this->m_Bricks[i]->GetPivotOffset().Length() > FLT_EPSILON * 5);
             PuRe_MatrixF rot = PuRe_MatrixF::Translation(-this->m_Bricks[i]->GetPivotOffset() * this->m_ElementSize) * PuRe_MatrixF::RotationAxis(PuRe_Vector3F(0, 1, 0), this->m_Rotation) * PuRe_MatrixF::Rotation(-this->m_Pitch, 0, 0);
             

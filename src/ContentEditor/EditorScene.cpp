@@ -142,10 +142,6 @@ namespace Content
 						ong::vec3& p = c.shape.hullFromPoints.points[i];
 
 						scanf("%f %f %f", &p.x, &p.y, &p.z, &p.x, &p.y, &p.z);
-
-						p.x *= TheBrick::CBrick::SEGMENT_WIDTH;
-						p.z *= TheBrick::CBrick::SEGMENT_WIDTH;
-						p.y *= TheBrick::CBrick::SEGMENT_HEIGHT;
 					}
 
 					m_Queue.push(c);
@@ -470,7 +466,7 @@ namespace Content
 		{
 			if (m_MouseValid)
 			{
-				if (input->MousePressed(input->LeftClick))
+				if (input->MouseIsPressed(input->LeftClick))
 				{
 				
 					switch (m_Mode)
@@ -497,7 +493,7 @@ namespace Content
 					}
 
 				}
-				else if (input->MousePressed(input->RightClick))
+                else if (input->MouseIsPressed(input->RightClick))
 				{
 					switch (m_Mode)
 					{
