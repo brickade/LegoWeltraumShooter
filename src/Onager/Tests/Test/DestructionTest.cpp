@@ -20,7 +20,7 @@ void DestructionTest::init()
 	BodyDescription descr;
 	descr.transform.p = vec3(0, 10, 0);
 	descr.transform.q = QuatFromAxisAngle(normalize(vec3(rand(), rand(), rand())), rand());
-	descr.transform.q = Quaternion(vec3(-0.308242381, -0.0624808222, -0.267928302), -0.910657585);
+	//descr.transform.q = Quaternion(vec3(-0.308242381, -0.0624808222, -0.267928302), -0.910657585);
 	descr.linearMomentum = vec3(0, 0, 0);
 	descr.angularMomentum = vec3(0, 0, 0);
 	descr.type = BodyType::Dynamic;

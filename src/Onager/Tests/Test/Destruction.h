@@ -20,9 +20,10 @@ struct JointData
 
 struct Joint
 {
+	Joint** tableEntry;
 	JointData* data;
 	Connection* connection;
-	Joint* twin;
+	Joint** twin;
 	float capacity;
 	float flow;
 };
@@ -45,7 +46,7 @@ struct Brick
 	Connection connections[MAX_CONNECTIONS];
 
 	int numBlocking;
-	Joint* blocking[MAX_CONNECTIONS];
+	Joint** blocking[MAX_CONNECTIONS];
 
 	Collider* collider;
 	Ship* ship;
@@ -79,7 +80,7 @@ private:
 
 	bool checkAxis(Brick * brick, vec3 impulse, vec3 pos, int axis);
 	bool checkVertical(Brick* brick,float verticalImpulse, vec3 impulse, vec3 pos);
-	void destroy(std::vector<Brick*>* selection, std::vector<Joint*>* front,vec3 impulse, vec3 pos, int axis, int tick);
+	void destroy(std::vector<Brick*>* selection, std::vector<Joint**>* front,vec3 impulse, vec3 pos, int axis, int tick);
 
 	void calcBase();
 	void renderBrick(Brick* brick, Brick* base, GLuint colorLocation, int tick);

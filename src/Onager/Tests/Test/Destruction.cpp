@@ -11,10 +11,16 @@ enum
 
 static ShapePtr g_brickShape = {};
 static Material g_material = { 1, 0, 1 };
+
 static int g_numJoints;
 static JointData g_joints[128];
+
 static int g_numBricks;
 static Brick g_bricks[32];
+
+static int g_numJointTableEntries;
+static Joint* g_jointTable[256];
+
 static int g_tick = 0;
 
 
@@ -78,17 +84,7 @@ bool studCallback(Collider* other, void* userData)
 	Connection* connection = brick->connections + brick->numConnections++;
 	Connection* connection2 = brick2->connections + brick2->numConnections++;
 	
-	for (int i = 0; i < 2; ++i)
-	{
-		for (int j = 0; j < 2; ++j)
-		{
-			connection->joints[i][j].connection = connection;
-			connection2->joints[i][j].connection = connection2;
 
-			connection->joints[i][j].twin = connection2->joints[i] + j;
-			connection2->joints[i][j].twin = connection->joints[i] + j;
-		}
-	}
 
 	connection->joints[X][0].data = connection2->joints[X][0].data = jointX0;
 	connection->joints[X][1].data = connection2->joints[X][1].data = jointX1;
@@ -96,10 +92,41 @@ bool studCallback(Collider* other, void* userData)
 	connection->joints[Z][1].data = connection2->joints[Z][1].data = jointZ1;
 
 
+	for (int i = X; i <= Z; ++i)
+	{
+		for (int j = 0; j < 2; ++j)
+		{
+			// set connection
+			connection->joints[i][j].connection = connection;
+			connection2->joints[i][j].connection = connection2;
+
+			// set up jointable
+			Joint** jointEntry = g_jointTable + g_numJointTableEntries++;
+			Joint** jointEntry2 = g_jointTable + g_numJointTableEntries++;
+			
+			*jointEntry = connection->joints[i] + j;
+			*jointEntry2 = connection2->joints[i] + j;
+
+			connection->joints[i][j].tableEntry = jointEntry;
+			connection2->joints[i][j].tableEntry = jointEntry2;
+
+			// set twin
+			connection->joints[i][j].twin = connection2->joints[i][j].tableEntry;
+			connection2->joints[i][j].twin = connection->joints[i][j].tableEntry;
+		}
+	}
+	
+
 	connection->verticalJoint.connection = connection;
-	connection->verticalJoint.twin = &connection2->verticalJoint;
+	connection->verticalJoint.tableEntry = g_jointTable + g_numJointTableEntries++;
+	*connection->verticalJoint.tableEntry = &connection->verticalJoint;
+	
 	connection2->verticalJoint.connection = connection2;
-	connection2->verticalJoint.twin = &connection->verticalJoint;
+	connection2->verticalJoint.tableEntry = g_jointTable + g_numJointTableEntries++;
+	*connection2->verticalJoint.tableEntry = &connection2->verticalJoint;
+
+	connection->verticalJoint.twin = connection2->verticalJoint.tableEntry;
+	connection2->verticalJoint.twin = connection->verticalJoint.tableEntry;
 
 	connection->verticalJoint.capacity = connection2->verticalJoint.capacity = numStuds * STUD_STRENGTH;
 
@@ -142,7 +169,7 @@ bool blockCallback(Collider* other, void* userData)
 				brick2->pos[0] + 2.0f == brick->connections[i].joints[X][j].data->fulcrum))
 			{
 				++brick->connections[i].joints[X][!j].data->blocked;
-				brick2->blocking[brick2->numBlocking++] = brick->connections[i].joints[X] + !j;
+				brick2->blocking[brick2->numBlocking++] = brick->connections[i].joints[X][!j].tableEntry;
 			}
 		}
 	}
@@ -158,7 +185,7 @@ bool blockCallback(Collider* other, void* userData)
 				brick2->pos[2] + 2.0f == brick->connections[i].joints[Z][j].data->fulcrum))
 			{
 				++brick->connections[i].joints[Z][!j].data->blocked;
-				brick2->blocking[brick2->numBlocking++] = brick->connections[i].joints[Z] + !j;
+				brick2->blocking[brick2->numBlocking++] = brick->connections[i].joints[Z][!j].tableEntry;
 			}
 		}
 	}
@@ -327,7 +354,7 @@ float maxFlow(Brick* source, Brick* sink, int axis)
 		for (int i = 0; i < augmentedPath.size(); ++i)
 		{
 			augmentedPath[i]->flow += minCapacity;
-			augmentedPath[i]->twin->flow -= minCapacity;
+			(*augmentedPath[i]->twin)->flow -= minCapacity;
 		}
 		augmentedPath.clear();
 	}
@@ -352,10 +379,10 @@ void checkForInvalidBlock(Brick* brick, int selectionTick, int tick)
 
 	for (int i = 0; i < brick->numBlocking; ++i)
 	{
-		if (brick->blocking[i]->connection->brick->tick == selectionTick ||
-			brick->blocking[i]->connection->other->tick == selectionTick)
+		if ((*brick->blocking[i])->connection->brick->tick == selectionTick ||
+			(*brick->blocking[i])->connection->other->tick == selectionTick)
 		{
-			brick->blocking[i]->data->blocked--;
+			(*brick->blocking[i])->data->blocked--;
 			brick->blocking[i] = brick->blocking[--brick->numBlocking];
 		}
 	}
@@ -412,14 +439,16 @@ struct Trace
 	Brick bricks[32];
 	int numJoints = 0;
 	JointData joints[128];
-	
-	std::vector<Joint*> front;
+	int numJointTabelEntries = 0;
+	Joint* jointTable[256];
+
+	std::vector<Joint**> front;
 	std::vector<Brick*> selection;
 };
 
 std::vector<Trace> g_traces;
 
-void makeTrace(std::vector<Joint*>& front, std::vector<Brick*>& selection)
+void makeTrace(std::vector<Joint**>& front, std::vector<Brick*>& selection)
 {
 
 	g_traces.push_back(Trace());
@@ -427,10 +456,11 @@ void makeTrace(std::vector<Joint*>& front, std::vector<Brick*>& selection)
 	Trace& trace = g_traces.back();
 	trace.numBricks = g_numBricks;
 	trace.numJoints = g_numJoints;
+	trace.numJointTabelEntries = g_numJointTableEntries;
 
 	memcpy(trace.bricks, g_bricks, sizeof(g_bricks));
 	memcpy(trace.joints, g_joints, sizeof(g_joints));
-
+	memcpy(trace.jointTable, g_jointTable, sizeof(g_joints));
 
 	for (int i = 0; i < trace.numBricks; ++i)
 	{ 
@@ -453,7 +483,11 @@ void makeTrace(std::vector<Joint*>& front, std::vector<Brick*>& selection)
 
 					jointDst->data = (jointSrc->data - g_joints) + trace.joints;
 					jointDst->connection = connectionDst;
-					//jointDst->twin;
+					
+					jointDst->tableEntry = (jointSrc->tableEntry - g_jointTable) + trace.jointTable;
+					*jointDst->tableEntry = jointDst;
+
+					jointDst->twin = (jointSrc->twin - g_jointTable) + trace.jointTable;
 				}
 			}
 
@@ -462,10 +496,7 @@ void makeTrace(std::vector<Joint*>& front, std::vector<Brick*>& selection)
 
 	for (int i = 0; i < front.size(); ++i)
 	{
-		Brick* brick = (front[i]->connection->brick - g_bricks) + trace.bricks;
-		Connection* connection = brick->connections + (front[i]->connection - front[i]->connection->brick->connections);
-		Joint* joint = (Joint*)connection->joints + (front[i] - (Joint*)front[i]->connection->joints);
-		trace.front.push_back(joint);
+		trace.front.push_back(front[i] - g_jointTable + trace.jointTable);
 	}
 
 	for (int i = 0; i < selection.size(); ++i)
@@ -475,8 +506,7 @@ void makeTrace(std::vector<Joint*>& front, std::vector<Brick*>& selection)
 	}
 }
 
-
-void Ship::destroy(std::vector<Brick*>* selection, std::vector<Joint*>* front, vec3 impulse, vec3 pos, int axis, int tick)
+void Ship::destroy(std::vector<Brick*>* selection, std::vector<Joint**>* front, vec3 impulse, vec3 pos, int axis, int tick)
 {
 	makeTrace(*front, *selection);
 
@@ -493,48 +523,79 @@ void Ship::destroy(std::vector<Brick*>* selection, std::vector<Joint*>* front, v
 
 	for (int i = 0; i < front->size(); ++i)
 	{
-		Connection* a = (*front)[i]->connection;
-		Connection* b = (*front)[i]->twin->connection;
+		Connection* a = (*(*front)[i])->connection;
+		Connection* b = (*(*(*front)[i])->twin)->connection;
 
- 		if ((*front)[i]->capacity < minCapacity && axis != Y)
+ 		if ((*(*front)[i])->capacity < minCapacity && axis != Y)
 		{
-			Joint* opposite = a->joints[axis] == (*front)[i] ? a->joints[axis] + 1 : a->joints[axis];
+			Joint* opposite = a->joints[axis][0].tableEntry == (*front)[i] ? a->joints[axis] + 1 : a->joints[axis];
 			minFulcrum.y = opposite->data->y;
 			if (axis == X)
 				minFulcrum.x = opposite->data->fulcrum;
 			else if (axis == Z)
 				minFulcrum.z = opposite->data->fulcrum;
 
-			minCapacity = (*front)[i]->capacity;
+			minCapacity = (*(*front)[i])->capacity;
 		}
 
-
-
-
-		*a = a->brick->connections[--a->brick->numConnections];
-		
-		for (int d = X; d <= Z; ++d)
+		if (a != a->brick->connections + a->brick->numConnections - 1)
 		{
-			for (int i = 0; i < 2; ++i)
+			*a = a->brick->connections[--a->brick->numConnections];
+
+			for (int d = X; d <= Z; ++d)
 			{
-				a->joints[d][i].connection = a;
-				a->joints[d][i].twin->twin = a->joints[d] + i;
+				for (int i = 0; i < 2; ++i)
+				{
+					a->joints[d][i].connection = a;
+					*a->joints[d][i].tableEntry = a->joints[d] + i;
+				}
 			}
 		}
-
-
-		*b = b->brick->connections[--b->brick->numConnections];
-
-		for (int d = X; d <= Z; ++d)
+		else
 		{
-			for (int i = 0; i < 2; ++i)
+			--a->brick->numConnections;
+		}
+
+
+		if (b != b->brick->connections + b->brick->numConnections - 1)
+		{
+			*b = b->brick->connections[--b->brick->numConnections];
+
+			for (int d = X; d <= Z; ++d)
 			{
-				b->joints[d][i].connection = b;
-				b->joints[d][i].twin->twin = b->joints[d] + i;
+				for (int i = 0; i < 2; ++i)
+				{
+					b->joints[d][i].connection = b;
+					*b->joints[d][i].tableEntry = b->joints[d] + i;
+				}
+			}
+		}
+		else
+		{
+			--b->brick->numConnections;
+		}
+			
+	}
+
+
+	//
+	for (int i = 0; i < g_numBricks; ++i)
+	{
+		for (int j = 0; j < g_bricks[i].numConnections; ++j)
+		{
+			Connection* connection = g_bricks[i].connections +j;
+
+			for (int d = 0; d < 2; ++d)
+			{
+				for (int k = 0; k < 2; ++k)
+				{
+					assert(connection->joints[d][k].connection == connection);
+					assert(connection->joints[d][k].data == (*connection->joints[d][k].twin)->data);
+				}
 			}
 		}
 	}
-
+	//
 
 	vec3 angularMomentum = vec3(0, 0, 0);
 
@@ -570,9 +631,9 @@ void Ship::destroy(std::vector<Brick*>* selection, std::vector<Joint*>* front, v
 		// free blocks
 		for (int i = 0; i < brick->numBlocking; ++i)
 		{
-			if (brick->blocking[i]->connection->brick->tick != tick)
+			if ((*brick->blocking[i])->connection->brick->tick != tick)
 			{
-				brick->blocking[i]->data->blocked--;
+				(*brick->blocking[i])->data->blocked--;
 				brick->blocking[i] = brick->blocking[--brick->numBlocking];
 			}
 		}
@@ -592,7 +653,7 @@ void Ship::destroy(std::vector<Brick*>* selection, std::vector<Joint*>* front, v
 	checkForInvalidBlock(m_base, tick , g_tick++);
 }
 
-bool breakGraph(Brick* brick,Brick* base, float maxFlow, int axis, std::vector<Brick*>* selection, std::vector<Joint*>* front, int tick)
+bool breakGraph(Brick* brick,Brick* base, float maxFlow, int axis, std::vector<Brick*>* selection, std::vector<Joint**>* front, int tick)
 {
 	brick->tick = tick;
 	selection->push_back(brick);
@@ -613,7 +674,7 @@ bool breakGraph(Brick* brick,Brick* base, float maxFlow, int axis, std::vector<B
 					}
 					else
 					{
-						front->push_back(connection->joints[axis] + j);
+						front->push_back(connection->joints[axis][j].tableEntry);
 					}
 					break;
 				}
@@ -707,7 +768,7 @@ bool Ship::checkAxis(Brick* brick, vec3 impulse, vec3 pos, int axis)
 	if (max > 0 && max < 1.0f)
 	{
 		std::vector<Brick*> selection;
-		std::vector<Joint*> front;
+		std::vector<Joint**> front;
 
 		int selectionTick = g_tick++;
 		if (!breakGraph(brick, m_base, max, axis, &selection, &front, selectionTick))
@@ -715,7 +776,7 @@ bool Ship::checkAxis(Brick* brick, vec3 impulse, vec3 pos, int axis)
 
 		for (int i = 0; i < front.size(); ++i)
 		{
-			Brick* brick = front[i]->connection->brick;
+			Brick* brick = (*front[i])->connection->brick;
 			int numUp = 0;
 			int numDown = 0;
 			for (int j = 0; j < brick->numConnections; ++j)
@@ -742,47 +803,47 @@ bool Ship::checkAxis(Brick* brick, vec3 impulse, vec3 pos, int axis)
 	return false;
 }
 
-bool Ship::checkVertical(Brick* brick, float verticalImpulse, vec3 impulse, vec3 pos)
-{
-	float max = maxFlow(brick, m_base, Y);
-
-	if (max > 0 && max < verticalImpulse)
-	{
-		std::vector<Brick*> selection;
-		std::vector<Joint*> front;
-
-		int selectionTick = g_tick++;
-		if (!breakVerticalGraph(brick, max, verticalImpulse, &selection, &front, selectionTick))
-			return false;
-
-		for (int i = 0; i < front.size(); ++i)
-		{
-			Brick* brick = front[i]->connection->brick;
-			int numUp = 0;
-			int numDown = 0;
-			for (int j = 0; j < brick->numConnections; ++j)
-			{
-				Brick* other = brick->connections[j].other;
-				if (other->tick != selectionTick)
-				{
-					if (other->pos[1] > brick->pos[1])
-						numUp++;
-					else if (other->pos[1] < brick->pos[1])
-						numDown++;
-				}
-				if (numUp > 0 && numDown > 0)
-					return false;
-			}
-
-
-		}
-
-
-		destroy(&selection, &front, impulse, pos, Y, g_tick++);
-	}
-
-	return false;
-}
+//bool Ship::checkVertical(Brick* brick, float verticalImpulse, vec3 impulse, vec3 pos)
+//{
+//	float max = maxFlow(brick, m_base, Y);
+//
+//	if (max > 0 && max < verticalImpulse)
+//	{
+//		std::vector<Brick*> selection;
+//		std::vector<Joint**> front;
+//
+//		int selectionTick = g_tick++;
+//		if (!breakVerticalGraph(brick, max, verticalImpulse, &selection, &front, selectionTick))
+//			return false;
+//
+//		for (int i = 0; i < front.size(); ++i)
+//		{
+//			Brick* brick = (*front[i])->connection->brick;
+//			int numUp = 0;
+//			int numDown = 0;
+//			for (int j = 0; j < brick->numConnections; ++j)
+//			{
+//				Brick* other = brick->connections[j].other;
+//				if (other->tick != selectionTick)
+//				{
+//					if (other->pos[1] > brick->pos[1])
+//						numUp++;
+//					else if (other->pos[1] < brick->pos[1])
+//						numDown++;
+//				}
+//				if (numUp > 0 && numDown > 0)
+//					return false;
+//			}
+//
+//
+//		}
+//
+//
+//		destroy(&selection, &front, impulse, pos, Y, g_tick++);
+//	}
+//
+//	return false;
+//}
 
 bool Ship::addImpulse(Brick* brick, vec3 pos, vec3 impulse)
 {
@@ -875,7 +936,7 @@ void Ship::renderBrick(Brick* brick, Brick* base, GLuint colorLocation, int tick
 				{
 					glBegin(GL_LINES);
 					glVertex3f(brick->pos[0], brick->pos[1], brick->pos[2]);
-					glVertex3f(brick->blocking[i]->connection->brick->pos[0], brick->blocking[i]->connection->brick->pos[1], brick->blocking[i]->connection->brick->pos[2]);
+					glVertex3f((*brick->blocking[i])->connection->brick->pos[0], (*brick->blocking[i])->connection->brick->pos[1], (*brick->blocking[i])->connection->brick->pos[2]);
 					glEnd();
 				}
 
@@ -973,9 +1034,11 @@ void initDestruction(World* world)
 
 	g_numJoints = 0;
 	g_numBricks = 0;
+	g_numJointTableEntries = 0;
 
 	memset(g_bricks, 0, sizeof(g_bricks));
 	memset(g_joints, 0, sizeof(g_joints));
+	memset(g_jointTable, 0, sizeof(g_jointTable));
 
 	g_traces.clear();
 	g_traces.reserve(64);
