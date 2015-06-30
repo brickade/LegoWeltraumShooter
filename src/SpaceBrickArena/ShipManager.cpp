@@ -97,9 +97,25 @@ namespace sba
     // **************************************************************************
     void CShipManager::AddNewShip(const char* a_pName)
     { //Add default ship with specified name
-        sba::CSpaceship* ship = new sba::CSpaceship(*sba_World, a_pName);
+        std::string name = a_pName;
+        bool unique = false;
+        while (!unique)
+        {
+            unique = true;
+            std::string path = this->PathFromName(name.c_str());
+            for (std::vector<std::pair<std::string, PuRe_Sprite*>>::iterator it = this->m_Sprites.begin(); it != this->m_Sprites.end(); ++it)
+            {
+                if ((*it).first.compare(path) == 0)
+                {
+                    unique = false;
+                    name += "_";
+                    break;
+                }
+            }
+        }
+        sba::CSpaceship* ship = new sba::CSpaceship(*sba_World, name.c_str());
         //Register
-        this->m_Sprites.push_back(std::make_pair(std::string(ship->GetName()).insert(0, this->m_FolderPath), this->GetSpriteFromShip(*ship)));
+        this->m_Sprites.push_back(std::make_pair(this->PathFromShip(*ship), this->GetSpriteFromShip(*ship)));
         //Set to default
         this->ResetShip(*ship);
         //Save to file
@@ -221,5 +237,33 @@ namespace sba
         PuRe_Sprite* sprite = new PuRe_Sprite(sba_Application->GetGraphics(), sba_Renderer->GetTexture(0, 0), true);
         local::SetRes(1920, 1080);
         return sprite;
+    }
+
+    // **************************************************************************
+    // **************************************************************************
+    void CShipManager::UpdateShipName(sba::CSpaceship& a_rShip, std::string& a_rOldShipName)
+    {
+        std::string oldPath = this->PathFromName(a_rOldShipName.c_str());
+        std::string newPath = this->PathFromShip(a_rShip);
+        if (rename(std::string(oldPath).append(".ship").c_str(), std::string(newPath).append(".ship").c_str()) != 0)
+        {
+            printf("cant rename ship bro");
+        }
+        if (rename(std::string(oldPath).append(".dds").c_str(), std::string(newPath).append(".dds").c_str()) != 0)
+        {
+            printf("cant rename dds bro");
+        }
+        
+        for (std::vector<std::pair<std::string, PuRe_Sprite*>>::iterator it = this->m_Sprites.begin(); it != this->m_Sprites.end(); ++it)
+        {
+            if ((*it).first.compare(oldPath) == 0)
+            {
+                it->first = newPath;
+                break;
+            }
+        }
+        //!!!#####!!!
+        //###Texture Path in PuRe_Sprite in m_Sprites.second is now invalid. Currently doesnt matter. When someone uses that info, he needs to reload the sprite here!
+        //!!!#####!!!
     }
 }

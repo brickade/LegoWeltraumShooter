@@ -254,7 +254,6 @@ namespace sba
             SAFE_DELETE(this->m_pBricks[i]);
             i--;
         }
-        this->SetNameFromFilename("Banana");
         TheBrick::CBrickInstance* brickInstance = a_rStartBrick.CreateInstance(*this, a_rWorld);
         brickInstance->SetTransform(ong::Transform(ong::vec3(0, 0, 0), ong::Quaternion(ong::vec3(0, 0, 0), 1)));
         brickInstance->RotateAroundPivotOffset(PuRe_QuaternionF(0.0f, 0.0f, 0.0f));

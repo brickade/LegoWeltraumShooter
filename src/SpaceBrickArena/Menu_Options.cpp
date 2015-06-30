@@ -129,7 +129,7 @@ namespace Menu
                 }
             }
         }
-        if (sba_Input->ButtonPressed(sba_Button::NaviagtionSelect, a_PlayerIdx))
+        if (sba_Input->ButtonPressed(sba_Button::NavigationSelect, a_PlayerIdx))
         {
             if (this->m_pNavigation->GetFocusedElementId() == 3)
                 return 0;

@@ -9,6 +9,7 @@
 #include "Navigation.h"
 
 #include "include/Space.h"
+#include "InputField.h"
 
 namespace sba
 {
@@ -33,6 +34,10 @@ namespace Editor
         sba::CNavigation* m_pNavigation;
         sba::CSpaceship* m_pCurrentSpaceship;
 
+        bool m_RenameShip;
+        sba::CInputField* m_pInputField;
+        std::string m_OldShipName;
+
         PuRe_Vector2F m_PreviewOffset = PuRe_Vector2F(0.0f, -50.0f);
         PuRe_Vector2F m_TextOffset = PuRe_Vector2F(-50.0f, 450.0f);
         PuRe_Vector2F m_TextStep = PuRe_Vector2F(0.0f, -50.0f);
@@ -45,6 +50,10 @@ namespace Editor
         sba::CSpaceship* GetCurrentSpaceShip()
         {
             return this->m_pCurrentSpaceship;
+        }
+        bool Renaming()
+        {
+            return this->m_RenameShip;
         }
 
     public:
@@ -62,6 +71,7 @@ namespace Editor
         TheBrick::CBrickInstance* AddBrickInstanceToCurrentShip(const TheBrick::CBrickInstance& a_pTemplate);
 
         void UpdateCurrentShipPreview();
+        void UpdateCurrentShipName();
     };
 }
 
