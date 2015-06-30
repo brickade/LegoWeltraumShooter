@@ -2,4 +2,4 @@
 
 #include <float.h>
 
-#define ong_OVERLAP_EPSILON FLT_EPSILON
+#define ong_OVERLAP_EPSILON (100.0f*FLT_EPSILON)
