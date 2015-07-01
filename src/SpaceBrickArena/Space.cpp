@@ -11,21 +11,21 @@ namespace sba
         this->World = new ong::World();
         this->InputManager = new sba::CInputManager();
         this->BrickManager = new sba::CBrickManager("../data/bricks/");
-        this->ShipManager = new sba::CShipManager("../data/ships/");
         this->m_pMap = new sba::CGameMap();
 
         std::string userpath = std::getenv("USERPROFILE");
         userpath += "\\Documents\\SpacebrickArena\\";
+        std::string shipPath = userpath + "ships/";
         //Create Directory if it doesn't exist
 #ifdef _WIN32
         CreateDirectory(userpath.c_str(), NULL);
+        CreateDirectory(shipPath.c_str(), NULL);
 #else
-        mkdir(a_pDirectoryPath, 777);
+        mkdir(userpath, 777);
+        mkdir(shipPath, 777);
 #endif
-
-        userpath += "Options.ini";
-        //Create IniFile
-        this->m_pIniReader = new sba::CIniReader(userpath.c_str());
+        this->m_pIniReader = new sba::CIniReader((userpath + "Options.ini").c_str()); //Create IniFile
+        this->ShipManager = new sba::CShipManager(shipPath.c_str()); 
         this->m_pNetworkhandler = new sba::CNetworkHandler(this->m_pIniReader);
     }
 
