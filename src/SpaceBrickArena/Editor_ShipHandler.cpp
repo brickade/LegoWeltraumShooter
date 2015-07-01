@@ -53,13 +53,15 @@ namespace Editor
             {
                 this->AddShip("");
             }
-            if (sba_Input->ButtonPressed(sba_Button::EditorDeleteShip, this->m_playerIdx) && this->GetCurrentSpaceShip() != nullptr)
-            {
-                this->DeleteCurrentShip();
-            }
             if (sba_Input->ButtonPressed(sba_Button::EditorRenameShip, this->m_playerIdx))
             {
                 this->m_State = ShipHandlerState::Rename;
+                this->m_OldShipName = this->m_pCurrentSpaceship->GetName();
+                this->m_pInputField->SetValue(this->m_OldShipName);
+            }
+            if (sba_Input->ButtonPressed(sba_Button::EditorDeleteShip, this->m_playerIdx) && this->GetCurrentSpaceShip() != nullptr)
+            {
+                this->m_State = ShipHandlerState::Delete;
                 this->m_OldShipName = this->m_pCurrentSpaceship->GetName();
                 this->m_pInputField->SetValue(this->m_OldShipName);
             }
@@ -80,6 +82,17 @@ namespace Editor
                 break;
             }
             this->m_pCurrentSpaceship->SetName(this->m_pInputField->GetValue()); //Update Name
+            break;
+        case ShipHandlerState::Delete:
+            if (sba_Input->ButtonPressed(sba_Button::NavigationSelect, this->m_playerIdx))
+            {
+                this->DeleteCurrentShip();
+                this->m_State = ShipHandlerState::Select;
+            }
+            else if (sba_Input->ButtonPressed(sba_Button::NavigationBack, this->m_playerIdx))
+            {
+                this->m_State = ShipHandlerState::Select;
+            }
             break;
         }
     }
@@ -112,8 +125,12 @@ namespace Editor
             sba_Space->RenderFont("Confirm [Enter]", center + this->m_TextOffset + this->m_TextStep * 3, 18);
             sba_Space->RenderFont("Cancel [Esc]", center + this->m_TextOffset + this->m_TextStep * 3.5f, 18);
             break;
+        case ShipHandlerState::Delete:
+            sba_Space->RenderFont("Kill me?", center + this->m_TextOffset + this->m_TextStep * 1, 24);
+            sba_Space->RenderFont("Confirm [Enter][A]", center + this->m_TextOffset + this->m_TextStep * 3, 18);
+            sba_Space->RenderFont("Cancel [Backspace][B]", center + this->m_TextOffset + this->m_TextStep * 3.5f, 18);
+            break;
         }
-        
 
         sba_Renderer->Draw(1, false, (*sba_ShipManager)[focus], sba_Space->SpriteMaterial, PuRe_Vector3F(center + this->m_PreviewOffset, 0), PuRe_MatrixF::Identity(), PuRe_Vector3F((*sba_ShipManager)[focus]->GetSize() * 0.5f, 0));
         //Right

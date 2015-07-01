@@ -31,7 +31,8 @@ namespace Editor
             enum Type
             {
                 Select,
-                Rename
+                Rename,
+                Delete
             };
         };
 
