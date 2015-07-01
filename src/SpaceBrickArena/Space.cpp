@@ -1,5 +1,4 @@
 #include "include/Space.h"
-#include "include/INIReader.h"
 
 namespace sba
 {
@@ -13,8 +12,21 @@ namespace sba
         this->InputManager = new sba::CInputManager();
         this->BrickManager = new sba::CBrickManager("../data/bricks/");
         this->ShipManager = new sba::CShipManager("../data/ships/");
-        this->m_pNetworkhandler = new sba::CNetworkHandler();
         this->m_pMap = new sba::CGameMap();
+
+        std::string userpath = std::getenv("USERPROFILE");
+        userpath += "\\Documents\\SpacebrickArena\\";
+        //Create Directory if it doesn't exist
+#ifdef _WIN32
+        CreateDirectory(userpath.c_str(), NULL);
+#else
+        mkdir(a_pDirectoryPath, 777);
+#endif
+
+        userpath += "Options.ini";
+        //Create IniFile
+        this->m_pIniReader = new sba::CIniReader(userpath.c_str());
+        this->m_pNetworkhandler = new sba::CNetworkHandler(this->m_pIniReader);
     }
 
     // **************************************************************************
@@ -27,6 +39,7 @@ namespace sba
             SAFE_DELETE(this->m_Players[i]);
         }
         this->m_Players.clear();
+        SAFE_DELETE(this->m_pIniReader);
         SAFE_DELETE(this->m_pMap);
         SAFE_DELETE(this->Renderer);
         SAFE_DELETE(this->m_SSAOMaterial);
@@ -35,6 +48,7 @@ namespace sba
         SAFE_DELETE(this->InputManager);
         SAFE_DELETE(this->World);
         SAFE_DELETE(this->m_pNetworkhandler);
+        SAFE_DELETE(this->m_pFinalMaterial);
     }
 
     // **************************************************************************
@@ -49,7 +63,7 @@ namespace sba
         {
             this->Renderer->AddTarget(PuRe_Vector2I(a_pGraphics.GetDescription().ResolutionWidth, a_pGraphics.GetDescription().ResolutionHeight));
         }
-        if (CIniReader::Instance()->GetValue("SSAO") == "On")
+        if (this->m_pIniReader->GetValue("SSAO") == "On")
         {
             this->Renderer->SetSSAO(0, this->m_SSAOMaterial, this->m_pNoiseTexture);
             this->Renderer->SetSSAO(1, this->m_SSAOMaterial, this->m_pNoiseTexture);
@@ -59,6 +73,7 @@ namespace sba
         this->Font = new PuRe_Font(&a_pGraphics, "../data/textures/font.png");
         this->FontMaterial = a_pGraphics.LoadMaterial("../data/effects/font/default");
         this->SpriteMaterial = a_pGraphics.LoadMaterial("../data/effects/sprite/default");
+        this->m_pFinalMaterial = a_pGraphics.LoadMaterial("../data/effects/Final/default");
     }
 
     // **************************************************************************
@@ -84,7 +99,7 @@ namespace sba
         {
             SAFE_DELETE(this->m_Players[a_Index]->Ship);
             SAFE_DELETE(this->m_Players[a_Index]);
-            this->m_Players.erase(this->m_Players.begin()+a_Index);
+            this->m_Players.erase(this->m_Players.begin() + a_Index);
         }
     }
 
@@ -98,7 +113,7 @@ namespace sba
 
         std::string file = a_pWindow->GetFileAtIndex(i, path);
         std::string lastFile = file;
-        
+
         while (!right)
         {
             if (file.substr(file.find_last_of(".") + 1) == "ship")
@@ -118,7 +133,7 @@ namespace sba
 
     // **************************************************************************
     // **************************************************************************
-    void Space::CreatePlayer(int a_Pad,PuRe_IWindow* a_pWindow)
+    void Space::CreatePlayer(int a_Pad, PuRe_IWindow* a_pWindow)
     {
         sba::SPlayer* p = new sba::SPlayer();
         int ID = 0; // 0 is Host

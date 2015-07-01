@@ -39,6 +39,7 @@ namespace sba
         int m_Life;
         int m_MaxLife;
         float m_Respawn;
+        std::vector<PuRe_ParticleEmitter*> m_EngineEmitter;
 
     public:
         float GetMaxSpeed() const
@@ -76,6 +77,7 @@ namespace sba
         void Serialize(TheBrick::CSerializer& a_pSerializer);
 
         void Reset(TheBrick::CBrick& a_rStartBrick, ong::World& a_rWorld);
+        void DrawEmitter(PuRe_Sprite* a_pSprite, PuRe_IMaterial* a_pMaterial);
 
         //Dont use raw pointer to avoid destructor call with std::vector clear/erase
         void GetWeapons(std::vector<TheBrick::CBrickInstance**>& a_rOutVector);

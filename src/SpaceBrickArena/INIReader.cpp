@@ -2,28 +2,6 @@
 
 namespace sba
 {
-    CIniReader* CIniReader::g_pInstance = 0;
-
-    // **************************************************************************
-    // **************************************************************************
-    CIniReader* CIniReader::Instance()
-    {
-        if (CIniReader::g_pInstance == nullptr)
-        {
-            assert(CIniReader::g_pInstance == nullptr);
-        }
-        return CIniReader::g_pInstance;
-    }
-
-    // **************************************************************************
-    // **************************************************************************
-    void CIniReader::SetPath(const char* a_pFile)
-    {
-        if (CIniReader::g_pInstance == nullptr)
-        {
-            CIniReader::g_pInstance = new CIniReader(a_pFile);
-        }
-    }
 
     // **************************************************************************
     // **************************************************************************
