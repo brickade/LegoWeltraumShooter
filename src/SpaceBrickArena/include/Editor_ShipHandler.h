@@ -26,6 +26,15 @@ namespace Editor
     class CShipHandler
     {
     public:
+        struct ShipHandlerState
+        {
+            enum Type
+            {
+                Select,
+                Rename
+            };
+        };
+
         struct ShipDataCache
         {
             int Weapons = 0;
@@ -36,12 +45,13 @@ namespace Editor
     private:
         int m_playerIdx;
 
+        ShipHandlerState::Type m_State;
+
         sba::CNavigation* m_pNavigation;
         sba::CSpaceship* m_pCurrentSpaceship;
 
         ShipDataCache m_pCurrentShipDataCache;
 
-        bool m_RenameShip;
         sba::CInputField* m_pInputField;
         std::string m_OldShipName;
 
@@ -58,9 +68,10 @@ namespace Editor
         {
             return this->m_pCurrentSpaceship;
         }
-        bool Renaming()
+
+        ShipHandlerState::Type GetCurrentState() const
         {
-            return this->m_RenameShip;
+            return this->m_State;
         }
 
         const ShipDataCache& GetCurrentShipData() const
