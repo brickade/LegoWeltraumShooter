@@ -506,7 +506,7 @@ void makeTrace(std::vector<Joint**>& front, std::vector<Brick*>& selection)
 	}
 }
 
-void Ship::destroy(std::vector<Brick*>* selection, std::vector<Joint**>* front, vec3 impulse, vec3 pos, int axis, int tick)
+void Ship::destroy(Brick* brick, std::vector<Brick*>* selection, std::vector<Joint**>* front, vec3 impulse, vec3 pos, int axis, int tick)
 {
 	makeTrace(*front, *selection);
 
@@ -599,35 +599,44 @@ void Ship::destroy(std::vector<Brick*>* selection, std::vector<Joint**>* front, 
 
 	vec3 angularMomentum = vec3(0, 0, 0);
 
-	if (axis != Y)
-	{
-		vec3 fulcrum = transformVec3(minFulcrum, m_body->getTransform());
-		vec3 r(0, 0, 0);
-		r.y = pos.y - fulcrum.y;
-		if (axis == X)
-			r.x = pos.x - fulcrum.x;
-		else if (axis == Z)
-			r.z = pos.z - fulcrum.z;
-		angularMomentum = cross(r, impulse);
-	}
 
-	BodyDescription descr;
-	descr.transform = m_body->getTransform();
-	descr.type = BodyType::Dynamic;
-	descr.linearMomentum = impulse + m_body->getLinearMomentum();
-	descr.angularMomentum = angularMomentum + m_body->getAngularMomentum();
+	vec3 fulcrum = transformVec3(minFulcrum, m_body->getTransform());
+	vec3 r(0, 0, 0);
+	r.y = pos.y - fulcrum.y;
+	if (axis == X)
+		r.x = pos.x - fulcrum.x;
+	else if (axis == Z)
+		r.z = pos.z - fulcrum.z;
+	angularMomentum = cross(r, impulse);
 
-	////
-	descr.linearMomentum = vec3(0, 0, 0);
-	descr.angularMomentum = vec3(0, 0, 0);
 
-	Ship* newShip = createShip(m_world, m_entities, descr, vec3(0,0,1));
+	//BodyDescription descr;
+	//descr.transform = m_body->getTransform();
+	//descr.type = BodyType::Dynamic;
+	//descr.linearMomentum = impulse + m_body->getLinearMomentum();
+	//descr.angularMomentum = angularMomentum + m_body->getAngularMomentum();
+
+	//////
+	//descr.linearMomentum = vec3(0, 0, 0);
+	//descr.angularMomentum = vec3(0, 0, 0);
+
+	//Ship* newShip = createShip(m_world, m_entities, descr, vec3(0,0,1));
 	
+	int id = m_impulses.size();
+	
+	Impulse newImpulse;
+	newImpulse.brick = brick;
+	newImpulse.impulse = impulse;
+	newImpulse.pos = pos;
+	newImpulse.angular = angularMomentum;
+
+	m_impulses.push_back(newImpulse);
 
 	// seperate selection
 	for (int i = 0; i < selection->size(); ++i)
 	{
 		Brick* brick = selection->at(i);
+
 		// free blocks
 		for (int i = 0; i < brick->numBlocking; ++i)
 		{
@@ -637,18 +646,21 @@ void Ship::destroy(std::vector<Brick*>* selection, std::vector<Joint**>* front, 
 				brick->blocking[i] = brick->blocking[--brick->numBlocking];
 			}
 		}
-		m_body->removeCollider(brick->collider);
-		brick->ship = newShip;
-		newShip->m_body->addCollider(brick->collider);
+		//m_body->removeCollider(brick->collider);
+		//brick->ship = newShip;
+		//newShip->m_body->addCollider(brick->collider);
+
+	
+
 	}
 	
 	//
 
-	newShip->calcBase();
-	calcBase();
+	//newShip->calcBase();
+	//calcBase();
 
-	assert(checkShip(newShip->m_base, g_tick++, newShip));
-	assert(checkShip(m_base, g_tick++, this));
+	//assert(checkShip(newShip->m_base, g_tick++, newShip));
+	//assert(checkShip(m_base, g_tick++, this));
 
 	checkForInvalidBlock(m_base, tick , g_tick++);
 }
@@ -776,28 +788,47 @@ bool Ship::checkAxis(Brick* brick, vec3 impulse, vec3 pos, int axis)
 
 		for (int i = 0; i < front.size(); ++i)
 		{
-			Brick* brick = (*front[i])->connection->brick;
-			int numUp = 0;
-			int numDown = 0;
-			for (int j = 0; j < brick->numConnections; ++j)
 			{
-				Brick* other = brick->connections[j].other;
-				if (other->tick != selectionTick)
+				Brick* brick = (*front[i])->connection->brick;
+				int numUp = 0;
+				int numDown = 0;
+				for (int j = 0; j < brick->numConnections; ++j)
 				{
-					if (other->pos[1] > brick->pos[1])
-						numUp++;
-					else if (other->pos[1] < brick->pos[1])
-						numDown++;
+					Brick* other = brick->connections[j].other;
+					if (other->tick != selectionTick)
+					{
+						if (other->pos[1] > brick->pos[1])
+							numUp++;
+						else if (other->pos[1] < brick->pos[1])
+							numDown++;
+					}
+					if (numUp > 0 && numDown > 0)
+						return false;
 				}
-				if (numUp > 0 && numDown > 0)
-					return false;
 			}
 
-
+			{
+				Brick* brick = (*front[i])->connection->other;
+				int numUp = 0;
+				int numDown = 0;
+				for (int j = 0; j < brick->numConnections; ++j)
+				{
+					Brick* other = brick->connections[j].other;
+					if (other->tick == selectionTick)
+					{
+						if (other->pos[1] > brick->pos[1])
+							numUp++;
+						else if (other->pos[1] < brick->pos[1])
+							numDown++;
+					}
+					if (numUp > 0 && numDown > 0)
+						return false;
+				}
+			}
 		}
 
 
-		destroy(&selection, &front, impulse, pos, axis, g_tick++);
+		destroy(brick, &selection, &front, impulse, pos, axis, g_tick++);
 		return true;
 	}
 	return false;
@@ -869,10 +900,10 @@ bool Ship::addImpulse(Brick* brick, vec3 pos, vec3 impulse)
 	//if (!destroy)
 	//	destroy = checkVertical(brick, abs(_impulse.y), impulse, pos);
 
-	if (destroy)
-	{
-		m_body->applyImpulse(-impulse, pos);
-	}
+	//if (destroy)
+	//{
+	//	m_body->applyImpulse(-impulse, pos);
+	//}
 
 	return destroy;
 }
@@ -1012,14 +1043,48 @@ void Ship::render(GLuint colorLocation)
 }
 
 
+void setShip(Brick* brick, Ship* newShip, int tick)
+{
+	brick->tick = tick;
+	brick->lastBroken = g_lastBroken;
+	brick->ship->getBody()->removeCollider(brick->collider);
+	brick->ship = newShip;
+	newShip->getBody()->addCollider(brick->collider);
+
+	for (int i = 0; i < brick->numConnections; ++i)
+	{
+		if (brick->connections[i].other->tick != tick)
+		{
+			setShip(brick->connections[i].other, newShip, tick);
+		}
+	}
+}
+
+
+
 void Ship::update(float dt)
 {
-
 	for (int i = 0; i < m_impulses.size(); ++i)
 	{
-		m_impulses[i].brick->ship->addImpulse(m_impulses[i].brick, m_impulses[i].pos, m_impulses[i].impulse);
-	}
+		BodyDescription descr;
+		descr.transform = m_body->getTransform();
+		descr.type = BodyType::Dynamic;
+		descr.linearMomentum = m_body->getLinearMomentum();
+		descr.angularMomentum = m_body->getAngularMomentum();
 
+		//////
+		//descr.linearMomentum = vec3(0, 0, 0);
+		//descr.angularMomentum = vec3(0, 0, 0);
+
+		Ship* newShip = createShip(m_world, m_entities, descr, vec3(0,0,1));
+
+		setShip(m_impulses[i].brick, newShip, g_tick++);
+		newShip->getBody()->applyImpulse(m_impulses[i].impulse);
+		newShip->getBody()->applyAngularImpulse(m_impulses[i].angular);
+		newShip->calcBase();
+
+	}
+	calcBase();
 	m_impulses.clear();
 }
 
@@ -1042,4 +1107,9 @@ void initDestruction(World* world)
 
 	g_traces.clear();
 	g_traces.reserve(64);
+}
+
+void updateDestruction()
+{
+	g_lastBroken++;
 }

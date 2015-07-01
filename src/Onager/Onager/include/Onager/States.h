@@ -40,8 +40,4 @@ namespace ong
 		MassState* m;
 
 	};
-
-
-
-
 }

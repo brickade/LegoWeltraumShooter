@@ -117,6 +117,8 @@ namespace ong
 
 			vec3 wAxis = dt * m_v[i].w;
 			float wScalar = sqrt(lengthSq(wAxis));
+			
+			wScalar = ong_MAX(-0.25f*ong_PI, ong_MIN(0.25f*ong_PI, wScalar));
 
 			if (wScalar != 0.0f)
 				m_r[i].q = QuatFromAxisAngle(1.0f / wScalar * wAxis, wScalar) * m_r[i].q;

@@ -13,14 +13,14 @@ DestructionTest::DestructionTest()
 }
 void DestructionTest::init()
 {
-	m_world = new World(vec3(0, -30, 0));
+	m_world = new World(vec3(0, -0, 0));
 	
 	initDestruction(m_world);
 
 	BodyDescription descr;
 	descr.transform.p = vec3(0, 10, 0);
 	descr.transform.q = QuatFromAxisAngle(normalize(vec3(rand(), rand(), rand())), rand());
-	//descr.transform.q = Quaternion(vec3(-0.308242381, -0.0624808222, -0.267928302), -0.910657585);
+	descr.transform.q = Quaternion(vec3(0.0, 0, 0), 1);
 	descr.linearMomentum = vec3(0, 0, 0);
 	descr.angularMomentum = vec3(0, 0, 0);
 	descr.type = BodyType::Dynamic;
@@ -45,7 +45,7 @@ void DestructionTest::init()
 
 	m_entities.push_back(addFloor(m_world, m_world->createMaterial({ 1, 0, 1 }), vec3(0, -10, 0)));
 
-	m_stepping = true;
+	m_stepping = false;
 }
 
 
@@ -73,7 +73,7 @@ bool DestructionTest::procEvent(SDL_Event event)
 void DestructionTest::update(float dt)
 {
 	int x, y;
-	if (m_click && SDL_GetMouseState(&x, &y) & SDL_BUTTON(SDL_BUTTON_LEFT))
+	if (false && m_click && SDL_GetMouseState(&x, &y) & SDL_BUTTON(SDL_BUTTON_LEFT))
 	{
 		m_force += 30.0f * dt;
 		printf("force: %f\n", m_force);
@@ -108,7 +108,16 @@ int DestructionTest::impulse()
 	dir.y = -tan(_y*fovY) * 0.1f;
 	dir.x = tan(_x*fovX) * 0.1f;
 
-	//dir = normalize(rotate(dir, m_eye.q));
+	dir = normalize(rotate(dir, m_eye.q));
+
+	BodyDescription descr;
+	descr.type = BodyType::Dynamic;
+	descr.transform = m_eye;
+	descr.linearMomentum = 2000.0f * dir;
+	descr.angularMomentum = vec3(0, 0, 0);
+	m_entities.push_back(addBox(m_world, descr, m_world->createMaterial({ 10, 0, 0 })));
+
+
 	//RayQueryResult result = { 0 };
 	//if (m_world->queryRay(m_eye.p, dir, &result) && result.collider != 0)
 	//{
@@ -132,3 +141,17 @@ int DestructionTest::impulse()
 void DestructionTest::render()
 {
 }
+
+
+void DestructionTest::stepPhysics(float dt)
+{
+	m_physicsTimer += dt;
+	while (m_physicsTimer >= 1.0f / 60.0f)
+	{
+		m_world->step(1.0f / 60.0f);
+		m_physicsTimer -= 1.0f / 60.0f;
+
+		updateDestruction();
+	}
+}
+

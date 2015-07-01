@@ -10,12 +10,6 @@ namespace ong
 	struct ContactConstraint
 	{
 		float veloctiyBias[MAX_CONTACT_POINTS];
-		//VelocityState velocityA;
-		//VelocityState velocityB;
-		//MomentumState momentumA; 
-		//MomentumState momentumB;
-		//MassState massA;
-		//MassState massB;
 	};
 
 
