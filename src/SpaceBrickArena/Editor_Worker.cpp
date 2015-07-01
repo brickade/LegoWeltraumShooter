@@ -61,7 +61,6 @@ namespace Editor
                 SAFE_DELETE(this->m_pCurrentBrick);
             }
             this->m_pCurrentBrick = a_pCurrentBrick->CreateInstance(*this->m_pCurrentBrickObject, *sba_World); //Create Instance
-            a_rShipHandler.UpdateCurrentShipData();
         }
         this->m_pCamera->Update(&a_pGraphics, &a_pWindow, &a_pTimer);
         this->UpdateTranslation(this->m_pCamera->GetForward(), a_pTimer.GetElapsedSeconds() * 3.0f);
@@ -73,7 +72,15 @@ namespace Editor
         //Safe Ship to file
         if (sba_Input->ButtonPressed(sba_Button::EditorSaveShip, this->m_playerIdx))
         {
-            a_rShipHandler.SaveCurrentShip();
+            //Delete CurrentBrick
+            if (this->m_pCurrentBrick != nullptr)
+            {
+                SAFE_DELETE(this->m_pCurrentBrick);
+            }
+            a_rShipHandler.SaveCurrentShip(); //Save ship & preview
+            //Recreate CurrentBrick
+            this->m_pCurrentBrick = a_pCurrentBrick->CreateInstance(*this->m_pCurrentBrickObject, *sba_World); //Create Instance
+            this->ApplyToCurrentBrick();
         }
 
         //Reset/Delete Ship

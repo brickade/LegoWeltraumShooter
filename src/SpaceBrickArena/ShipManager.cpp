@@ -146,7 +146,16 @@ namespace sba
         delete serializer;
         std::string spritePath = this->PathFromShip(a_rShip);
         spritePath.append(".dds");
-        this->GetSpriteFromShip(a_rShip)->GetTexture()->SaveTextureToFile(spritePath.c_str());
+        std::string path = this->PathFromShip(a_rShip);
+        for (std::vector<std::pair<std::string, PuRe_Sprite*>>::iterator it = this->m_Sprites.begin(); it != this->m_Sprites.end(); ++it)
+        {
+            if ((*it).first.compare(path) == 0)
+            {
+                (*it).second = this->GetSpriteFromShip(a_rShip);
+                (*it).second->GetTexture()->SaveTextureToFile(spritePath.c_str());
+                return;
+            }
+        }
     }
 
     // **************************************************************************
