@@ -11,31 +11,17 @@ int PURE_MAIN
     //Memory Leak detection
     //static unsigned int breakId = 162;
     //_CrtSetBreakAlloc(breakId);
-
-    std::string userpath = std::getenv("USERPROFILE");
-    userpath += "\\Documents\\SpacebrickArena\\";
-    //Create Directory if it doesn't exist
-    #ifdef _WIN32
-        CreateDirectory(userpath.c_str(), NULL);
-    #else
-        mkdir(a_pDirectoryPath, 777);
-    #endif
-
-    userpath += "Options.ini";
-    //Create IniFile
-    sba::CIniReader::SetPath(userpath.c_str());
-
     PuRe_IPlatform* pplatform = PuRe_CreatePlatform();
     PuRe_ApplicationDescription description;
-    description.Graphics.ResolutionWidth = std::stoi(sba::CIniReader::Instance()->GetValue("ResolutionWidth"));
-    description.Graphics.ResolutionHeight = std::stoi(sba::CIniReader::Instance()->GetValue("ResolutionHeight"));
+    description.Graphics.ResolutionWidth = std::stoi(sba_Options->GetValue("ResolutionWidth"));
+    description.Graphics.ResolutionHeight = std::stoi(sba_Options->GetValue("ResolutionHeight"));
     description.Graphics.Module = PuRe_GraphicsModuleType::OpenGL;
     description.Window.Title = "SpacebrickArena - Development";
-    description.Window.Width = std::stoi(sba::CIniReader::Instance()->GetValue("WindowWidth"));
-    description.Window.Height = std::stoi(sba::CIniReader::Instance()->GetValue("WindowHeight"));
+    description.Window.Width = std::stoi(sba_Options->GetValue("WindowWidth"));
+    description.Window.Height = std::stoi(sba_Options->GetValue("WindowHeight"));
     description.Window.X = 100;
     description.Window.Y = 100;
-    std::string DisplayMode = sba::CIniReader::Instance()->GetValue("DisplayMode");
+    std::string DisplayMode = sba_Options->GetValue("DisplayMode");
     if (DisplayMode == "Windowed")
         description.Window.DisplaySetting = PuRe_DisplaySetting::Windowed;
     else if (DisplayMode == "FullscreenWindowed")
@@ -52,7 +38,7 @@ int PURE_MAIN
 
     SAFE_DELETE(papplication);
     SAFE_DELETE(pplatform);
-    SAFE_DELETE(sba::CIniReader::Instance());
+    SAFE_DELETE(sba_Options);
     //Print memory leak in output
     //_CrtDumpMemoryLeaks();
 }

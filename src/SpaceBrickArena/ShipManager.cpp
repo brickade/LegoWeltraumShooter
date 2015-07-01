@@ -243,7 +243,7 @@ namespace sba
         Editor::CEditorScene::PreRender(this->m_pDirectionalLight, this->m_pDirectionalLightMaterial, nullptr, nullptr);
         sba_BrickManager->Render();
         Editor::CEditorScene::PostRender(this->m_pCamera, nullptr, this->m_pPostMaterial);
-        PuRe_Sprite* sprite = new PuRe_Sprite(sba_Application->GetGraphics(), sba_Renderer->GetTexture(0, 0), true);
+        PuRe_Sprite* sprite = new PuRe_Sprite(sba_Application->GetGraphics(), sba_Renderer->GetResult(), true);
         local::SetRes(1920, 1080);
         return sprite;
     }

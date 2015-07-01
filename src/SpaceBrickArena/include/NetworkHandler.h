@@ -22,10 +22,10 @@ namespace sba
     {
         unsigned char Player;
         bool Shoot;
-        bool Thrust;
-        unsigned char Spin;
-        unsigned char MoveX;
-        unsigned char MoveY;
+        char Thrust;
+        char Spin;
+        char MoveX;
+        char MoveY;
 
     };
     /// @brief HeaderPacket, used to tell which Packet we got
@@ -139,7 +139,7 @@ namespace sba
         bool m_Host;
         bool m_Connected;
     public:
-        CNetworkHandler();
+        CNetworkHandler(CIniReader* a_pIniReader);
         ~CNetworkHandler();
     public:
         /// @brief Sets whether the calls are blocking or not

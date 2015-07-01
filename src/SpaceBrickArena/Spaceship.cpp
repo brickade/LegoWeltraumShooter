@@ -7,6 +7,8 @@
 #include "include/Player.h"
 #include "include/Editor_BrickCategory.h"
 
+#include "include/Space.h"
+
 namespace sba
 {
     const int CSpaceship::MAX_BRICK_COUNT = 200;
@@ -28,7 +30,8 @@ namespace sba
     // **************************************************************************
     CSpaceship::~CSpaceship()
     {
-
+        for (unsigned int i = 0; i < this->m_EngineEmitter.size(); i++)
+            SAFE_DELETE(this->m_EngineEmitter[i]);
     }
 
     // **************************************************************************
@@ -125,6 +128,18 @@ namespace sba
         {
             c->setCallbacks(cb);
             c = c->getNext();
+        }
+
+        //Add emitter
+        std::vector<TheBrick::CBrickInstance**> engines;
+        this->GetEngines(engines);
+        for (std::vector<TheBrick::CBrickInstance**>::iterator it = engines.begin(); it != engines.end(); ++it)
+        {
+            TheBrick::CBrickInstance* engine = *(*it);
+            ong::Transform transform = engine->GetTransform();
+            PuRe_Vector3F pos = engine->PosToWorldSpace(TheBrick::OngToPuRe(transform.p));
+            PuRe_ParticleEmitter* emitter = new PuRe_ParticleEmitter(pos, PuRe_QuaternionF());
+            this->m_EngineEmitter.push_back(emitter);
         }
     }
 
@@ -228,10 +243,59 @@ namespace sba
             this->m_TargetAng = ong::vec3(0.0f, 0.0f, 0.0f);
 
             ong::Transform t = ong::Transform(ong::vec3(0.0f, 0.0f, 0.0f), ong::Quaternion(ong::vec3(0, 0, 0), 1));
+
+            //draw particles
+
+
+            //Add emitter
+            std::vector<TheBrick::CBrickInstance**> engines;
+            this->GetEngines(engines);
+            unsigned int eID = 0;
+            float amount = TheBrick::OngToPuRe(currVel).Length()/this->m_MaxSpeed;
+            printf("Amount: %f\n",amount);
+            for (std::vector<TheBrick::CBrickInstance**>::iterator it = engines.begin(); it != engines.end(); ++it)
+            {
+                TheBrick::CBrickInstance* engine = *(*it);
+                ong::Transform transform = engine->GetTransform();
+                ong::Transform ship = this->m_pBody->getTransform();
+                this->m_pBody->getPosition();
+                PuRe_Vector3F pos = TheBrick::OngToPuRe(ong::transformTransform(transform,ship).p);
+                PuRe_ParticleEmitter* emitter = this->m_EngineEmitter[eID];
+                //TheBrick::OngToPuRe(this->m_pBody->getOrientation())
+                emitter->m_Position = pos;
+                emitter->m_Rotation = TheBrick::OngToPuRe(this->m_pBody->getOrientation());
+
+                if (emitter->GetAmount() < (96*amount)+4)
+                {
+                    PuRe_Vector3F pos = PuRe_Vector3F(0.0f, 0.0f, 0.0f);
+                    pos.X -= 0.75f;
+                    pos.Y -= 0.75f;
+                    pos.X += (std::rand() % 100) / 1000.0f;
+                    pos.Y += (std::rand() % 100) / 1000.0f;
+
+                    pos.Z = -5.0f;
+                    PuRe_Vector3F size = PuRe_Vector3F(1.5f, 1.5f, 1.5f);
+                    PuRe_Vector3F velocity = PuRe_Vector3F(0.0f, 0.0f, (-0.001f*amount)-0.0005f);
+                    PuRe_Color color;
+                    color.R = 1.0f;
+                    color.B = 1.0f;
+                    color.G = 1.0f;
+                    emitter->Spawn(0.2f, pos, size, velocity, emitter->m_Rotation, color);
+                }
+                emitter->Update(a_DeltaTime);
+                eID++;
+            }
         }
     }
 
     // **************************************************************************
+    // **************************************************************************
+    void CSpaceship::DrawEmitter(PuRe_Sprite* a_pSprite,PuRe_IMaterial* a_pMaterial)
+    {
+        for (int i = 0; i<this->m_EngineEmitter.size(); i++)
+            sba_Renderer->Draw(0, true, this->m_EngineEmitter[i], a_pMaterial, a_pSprite,-1,0.2f);
+    }
+
     // **************************************************************************
     // **************************************************************************
     void CSpaceship::Deserialize(TheBrick::CSerializer& a_pSerializer, TheBrick::BrickArray& a_rBricks, ong::World& a_pWorld)

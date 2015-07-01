@@ -1,13 +1,14 @@
 #include "include/NetworkHandler.h"
+#include "include/Space.h"
 
 namespace sba
 {
-    CNetworkHandler::CNetworkHandler()
+    CNetworkHandler::CNetworkHandler(CIniReader* a_pIniReader)
     {
         this->m_pSocket = new PuRe_Socket();
         this->m_pBSocket = new PuRe_Socket();
-        this->m_IP = sba::CIniReader::Instance()->GetValue("IP");
-        this->m_Port = sba::CIniReader::Instance()->GetValue("Port");
+        this->m_IP = a_pIniReader->GetValue("IP");
+        this->m_Port = a_pIniReader->GetValue("Port");
         this->m_Host = false;
     }
 
@@ -81,9 +82,9 @@ namespace sba
         }
         else
             this->m_pSocket->Initialize(PuRe_SocketType::Client, PuRe_Protocol::TCP, std::stoi(this->m_Port), this->m_IP.c_str());
-        sba::CIniReader::Instance()->SetValue("IP", this->m_IP);
-        sba::CIniReader::Instance()->SetValue("Port", this->m_Port);
-        sba::CIniReader::Instance()->Save();
+        sba_Options->SetValue("IP", this->m_IP);
+        sba_Options->SetValue("Port", this->m_Port);
+        sba_Options->Save();
         if (this->m_pSocket->IsWorking())
             this->m_Connected = true;
         else
