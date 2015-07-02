@@ -17,6 +17,7 @@ namespace sba
         Space::Instance()->Initialize(*a_pApplication->GetGraphics(), *a_pApplication->GetInput(), *a_pApplication->GetSoundPlayer(), *a_pApplication);
         sba_BrickManager->Load();
         sba_ShipManager->Load();
+        sba_SoundPlayer->PlaySound("Theme",true,true,std::stof(sba_Options->GetValue("MusicVolume")));
 
         this->m_pMenuScene->Initialize(a_pApplication);
         this->m_pActiveScene = this->m_pMenuScene;
@@ -58,6 +59,8 @@ namespace sba
         case 4: //Editor Initialize
             this->m_pActiveScene->Exit();
             SAFE_DELETE(this->m_pActiveScene);
+            sba_SoundPlayer->StopSound("Theme");
+            sba_SoundPlayer->PlaySound("Editor", true, true, std::stof(sba_Options->GetValue("MusicVolume")));
 
             this->m_pEditorScene = new Editor::CEditorScene(a_pApplication, this->m_PlayerIdx);
             this->m_pEditorScene->Initialize(a_pApplication);
@@ -67,6 +70,9 @@ namespace sba
         case 5: //Menu Initialize
             this->m_pActiveScene->Exit();
             SAFE_DELETE(this->m_pActiveScene);
+            sba_SoundPlayer->StopSound("Theme");
+            sba_SoundPlayer->StopSound("Editor");
+            sba_SoundPlayer->PlaySound("Theme", true, true, std::stof(sba_Options->GetValue("MusicVolume")));
 
             this->m_pMenuScene = new Menu::CMenuScene(a_pApplication, &this->m_PlayerIdx);
             this->m_pMenuScene->Initialize(a_pApplication);
