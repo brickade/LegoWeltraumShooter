@@ -151,12 +151,28 @@ namespace sba
         {
             ong::Body* b = this->m_pBody;
             ong::World* w = b->getWorld();
+            //Add emitter
+            std::vector<TheBrick::CBrickInstance**> weapons;
+            this->GetWeapons(weapons);
+            unsigned int wID = 0;
+            for (std::vector<TheBrick::CBrickInstance**>::iterator it = weapons.begin(); it != weapons.end(); ++it)
+            {
+                TheBrick::CBrickInstance* weapon = *(*it);
+                ong::Transform transform = weapon->GetTransform();
+                ong::Transform ship = this->m_pBody->getTransform();
+                this->m_pBody->getPosition();
+                ong::Transform wtransform = ong::transformTransform(transform, ship);
+                PuRe_Vector3F pos = TheBrick::OngToPuRe(ong::transformTransform(transform, ship).p);
 
-            float len = TheBrick::OngToPuRe(this->m_pBody->getLinearVelocity()).Length();
-            PuRe_Vector3F speed = a_Forward*100.0f + a_Forward * len;
+                PuRe_Vector3F forward = PuRe_Vector3F(0.0f, 0.0f, 1.0f) * TheBrick::OngToPuRe(wtransform.q);
+                pos = pos + forward*10.0f;
 
-            speed *= 1.0f/100.0f;
-            a_rBullets.push_back(new CBullet(TheBrick::OngToPuRe(this->GetTransform().p) + a_Forward*10.0f, speed, *w, a_pOwner));
+                float len = TheBrick::OngToPuRe(this->m_pBody->getLinearVelocity()).Length();
+                PuRe_Vector3F speed = forward*100.0f + forward * len;
+                speed *= 1.0f / 100.0f;
+
+                a_rBullets.push_back(new CBullet(pos, speed, *w, a_pOwner));
+            }
         }
     }
 
@@ -268,8 +284,15 @@ namespace sba
                 if (emitter->GetAmount() < (96*amount)+4)
                 {
                     PuRe_Vector3F pos = PuRe_Vector3F(0.0f, 0.0f, 0.0f);
-                    pos.X -= 0.75f;
-                    pos.Y -= 0.75f;
+                    if(engine->m_pBrick->GetBrickId() == 702)
+                    { 
+                        pos.X -= 0.75f;
+                        pos.Y -= 0.75f;
+                    }
+                    else
+                    {
+                        pos.X += 0.5f;
+                    }
                     pos.X += (std::rand() % 100) / 1000.0f;
                     pos.Y += (std::rand() % 100) / 1000.0f;
 

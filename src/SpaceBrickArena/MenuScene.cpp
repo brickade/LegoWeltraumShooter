@@ -43,6 +43,7 @@ namespace Menu
         this->m_pOptions = new COptions();
         this->m_pLobby = new CLobby(window);
         this->m_pNetwork = new CNetwork(a_pApplication->GetTimer());
+
     }
 
     // **************************************************************************

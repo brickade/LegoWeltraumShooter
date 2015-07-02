@@ -14,7 +14,7 @@ namespace sba
     {
         this->m_pOwner = a_pOwner;
         this->m_Type = TheBrick::EGameObjectType::Bullet;
-        TheBrick::CBrickInstance* brick = new TheBrick::CBrickInstance(*sba_BrickManager->GetBrickArray()[2], *this, *sba_World);
+        TheBrick::CBrickInstance* brick = new TheBrick::CBrickInstance(*sba_BrickManager->GetBrickArray()[900], *this, *sba_World);
         this->m_pBody->setPosition(TheBrick::PuReToOng(a_Position));
         this->m_pBody->applyImpulse(TheBrick::PuReToOng(a_Speed));
 

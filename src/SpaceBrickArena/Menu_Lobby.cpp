@@ -846,6 +846,7 @@ namespace Menu
                                 p->ShipID = sba_ShipManager->GetShipCount()-1;
                             else if (p->ShipID < 0)
                                 p->ShipID = 0;
+                            SAFE_DELETE(p->Ship);
                             p->Ship = sba_ShipManager->GetShip(p->ShipID);
 
                             if (sba_Network->IsConnected())
