@@ -188,6 +188,7 @@ namespace sba
     // **************************************************************************
     sba::CSpaceship* CShipManager::GetShip(size_t a_Index)
     { //Load actual ship from disk
+        assert(a_Index >= 0 && a_Index < this->GetShipCount());
         sba::CSpaceship* ship = new sba::CSpaceship(*sba_World, this->m_Sprites[a_Index].first.substr(this->m_Sprites[a_Index].first.find_last_of("/") + 1));
         TheBrick::CSerializer* serializer = new TheBrick::CSerializer();
         if (serializer->OpenRead(std::string(this->m_Sprites[a_Index].first).append(".ship").c_str()))
