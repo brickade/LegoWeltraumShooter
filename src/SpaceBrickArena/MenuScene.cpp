@@ -70,13 +70,9 @@ namespace Menu
                 return 0;
                 break;
             case 2: //local
-                //test if he has a possible ship
-                if (sba_Space->CheckShip(window))
-                {
                     //create first player
-                    this->m_Displayed = Lobby;
-                    sba_Space->CreatePlayer(0, window);
-                }
+                this->m_Displayed = Lobby;
+                sba_Space->CreatePlayer(0, window);
                 break;
             case 3: //Multiplayer
                 this->m_Displayed = Network;

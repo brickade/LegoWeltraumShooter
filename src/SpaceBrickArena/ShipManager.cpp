@@ -128,7 +128,7 @@ namespace sba
     // **************************************************************************
     void CShipManager::ResetShip(sba::CSpaceship& a_rShip)
     { //Reset given ship to default and update sprite
-        a_rShip.Reset(sba_BrickManager->GetBrick(1), *sba_World);
+        a_rShip.Reset(sba_BrickManager->GetBrick(341), *sba_World); //Plate6x6
         this->UpdateSprite(a_rShip);
     }
 

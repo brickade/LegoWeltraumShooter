@@ -27,6 +27,8 @@ namespace sba
         this->m_pIniReader = new sba::CIniReader((userpath + "Options.ini").c_str()); //Create IniFile
         this->ShipManager = new sba::CShipManager(shipPath.c_str()); 
         this->m_pNetworkhandler = new sba::CNetworkHandler(this->m_pIniReader);
+
+        this->m_pSoundPlayer = new PuRe_SoundPlayer();
     }
 
     // **************************************************************************
@@ -39,6 +41,7 @@ namespace sba
             SAFE_DELETE(this->m_Players[i]);
         }
         this->m_Players.clear();
+        SAFE_DELETE(this->m_pSoundPlayer);
         SAFE_DELETE(this->m_pIniReader);
         SAFE_DELETE(this->m_pMap);
         SAFE_DELETE(this->Renderer);
@@ -74,6 +77,26 @@ namespace sba
         this->FontMaterial = a_pGraphics.LoadMaterial("../data/effects/font/default");
         this->SpriteMaterial = a_pGraphics.LoadMaterial("../data/effects/sprite/default");
         this->m_pFinalMaterial = a_pGraphics.LoadMaterial("../data/effects/Final/default");
+
+        //load sounds
+        int i = 0;
+        PuRe_IWindow* window = sba_Application->GetWindow();
+        std::string folderPath = "../data/audio/";
+        std::string file = window->GetFileAtIndex(i, folderPath.c_str());
+        while (file != "")
+        {
+            i++;
+            if (file.substr(file.find_last_of(".") + 1) != "mp3")
+            {
+                file = window->GetFileAtIndex(i, folderPath.c_str());
+                continue;
+            }
+            std::string name = file.substr(0, file.find_last_of("."));
+            std::string path = folderPath + "/" + file.c_str();
+            this->m_pSoundPlayer->LoadSound(path.c_str(), name.c_str());
+            file = window->GetFileAtIndex(i, folderPath.c_str());
+
+        }
     }
 
     // **************************************************************************
@@ -105,34 +128,6 @@ namespace sba
 
     // **************************************************************************
     // **************************************************************************
-    bool Space::CheckShip(PuRe_IWindow* a_pWindow)
-    {
-        int i = 0;
-        const char* path = "../data/ships/";
-        bool right = false;
-
-        std::string file = a_pWindow->GetFileAtIndex(i, path);
-        std::string lastFile = file;
-
-        while (!right)
-        {
-            if (file.substr(file.find_last_of(".") + 1) == "ship")
-                return true;
-            else
-            {
-                i++;
-                file = a_pWindow->GetFileAtIndex(i, path);
-                if (lastFile == file)
-                    return false;
-                else
-                    lastFile = file;
-            }
-        }
-        return true;
-    }
-
-    // **************************************************************************
-    // **************************************************************************
     void Space::CreatePlayer(int a_Pad, PuRe_IWindow* a_pWindow)
     {
         sba::SPlayer* p = new sba::SPlayer();
@@ -147,38 +142,9 @@ namespace sba
         }
         p->ID = ID;
         p->PadID = a_Pad;
+        p->ShipID = 0;
         p->NetworkInformation = 0;
-        int i = 0;
-        const char* path = "../data/ships/";
-        bool right = false;
-
-        std::string file = a_pWindow->GetFileAtIndex(i, path);
-        std::string lastFile = file;
-
-        while (!right)
-        {
-            if (file.substr(file.find_last_of(".") + 1) == "ship")
-                right = true;
-            else
-            {
-                i++;
-                file = a_pWindow->GetFileAtIndex(i, path);
-                if (lastFile == file)
-                    right = true;
-                else
-                    lastFile = file;
-            }
-        }
-
-        std::string name = file.substr(0, file.find_last_of("."));
-
-        file = path + file;
-        TheBrick::CSerializer serializer;
-        serializer.OpenRead(file.c_str());
-        ong::vec3 pos = ong::vec3(0.0f, 0.0f, 0.0f);
-        p->Ship = new sba::CSpaceship(*sba_World, name);
-        p->Ship->Deserialize(serializer, sba_BrickManager->GetBrickArray(), *sba_World);
-        serializer.Close();
+        p->Ship = sba_ShipManager->GetShip(p->ShipID);
         sba_Players.push_back(p);
     }
 
