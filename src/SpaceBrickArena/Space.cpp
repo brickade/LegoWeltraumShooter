@@ -147,38 +147,9 @@ namespace sba
         }
         p->ID = ID;
         p->PadID = a_Pad;
+        p->ShipID = 0;
         p->NetworkInformation = 0;
-        int i = 0;
-        const char* path = "../data/ships/";
-        bool right = false;
-
-        std::string file = a_pWindow->GetFileAtIndex(i, path);
-        std::string lastFile = file;
-
-        while (!right)
-        {
-            if (file.substr(file.find_last_of(".") + 1) == "ship")
-                right = true;
-            else
-            {
-                i++;
-                file = a_pWindow->GetFileAtIndex(i, path);
-                if (lastFile == file)
-                    right = true;
-                else
-                    lastFile = file;
-            }
-        }
-
-        std::string name = file.substr(0, file.find_last_of("."));
-
-        file = path + file;
-        TheBrick::CSerializer serializer;
-        serializer.OpenRead(file.c_str());
-        ong::vec3 pos = ong::vec3(0.0f, 0.0f, 0.0f);
-        p->Ship = new sba::CSpaceship(*sba_World, name);
-        p->Ship->Deserialize(serializer, sba_BrickManager->GetBrickArray(), *sba_World);
-        serializer.Close();
+        p->Ship = sba_ShipManager->GetShip(p->ShipID);
         sba_Players.push_back(p);
     }
 
