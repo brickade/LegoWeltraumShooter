@@ -26,6 +26,10 @@ namespace Editor
     CWorker::~CWorker()
     {
         SAFE_DELETE(this->m_pCamera);
+        if (this->m_pCurrentBrick != nullptr)
+        {
+            SAFE_DELETE(this->m_pCurrentBrick);
+        }
     }
 
     // **************************************************************************
