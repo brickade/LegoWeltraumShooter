@@ -553,6 +553,11 @@ namespace Content
 							hullPoints->push_back(other->getTransform().p);
 							other->setUserData((void*)&SELECTED);
 						}
+						else
+						{
+							printf("test \n");
+						}
+
 						return true;
 					},
 						[](ong::Collider* other, void* userData)->bool // remove selection
@@ -569,6 +574,10 @@ namespace Content
 								}
 							}
 							other->setUserData((void*)&UNSELECTED);
+						}
+						else 
+						{
+							printf("test\n");
 						}
 						return true;
 					}
@@ -797,10 +806,9 @@ namespace Content
 
 			break;
 		case Mode::ORIGIN:
-            m_Pivot.x = (float)(floor(m_MouseTransform.p.x / w) + 0.5) * w - (rayResult.normal.x * 0.5f*w);
-            //m_Pivot.y = (float)(floor(m_MouseTransform.p.y / h) + 0.5) * h - (rayResult.normal.y * 0.5f*h);
+            m_Pivot.x = (float)(floor(m_MouseTransform.p.x / w) + 0.5) * w;
 			m_Pivot.y = 0.0f;
-            m_Pivot.z = (float)(floor(m_MouseTransform.p.z / w) + 0.5) * w - (rayResult.normal.z * 0.5f*w);
+            m_Pivot.z = (float)(floor(m_MouseTransform.p.z / w) + 0.5) * w;
 			break;
 		}
 
