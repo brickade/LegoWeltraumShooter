@@ -23,14 +23,14 @@ namespace sba
             {
                 pos.X = 100.0f;
                 pos.Y = 1080.0f - 100.0f;
-                sba_Renderer->Draw(1, false, a_pFont, a_pFontMaterial, "Life: " + std::to_string(sba_Players[i]->Ship->m_Life), pos, PuRe_MatrixF(), size, 36.0f, c, local);
+                sba_Renderer->Draw(2, false, a_pFont, a_pFontMaterial, "Life: " + std::to_string(sba_Players[i]->Ship->m_Life), pos, PuRe_MatrixF(), size, 36.0f, c, local);
                 pos.Y -= 100.0f;
-                sba_Renderer->Draw(1, false, a_pFont, a_pFontMaterial, "Shield: " + std::to_string(sba_Players[i]->Ship->m_Shield), pos, PuRe_MatrixF(), size, 36.0f, c, local);
+                sba_Renderer->Draw(2, false, a_pFont, a_pFontMaterial, "Shield: " + std::to_string(sba_Players[i]->Ship->m_Shield), pos, PuRe_MatrixF(), size, 36.0f, c, local);
                 pos.Y -= 100.0f;
-                sba_Renderer->Draw(1, false, a_pFont, a_pFontMaterial, "Points: " + std::to_string(sba_Players[i]->m_Points), pos, PuRe_MatrixF(), size, 36.0f, c, local);
+                sba_Renderer->Draw(2, false, a_pFont, a_pFontMaterial, "Points: " + std::to_string(sba_Players[i]->m_Points), pos, PuRe_MatrixF(), size, 36.0f, c, local);
                 pos.X = 1920.0f / 2.0f;
                 pos.Y = 1080.0f / 2.0f;
-                sba_Renderer->Draw(1, false, this->m_pCrossHairSprite, this->m_pSpriteMaterial, pos, PuRe_MatrixF(), PuRe_Vector3F(0.0f, 0.0f, 0.0f), PuRe_Vector3F(0.5f, 0.5f, 0.5f), PuRe_Color(1.0f, 1.0f, 1.0f), PuRe_Vector2F(), PuRe_Vector2F(), local);
+                sba_Renderer->Draw(2, false, this->m_pCrossHairSprite, this->m_pSpriteMaterial, pos, PuRe_MatrixF(), PuRe_Vector3F(0.0f, 0.0f, 0.0f), PuRe_Vector3F(0.5f, 0.5f, 0.5f), PuRe_Color(1.0f, 1.0f, 1.0f), PuRe_Vector2F(), PuRe_Vector2F(), local);
                 local++;
             }
         }
@@ -41,7 +41,7 @@ namespace sba
         {
             size = PuRe_Vector3F(64.0f, 64.0f, 0.0f);
             pos = PuRe_Vector3F(1920.0f / 4.0f, 1080.0f / 2.0f, 0.0f);
-            sba_Renderer->Draw(2, false, a_pFont, a_pFontMaterial, "Player " + std::to_string(a_WonID) + " won!", pos, PuRe_MatrixF(), size, 72.0f, c);
+            sba_Renderer->Draw(3, false, a_pFont, a_pFontMaterial, "Player " + std::to_string(a_WonID) + " won!", pos, PuRe_MatrixF(), size, 72.0f, c);
         }
         else
         {
@@ -53,8 +53,8 @@ namespace sba
                 secString = "0" + secString;
             std::string timeLeft = "Left Time: " + minString + ":" + secString;
             size = PuRe_Vector3F(32.0f, 32.0f, 0.0f);
-            pos = PuRe_Vector3F(1920.0f / 4.0f, 1080.0f - 100.0f, 0.0f);
-            sba_Renderer->Draw(2, false, a_pFont, a_pFontMaterial, timeLeft, pos, PuRe_MatrixF(), size, 32.0f, c);
+            pos = PuRe_Vector3F(1920.0f / 4.0f, 1080.0f - 150.0f, 0.0f);
+            sba_Renderer->Draw(3, false, a_pFont, a_pFontMaterial, timeLeft, pos, PuRe_MatrixF(), size, 32.0f, c);
         }
     }
 

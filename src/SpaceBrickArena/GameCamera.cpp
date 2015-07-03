@@ -27,6 +27,12 @@ namespace sba
         this->m_QRotation = PuRe_QuaternionF();
     }
 
+    float CGameCamera::getZOffset()
+    {
+        return this->m_ZOffset;
+    }
+
+
     void CGameCamera::UpdateData(int a_CID, sba::CSpaceship* a_pPlayer, PuRe_IInput* a_pInput, PuRe_Timer* a_pTimer)
     {
         //Seconds for frame independent movement

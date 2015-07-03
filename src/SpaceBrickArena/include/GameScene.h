@@ -55,7 +55,9 @@ namespace sba
         PuRe_IMaterial* m_pPointLightMaterial;
         PuRe_IMaterial* m_pDirectionalLightMaterial;
         PuRe_IMaterial* m_pParticleMaterial;
+        PuRe_IMaterial* m_pSpriteMaterial;
 
+        PuRe_Sprite* m_pLockSprite;
         PuRe_Sprite* m_pParticle1Sprite;
         PuRe_Sprite* m_pParticle2Sprite;
         PuRe_Sprite* m_pParticle3Sprite;
