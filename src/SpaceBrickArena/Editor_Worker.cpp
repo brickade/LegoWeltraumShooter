@@ -46,6 +46,7 @@ namespace Editor
         this->m_pHistory = new CHistory(300, 100);
         this->m_placeBelow = false;
         this->m_pCurrentBrickObject = new TheBrick::CGameObject(*sba_World, nullptr);
+        this->m_CurrentBrickHeightIstInvalid = true;
         //this->m_pShipWorker = new CShipHandler();
         //this->m_pShipWorker->LoadShipFromFile("../data/ships/Banana.ship"); //Load Ship from file
         
@@ -65,11 +66,19 @@ namespace Editor
                 SAFE_DELETE(this->m_pCurrentBrick);
             }
             this->m_pCurrentBrick = a_pCurrentBrick->CreateInstance(*this->m_pCurrentBrickObject, *sba_World); //Create Instance
+            this->m_CurrentBrickHeightIstInvalid = true;
         }
         this->m_pCamera->Update(&a_pGraphics, &a_pWindow, &a_pTimer);
         this->UpdateTranslation(this->m_pCamera->GetForward(), a_pTimer.GetElapsedSeconds() * 3.0f);
         this->UpdateRotation();
-        this->UpdateHeight(a_rShipHandler);
+        if (this->m_CurrentBrickHeightIstInvalid)
+        {
+#ifdef EDITOR_DEBUG
+            printf("Update Height on sec %f\n", a_pTimer.GetTotalElapsedSeconds());
+#endif
+            this->UpdateHeight(a_rShipHandler);
+            this->m_CurrentBrickHeightIstInvalid = false;
+        }
         this->ApplyToCurrentBrick();
         this->UpdatePlacement(a_rShipHandler);
 
@@ -93,6 +102,7 @@ namespace Editor
             a_rShipHandler.ResetCurrentShip();
             this->m_pHistory->Clear();
             a_rShipHandler.UpdateCurrentShipData();
+            this->m_CurrentBrickHeightIstInvalid = true;
         }
     }
 
@@ -151,7 +161,12 @@ namespace Editor
         this->m_currentPosition.X = PuRe_clamp(this->m_currentPosition.X, -this->m_maxBrickDistance, this->m_maxBrickDistance);
         this->m_currentPosition.Y = PuRe_clamp(this->m_currentPosition.Y, -this->m_maxBrickDistance, this->m_maxBrickDistance);
 
+        PuRe_Vector2I posCache = this->m_currentBrickPosition;
         this->m_currentBrickPosition = PuRe_Vector2I((int)round(this->m_currentPosition.X), (int)round(this->m_currentPosition.Y)); //Snap to grid
+        if (this->m_currentBrickPosition.X != posCache.X || this->m_currentBrickPosition.Y != posCache.Y)
+        { //Position changed
+            this->m_CurrentBrickHeightIstInvalid = true;
+        }
     }
 
     // **************************************************************************
@@ -166,10 +181,12 @@ namespace Editor
         if (sba_Input->ButtonPressed(sba_Button::EditorRotateBrickRight, this->m_playerIdx))
         {
             this->m_currentBrickRotation++;
+            this->m_CurrentBrickHeightIstInvalid = true;
         }
         if (sba_Input->ButtonPressed(sba_Button::EditorRotateBrickLeft, this->m_playerIdx))
         {
             this->m_currentBrickRotation--;
+            this->m_CurrentBrickHeightIstInvalid = true;
         }
         this->m_currentBrickRotation += 4; //Avoid negative numbers
         this->m_currentBrickRotation = this->m_currentBrickRotation % 4; //Snap Rotation

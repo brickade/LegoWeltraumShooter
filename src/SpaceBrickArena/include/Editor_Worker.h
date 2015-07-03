@@ -38,6 +38,7 @@ namespace Editor
         PuRe_Vector2I m_currentBrickPosition;
         PuRe_Vector2F m_currentPosition;
         int m_currentHeight;
+        bool m_CurrentBrickHeightIstInvalid;
         PuRe_Color m_currentBrickColor;
         bool m_canPlaceHere = false; 
         float m_nubDockThreshold = 0.01f;
