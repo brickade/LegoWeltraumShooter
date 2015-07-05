@@ -10,13 +10,11 @@ namespace sba
 {
     // **************************************************************************
     // **************************************************************************
-    CBullet::CBullet(PuRe_Vector3F a_Position, PuRe_Vector3F a_Speed, ong::World& a_rWorld,SPlayer* a_pOwner) : CGameObject(a_rWorld, nullptr)
+    CBullet::CBullet(ong::BodyDescription* a_desc, ong::World& a_rWorld, SPlayer* a_pOwner) : CGameObject(a_rWorld, a_desc)
     {
         this->m_pOwner = a_pOwner;
         this->m_Type = TheBrick::EGameObjectType::Bullet;
         TheBrick::CBrickInstance* brick = new TheBrick::CBrickInstance(*sba_BrickManager->GetBrickArray()[900], *this, *sba_World);
-        this->m_pBody->setPosition(TheBrick::PuReToOng(a_Position));
-        this->m_pBody->applyImpulse(TheBrick::PuReToOng(a_Speed));
 
         this->m_lifeTime = 0.0f;
         this->m_Damage = 10;

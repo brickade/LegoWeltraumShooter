@@ -18,6 +18,7 @@ void main()
 	c.g += 1.0-diff*1.5;
 	c.a -= diff*2;
 	c.a *= Color.a;
+
 	if(c.a < 0.1)
 		discard;
 	gl_FragData[0] = c;

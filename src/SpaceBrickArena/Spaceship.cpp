@@ -167,11 +167,20 @@ namespace sba
                 PuRe_Vector3F forward = PuRe_Vector3F(0.0f, 0.0f, 1.0f) * TheBrick::OngToPuRe(wtransform.q);
                 pos = pos + forward*10.0f;
 
+                
+
                 float len = TheBrick::OngToPuRe(this->m_pBody->getLinearVelocity()).Length();
                 PuRe_Vector3F speed = forward*100.0f + forward * len;
                 speed *= 1.0f / 100.0f;
 
-                a_rBullets.push_back(new CBullet(pos, speed, *w, a_pOwner));
+                ong::BodyDescription bdesc;
+
+                bdesc.linearMomentum = TheBrick::PuReToOng(speed);
+                bdesc.angularMomentum = ong::vec3(0, 0, 0);
+                bdesc.transform.p = TheBrick::PuReToOng(pos);
+                bdesc.transform.q = ship.q;
+                bdesc.type = ong::BodyType::Dynamic;
+                a_rBullets.push_back(new CBullet(&bdesc, *w, a_pOwner));
             }
         }
     }
@@ -316,7 +325,7 @@ namespace sba
     void CSpaceship::DrawEmitter(PuRe_Sprite* a_pSprite,PuRe_IMaterial* a_pMaterial)
     {
         for (int i = 0; i<this->m_EngineEmitter.size(); i++)
-            sba_Renderer->Draw(0, true, this->m_EngineEmitter[i], a_pMaterial, a_pSprite,-1,0.2f);
+            sba_Renderer->Draw(1, true, this->m_EngineEmitter[i], a_pMaterial, a_pSprite,-1,0.2f);
     }
 
     // **************************************************************************

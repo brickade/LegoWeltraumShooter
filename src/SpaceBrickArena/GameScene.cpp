@@ -213,6 +213,7 @@ namespace sba
         }
         sba_Renderer->AddTarget(size);
         sba_Renderer->AddTarget(size);
+        sba_Renderer->AddTarget(size);
         sba_Renderer->AddTarget(PuRe_Vector2I(gdesc.ResolutionWidth, gdesc.ResolutionHeight));
         if (sba_Options->GetValue("SSAO") == "On")
         {
@@ -228,9 +229,11 @@ namespace sba
         this->m_pPointLightMaterial = graphics->LoadMaterial("../data/effects/PointLight/default");
         this->m_pDirectionalLightMaterial = graphics->LoadMaterial("../data/effects/DirectionalLight/default");
         this->m_pParticleMaterial = graphics->LoadMaterial("../data/effects/particles/default");
+        this->m_pSpriteMaterial = graphics->LoadMaterial("../data/effects/sprite/default");
         this->m_pPointLight = new PuRe_PointLight(graphics);
         this->m_pDirectionalLight = new PuRe_DirectionalLight(graphics);
         this->m_pFont = new PuRe_Font(graphics, "../data/textures/font.png");
+        this->m_pLockSprite = new PuRe_Sprite(graphics, "../data/textures/lock.png");
         this->m_pParticle1Sprite = new PuRe_Sprite(graphics, "../data/textures/partikel_1.png");
         this->m_pParticle2Sprite = new PuRe_Sprite(graphics, "../data/textures/partikel_2.png");
         this->m_pParticle3Sprite = new PuRe_Sprite(graphics, "../data/textures/partikel_3.png");
@@ -419,7 +422,7 @@ namespace sba
 
         /////////////  DRAW Particles  ///////////////////////
         for (int i = 0; i<this->m_LocalPlayers; i++)
-            sba_Renderer->Draw(0, true, this->m_SpaceEmitter[i], this->m_pParticleMaterial, this->m_pParticle1Sprite);
+            sba_Renderer->Draw(1, true, this->m_SpaceEmitter[i], this->m_pParticleMaterial, this->m_pParticle1Sprite);
         //player emitter
         for (int i = 0; i<sba_Players.size(); i++)
             sba_Players[i]->Ship->DrawEmitter(this->m_pParticle1Sprite, this->m_pParticleMaterial);
@@ -427,6 +430,37 @@ namespace sba
 
         /////////////  DRAW UI  ///////////////////////
         this->m_pUI->DisplayUI(this->m_pFont, this->m_pFontMaterial, this->m_EndTime, this->m_WonID);
+        int camID = 0;
+        for (unsigned int i = 0; i < sba_Players.size(); i++)
+        {
+            if (sba_Players[i]->PadID != -1)
+            {
+                PuRe_QuaternionF rotation = this->m_Cameras[camID]->GetQuaternion();
+                PuRe_Vector3F ppos = TheBrick::OngToPuRe(sba_Players[i]->Ship->m_pBody->getWorldCenter());
+
+                //PuRe_Vector3F cpos = this->m_Cameras[camID]->GetPosition();
+                //float zOffset = this->m_Cameras[camID]->getZOffset();
+
+                for (int j = 0; j<sba_Players.size(); j++)
+                {
+                    if (sba_Players[j]->PadID != i)
+                    {
+                        PuRe_Vector3F pos = TheBrick::OngToPuRe(sba_Players[j]->Ship->m_pBody->getWorldCenter());
+                        pos += TheBrick::OngToPuRe(ong::rotate(ong::vec3(0.0f,5.0f,0.0f),sba_Players[j]->Ship->m_pBody->getOrientation()));
+                        PuRe_Vector3F diffPos = (ppos - pos);
+
+                        float diff = diffPos.Length()/500.0f;
+                        if (diff > 1.0f)
+                            diff = 1.0f;
+                        if (diff < 0.1f)
+                            diff = 0.1f;
+                        float size = 0.1f*diff;
+                        sba_Renderer->Draw(1, false, this->m_pLockSprite, this->m_pSpriteMaterial, pos, rotation.GetMatrix(), PuRe_Vector3F(), PuRe_Vector3F(size, size, size), PuRe_Color(), PuRe_Vector2F(), PuRe_Vector2F(), camID);
+                    }
+                }
+                camID++;
+            }
+        }
         ////////////////////////////////////////////////////
 
         //////////////////// POST SCREEN ////////////////////////////////
@@ -438,24 +472,27 @@ namespace sba
             {
             case 1:
                 sba_Renderer->Set(0, PuRe_Vector3F(0.1f, 0.1f, 0.1f), "ambient");
-                sba_Renderer->Render(0,0, this->m_Cameras[i], this->m_pPostMaterial,sba_FinalMaterial, size);
+                sba_Renderer->Render(i, 0, this->m_Cameras[i], this->m_pPostMaterial, sba_FinalMaterial, size);
+                sba_Renderer->Render(i, 1, this->m_Cameras[i], this->m_pUIMaterial, sba_FinalMaterial, size);
                 sba_Renderer->Set(1, PuRe_Vector3F(1.0f, 1.0f, 1.0f), "ambient");
-                sba_Renderer->Render(i, 1, this->m_pUICam, this->m_pUIMaterial, sba_FinalMaterial, size);
+                sba_Renderer->Render(i, 2, this->m_pUICam, this->m_pUIMaterial, sba_FinalMaterial, size);
                 break;
             case 2:
                 size.X = i*gdesc.ResolutionWidth / 2.0f;
                 sba_Renderer->Set(0, PuRe_Vector3F(0.1f, 0.1f, 0.1f), "ambient");
-                sba_Renderer->Render(0, 0, this->m_Cameras[i], this->m_pPostMaterial, sba_FinalMaterial, size);
+                sba_Renderer->Render(i, 0, this->m_Cameras[i], this->m_pPostMaterial, sba_FinalMaterial, size);
+                sba_Renderer->Render(i, 1, this->m_Cameras[i], this->m_pUIMaterial, sba_FinalMaterial, size);
                 sba_Renderer->Set(1, PuRe_Vector3F(1.0f, 1.0f, 1.0f), "ambient");
-                sba_Renderer->Render(i, 1, this->m_pUICam, this->m_pUIMaterial, sba_FinalMaterial, size);
+                sba_Renderer->Render(i, 2, this->m_pUICam, this->m_pUIMaterial, sba_FinalMaterial, size);
                 break;
             default:
                 sba_Renderer->Set(0, PuRe_Vector3F(0.1f, 0.1f, 0.1f), "ambient");
                 size.X = (i % 2)*gdesc.ResolutionWidth / 2.0f;
                 size.Y = (1 - ((int)(i / 2)))*gdesc.ResolutionHeight / 2.0f;
-                sba_Renderer->Render(0, 0, this->m_Cameras[i], this->m_pPostMaterial, sba_FinalMaterial, size);
+                sba_Renderer->Render(i, 0, this->m_Cameras[i], this->m_pPostMaterial, sba_FinalMaterial, size);
+                sba_Renderer->Render(i, 1, this->m_Cameras[i], this->m_pUIMaterial, sba_FinalMaterial, size);
                 sba_Renderer->Set(1, PuRe_Vector3F(1.0f, 1.0f, 1.0f), "ambient");
-                sba_Renderer->Render(i, 1, this->m_pUICam, this->m_pUIMaterial, sba_FinalMaterial, size);
+                sba_Renderer->Render(i, 2, this->m_pUICam, this->m_pUIMaterial, sba_FinalMaterial, size);
                 break;
             }
         }
@@ -464,11 +501,12 @@ namespace sba
             size.X = gdesc.ResolutionWidth / 2.0f;
             size.Y = 0.0f;
             sba_Renderer->Set(0, PuRe_Vector3F(0.1f, 0.1f, 0.1f), "ambient");
-            sba_Renderer->Render(0, 0, this->m_Cameras[3], this->m_pPostMaterial, sba_FinalMaterial, size);
+            sba_Renderer->Render(3, 0, this->m_Cameras[3], this->m_pPostMaterial, sba_FinalMaterial, size);
+            sba_Renderer->Render(3, 1, this->m_Cameras[3], this->m_pUIMaterial, sba_FinalMaterial, size);
         }
         size.X = 0.0f;
         size.Y = 0.0f;
-        sba_Renderer->Render(0, 2, this->m_pUICam, this->m_pUIMaterial, sba_FinalMaterial, size);
+        sba_Renderer->Render(0, 3, this->m_pUICam, this->m_pUIMaterial, sba_FinalMaterial, size);
         sba_Renderer->End();
         ////////////////////////////////////////////////////
 
@@ -482,12 +520,14 @@ namespace sba
         if (sba_Network->IsConnected())
             SAFE_DELETE(this->m_pNetwork);
         SAFE_DELETE(this->m_pUI);
+        SAFE_DELETE(this->m_pLockSprite);
         SAFE_DELETE(this->m_pParticle1Sprite);
         SAFE_DELETE(this->m_pParticle2Sprite);
         SAFE_DELETE(this->m_pParticle3Sprite);
         for (unsigned int i = 0; i < this->m_SpaceEmitter.size(); i++)
             SAFE_DELETE(this->m_SpaceEmitter[i]);
         // DELETE MATERIALS
+        SAFE_DELETE(this->m_pSpriteMaterial);
         SAFE_DELETE(this->m_pParticleMaterial);
         SAFE_DELETE(this->m_pDirectionalLightMaterial);
         SAFE_DELETE(this->m_pPointLightMaterial);
