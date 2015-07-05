@@ -251,10 +251,17 @@ namespace Editor
                 ong::vec3 maxCollisionFreeDelta = ong::vec3(0, 0, 0);
                 if (CAssistant::MovementDeltaIsCollisionFree(*this->m_pCurrentBrick, *a_rShipHandler.GetCurrentSpaceShip(), hitDelta, TheBrick::CBrick::SEGMENT_HEIGHT, &maxCollisionFreeDelta))
                 { //CollisionFree
-                    this->m_canPlaceHere = true;
-                    this->m_currentHeight = (int)round((hitResultRayOrigins[i].y + maxCollisionFreeDelta.y + (brickTransform.p.y - hitResultRayOrigins[i].y)) / TheBrick::CBrick::SEGMENT_HEIGHT);
+                    if (CAssistant::SpecialCategoryRequirementsPassed(*this->m_pCurrentBrick, *a_rShipHandler.GetCurrentSpaceShip))
+                    {
+                        this->m_canPlaceHere = true;
+                        this->m_currentHeight = (int)round((hitResultRayOrigins[i].y + maxCollisionFreeDelta.y + (brickTransform.p.y - hitResultRayOrigins[i].y)) / TheBrick::CBrick::SEGMENT_HEIGHT);
 #ifdef EDITOR_DEBUG
-                    printf("Collision free: delta(%f, %f, %f)\n", maxCollisionFreeDelta.x, maxCollisionFreeDelta.y, maxCollisionFreeDelta.z);
+                        printf("Passed all tests: delta(%f, %f, %f)\n", maxCollisionFreeDelta.x, maxCollisionFreeDelta.y, maxCollisionFreeDelta.z);
+#endif
+                        return;
+                    }
+#ifdef EDITOR_DEBUG
+                    printf("SpecialCategoryRequirements NOT passed: delta(%f, %f, %f)\n", maxCollisionFreeDelta.x, maxCollisionFreeDelta.y, maxCollisionFreeDelta.z);
 #endif
                     return;
                 }

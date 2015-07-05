@@ -4,6 +4,7 @@
 #include <TheBrick/BrickInstance.h>
 #include <TheBrick/Brick.h>
 #include <TheBrick/GameObject.h>
+#include "include\Editor_BrickCategory.h"
 
 namespace Editor
 {
@@ -97,6 +98,61 @@ namespace Editor
                     *a_pMaxCollisionFreeMovementDelta = (i * a_MoveTestingSteps) * direction;
                     return false;
                 }
+            }
+        }
+        return true;
+    }
+
+    // **************************************************************************
+    // **************************************************************************
+    bool CAssistant::SpecialCategoryRequirementsPassed(TheBrick::CBrickInstance& a_rBrickInstanceToTest, TheBrick::CGameObject& a_rGameObjectToTestAgainst, bool a_TestForOccludingOtherBricks)
+    {
+        int category = a_rBrickInstanceToTest.m_pBrick->GetCategoryId();
+        ong::vec3 rayOrigin = TheBrick::PuReToOng(a_rBrickInstanceToTest.PosToWorldSpace(a_rBrickInstanceToTest.m_pBrick->GetPivotOffset()));
+        ong::RayQueryResult hs = { 0 };
+        ong::vec3 rayDir;
+        //Front
+        rayDir = TheBrick::PuReToOng(a_rBrickInstanceToTest.DirToWorldSpace(PuRe_Vector3F(0, 0, 1)));
+        if (a_rGameObjectToTestAgainst.m_pBody->queryRay(rayOrigin, rayDir, &hs)) //Cast Ray
+        {
+            if (category == CBrickCategory::CATEGORY_COCKPITS || category == CBrickCategory::CATEGORY_WEAPONS)
+            {
+                return false;
+            }
+            if (a_TestForOccludingOtherBricks && !SpecialCategoryRequirementsPassed(reinterpret_cast<TheBrick::CBrickInstance*>(hs.collider->getUserData), *a_rBrickInstanceToTest.GetGameObject(), false))
+            { //Test if this brick occludes another brick
+                return false;
+            }
+        }
+        //Back
+        rayDir = TheBrick::PuReToOng(a_rBrickInstanceToTest.DirToWorldSpace(PuRe_Vector3F(0, 0, -1)));
+        if (a_rGameObjectToTestAgainst.m_pBody->queryRay(rayOrigin, rayDir, &hs)) //Cast Ray
+        {
+            if (category == CBrickCategory::CATEGORY_ENGINES)
+            {
+                return false;
+            }
+            if (a_TestForOccludingOtherBricks && !SpecialCategoryRequirementsPassed(reinterpret_cast<TheBrick::CBrickInstance*>(hs.collider->getUserData), *a_rBrickInstanceToTest.GetGameObject(), false))
+            { //Test if this brick occludes another brick
+                return false;
+            }
+        }
+        //Left
+        rayDir = TheBrick::PuReToOng(a_rBrickInstanceToTest.DirToWorldSpace(PuRe_Vector3F(-1, 0, 0)));
+        if (a_rGameObjectToTestAgainst.m_pBody->queryRay(rayOrigin, rayDir, &hs)) //Cast Ray
+        {
+            if (a_TestForOccludingOtherBricks && !SpecialCategoryRequirementsPassed(reinterpret_cast<TheBrick::CBrickInstance*>(hs.collider->getUserData), *a_rBrickInstanceToTest.GetGameObject(), false))
+            { //Test if this brick occludes another brick
+                return false;
+            }
+        }
+        //Right
+        rayDir = TheBrick::PuReToOng(a_rBrickInstanceToTest.DirToWorldSpace(PuRe_Vector3F(1, 0, 0)));
+        if (a_rGameObjectToTestAgainst.m_pBody->queryRay(rayOrigin, rayDir, &hs)) //Cast Ray
+        {
+            if (a_TestForOccludingOtherBricks && !SpecialCategoryRequirementsPassed(reinterpret_cast<TheBrick::CBrickInstance*>(hs.collider->getUserData), *a_rBrickInstanceToTest.GetGameObject(), false))
+            { //Test if this brick occludes another brick
+                return false;
             }
         }
         return true;
