@@ -7,6 +7,7 @@
 #include "Onager/World.h"
 
 #include "TheBrick/GameObject.h"
+#include "DestructibleObject.h"
 #include "TheBrick/DebugDraw.h"
 #include "TheBrick/CSVParser.h"
 #include "Bullet.h"
@@ -16,7 +17,7 @@ namespace sba
 {
     class CBrick;
 
-    class CSpaceship : public TheBrick::CGameObject
+    class CSpaceship : public CDestructibleObject
     {
     public:
         static const int MAX_BRICK_COUNT;

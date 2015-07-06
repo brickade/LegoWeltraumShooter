@@ -14,7 +14,7 @@ namespace sba
 
     // **************************************************************************
     // **************************************************************************
-    CSpaceship::CSpaceship(ong::World& a_rWorld,std::string a_Name) : CGameObject(a_rWorld, nullptr)
+	CSpaceship::CSpaceship(ong::World& a_rWorld, std::string a_Name) : CDestructibleObject(a_rWorld, nullptr)
     {
         this->m_Type = TheBrick::EGameObjectType::Ship;
         this->m_TargetVec = ong::vec3(0.0f, 0.0f, 0.0f);
@@ -117,11 +117,12 @@ namespace sba
 
 
         ong::Collider* c = this->m_pBody->getCollider();
-        ong::ColliderCallbacks cb;
-        cb.beginContact = CSpaceship::Collision;
 
         while (c)
         {
+			ong::ColliderCallbacks cb = c->getColliderCallbacks();
+			cb.beginContact = CSpaceship::Collision;
+
             c->setCallbacks(cb);
             c = c->getNext();
         }
@@ -232,14 +233,14 @@ namespace sba
     // **************************************************************************
     void CSpaceship::Deserialize(TheBrick::CSerializer& a_pSerializer, TheBrick::BrickArray& a_rBricks, ong::World& a_pWorld)
     {
-        CGameObject::Deserialize(a_pSerializer, a_rBricks, a_pWorld);
+		CDestructibleObject::Deserialize(a_pSerializer, a_rBricks, a_pWorld);
     }
 
     // **************************************************************************
     // **************************************************************************
     void CSpaceship::Serialize(TheBrick::CSerializer& a_pSerializer)
     {
-        CGameObject::Serialize(a_pSerializer);
+		CDestructibleObject::Serialize(a_pSerializer);
     }
 
     // **************************************************************************

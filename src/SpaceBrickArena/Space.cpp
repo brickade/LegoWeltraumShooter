@@ -13,6 +13,7 @@ namespace sba
         this->InputManager = new sba::CInputManager();
         this->BrickManager = new sba::CBrickManager("../data/bricks/");
         this->ShipManager = new sba::CShipManager("../data/ships/");
+		this->DestructionManager = new sba::CDestructionManager();
         this->m_pNetworkhandler = new sba::CNetworkHandler();
         this->m_pMap = new sba::CGameMap();
     }
@@ -73,8 +74,13 @@ namespace sba
                 Space::Instance()->World->step(1 / this->m_PhysicsFramerate);
             } while (a_pTimer->GetTotalElapsedSeconds() - this->m_LastPhysicsUpdate >= 1 / this->m_PhysicsFramerate);
             Space::Instance()->BrickManager->RebuildRenderInstances(); //Update RenderInstances
+
+			//update destruction
+			DestructionManager->Update();
+
         }
-    }
+
+	}
 
     // **************************************************************************
     // **************************************************************************

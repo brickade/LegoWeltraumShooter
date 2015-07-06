@@ -110,6 +110,8 @@ namespace ong
 		uint32 getCollisionGroup() const;
 		uint32 getCollisionFilter() const;
 
+		ColliderCallbacks getColliderCallbacks() const;
+
 		Transform& getTransform();
 		const Transform& getTransform() const;
 
@@ -265,5 +267,10 @@ namespace ong
 	inline uint32 Collider::getCollisionFilter() const
 	{
 		return m_collisionFilter;
+	}
+
+	inline ColliderCallbacks Collider::getColliderCallbacks() const
+	{
+		return m_callbacks;
 	}
 }

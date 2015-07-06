@@ -14,6 +14,7 @@
 #include "Player.h"
 #include "NetworkHandler.h"
 #include "GameMap.h"
+#include "DestructionManager.h"
 
 namespace sba
 {
@@ -35,6 +36,7 @@ namespace sba
         sba::CInputManager* InputManager;
         sba::CBrickManager* BrickManager;
         sba::CShipManager* ShipManager;
+		sba::CDestructionManager* DestructionManager;
         PuRe_Font* Font;
         PuRe_IMaterial* SpriteMaterial;
         PuRe_IMaterial* FontMaterial;

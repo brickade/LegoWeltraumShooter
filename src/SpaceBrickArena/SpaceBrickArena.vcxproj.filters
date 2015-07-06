@@ -99,6 +99,12 @@
     <ClCompile Include="Item.cpp">
       <Filter>Objects</Filter>
     </ClCompile>
+    <ClCompile Include="DestructionManager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="DestructibleObject.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Space.h" />
@@ -203,6 +209,12 @@
       <Filter>Utilities</Filter>
     </ClInclude>
     <ClInclude Include="include\Item.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DestructionManager.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DestructibleObject.h">
       <Filter>Objects</Filter>
     </ClInclude>
   </ItemGroup>

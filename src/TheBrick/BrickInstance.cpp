@@ -91,4 +91,14 @@ namespace TheBrick
         }
         return nullptr;
     }
+
+	void CBrickInstance::SetDestructionInstance(sba::SBrickDestruction* a_DestructionInstance)
+	{
+		m_pDestructionInstance = a_DestructionInstance;
+	}
+
+	sba::SBrickDestruction* CBrickInstance::GetDestructionInstance()
+	{
+		return m_pDestructionInstance;
+	}
 }

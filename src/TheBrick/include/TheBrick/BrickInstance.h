@@ -9,12 +9,18 @@
 #include <Onager/World.h>
 #include "Nub.h"
 
+
+namespace sba
+{
+	struct SBrickDestruction;
+}
+
 namespace TheBrick
 {
     //Forward declaration
     class CGameObject;
     class CBrick;
-
+	
     class CBrickInstance
     {
     public:
@@ -25,6 +31,8 @@ namespace TheBrick
     private:
 
         CGameObject* m_pGameObject;
+		sba::SBrickDestruction* m_pDestructionInstance;
+
 
     public:
         const ong::Transform& GetTransform() const
@@ -63,6 +71,9 @@ namespace TheBrick
         PuRe_Vector3F DirToWorldSpace(const PuRe_Vector3F& a_rBrickSpaceDir) const;
 
         SNub* GetNubAtWorldPos(const PuRe_Vector3F& a_WorldPos, float a_threshold) const;
+
+		void SetDestructionInstance(sba::SBrickDestruction* a_DestructionInstance);
+		sba::SBrickDestruction* GetDestructionInstance();
     };
 }
 
