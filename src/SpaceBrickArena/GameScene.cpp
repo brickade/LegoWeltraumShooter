@@ -4,7 +4,6 @@
 
 namespace sba
 {
-
     // **************************************************************************
     // **************************************************************************
     CGameScene::CGameScene(PuRe_Application* a_pApplication, int a_playerIdx, bool a_Network)
@@ -32,7 +31,7 @@ namespace sba
         if (Move.X > 0.1f || Move.X < -0.1f)
             input.MoveX = (char)(Move.X*100.0f);
         if (Move.Y > 0.1f || Move.Y < -0.1f)
-            input.MoveY = (char)(Move.Y*100.0f);
+            input.MoveY = -(char)(Move.Y*100.0f);
 
 
 
@@ -47,7 +46,7 @@ namespace sba
 
         float Spin = sba_Input->Axis(Input::EAxis::Type::GameSpin, a_PlayerIdx);
         if (Spin < -0.1f || Spin > 0.1f)
-            input.Spin = (char)(Spin*100.0f);
+            input.Spin = -(char)(Spin*100.0f);
 
         return input;
     }
@@ -426,9 +425,9 @@ namespace sba
         //player emitter
         for (int i = 0; i<sba_Players.size(); i++)
             sba_Players[i]->Ship->DrawEmitter(this->m_pParticle1Sprite, this->m_pParticleMaterial);
-        ////////////////////////////////////////////////////
+        //////////////////////////////////////////////////
 
-        /////////////  DRAW UI  ///////////////////////
+        ///////////  DRAW UI  ///////////////////////
         this->m_pUI->DisplayUI(this->m_pFont, this->m_pFontMaterial, this->m_EndTime, this->m_WonID);
         int camID = 0;
         for (unsigned int i = 0; i < sba_Players.size(); i++)
@@ -461,11 +460,12 @@ namespace sba
                 camID++;
             }
         }
-        ////////////////////////////////////////////////////
+        //////////////////////////////////////////////////
 
-        //////////////////// POST SCREEN ////////////////////////////////
+        ////////////////// POST SCREEN ////////////////////////////////
         sba_Renderer->Set(0, (float)this->m_TextureID, "textureID");
         PuRe_Vector3F size = PuRe_Vector3F(0.0f, 0.0f, 0.0f);
+        
         for (int i = 0; i < this->m_LocalPlayers; i++)
         {
             switch (this->m_LocalPlayers)
@@ -504,9 +504,17 @@ namespace sba
             sba_Renderer->Render(3, 0, this->m_Cameras[3], this->m_pPostMaterial, sba_FinalMaterial, size);
             sba_Renderer->Render(3, 1, this->m_Cameras[3], this->m_pUIMaterial, sba_FinalMaterial, size);
         }
+
+      
+
         size.X = 0.0f;
         size.Y = 0.0f;
         sba_Renderer->Render(0, 3, this->m_pUICam, this->m_pUIMaterial, sba_FinalMaterial, size);
+        //sba_Renderer->GetTexture(0, 0)->SaveTextureToFile("test1.dds");
+        //sba_Renderer->GetTexture(1, 0)->SaveTextureToFile("test2.dds");
+        //sba_Renderer->GetTexture(2, 0)->SaveTextureToFile("test3.dds");
+        //sba_Renderer->GetTexture(3, 0)->SaveTextureToFile("test4.dds");
+        //sba_Renderer->GetResult()->SaveTextureToFile("test5.dds");
         sba_Renderer->End();
         ////////////////////////////////////////////////////
 

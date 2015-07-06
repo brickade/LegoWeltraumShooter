@@ -54,6 +54,9 @@ namespace sba
             std::string timeLeft = "Left Time: " + minString + ":" + secString;
             size = PuRe_Vector3F(32.0f, 32.0f, 0.0f);
             pos = PuRe_Vector3F(1920.0f / 4.0f, 1080.0f - 150.0f, 0.0f);
+
+            pos.X = 100.0f;
+            pos.Y = 100.0f;
             sba_Renderer->Draw(3, false, a_pFont, a_pFontMaterial, timeLeft, pos, PuRe_MatrixF(), size, 32.0f, c);
         }
     }

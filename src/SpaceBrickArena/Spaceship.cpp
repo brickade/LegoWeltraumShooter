@@ -113,7 +113,7 @@ namespace sba
         float mass = 1.0f/this->m_pBody->getInverseMass();
         this->m_RotationAcceleration = PuRe_Vector3F(mass*50.0f, mass*100.0f, mass*100.0f);
         this->m_SpeedAcceleration = mass*30.0f;
-        this->m_MaxRotationSpeed = PuRe_Vector3F(2.0f, 2.0f, 2.0f);
+        this->m_MaxRotationSpeed = PuRe_Vector3F(1.0f, 1.0f, 1.0f);
         this->m_MaxSpeed = 15.0f*(20.0f/mass);
         this->m_MaxLife = (int)(mass*10.0f);
         this->m_Life = this->m_MaxLife;
@@ -171,7 +171,7 @@ namespace sba
 
                 float len = TheBrick::OngToPuRe(this->m_pBody->getLinearVelocity()).Length();
                 PuRe_Vector3F speed = forward*100.0f + forward * len;
-                speed *= 1.0f / 100.0f;
+                speed *= 1.0f / 20.0f;
 
                 ong::BodyDescription bdesc;
 
@@ -264,7 +264,7 @@ namespace sba
             }
 
             //this->m_Transform = this->m_pBody->getTransform();
-            this->m_TargetVec = ong::vec3(0.0f,0.0f,0.0f);
+            this->m_TargetVec = ong::vec3(0.0f, 0.0f, this->m_MaxSpeed/10.0f);
             this->m_TargetAng = ong::vec3(0.0f, 0.0f, 0.0f);
 
             ong::Transform t = ong::Transform(ong::vec3(0.0f, 0.0f, 0.0f), ong::Quaternion(ong::vec3(0, 0, 0), 1));
