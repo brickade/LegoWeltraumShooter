@@ -71,6 +71,15 @@ namespace Editor
         this->m_pCamera->Update(&a_pGraphics, &a_pWindow, &a_pTimer);
         this->UpdateTranslation(this->m_pCamera->GetForward(), a_pTimer.GetElapsedSeconds() * 3.0f);
         this->UpdateRotation();
+
+        //Update Placement Direction
+        if (sba_Input->ButtonPressed(sba_Button::EditorTogglePlacementSide, this->m_playerIdx))
+        {
+            this->m_placeBelow = !this->m_placeBelow;
+            this->m_CurrentBrickHeightIstInvalid = true;
+        }
+
+        //Update Height
         if (this->m_CurrentBrickHeightIstInvalid)
         {
 #ifdef EDITOR_DEBUG
@@ -196,12 +205,6 @@ namespace Editor
     // **************************************************************************
     void CWorker::UpdateHeight(CShipHandler& a_rShipHandler)
     {
-        //Update Placement Direction
-        if (sba_Input->ButtonPressed(sba_Button::EditorTogglePlacementSide, this->m_playerIdx))
-        {
-            this->m_placeBelow = !this->m_placeBelow;
-        }
-
         //Set Brick up
         this->m_currentHeight = this->m_maxBrickDistance;
         if (this->m_placeBelow)
@@ -325,6 +328,7 @@ namespace Editor
             {
                 delete step->BrickInstance;
                 a_rShipHandler.UpdateCurrentShipData();
+                this->m_CurrentBrickHeightIstInvalid = true;
             }
         }
         else if (sba_Input->ButtonIsPressed(sba_Button::EditorUndoRedoHold, this->m_playerIdx) && sba_Input->ButtonPressed(sba_Button::EditorRedo, this->m_playerIdx))
@@ -335,6 +339,7 @@ namespace Editor
                 step->BrickInstance = new TheBrick::CBrickInstance(*step->Brick, *a_rShipHandler.GetCurrentSpaceShip(), *sba_World, step->Color);
                 step->BrickInstance->SetTransform(step->Transform);
                 a_rShipHandler.UpdateCurrentShipData();
+                this->m_CurrentBrickHeightIstInvalid = true;
             }
         }
         if (!this->m_canPlaceHere)
@@ -362,6 +367,7 @@ namespace Editor
             step.Color = this->m_currentBrickColor;
             this->m_pHistory->AddStep(step); //Add History step
             a_rShipHandler.UpdateCurrentShipData();
+            this->m_CurrentBrickHeightIstInvalid = true;
         }
     }
 }
