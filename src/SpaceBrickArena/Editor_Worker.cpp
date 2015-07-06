@@ -260,6 +260,7 @@ namespace Editor
 #endif
                         return;
                     }
+                    this->m_currentHeight = (int)round((hitResultRayOrigins[i].y + maxCollisionFreeDelta.y + (brickTransform.p.y - hitResultRayOrigins[i].y)) / TheBrick::CBrick::SEGMENT_HEIGHT);
 #ifdef EDITOR_DEBUG
                     printf("SpecialCategoryRequirements NOT passed: delta(%f, %f, %f)\n", maxCollisionFreeDelta.x, maxCollisionFreeDelta.y, maxCollisionFreeDelta.z);
 #endif
