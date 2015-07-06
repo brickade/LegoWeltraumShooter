@@ -251,7 +251,7 @@ namespace Editor
                 ong::vec3 maxCollisionFreeDelta = ong::vec3(0, 0, 0);
                 if (CAssistant::MovementDeltaIsCollisionFree(*this->m_pCurrentBrick, *a_rShipHandler.GetCurrentSpaceShip(), hitDelta, TheBrick::CBrick::SEGMENT_HEIGHT, &maxCollisionFreeDelta))
                 { //CollisionFree
-                    if (CAssistant::SpecialCategoryRequirementsPassed(*this->m_pCurrentBrick, *a_rShipHandler.GetCurrentSpaceShip))
+                    if (CAssistant::SpecialCategoryRequirementsPassed(*this->m_pCurrentBrick, *a_rShipHandler.GetCurrentSpaceShip()))
                     {
                         this->m_canPlaceHere = true;
                         this->m_currentHeight = (int)round((hitResultRayOrigins[i].y + maxCollisionFreeDelta.y + (brickTransform.p.y - hitResultRayOrigins[i].y)) / TheBrick::CBrick::SEGMENT_HEIGHT);

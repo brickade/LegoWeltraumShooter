@@ -119,7 +119,7 @@ namespace Editor
             {
                 return false;
             }
-            if (a_TestForOccludingOtherBricks && !SpecialCategoryRequirementsPassed(reinterpret_cast<TheBrick::CBrickInstance*>(hs.collider->getUserData), *a_rBrickInstanceToTest.GetGameObject(), false))
+            if (a_TestForOccludingOtherBricks && !SpecialCategoryRequirementsPassed(*reinterpret_cast<TheBrick::CBrickInstance*>(hs.collider->getUserData()), *a_rBrickInstanceToTest.GetGameObject(), false))
             { //Test if this brick occludes another brick
                 return false;
             }
@@ -132,7 +132,7 @@ namespace Editor
             {
                 return false;
             }
-            if (a_TestForOccludingOtherBricks && !SpecialCategoryRequirementsPassed(reinterpret_cast<TheBrick::CBrickInstance*>(hs.collider->getUserData), *a_rBrickInstanceToTest.GetGameObject(), false))
+            if (a_TestForOccludingOtherBricks && !SpecialCategoryRequirementsPassed(*reinterpret_cast<TheBrick::CBrickInstance*>(hs.collider->getUserData()), *a_rBrickInstanceToTest.GetGameObject(), false))
             { //Test if this brick occludes another brick
                 return false;
             }
@@ -141,7 +141,7 @@ namespace Editor
         rayDir = TheBrick::PuReToOng(a_rBrickInstanceToTest.DirToWorldSpace(PuRe_Vector3F(-1, 0, 0)));
         if (a_rGameObjectToTestAgainst.m_pBody->queryRay(rayOrigin, rayDir, &hs)) //Cast Ray
         {
-            if (a_TestForOccludingOtherBricks && !SpecialCategoryRequirementsPassed(reinterpret_cast<TheBrick::CBrickInstance*>(hs.collider->getUserData), *a_rBrickInstanceToTest.GetGameObject(), false))
+            if (a_TestForOccludingOtherBricks && !SpecialCategoryRequirementsPassed(*reinterpret_cast<TheBrick::CBrickInstance*>(hs.collider->getUserData()), *a_rBrickInstanceToTest.GetGameObject(), false))
             { //Test if this brick occludes another brick
                 return false;
             }
@@ -150,7 +150,7 @@ namespace Editor
         rayDir = TheBrick::PuReToOng(a_rBrickInstanceToTest.DirToWorldSpace(PuRe_Vector3F(1, 0, 0)));
         if (a_rGameObjectToTestAgainst.m_pBody->queryRay(rayOrigin, rayDir, &hs)) //Cast Ray
         {
-            if (a_TestForOccludingOtherBricks && !SpecialCategoryRequirementsPassed(reinterpret_cast<TheBrick::CBrickInstance*>(hs.collider->getUserData), *a_rBrickInstanceToTest.GetGameObject(), false))
+            if (a_TestForOccludingOtherBricks && !SpecialCategoryRequirementsPassed(*reinterpret_cast<TheBrick::CBrickInstance*>(hs.collider->getUserData()), *a_rBrickInstanceToTest.GetGameObject(), false))
             { //Test if this brick occludes another brick
                 return false;
             }
