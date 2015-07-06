@@ -97,9 +97,25 @@ namespace sba
     // **************************************************************************
     void CShipManager::AddNewShip(const char* a_pName)
     { //Add default ship with specified name
-        sba::CSpaceship* ship = new sba::CSpaceship(*sba_World, a_pName);
+        std::string name = a_pName;
+        bool unique = false;
+        while (!unique)
+        {
+            unique = true;
+            std::string path = this->PathFromName(name.c_str());
+            for (std::vector<std::pair<std::string, PuRe_Sprite*>>::iterator it = this->m_Sprites.begin(); it != this->m_Sprites.end(); ++it)
+            {
+                if ((*it).first.compare(path) == 0)
+                {
+                    unique = false;
+                    name += "_";
+                    break;
+                }
+            }
+        }
+        sba::CSpaceship* ship = new sba::CSpaceship(*sba_World, name.c_str());
         //Register
-        this->m_Sprites.push_back(std::make_pair(std::string(ship->GetName()).insert(0, this->m_FolderPath), this->GetSpriteFromShip(*ship)));
+        this->m_Sprites.push_back(std::make_pair(this->PathFromShip(*ship), this->GetSpriteFromShip(*ship)));
         //Set to default
         this->ResetShip(*ship);
         //Save to file
@@ -112,7 +128,7 @@ namespace sba
     // **************************************************************************
     void CShipManager::ResetShip(sba::CSpaceship& a_rShip)
     { //Reset given ship to default and update sprite
-        a_rShip.Reset(sba_BrickManager->GetBrick(1), *sba_World);
+        a_rShip.Reset(sba_BrickManager->GetBrick(341), *sba_World); //Plate6x6
         this->UpdateSprite(a_rShip);
     }
 
@@ -130,7 +146,16 @@ namespace sba
         delete serializer;
         std::string spritePath = this->PathFromShip(a_rShip);
         spritePath.append(".dds");
-        this->GetSpriteFromShip(a_rShip)->GetTexture()->SaveTextureToFile(spritePath.c_str());
+        std::string path = this->PathFromShip(a_rShip);
+        for (std::vector<std::pair<std::string, PuRe_Sprite*>>::iterator it = this->m_Sprites.begin(); it != this->m_Sprites.end(); ++it)
+        {
+            if ((*it).first.compare(path) == 0)
+            {
+                (*it).second = this->GetSpriteFromShip(a_rShip);
+                (*it).second->GetTexture()->SaveTextureToFile(spritePath.c_str());
+                return;
+            }
+        }
     }
 
     // **************************************************************************
@@ -163,6 +188,7 @@ namespace sba
     // **************************************************************************
     sba::CSpaceship* CShipManager::GetShip(size_t a_Index)
     { //Load actual ship from disk
+        assert(a_Index >= 0 && a_Index < this->GetShipCount());
         sba::CSpaceship* ship = new sba::CSpaceship(*sba_World, this->m_Sprites[a_Index].first.substr(this->m_Sprites[a_Index].first.find_last_of("/") + 1));
         TheBrick::CSerializer* serializer = new TheBrick::CSerializer();
         if (serializer->OpenRead(std::string(this->m_Sprites[a_Index].first).append(".ship").c_str()))
@@ -193,10 +219,61 @@ namespace sba
     // **************************************************************************
     PuRe_Sprite* CShipManager::GetSpriteFromShip(sba::CSpaceship& a_rShip) const
     {   
+        struct local
+        {
+            static void SetRes(int x, int y)
+            {
+                PuRe_Renderer& renderer = *sba_Renderer;
+                PuRe_Vector2I size = PuRe_Vector2I(x, y);
+                sba_Application->GetGraphics()->ChangeResolution(size);
+
+                renderer.DeleteTargets();
+                for (int i = 0; i < 3; i++)
+                {
+                    renderer.AddTarget(size);
+                }
+                if (true) //TODO: Muss hier aus Options wissen ob SSAO gesetzt ist
+                {
+                    renderer.SetSSAO(0, sba::Space::Instance()->m_SSAOMaterial, sba::Space::Instance()->m_pNoiseTexture);
+                    renderer.SetSSAO(1, sba::Space::Instance()->m_SSAOMaterial, sba::Space::Instance()->m_pNoiseTexture);
+                }
+            }
+        };
+        local::SetRes(960, 540);
         sba_BrickManager->RebuildRenderInstances();
         Editor::CEditorScene::PreRender(this->m_pDirectionalLight, this->m_pDirectionalLightMaterial, nullptr, nullptr);
         sba_BrickManager->Render();
         Editor::CEditorScene::PostRender(this->m_pCamera, nullptr, this->m_pPostMaterial);
-        return new PuRe_Sprite(sba_Application->GetGraphics(), sba_Renderer->GetTexture(0, 0), true);
+        PuRe_Sprite* sprite = new PuRe_Sprite(sba_Application->GetGraphics(), sba_Renderer->GetResult(), true);
+        local::SetRes(1920, 1080);
+        return sprite;
+    }
+
+    // **************************************************************************
+    // **************************************************************************
+    void CShipManager::UpdateShipName(sba::CSpaceship& a_rShip, std::string& a_rOldShipName)
+    {
+        std::string oldPath = this->PathFromName(a_rOldShipName.c_str());
+        std::string newPath = this->PathFromShip(a_rShip);
+        if (rename(std::string(oldPath).append(".ship").c_str(), std::string(newPath).append(".ship").c_str()) != 0)
+        {
+            printf("cant rename ship bro");
+        }
+        if (rename(std::string(oldPath).append(".dds").c_str(), std::string(newPath).append(".dds").c_str()) != 0)
+        {
+            printf("cant rename dds bro");
+        }
+        
+        for (std::vector<std::pair<std::string, PuRe_Sprite*>>::iterator it = this->m_Sprites.begin(); it != this->m_Sprites.end(); ++it)
+        {
+            if ((*it).first.compare(oldPath) == 0)
+            {
+                it->first = newPath;
+                break;
+            }
+        }
+        //!!!#####!!!
+        //###Texture Path in PuRe_Sprite in m_Sprites.second is now invalid. Currently doesnt matter. When someone uses that info, he needs to reload the sprite here!
+        //!!!#####!!!
     }
 }

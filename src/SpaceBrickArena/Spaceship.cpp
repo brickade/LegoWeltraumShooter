@@ -5,6 +5,9 @@
 #include "TheBrick/Brick.h"
 
 #include "include/Player.h"
+#include "include/Editor_BrickCategory.h"
+
+#include "include/Space.h"
 
 namespace sba
 {
@@ -27,7 +30,8 @@ namespace sba
     // **************************************************************************
     CSpaceship::~CSpaceship()
     {
-
+        for (unsigned int i = 0; i < this->m_EngineEmitter.size(); i++)
+            SAFE_DELETE(this->m_EngineEmitter[i]);
     }
 
     // **************************************************************************
@@ -107,10 +111,10 @@ namespace sba
     void CSpaceship::CalculateData()
     {
         float mass = 1.0f/this->m_pBody->getInverseMass();
-        this->m_RotationAcceleration = PuRe_Vector3F(mass*10.0f, mass*20.0f, mass*20.0f);
-        this->m_SpeedAcceleration = mass*20.0f;
-        this->m_MaxRotationSpeed = PuRe_Vector3F(5.0f, 5.0f, 5.0f);
-        this->m_MaxSpeed = 10.0f*(20.0f/mass);
+        this->m_RotationAcceleration = PuRe_Vector3F(mass*50.0f, mass*100.0f, mass*100.0f);
+        this->m_SpeedAcceleration = mass*30.0f;
+        this->m_MaxRotationSpeed = PuRe_Vector3F(2.0f, 2.0f, 2.0f);
+        this->m_MaxSpeed = 15.0f*(20.0f/mass);
         this->m_MaxLife = (int)(mass*10.0f);
         this->m_Life = this->m_MaxLife;
         this->m_Shield = 0;
@@ -126,20 +130,60 @@ namespace sba
             c->setCallbacks(cb);
             c = c->getNext();
         }
+
+        //Add emitter
+        std::vector<TheBrick::CBrickInstance**> engines;
+        this->GetEngines(engines);
+        for (std::vector<TheBrick::CBrickInstance**>::iterator it = engines.begin(); it != engines.end(); ++it)
+        {
+            TheBrick::CBrickInstance* engine = *(*it);
+            ong::Transform transform = engine->GetTransform();
+            PuRe_Vector3F pos = engine->PosToWorldSpace(TheBrick::OngToPuRe(transform.p));
+            PuRe_ParticleEmitter* emitter = new PuRe_ParticleEmitter(pos, PuRe_QuaternionF());
+            this->m_EngineEmitter.push_back(emitter);
+        }
     }
 
     // **************************************************************************
     // **************************************************************************
     void CSpaceship::Shoot(std::vector<CBullet*>& a_rBullets, SPlayer* a_pOwner,PuRe_Vector3F a_Forward)
     {
-        ong::Body* b = this->m_pBody;
-        ong::World* w = b->getWorld();
+        if (this->m_Life > 0)
+        {
+            ong::Body* b = this->m_pBody;
+            ong::World* w = b->getWorld();
+            //Add emitter
+            std::vector<TheBrick::CBrickInstance**> weapons;
+            this->GetWeapons(weapons);
+            unsigned int wID = 0;
+            for (std::vector<TheBrick::CBrickInstance**>::iterator it = weapons.begin(); it != weapons.end(); ++it)
+            {
+                TheBrick::CBrickInstance* weapon = *(*it);
+                ong::Transform transform = weapon->GetTransform();
+                ong::Transform ship = this->m_pBody->getTransform();
+                this->m_pBody->getPosition();
+                ong::Transform wtransform = ong::transformTransform(transform, ship);
+                PuRe_Vector3F pos = TheBrick::OngToPuRe(ong::transformTransform(transform, ship).p);
 
-        float len = TheBrick::OngToPuRe(this->m_pBody->getLinearVelocity()).Length();
-        PuRe_Vector3F speed = a_Forward*100.0f + a_Forward * len;
+                PuRe_Vector3F forward = PuRe_Vector3F(0.0f, 0.0f, 1.0f) * TheBrick::OngToPuRe(wtransform.q);
+                pos = pos + forward*10.0f;
 
-        speed *= 1.0f/100.0f;
-        a_rBullets.push_back(new CBullet(TheBrick::OngToPuRe(this->GetTransform().p) + a_Forward*10.0f, speed, *w, a_pOwner));
+                
+
+                float len = TheBrick::OngToPuRe(this->m_pBody->getLinearVelocity()).Length();
+                PuRe_Vector3F speed = forward*100.0f + forward * len;
+                speed *= 1.0f / 100.0f;
+
+                ong::BodyDescription bdesc;
+
+                bdesc.linearMomentum = TheBrick::PuReToOng(speed);
+                bdesc.angularMomentum = ong::vec3(0, 0, 0);
+                bdesc.transform.p = TheBrick::PuReToOng(pos);
+                bdesc.transform.q = ship.q;
+                bdesc.type = ong::BodyType::Dynamic;
+                a_rBullets.push_back(new CBullet(&bdesc, *w, a_pOwner));
+            }
+        }
     }
 
     // **************************************************************************
@@ -225,10 +269,66 @@ namespace sba
             this->m_TargetAng = ong::vec3(0.0f, 0.0f, 0.0f);
 
             ong::Transform t = ong::Transform(ong::vec3(0.0f, 0.0f, 0.0f), ong::Quaternion(ong::vec3(0, 0, 0), 1));
+
+            //draw particles
+
+
+            //Add emitter
+            std::vector<TheBrick::CBrickInstance**> engines;
+            this->GetEngines(engines);
+            unsigned int eID = 0;
+            float amount = TheBrick::OngToPuRe(currVel).Length()/this->m_MaxSpeed;
+            printf("Amount: %f\n",amount);
+            for (std::vector<TheBrick::CBrickInstance**>::iterator it = engines.begin(); it != engines.end(); ++it)
+            {
+                TheBrick::CBrickInstance* engine = *(*it);
+                ong::Transform transform = engine->GetTransform();
+                ong::Transform ship = this->m_pBody->getTransform();
+                this->m_pBody->getPosition();
+                PuRe_Vector3F pos = TheBrick::OngToPuRe(ong::transformTransform(transform,ship).p);
+                PuRe_ParticleEmitter* emitter = this->m_EngineEmitter[eID];
+                //TheBrick::OngToPuRe(this->m_pBody->getOrientation())
+                emitter->m_Position = pos;
+                emitter->m_Rotation = TheBrick::OngToPuRe(this->m_pBody->getOrientation());
+
+                if (emitter->GetAmount() < (96*amount)+4)
+                {
+                    PuRe_Vector3F pos = PuRe_Vector3F(0.0f, 0.0f, 0.0f);
+                    if(engine->m_pBrick->GetBrickId() == 702)
+                    { 
+                        pos.X -= 0.75f;
+                        pos.Y -= 0.75f;
+                    }
+                    else
+                    {
+                        pos.X += 0.5f;
+                    }
+                    pos.X += (std::rand() % 100) / 1000.0f;
+                    pos.Y += (std::rand() % 100) / 1000.0f;
+
+                    pos.Z = -5.0f;
+                    PuRe_Vector3F size = PuRe_Vector3F(1.5f, 1.5f, 1.5f);
+                    PuRe_Vector3F velocity = PuRe_Vector3F(0.0f, 0.0f, (-0.001f*amount)-0.0005f);
+                    PuRe_Color color;
+                    color.R = 1.0f;
+                    color.B = 1.0f;
+                    color.G = 1.0f;
+                    emitter->Spawn(0.2f, pos, size, velocity, emitter->m_Rotation, color);
+                }
+                emitter->Update(a_DeltaTime);
+                eID++;
+            }
         }
     }
 
     // **************************************************************************
+    // **************************************************************************
+    void CSpaceship::DrawEmitter(PuRe_Sprite* a_pSprite,PuRe_IMaterial* a_pMaterial)
+    {
+        for (int i = 0; i<this->m_EngineEmitter.size(); i++)
+            sba_Renderer->Draw(1, true, this->m_EngineEmitter[i], a_pMaterial, a_pSprite,-1,0.2f);
+    }
+
     // **************************************************************************
     // **************************************************************************
     void CSpaceship::Deserialize(TheBrick::CSerializer& a_pSerializer, TheBrick::BrickArray& a_rBricks, ong::World& a_pWorld)
@@ -252,10 +352,48 @@ namespace sba
             SAFE_DELETE(this->m_pBricks[i]);
             i--;
         }
-        this->SetNameFromFilename("Banana");
         TheBrick::CBrickInstance* brickInstance = a_rStartBrick.CreateInstance(*this, a_rWorld);
         brickInstance->SetTransform(ong::Transform(ong::vec3(0, 0, 0), ong::Quaternion(ong::vec3(0, 0, 0), 1)));
         brickInstance->RotateAroundPivotOffset(PuRe_QuaternionF(0.0f, 0.0f, 0.0f));
         brickInstance->m_Color = PuRe_Color(0, 0, 1);
+    }
+
+    // **************************************************************************
+    // **************************************************************************
+    void CSpaceship::GetWeapons(std::vector<TheBrick::CBrickInstance**>& a_rOutVector)
+    {
+        for (std::vector<TheBrick::CBrickInstance*>::iterator it = this->m_pBricks.begin(); it != this->m_pBricks.end(); ++it)
+        {
+            if ((*it)->m_pBrick->GetCategoryId() == Editor::CBrickCategory::CATEGORY_WEAPONS)
+            {
+                a_rOutVector.push_back(&(*it));
+            }
+        }
+    }
+
+    // **************************************************************************
+    // **************************************************************************
+    void CSpaceship::GetEngines(std::vector<TheBrick::CBrickInstance**>& a_rOutVector)
+    {
+        for (std::vector<TheBrick::CBrickInstance*>::iterator it = this->m_pBricks.begin(); it != this->m_pBricks.end(); ++it)
+        {
+            if ((*it)->m_pBrick->GetCategoryId() == Editor::CBrickCategory::CATEGORY_ENGINES)
+            {
+                a_rOutVector.push_back(&(*it));
+            }
+        }
+    }
+
+    // **************************************************************************
+    // **************************************************************************
+    void CSpaceship::GetCockpits(std::vector<TheBrick::CBrickInstance**>& a_rOutVector)
+    {
+        for (std::vector<TheBrick::CBrickInstance*>::iterator it = this->m_pBricks.begin(); it != this->m_pBricks.end(); ++it)
+        {
+            if ((*it)->m_pBrick->GetCategoryId() == Editor::CBrickCategory::CATEGORY_COCKPITS)
+            {
+                a_rOutVector.push_back(&(*it));
+            }
+        }
     }
 }

@@ -55,9 +55,13 @@ namespace sba
         PuRe_IMaterial* m_pPointLightMaterial;
         PuRe_IMaterial* m_pDirectionalLightMaterial;
         PuRe_IMaterial* m_pParticleMaterial;
-        PuRe_Sprite* m_pParticleSprite;
+        PuRe_IMaterial* m_pSpriteMaterial;
 
-        std::vector<PuRe_ParticleEmitter*> m_Emitters;
+        PuRe_Sprite* m_pLockSprite;
+        PuRe_Sprite* m_pParticle1Sprite;
+        PuRe_Sprite* m_pParticle2Sprite;
+        PuRe_Sprite* m_pParticle3Sprite;
+        std::vector<PuRe_ParticleEmitter*> m_SpaceEmitter;
         std::vector<CGameCamera*> m_Cameras;
         std::vector<sba::CBullet*> m_Bullets;
         std::vector<sba::CAsteroid*> m_Asteroids;

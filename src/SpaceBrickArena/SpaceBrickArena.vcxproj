@@ -152,6 +152,7 @@
     <ClInclude Include="include\Game_Network.h" />
     <ClInclude Include="include\Game_UI.h" />
     <ClInclude Include="include\INIReader.h" />
+    <ClInclude Include="include\InputField.h" />
     <ClInclude Include="include\InputManager.h" />
     <ClInclude Include="include\InputManagerTypes.h" />
     <ClInclude Include="include\Item.h" />
@@ -191,6 +192,7 @@
     <ClCompile Include="Game_Network.cpp" />
     <ClCompile Include="Game_UI.cpp" />
     <ClCompile Include="INIReader.cpp" />
+    <ClCompile Include="InputField.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="MenuScene.cpp" />

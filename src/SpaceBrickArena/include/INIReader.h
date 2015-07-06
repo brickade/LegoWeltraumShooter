@@ -13,10 +13,8 @@ namespace sba
     private:
         std::string m_Path;
         std::unordered_map<std::string, std::string> m_Table;
-        static CIniReader* g_pInstance;
     public:
-        static CIniReader* Instance();
-        static void SetPath(const char* a_pFile);
+        void SetPath(const char* a_pFile);
     public:
         CIniReader(const char* a_pFile);
         ~CIniReader();

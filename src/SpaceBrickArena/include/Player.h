@@ -13,6 +13,7 @@ namespace sba
     {
         unsigned char ID;
         char PadID;
+        unsigned int ShipID;
         SOCKET NetworkInformation;
         bool Timeout;
         int m_Points;

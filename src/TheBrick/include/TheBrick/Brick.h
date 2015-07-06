@@ -16,7 +16,7 @@
 
 namespace TheBrick
 {
-    typedef std::array<TheBrick::CBrick*, 200> BrickArray;
+    typedef std::array<TheBrick::CBrick*, 910> BrickArray;
     class CBrick
     {
     // ------------------------------------------------------------------------

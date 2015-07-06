@@ -18,7 +18,7 @@ namespace TheBrick
     class CGameObject
     {
     public:
-        PuRe_List<CBrickInstance*> m_pBricks;
+        std::vector<CBrickInstance*> m_pBricks;
         ong::Body* m_pBody;
         EGameObjectType m_Type;
 

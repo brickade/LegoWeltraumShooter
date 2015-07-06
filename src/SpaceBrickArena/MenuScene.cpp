@@ -20,7 +20,7 @@ namespace Menu
         this->m_pPostMaterial = graphics->LoadMaterial("../data/effects/Post/default");
         this->m_pFontMaterial = graphics->LoadMaterial("../data/effects/font/default");
 
-        //this->m_pSkyBox = new PuRe_SkyBox(graphics, "../data/textures/cube/");
+        this->m_pSkyBox = new PuRe_SkyBox(graphics, "../data/textures/cube/");
         this->m_pFont = new PuRe_Font(graphics, "../data/textures/font.png");
 
         //Camera
@@ -29,7 +29,7 @@ namespace Menu
         {
             sba_Renderer->AddTarget(PuRe_Vector2I(graphics->GetDescription().ResolutionWidth, graphics->GetDescription().ResolutionHeight));
         }
-        if (sba::CIniReader::Instance()->GetValue("SSAO") == "On")
+        if (sba_Options->GetValue("SSAO") == "On")
         {
             sba_Renderer->SetSSAO(0, sba_Space->m_SSAOMaterial, sba_Space->m_pNoiseTexture);
             sba_Renderer->SetSSAO(1, sba_Space->m_SSAOMaterial, sba_Space->m_pNoiseTexture);
@@ -43,6 +43,7 @@ namespace Menu
         this->m_pOptions = new COptions();
         this->m_pLobby = new CLobby(window);
         this->m_pNetwork = new CNetwork(a_pApplication->GetTimer());
+
     }
 
     // **************************************************************************
@@ -70,13 +71,9 @@ namespace Menu
                 return 0;
                 break;
             case 2: //local
-                //test if he has a possible ship
-                if (sba_Space->CheckShip(window))
-                {
                     //create first player
-                    this->m_Displayed = Lobby;
-                    sba_Space->CreatePlayer(0, window);
-                }
+                this->m_Displayed = Lobby;
+                sba_Space->CreatePlayer(0, window);
                 break;
             case 3: //Multiplayer
                 this->m_Displayed = Network;
@@ -154,7 +151,7 @@ namespace Menu
 
         renderer->Begin(PuRe_Color(0.0f, 0.0f, 0.0f));
 
-        //renderer->Draw(0, true, this->m_pSkyBox, this->m_pSkyMaterial);
+        renderer->Draw(0, true, this->m_pSkyBox, this->m_pSkyMaterial);
         sba_BrickManager->Render();
 
         switch (this->m_Displayed)
@@ -174,9 +171,9 @@ namespace Menu
         default:
             break;
         }
-        renderer->Render(0,0, this->m_pSceneCamera, this->m_pPostMaterial);
+        renderer->Render(0, 0, this->m_pSceneCamera, this->m_pPostMaterial, sba_FinalMaterial);
         renderer->Set(1, PuRe_Vector3F(1.0f, 1.0f, 1.0f), "ambient");
-        renderer->Render(0,1, this->m_pUICamera, this->m_pPostMaterial);
+        renderer->Render(0, 1, this->m_pUICamera, this->m_pPostMaterial, sba_FinalMaterial);
         renderer->End();
     }
 

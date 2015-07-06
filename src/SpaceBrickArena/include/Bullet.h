@@ -21,7 +21,7 @@ namespace sba
         SPlayer* m_pOwner;
 
     public:
-        CBullet(PuRe_Vector3F a_Position, PuRe_Vector3F a_Speed, ong::World& a_rWorld,SPlayer* a_pOwner);
+        CBullet(ong::BodyDescription* a_desc, ong::World& a_rWorld, SPlayer* a_pOwner);
         ~CBullet();
         void Update(float a_DeltaTime) override;
     };

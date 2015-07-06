@@ -21,22 +21,22 @@ namespace Menu
         this->m_Resolutions[5][1] = 1050;
         this->m_Resolutions[6][0] = 1920;
         this->m_Resolutions[6][1] = 1080;
-        int RWidth = std::stoi(sba::CIniReader::Instance()->GetValue("ResolutionWidth"));
-        int RHeight = std::stoi(sba::CIniReader::Instance()->GetValue("ResolutionHeight"));
+        int RWidth = std::stoi(sba_Options->GetValue("ResolutionWidth"));
+        int RHeight = std::stoi(sba_Options->GetValue("ResolutionHeight"));
         this->m_Resolution = 0;
         for (int i = 0; i < 7; i++)
         {
             if (this->m_Resolutions[i][0] == RWidth&&this->m_Resolutions[i][1] == RHeight)
                 this->m_Resolution = i;
         }
-        std::string DisplayMode = sba::CIniReader::Instance()->GetValue("DisplayMode");
+        std::string DisplayMode = sba_Options->GetValue("DisplayMode");
         if (DisplayMode == "Windowed")
             this->m_DMode = PuRe_DisplaySetting::Windowed;
         else if (DisplayMode == "FullscreenWindowed")
             this->m_DMode = PuRe_DisplaySetting::FullscreenWindowed;
         else
             this->m_DMode = PuRe_DisplaySetting::Fullscreen;
-        std::string ssao = sba::CIniReader::Instance()->GetValue("SSAO");
+        std::string ssao = sba_Options->GetValue("SSAO");
         this->m_SSAO = false;
         if (ssao == "On")
             this->m_SSAO = true;
@@ -129,7 +129,7 @@ namespace Menu
                 }
             }
         }
-        if (sba_Input->ButtonPressed(sba_Button::NaviagtionSelect, a_PlayerIdx))
+        if (sba_Input->ButtonPressed(sba_Button::NavigationSelect, a_PlayerIdx))
         {
             if (this->m_pNavigation->GetFocusedElementId() == 3)
                 return 0;
@@ -154,9 +154,9 @@ namespace Menu
                         a_pRenderer->SetSSAO(0, sba::Space::Instance()->m_SSAOMaterial, sba::Space::Instance()->m_pNoiseTexture);
                         a_pRenderer->SetSSAO(1, sba::Space::Instance()->m_SSAOMaterial, sba::Space::Instance()->m_pNoiseTexture);
                     }
-                    sba::CIniReader::Instance()->SetValue("ResolutionWidth", std::to_string(size.X));
-                    sba::CIniReader::Instance()->SetValue("ResolutionHeight", std::to_string(size.Y));
-                    sba::CIniReader::Instance()->Save();
+                    sba_Options->SetValue("ResolutionWidth", std::to_string(size.X));
+                    sba_Options->SetValue("ResolutionHeight", std::to_string(size.Y));
+                    sba_Options->Save();
                     break;
                 case 1: //DisplayMode
                     a_pWindow->ChangeDisplayMode(this->m_DMode);
@@ -164,13 +164,13 @@ namespace Menu
                     switch (this->m_DMode)
                     {
                     case PuRe_DisplaySetting::Windowed:
-                        sba::CIniReader::Instance()->SetValue("DisplayMode", "Windowed");
+                        sba_Options->SetValue("DisplayMode", "Windowed");
                         break;
                     case PuRe_DisplaySetting::FullscreenWindowed:
-                        sba::CIniReader::Instance()->SetValue("DisplayMode", "FullscreenWindowed");
+                        sba_Options->SetValue("DisplayMode", "FullscreenWindowed");
                         break;
                     default:
-                        sba::CIniReader::Instance()->SetValue("DisplayMode", "Fullscreen");
+                        sba_Options->SetValue("DisplayMode", "Fullscreen");
                         break;
                     }
                     break;
@@ -179,17 +179,17 @@ namespace Menu
                     {
                         sba_Renderer->SetSSAO(0, sba::Space::Instance()->m_SSAOMaterial, sba::Space::Instance()->m_pNoiseTexture);
                         sba_Renderer->SetSSAO(1, sba::Space::Instance()->m_SSAOMaterial, sba::Space::Instance()->m_pNoiseTexture);
-                        sba::CIniReader::Instance()->SetValue("SSAO", "On");
+                        sba_Options->SetValue("SSAO", "On");
                     }
                     else
                     {
                         sba_Renderer->SetSSAO(0, NULL,NULL);
                         sba_Renderer->SetSSAO(1, NULL, NULL);
-                        sba::CIniReader::Instance()->SetValue("SSAO", "Off");
+                        sba_Options->SetValue("SSAO", "Off");
                     }
                     break;
                 }
-                sba::CIniReader::Instance()->Save();
+                sba_Options->Save();
             }
             else
                 this->m_pNavigation->SetFocusedElementId(3);

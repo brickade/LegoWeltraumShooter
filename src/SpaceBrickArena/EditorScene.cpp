@@ -44,7 +44,7 @@ namespace Editor
             {
                 this->m_State = EEditorState::SelectShip;
             }
-            else
+            else if (this->m_pShipHandler->GetCurrentState() == CShipHandler::ShipHandlerState::Select)
             {
                 return 5;
             }
@@ -56,7 +56,7 @@ namespace Editor
             //------------------------------
             // Select
             //------------------------------
-            if (sba_Input->ButtonPressed(sba_Button::NaviagtionSelect, this->m_PlayerIdx))
+            if (sba_Input->ButtonPressed(sba_Button::NavigationSelect, this->m_PlayerIdx) && this->m_pShipHandler->GetCurrentState() == CShipHandler::ShipHandlerState::Select)
             {
                 this->m_State = EEditorState::EditShip;
                 break;
@@ -142,13 +142,13 @@ namespace Editor
     {
         //Post
         sba_Renderer->Set(0, PuRe_Vector3F(0.2f, 0.2f, 0.2f), "ambient");
-        sba_Renderer->Set(1, PuRe_Vector3F(0.2f, 0.2f, 0.2f), "ambient");
+        sba_Renderer->Set(1, PuRe_Vector3F(1, 1, 1), "ambient");
         sba_Renderer->Set(2, PuRe_Vector3F(1, 1, 1), "ambient");
-        sba_Renderer->Render(0, 0, a_pSceneCamera, a_pPostMaterial); //Scene
+        sba_Renderer->Render(0, 0, a_pSceneCamera, a_pPostMaterial, sba_FinalMaterial); //Scene
         if (a_pUICamera != nullptr)
         {
-            sba_Renderer->Render(0, 1, a_pUICamera, a_pPostMaterial); //UI    
-            sba_Renderer->Render(0, 2, a_pUICamera, a_pPostMaterial); //Font
+            sba_Renderer->Render(0, 1, a_pUICamera, a_pPostMaterial, sba_FinalMaterial); //UI    
+            sba_Renderer->Render(0, 2, a_pUICamera, a_pPostMaterial, sba_FinalMaterial); //Font
         }
         sba_Renderer->End();
     }

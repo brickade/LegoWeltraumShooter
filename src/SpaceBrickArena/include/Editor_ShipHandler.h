@@ -9,6 +9,7 @@
 #include "Navigation.h"
 
 #include "include/Space.h"
+#include "InputField.h"
 
 namespace sba
 {
@@ -24,14 +25,36 @@ namespace Editor
 {
     class CShipHandler
     {
-
     public:
+        struct ShipHandlerState
+        {
+            enum Type
+            {
+                Select,
+                Rename,
+                Delete
+            };
+        };
+
+        struct ShipDataCache
+        {
+            int Weapons = 0;
+            int Engines = 0;
+            int Cockpits = 0;
+        };
 
     private:
         int m_playerIdx;
 
+        ShipHandlerState::Type m_State;
+
         sba::CNavigation* m_pNavigation;
         sba::CSpaceship* m_pCurrentSpaceship;
+
+        ShipDataCache m_pCurrentShipDataCache;
+
+        sba::CInputField* m_pInputField;
+        std::string m_OldShipName;
 
         PuRe_Vector2F m_PreviewOffset = PuRe_Vector2F(0.0f, -50.0f);
         PuRe_Vector2F m_TextOffset = PuRe_Vector2F(-50.0f, 450.0f);
@@ -45,6 +68,16 @@ namespace Editor
         sba::CSpaceship* GetCurrentSpaceShip()
         {
             return this->m_pCurrentSpaceship;
+        }
+
+        ShipHandlerState::Type GetCurrentState() const
+        {
+            return this->m_State;
+        }
+
+        const ShipDataCache& GetCurrentShipData() const
+        {
+            return this->m_pCurrentShipDataCache;
         }
 
     public:
@@ -62,6 +95,9 @@ namespace Editor
         TheBrick::CBrickInstance* AddBrickInstanceToCurrentShip(const TheBrick::CBrickInstance& a_pTemplate);
 
         void UpdateCurrentShipPreview();
+        void UpdateCurrentShipName();
+
+        void UpdateCurrentShipData();
     };
 }
 

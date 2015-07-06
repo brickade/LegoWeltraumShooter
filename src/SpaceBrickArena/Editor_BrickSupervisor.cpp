@@ -22,7 +22,9 @@ namespace Editor
     // **************************************************************************
     void CBrickSupervisor::Initialize(PuRe_IGraphics& a_pGraphics)
     {
-        this->m_CategoriesCount = sba_BrickManager->GetCategoryCount();
+        
+        this->m_CategoriesCount = sba_BrickManager->GetCategoryCount()-1; // not 900
+
         assert(this->m_Categories.max_size() >= (size_t)this->m_CategoriesCount);
         for (int i = 0; i < this->m_CategoriesCount; i++)
         {

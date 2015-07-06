@@ -38,13 +38,16 @@ namespace sba
         sba::CShipManager* ShipManager;
 		sba::CDestructionManager* DestructionManager;
         PuRe_Font* Font;
+        PuRe_IMaterial* m_pFinalMaterial;
         PuRe_IMaterial* SpriteMaterial;
         PuRe_IMaterial* FontMaterial;
         PuRe_IMaterial* m_SSAOMaterial;
         PuRe_Sprite* m_pNoiseTexture;
+        PuRe_SoundPlayer* m_pSoundPlayer;
         std::vector<SPlayer*> m_Players;
         CNetworkHandler* m_pNetworkhandler;
         CGameMap* m_pMap;
+        CIniReader* m_pIniReader;
 
     private:
         static Space* g_pInstance;
@@ -58,7 +61,6 @@ namespace sba
 
         void RenderFont(std::string a_Text, PuRe_Vector2F a_Position, float a_Size = 24, float a_Width = 1, unsigned int a_RendertargetIndex = 2);
 
-        bool CheckShip(PuRe_IWindow* a_pWindow);
         void CreatePlayer(int a_Pad, PuRe_IWindow* a_pWindow);
         void DeletePlayer(unsigned int a_Index);
 
@@ -72,8 +74,11 @@ namespace sba
 #define sba_Width 1920
 #define sba_Height 1080
 
+#define sba_SoundPlayer sba::Space::Instance()->m_pSoundPlayer
 #define sba_Players sba::Space::Instance()->m_Players
+#define sba_FinalMaterial sba::Space::Instance()->m_pFinalMaterial
 #define sba_Network sba::Space::Instance()->m_pNetworkhandler
+#define sba_Options sba::Space::Instance()->m_pIniReader
 #define sba_Map sba::Space::Instance()->m_pMap
 
 #define sba_World sba::Space::Instance()->World
@@ -81,4 +86,5 @@ namespace sba
 #define sba_Input sba::Space::Instance()->InputManager
 #define sba_BrickManager sba::Space::Instance()->BrickManager
 #define sba_ShipManager sba::Space::Instance()->ShipManager
+
 #endif /* _SPACE_H_ */

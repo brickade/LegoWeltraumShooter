@@ -28,6 +28,8 @@ namespace sba
     void Initialize();
     void UpdateData(int a_CID, sba::CSpaceship* a_pPlayer, PuRe_IInput* a_pInput, PuRe_Timer* a_pTimer);
 
+    float getZOffset();
+
     PuRe_QuaternionF GetAim();
 
 

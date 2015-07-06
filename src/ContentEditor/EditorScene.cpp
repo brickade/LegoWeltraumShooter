@@ -142,10 +142,6 @@ namespace Content
 						ong::vec3& p = c.shape.hullFromPoints.points[i];
 
 						scanf("%f %f %f", &p.x, &p.y, &p.z, &p.x, &p.y, &p.z);
-
-						p.x *= TheBrick::CBrick::SEGMENT_WIDTH;
-						p.z *= TheBrick::CBrick::SEGMENT_WIDTH;
-						p.y *= TheBrick::CBrick::SEGMENT_HEIGHT;
 					}
 
 					m_Queue.push(c);
@@ -470,7 +466,7 @@ namespace Content
 		{
 			if (m_MouseValid)
 			{
-				if (input->MousePressed(input->LeftClick))
+				if (input->MouseIsPressed(input->LeftClick))
 				{
 				
 					switch (m_Mode)
@@ -497,7 +493,7 @@ namespace Content
 					}
 
 				}
-				else if (input->MousePressed(input->RightClick))
+                else if (input->MouseIsPressed(input->RightClick))
 				{
 					switch (m_Mode)
 					{
@@ -557,6 +553,11 @@ namespace Content
 							hullPoints->push_back(other->getTransform().p);
 							other->setUserData((void*)&SELECTED);
 						}
+						else
+						{
+							printf("test \n");
+						}
+
 						return true;
 					},
 						[](ong::Collider* other, void* userData)->bool // remove selection
@@ -573,6 +574,10 @@ namespace Content
 								}
 							}
 							other->setUserData((void*)&UNSELECTED);
+						}
+						else 
+						{
+							printf("test\n");
 						}
 						return true;
 					}
@@ -801,10 +806,9 @@ namespace Content
 
 			break;
 		case Mode::ORIGIN:
-            m_Pivot.x = (float)(floor(m_MouseTransform.p.x / w) + 0.5) * w - (rayResult.normal.x * 0.5f*w);
-            //m_Pivot.y = (float)(floor(m_MouseTransform.p.y / h) + 0.5) * h - (rayResult.normal.y * 0.5f*h);
+            m_Pivot.x = (float)(floor(m_MouseTransform.p.x / w) + 0.5) * w;
 			m_Pivot.y = 0.0f;
-            m_Pivot.z = (float)(floor(m_MouseTransform.p.z / w) + 0.5) * w - (rayResult.normal.z * 0.5f*w);
+            m_Pivot.z = (float)(floor(m_MouseTransform.p.z / w) + 0.5) * w;
 			break;
 		}
 

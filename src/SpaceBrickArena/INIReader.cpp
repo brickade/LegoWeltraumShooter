@@ -2,28 +2,6 @@
 
 namespace sba
 {
-    CIniReader* CIniReader::g_pInstance = 0;
-
-    // **************************************************************************
-    // **************************************************************************
-    CIniReader* CIniReader::Instance()
-    {
-        if (CIniReader::g_pInstance == nullptr)
-        {
-            assert(CIniReader::g_pInstance == nullptr);
-        }
-        return CIniReader::g_pInstance;
-    }
-
-    // **************************************************************************
-    // **************************************************************************
-    void CIniReader::SetPath(const char* a_pFile)
-    {
-        if (CIniReader::g_pInstance == nullptr)
-        {
-            CIniReader::g_pInstance = new CIniReader(a_pFile);
-        }
-    }
 
     // **************************************************************************
     // **************************************************************************
@@ -79,28 +57,47 @@ namespace sba
             //deallocate buffer
             free(buffer);
         }
-        else
-        {
-            auto error = fopen_s(&pFile, a_pFile, "w"); //always writes at the end, created if it does not exist
-            //Ini File doesn't exist, create new
-            if (pFile != NULL)
-            {
-                this->m_Table["ResolutionWidth"] = "1920";
-                this->m_Table["ResolutionHeight"] = "1080";
-                this->m_Table["WindowWidth"] = "1024";
-                this->m_Table["WindowHeight"] = "768";
-                this->m_Table["DisplayMode"] = "Windowed";
-                this->m_Table["SSAO"] = "On";
-                std::string write;
-                for (auto it = this->m_Table.begin(); it != this->m_Table.end(); ++it)
-                {
-                    write = it->first + "=" + it->second +"\r\n";
-                    fwrite(write.c_str(), sizeof(char), write.length(), pFile);
-                }
-                fclose(pFile);
-            }
+        //check if the values are inside
+        auto got = this->m_Table.find("ResolutionWidth");
+        if (got == this->m_Table.end())
+            this->m_Table["ResolutionWidth"] = "1920";
 
+        got = this->m_Table.find("ResolutionHeight");
+        if (got == this->m_Table.end())
+            this->m_Table["ResolutionHeight"] = "1080";
+
+        got = this->m_Table.find("WindowWidth");
+        if (got == this->m_Table.end())
+            this->m_Table["WindowWidth"] = "1024";
+
+        got = this->m_Table.find("WindowHeight");
+        if (got == this->m_Table.end())
+            this->m_Table["WindowHeight"] = "768";
+
+        got = this->m_Table.find("DisplayMode");
+        if (got == this->m_Table.end())
+            this->m_Table["DisplayMode"] = "Windowed";
+
+        got = this->m_Table.find("SSAO");
+        if (got == this->m_Table.end())
+            this->m_Table["SSAO"] = "On";
+
+        got = this->m_Table.find("MusicVolume");
+        if (got == this->m_Table.end())
+            this->m_Table["MusicVolume"] = "1.0";
+
+        got = this->m_Table.find("SoundVolume");
+        if (got == this->m_Table.end())
+            this->m_Table["SoundVolume"] = "1.0";
+
+        std::string write;
+        pFile = fopen(a_pFile, "w");
+        for (auto it = this->m_Table.begin(); it != this->m_Table.end(); ++it)
+        {
+            write = it->first + "=" + it->second + "\r\n";
+            fwrite(write.c_str(), sizeof(char), write.length(), pFile);
         }
+        fclose(pFile);
     }
 
     // **************************************************************************

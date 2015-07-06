@@ -74,17 +74,13 @@ namespace Menu
 
     bool CNetwork::ConnectToServer(PuRe_IWindow* a_pWindow)
     {
-        //test if he has a possible ship, so working Data is send to the Host
-        if (sba_Space->CheckShip(a_pWindow))
+        //seems possible, now connect
+        if (sba_Network->Connect(false))
         {
-            //seems possible, now connect
-            if (sba_Network->Connect(false))
-            {
-                this->m_getList = false;
-                sba_Network->DeleteBroadcast();
-                this->DeleteServers();
-                return true;
-            }
+            this->m_getList = false;
+            sba_Network->DeleteBroadcast();
+            this->DeleteServers();
+            return true;
         }
         return false;
     }
@@ -119,7 +115,7 @@ namespace Menu
         if (!this->m_Focus)
         {
             this->m_pNavigation->Update(*a_pTimer, sba_Input->Direction(sba_Direction::Navigate, a_PlayerIdx));
-            if (sba_Input->ButtonPressed(sba_Button::NaviagtionSelect, a_PlayerIdx))
+            if (sba_Input->ButtonPressed(sba_Button::NavigationSelect, a_PlayerIdx))
             {
                 switch (this->m_pNavigation->GetFocusedElementId())
                 {
@@ -156,7 +152,7 @@ namespace Menu
                     sba_Network->Update(a_pInput, sba::EUpdate::IP);
                 else
                     sba_Network->Update(a_pInput, sba::EUpdate::Port);
-                if (sba_Input->ButtonPressed(sba_Button::NaviagtionSelect, a_PlayerIdx))
+                if (sba_Input->ButtonPressed(sba_Button::NavigationSelect, a_PlayerIdx))
                 {
                     if (this->m_Focus2)
                     {
@@ -202,7 +198,7 @@ namespace Menu
                     this->m_Server = 0;
                 if (this->m_Servers.size()-1 < this->m_Server)
                     this->m_Server = this->m_Servers.size()-1;
-                if (sba_Input->ButtonPressed(sba_Button::NaviagtionSelect, a_PlayerIdx))
+                if (sba_Input->ButtonPressed(sba_Button::NavigationSelect, a_PlayerIdx))
                 {
                     if (this->m_Servers.size() != 0)
                     {
@@ -231,7 +227,7 @@ namespace Menu
                     sba_Network->Update(a_pInput, sba::EUpdate::Name);
                 else
                     sba_Network->Update(a_pInput, sba::EUpdate::Port);
-                if (sba_Input->ButtonPressed(sba_Button::NaviagtionSelect, a_PlayerIdx))
+                if (sba_Input->ButtonPressed(sba_Button::NavigationSelect, a_PlayerIdx))
                 {
                     if (this->m_Focus2)
                     {
@@ -244,21 +240,17 @@ namespace Menu
                         //check if port is not null, else connect
                         if (sba_Network->m_Port.length() > 0 && std::stoi(sba_Network->m_Port) >= 1024 && std::stoi(sba_Network->m_Port) != sba::BroadcastPort)
                         {
-                            //test if he has a possible ship
-                            if (sba_Space->CheckShip(a_pWindow))
+                            if (sba_Network->Connect(true))
                             {
-                                if(sba_Network->Connect(true))
-                                {
-                                    this->m_Focus = false;
-                                    this->m_Focus2 = false;
+                                this->m_Focus = false;
+                                this->m_Focus2 = false;
 
-                                    this->m_getList = false;
-                                    sba_Network->DeleteBroadcast();
-                                    sba_Network->CreateBroadcast(true, sba::BroadcastPort);
-                                    sba_Space->CreatePlayer(0, a_pWindow);
-                                    this->DeleteServers();
-                                    return 2;
-                                }
+                                this->m_getList = false;
+                                sba_Network->DeleteBroadcast();
+                                sba_Network->CreateBroadcast(true, sba::BroadcastPort);
+                                sba_Space->CreatePlayer(0, a_pWindow);
+                                this->DeleteServers();
+                                return 2;
                             }
                         }
                     }

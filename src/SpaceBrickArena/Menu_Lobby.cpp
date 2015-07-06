@@ -104,6 +104,7 @@ namespace Menu
                         p->ID = ID;
                         p->NetworkInformation = s;
                         p->PadID = -1;
+                        p->ShipID = -1;
                         p->Ship = NULL;
                         sba_Players.push_back(p);
                         //tell the user who he is
@@ -246,6 +247,7 @@ namespace Menu
                     p->ID = ID;
                     p->NetworkInformation = s;
                     p->PadID = -1;
+                    p->ShipID = -1;
                     p->Ship = NULL;
                     sba_Players.push_back(p);
                     printf("User %i joined remote locally!\n", ID);
@@ -354,6 +356,7 @@ namespace Menu
                         printf("User %i joined!\n", up->ID);
                         p->NetworkInformation = s; //save socket, only important for server
                         p->PadID = -1;
+                        p->ShipID = -1;
                         p->Ship = new sba::CSpaceship(*sba_World, up->Name);
                         sba_Players.push_back(p);
                     }
@@ -557,7 +560,7 @@ namespace Menu
                 }
             }
         }
-        if (sba_Input->ButtonPressed(sba_Button::NaviagtionSelect, a_PlayerIdx))
+        if (sba_Input->ButtonPressed(sba_Button::NavigationSelect, a_PlayerIdx))
         {
             switch (this->m_pNavigation->GetFocusedElementId())
             {
@@ -835,58 +838,54 @@ namespace Menu
                         sba::SPlayer* p = sba_Players[j];
                         if (p->ID != -1) //doesnt work if he hasn't been accepted
                         {
-                            int s = 0;
-                            const char* path = "../data/ships/";
-                            bool right = false;
-
-                            std::string file = a_pWindow->GetFileAtIndex(s, path);
-                            std::string lastFile = file;
-                            std::string working = file;
-                            bool found = false;
-                            //aslong as the file is not right
-                            while (!right)
+                            unsigned int sID = p->ShipID; //save old ID
+                            SAFE_DELETE(p->Ship);
+                            p->Ship = NULL;
+                            std::vector<TheBrick::CBrickInstance**> engines;
+                            std::vector<TheBrick::CBrickInstance**> cockpits;
+                            std::vector<TheBrick::CBrickInstance**> weapons;
+                            while (p->Ship == NULL)
                             {
-                                if (!found&&file == p->Ship->GetName()+".ship")
+                                bool last = false;
+                                int lastID = p->ShipID;
+                                if (rightPress)
+                                    p->ShipID++;
+                                else
+                                    p->ShipID--;
+
+                                if (rightPress&&lastID == sba_ShipManager->GetShipCount()-1)
                                 {
-                                    //if he has not been found and the file is the current one
-                                    working = file;
-                                    found = true; //current one found
+                                    p->ShipID = sba_ShipManager->GetShipCount() - 1;
+                                    last = true;
                                 }
-                                else if (found)
+                                else if (leftPress&&lastID == 0)
                                 {
-                                    //if he has been found
-                                    if (file.substr(file.find_last_of(".") + 1) == "ship")
-                                    {
-                                        //this is a ship, take it!
-                                        working = file;
-                                        break;
-                                    }
+                                    p->ShipID = 0;
+                                    last = true;
                                 }
-                                if (!found || rightPress)
-                                    s++;
-                                else if (leftPress)
-                                    s--;
-                                if (s >= 0)
-                                    file = a_pWindow->GetFileAtIndex(s, path);
-                                if (s < 0 || lastFile == file)
+                                engines.clear();
+                                cockpits.clear();
+                                weapons.clear();
+
+                                p->Ship = sba_ShipManager->GetShip(p->ShipID);
+                                p->Ship->GetEngines(engines);
+                                p->Ship->GetCockpits(cockpits);
+                                p->Ship->GetWeapons(weapons);
+
+                                if (engines.size() == 0 || cockpits.size() == 0 || weapons.size() == 0)
                                 {
-                                    file = working;
-                                    break;
+                                    SAFE_DELETE(p->Ship);
+                                    p->Ship = NULL;
                                 }
                                 else
-                                    lastFile = file;
+                                    break;
+                                if (last)
+                                {
+                                    p->ShipID = sID;
+                                    p->Ship = sba_ShipManager->GetShip(p->ShipID);
+                                    break;
+                                }
                             }
-
-                            std::string name = file.substr(0, file.find_last_of("."));
-
-                            file = path + file;
-                            TheBrick::CSerializer serializer;
-                            serializer.OpenRead(file.c_str());
-                            ong::vec3 pos = ong::vec3(0.0f, 0.0f, 0.0f);
-                            SAFE_DELETE(p->Ship);
-                            p->Ship = new sba::CSpaceship(*sba_World, name);
-                            p->Ship->Deserialize(serializer, sba_BrickManager->GetBrickArray(), *sba_World);
-                            serializer.Close();
 
                             if (sba_Network->IsConnected())
                             {
