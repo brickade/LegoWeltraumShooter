@@ -144,7 +144,29 @@ namespace sba
         p->PadID = a_Pad;
         p->ShipID = 0;
         p->NetworkInformation = 0;
-        p->Ship = sba_ShipManager->GetShip(p->ShipID);
+        std::vector<TheBrick::CBrickInstance**> engines;
+        std::vector<TheBrick::CBrickInstance**> cockpits;
+        std::vector<TheBrick::CBrickInstance**> weapons;
+        for (unsigned int i = 0; i<sba_ShipManager->GetShipCount(); i++)
+        {
+            p->ShipID = i;
+            p->Ship = sba_ShipManager->GetShip(p->ShipID);
+            engines.clear();
+            cockpits.clear();
+            weapons.clear();
+            p->Ship->GetEngines(engines);
+            p->Ship->GetCockpits(cockpits);
+            p->Ship->GetWeapons(weapons);
+            if (engines.size() == 0||cockpits.size() == 0||weapons.size() == 0)
+            {
+                SAFE_DELETE(p->Ship);
+                p->Ship = NULL;
+            }
+            else
+                break;
+        }
+        if (p->Ship == NULL)
+            printf("NO VALID SHIP!!\n");
         sba_Players.push_back(p);
     }
 

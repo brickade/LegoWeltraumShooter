@@ -838,16 +838,54 @@ namespace Menu
                         sba::SPlayer* p = sba_Players[j];
                         if (p->ID != -1) //doesnt work if he hasn't been accepted
                         {
-                            if(rightPress)
-                                p->ShipID++;
-                            else
-                                p->ShipID--;
-                            if (sba_ShipManager->GetShipCount() <= p->ShipID)
-                                p->ShipID = sba_ShipManager->GetShipCount()-1;
-                            else if (p->ShipID < 0)
-                                p->ShipID = 0;
+                            unsigned int sID = p->ShipID; //save old ID
                             SAFE_DELETE(p->Ship);
-                            p->Ship = sba_ShipManager->GetShip(p->ShipID);
+                            p->Ship = NULL;
+                            std::vector<TheBrick::CBrickInstance**> engines;
+                            std::vector<TheBrick::CBrickInstance**> cockpits;
+                            std::vector<TheBrick::CBrickInstance**> weapons;
+                            while (p->Ship == NULL)
+                            {
+                                bool last = false;
+                                int lastID = p->ShipID;
+                                if (rightPress)
+                                    p->ShipID++;
+                                else
+                                    p->ShipID--;
+
+                                if (rightPress&&lastID == sba_ShipManager->GetShipCount()-1)
+                                {
+                                    p->ShipID = sba_ShipManager->GetShipCount() - 1;
+                                    last = true;
+                                }
+                                else if (leftPress&&lastID == 0)
+                                {
+                                    p->ShipID = 0;
+                                    last = true;
+                                }
+                                engines.clear();
+                                cockpits.clear();
+                                weapons.clear();
+
+                                p->Ship = sba_ShipManager->GetShip(p->ShipID);
+                                p->Ship->GetEngines(engines);
+                                p->Ship->GetCockpits(cockpits);
+                                p->Ship->GetWeapons(weapons);
+
+                                if (engines.size() == 0 || cockpits.size() == 0 || weapons.size() == 0)
+                                {
+                                    SAFE_DELETE(p->Ship);
+                                    p->Ship = NULL;
+                                }
+                                else
+                                    break;
+                                if (last)
+                                {
+                                    p->ShipID = sID;
+                                    p->Ship = sba_ShipManager->GetShip(p->ShipID);
+                                    break;
+                                }
+                            }
 
                             if (sba_Network->IsConnected())
                             {
