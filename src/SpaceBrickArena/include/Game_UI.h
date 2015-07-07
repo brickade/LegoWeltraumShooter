@@ -13,13 +13,14 @@ namespace sba
     {
     private:
         PuRe_Sprite* m_pCrossHairSprite;
+        PuRe_Sprite* m_pHitMarkerSprite;
         PuRe_IMaterial* m_pSpriteMaterial;
         CMinimap* m_pMinimap;
     public:
         CGUI(PuRe_IGraphics* a_pGraphics);
         ~CGUI();
     public:
-        void DisplayUI(PuRe_Font* a_pFont, PuRe_IMaterial* a_pFontMaterial, float a_EndTime,int a_WonID);
+        void DisplayUI(PuRe_Font* a_pFont, PuRe_IMaterial* a_pFontMaterial, float a_EndTime, int a_WonID, bool* a_pDisplayEnd);
     };
 }
 #endif /* _GAME_UI_H */

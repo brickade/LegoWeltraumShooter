@@ -5,11 +5,16 @@ in vec3 Normal;
 in vec4 Position;
 
 uniform samplerCube Diffuse;
+uniform float greyscale = 0.0;
 
 
 void main()
 {
 
 	vec4 blend = texture( Diffuse, UV );
+
+	float grey = dot(blend.rgb,vec3(0.3, 0.59, 0.11));
+	blend = mix(blend,vec4(grey,grey,grey,blend.a),greyscale);
+
 	gl_FragColor = blend;
 }

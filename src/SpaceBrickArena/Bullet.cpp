@@ -10,12 +10,12 @@ namespace sba
 {
     // **************************************************************************
     // **************************************************************************
-    CBullet::CBullet(ong::BodyDescription* a_desc, ong::World& a_rWorld, SPlayer* a_pOwner) : CGameObject(a_rWorld, a_desc)
+    CBullet::CBullet(ong::BodyDescription* a_desc, ong::World& a_rWorld, SPlayer* a_pOwner,PuRe_Color a_Color) : CGameObject(a_rWorld, a_desc)
     {
         this->m_pOwner = a_pOwner;
         this->m_Type = TheBrick::EGameObjectType::Bullet;
         TheBrick::CBrickInstance* brick = new TheBrick::CBrickInstance(*sba_BrickManager->GetBrickArray()[900], *this, *sba_World);
-
+        brick->m_Color = a_Color;
         this->m_lifeTime = 0.0f;
         this->m_Damage = 10;
         this->m_Collided = false;

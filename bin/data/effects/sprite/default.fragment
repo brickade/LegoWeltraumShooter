@@ -6,6 +6,7 @@ in vec3 Normal;
 
 uniform sampler2D Diffuse;
 
+uniform float alpha= 1.0;
 
 void main()
 {
@@ -13,7 +14,7 @@ void main()
 	vec4 blend = texture2D( Diffuse, vec2(UV.x,UV.y) );
          if(blend.a < 0.9)
 		discard;
-
+	blend.a = blend.a*alpha;
 	gl_FragData[0] = blend;
 	gl_FragData[1] = (vec4(-1,0,0,0)+1)/2;
 }

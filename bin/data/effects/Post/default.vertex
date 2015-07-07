@@ -12,6 +12,8 @@ uniform mat4 Scale;
 uniform mat4 Rotation;
 uniform mat4 Translation;
 
+uniform vec3 shake;
+
 void main()
 {
 

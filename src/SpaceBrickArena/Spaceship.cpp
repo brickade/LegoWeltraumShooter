@@ -54,14 +54,14 @@ namespace sba
             if (Ship->m_Respawn == 0.0f)
                 Ship->m_Life -= 10;
 
-            ong::vec3 diff = oship->m_pBody->getWorldCenter() - Ship->m_pBody->getWorldCenter(); //from oship to ship
-            ong::vec3 impactVector = contact->manifold.normal;
-            diff.x *= 50.0f;
-            diff.y *= 50.0f;
-            diff.z *= 50.0f;
+            //ong::vec3 diff = oship->m_pBody->getWorldCenter() - Ship->m_pBody->getWorldCenter(); //from oship to ship
+            //ong::vec3 impactVector = contact->manifold.normal;
+            //diff.x *= 50.0f;
+            //diff.y *= 50.0f;
+            //diff.z *= 50.0f;
 
-            Ship->m_pBody->applyImpulse(-diff);
-            oship->m_pBody->applyImpulse(diff);
+            //Ship->m_pBody->applyImpulse(-diff);
+            //oship->m_pBody->applyImpulse(diff);
         }
         else if (object->m_Type == TheBrick::EGameObjectType::Item)
         {
@@ -71,14 +71,14 @@ namespace sba
                 switch (item->GetType())
                 {
                     case sba::EItemType::Repair:
-                        Ship->m_Life += 10.0f;
+                        Ship->m_Life += 10;
                         if (Ship->m_Life  > Ship->m_MaxLife)
                             Ship->m_Life = Ship->m_MaxLife;
                         break;
                     case sba::EItemType::Shield:
-                        Ship->m_Shield += 10.0f;
-                        if (Ship->m_Shield  > 100.0f)
-                            Ship->m_Shield = 100.0f;
+                        Ship->m_Shield += 10;
+                        if (Ship->m_Shield  > 100)
+                            Ship->m_Shield = 100;
                         break;
                 }
                 item->m_Collided = true;
@@ -93,7 +93,8 @@ namespace sba
                 {
                     Ship->m_Life -= bull->m_Damage;
                     if (Ship->m_Life < 0)
-                        bull->m_pOwner->m_Points += 10;
+                        bull->m_pOwner->Points += 10;
+                    bull->m_pOwner->Marker = 1.0f;
                 }
                 bull->m_Collided = true;
             }
@@ -118,6 +119,7 @@ namespace sba
         this->m_MaxLife = (int)(mass*10.0f);
         this->m_Life = this->m_MaxLife;
         this->m_Shield = 0;
+
 
 
         ong::Collider* c = this->m_pBody->getCollider();
@@ -145,7 +147,7 @@ namespace sba
 
     // **************************************************************************
     // **************************************************************************
-    void CSpaceship::Shoot(std::vector<CBullet*>& a_rBullets, SPlayer* a_pOwner,PuRe_Vector3F a_Forward)
+    void CSpaceship::Shoot(std::vector<CBullet*>& a_rBullets, SPlayer* a_pOwner)
     {
         if (this->m_Life > 0)
         {
@@ -171,7 +173,7 @@ namespace sba
 
                 float len = TheBrick::OngToPuRe(this->m_pBody->getLinearVelocity()).Length();
                 PuRe_Vector3F speed = forward*100.0f + forward * len;
-                speed *= 1.0f / 20.0f;
+                speed *= 1.0f / 50.0f;
 
                 ong::BodyDescription bdesc;
 
@@ -180,8 +182,9 @@ namespace sba
                 bdesc.transform.p = TheBrick::PuReToOng(pos);
                 bdesc.transform.q = ship.q;
                 bdesc.type = ong::BodyType::Dynamic;
-                a_rBullets.push_back(new CBullet(&bdesc, *w, a_pOwner));
+                a_rBullets.push_back(new CBullet(&bdesc, *w, a_pOwner,PuRe_Color(1.0f,0.0f,0.0f,1.0f)));
             }
+            a_pOwner->Shake = 1.0f;
         }
     }
 
@@ -214,24 +217,26 @@ namespace sba
     }
     // **************************************************************************
     // **************************************************************************
-    void CSpaceship::Update(float a_DeltaTime)
+    void CSpaceship::Update(int a_OID,float a_DeltaTime)
     {
+
+        ong::vec3 currVel = ong::rotate(this->m_pBody->getLinearVelocity(), ong::conjugate(this->m_pBody->getOrientation()));
+
         if (this->m_Respawn > 0.0f)
         {
             this->m_Respawn -= a_DeltaTime;
             if (this->m_Respawn < 0.0f)
             {
                 this->m_Respawn = 0.0f;
-                float x = (this->m_pBricks.size() % 10) * 10.0f;
-                float y = (this->m_pBricks.size() % 5) * 10.0f;
-                float z = (this->m_pBricks.size() % 8) * 10.0f;
+                float x = a_OID * 30.0f;
+                float y = 0.0f;
+                float z = 0.0f;
                 this->m_pBody->setPosition(ong::vec3(x, y, z));
                 this->m_Life = this->m_MaxLife;
             }
         }
         else
         {
-            ong::vec3 currVel = ong::rotate(this->m_pBody->getLinearVelocity(), ong::conjugate(this->m_pBody->getOrientation()));
             ong::vec3 currAng = ong::rotate(this->m_pBody->getAngularVelocity(), ong::conjugate(this->m_pBody->getOrientation()));
 
             float forAcc = this->m_SpeedAcceleration;
@@ -264,37 +269,40 @@ namespace sba
             }
 
             //this->m_Transform = this->m_pBody->getTransform();
-            this->m_TargetVec = ong::vec3(0.0f, 0.0f, this->m_MaxSpeed/10.0f);
+            this->m_TargetVec = ong::vec3(0.0f, 0.0f, this->m_MaxSpeed/4.0f);
             this->m_TargetAng = ong::vec3(0.0f, 0.0f, 0.0f);
 
             ong::Transform t = ong::Transform(ong::vec3(0.0f, 0.0f, 0.0f), ong::Quaternion(ong::vec3(0, 0, 0), 1));
 
             //draw particles
+        }
 
 
-            //Add emitter
-            std::vector<TheBrick::CBrickInstance**> engines;
-            this->GetEngines(engines);
-            unsigned int eID = 0;
-            float amount = TheBrick::OngToPuRe(currVel).Length()/this->m_MaxSpeed;
+        //Add emitter
+        std::vector<TheBrick::CBrickInstance**> engines;
+        this->GetEngines(engines);
+        unsigned int eID = 0;
+        float amount = TheBrick::OngToPuRe(currVel).Length() / this->m_MaxSpeed;
 
-            for (std::vector<TheBrick::CBrickInstance**>::iterator it = engines.begin(); it != engines.end(); ++it)
+        for (std::vector<TheBrick::CBrickInstance**>::iterator it = engines.begin(); it != engines.end(); ++it)
+        {
+            PuRe_ParticleEmitter* emitter = this->m_EngineEmitter[eID];
+            if (this->m_Respawn == 0.0f)
             {
                 TheBrick::CBrickInstance* engine = *(*it);
                 ong::Transform transform = engine->GetTransform();
                 ong::Transform ship = this->m_pBody->getTransform();
                 this->m_pBody->getPosition();
-                PuRe_Vector3F pos = TheBrick::OngToPuRe(ong::transformTransform(transform,ship).p);
-                PuRe_ParticleEmitter* emitter = this->m_EngineEmitter[eID];
+                PuRe_Vector3F pos = TheBrick::OngToPuRe(ong::transformTransform(transform, ship).p);
                 //TheBrick::OngToPuRe(this->m_pBody->getOrientation())
                 emitter->m_Position = pos;
                 emitter->m_Rotation = TheBrick::OngToPuRe(this->m_pBody->getOrientation());
 
-                if (emitter->GetAmount() < (96*amount)+4)
+                if (emitter->GetAmount() < (96 * amount) + 4)
                 {
                     PuRe_Vector3F pos = PuRe_Vector3F(0.0f, 0.0f, 0.0f);
-                    if(engine->m_pBrick->GetBrickId() == 702)
-                    { 
+                    if (engine->m_pBrick->GetBrickId() == 702)
+                    {
                         pos.X -= 0.75f;
                         pos.Y -= 0.75f;
                     }
@@ -307,16 +315,16 @@ namespace sba
 
                     pos.Z = -5.0f;
                     PuRe_Vector3F size = PuRe_Vector3F(1.5f, 1.5f, 1.5f);
-                    PuRe_Vector3F velocity = PuRe_Vector3F(0.0f, 0.0f, (-0.001f*amount)-0.0005f);
+                    PuRe_Vector3F velocity = PuRe_Vector3F(0.0f, 0.0f, (-0.001f*amount) - 0.0005f);
                     PuRe_Color color;
                     color.R = 1.0f;
                     color.B = 1.0f;
                     color.G = 1.0f;
                     emitter->Spawn(0.2f, pos, size, velocity, emitter->m_Rotation, color);
                 }
-                emitter->Update(a_DeltaTime);
-                eID++;
             }
+            emitter->Update(a_DeltaTime);
+            eID++;
         }
     }
 
@@ -324,7 +332,7 @@ namespace sba
     // **************************************************************************
     void CSpaceship::DrawEmitter(PuRe_Sprite* a_pSprite,PuRe_IMaterial* a_pMaterial)
     {
-        for (int i = 0; i<this->m_EngineEmitter.size(); i++)
+        for (unsigned int i = 0; i<this->m_EngineEmitter.size(); i++)
             sba_Renderer->Draw(1, true, this->m_EngineEmitter[i], a_pMaterial, a_pSprite,-1,0.2f);
     }
 

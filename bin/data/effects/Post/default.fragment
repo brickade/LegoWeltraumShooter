@@ -12,6 +12,10 @@ uniform vec3 ambient = vec3(0.1,0.1,0.1);
 
 uniform int BlurSize = 4;
 
+uniform vec2 shake;
+
+uniform float greyscale = 0.0;
+
 vec2 CalcTexCoord()
 {
    return gl_FragCoord.xy / Resolution;
@@ -19,7 +23,7 @@ vec2 CalcTexCoord()
 
 void main()
 {
-	vec2 TexCoord = CalcTexCoord();
+	vec2 TexCoord = CalcTexCoord()+shake;
 	vec4 blend = texture2D( DiffuseMap, TexCoord );
 	vec4 light = texture2D( LightMap, TexCoord );
 
@@ -43,6 +47,9 @@ void main()
 	blend = vec4(color,blend.a);
         if(blend.a < 0.1)
          discard;
+
+	float grey = dot(blend.rgb,vec3(0.3, 0.59, 0.11));
+	blend = mix(blend,vec4(grey,grey,grey,blend.a),greyscale);
 
 	if(textureID == 0.0)
 	    gl_FragColor = blend;

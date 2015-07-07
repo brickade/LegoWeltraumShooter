@@ -21,7 +21,7 @@ namespace sba
         SPlayer* m_pOwner;
 
     public:
-        CBullet(ong::BodyDescription* a_desc, ong::World& a_rWorld, SPlayer* a_pOwner);
+        CBullet(ong::BodyDescription* a_desc, ong::World& a_rWorld, SPlayer* a_pOwner, PuRe_Color a_Color);
         ~CBullet();
         void Update(float a_DeltaTime) override;
     };

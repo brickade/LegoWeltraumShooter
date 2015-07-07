@@ -16,9 +16,27 @@ namespace sba
         unsigned int ShipID;
         SOCKET NetworkInformation;
         bool Timeout;
-        int m_Points;
-        float m_ShootCooldown;
+        int Points;
+        float ShootCooldown;
+        float Shake;
+        float Marker;
         CSpaceship* Ship;
+
+        void Update(float a_DeltaTime)
+        {
+            if (this->Shake != 0.0f)
+            {
+                this->Shake -= a_DeltaTime;
+                if (this->Shake < 0.0f)
+                    this->Shake = 0.0f;
+            }
+            if (this->Marker != 0.0f)
+            {
+                this->Marker -= a_DeltaTime;
+                if (this->Marker < 0.0f)
+                    this->Marker = 0.0f;
+            }
+        }
     };
 }
 #endif /* _PLAYER_H_ */

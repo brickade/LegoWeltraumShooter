@@ -6,12 +6,13 @@ namespace sba
     {
         this->m_pSpriteMaterial = a_pGraphics->LoadMaterial("../data/effects/sprite/default");
         this->m_pCrossHairSprite = new PuRe_Sprite(a_pGraphics, "../data/textures/crosshair.png");
+        this->m_pHitMarkerSprite = new PuRe_Sprite(a_pGraphics, "../data/textures/hitmarker.png");
         this->m_pMinimap = new CMinimap(a_pGraphics);
     }
 
     // **************************************************************************
     // **************************************************************************
-    void CGUI::DisplayUI(PuRe_Font* a_pFont, PuRe_IMaterial* a_pFontMaterial, float a_EndTime,int a_WonID)
+    void CGUI::DisplayUI(PuRe_Font* a_pFont, PuRe_IMaterial* a_pFontMaterial, float a_EndTime, int a_WonID, bool* a_pDisplayEnd)
     {
         PuRe_Color c = PuRe_Color(1.0f, 1.0f, 1.0f, 1.0f);
         PuRe_Vector3F size = PuRe_Vector3F(32.0f, 32.0f, 0.0f);
@@ -27,10 +28,22 @@ namespace sba
                 pos.Y -= 100.0f;
                 sba_Renderer->Draw(2, false, a_pFont, a_pFontMaterial, "Shield: " + std::to_string(sba_Players[i]->Ship->m_Shield), pos, PuRe_MatrixF(), size, 36.0f, c, local);
                 pos.Y -= 100.0f;
-                sba_Renderer->Draw(2, false, a_pFont, a_pFontMaterial, "Points: " + std::to_string(sba_Players[i]->m_Points), pos, PuRe_MatrixF(), size, 36.0f, c, local);
+                sba_Renderer->Draw(2, false, a_pFont, a_pFontMaterial, "Points: " + std::to_string(sba_Players[i]->Points), pos, PuRe_MatrixF(), size, 36.0f, c, local);
                 pos.X = 1920.0f / 2.0f;
                 pos.Y = 1080.0f / 2.0f;
+                sba_Renderer->Set(2, 1.0f, "alpha");
                 sba_Renderer->Draw(2, false, this->m_pCrossHairSprite, this->m_pSpriteMaterial, pos, PuRe_MatrixF(), PuRe_Vector3F(0.0f, 0.0f, 0.0f), PuRe_Vector3F(0.5f, 0.5f, 0.5f), PuRe_Color(1.0f, 1.0f, 1.0f), PuRe_Vector2F(), PuRe_Vector2F(), local);
+
+                if (sba_Players[i]->Marker != 0.0f)
+                {
+                    sba_Renderer->Set(2, sba_Players[i]->Marker, "alpha");
+                    sba_Renderer->Draw(2, false, this->m_pHitMarkerSprite, this->m_pSpriteMaterial, pos, PuRe_MatrixF(), PuRe_Vector3F(0.0f, 0.0f, 0.0f), PuRe_Vector3F(0.5f, 0.5f, 0.5f), PuRe_Color(1.0f, 1.0f, 1.0f), PuRe_Vector2F(), PuRe_Vector2F(), local);
+                }
+                sba_Renderer->Set(2, 1.0f, "alpha");
+                pos.Y = 1080.0f-100.0f;
+                pos.X -= 200.0f;
+                if (a_pDisplayEnd[local])
+                    sba_Renderer->Draw(2, false, a_pFont, a_pFontMaterial, "Turn around", pos, PuRe_MatrixF(), size*1.2f, 36.0f*1.2f, PuRe_Color(1.0f, 1.0f, 1.0f, (sin(a_EndTime) + 1.0f) / 2.0f), local);
                 local++;
             }
         }
@@ -39,9 +52,9 @@ namespace sba
 
         if (a_EndTime < 0.0f)
         {
-            size = PuRe_Vector3F(64.0f, 64.0f, 0.0f);
-            pos = PuRe_Vector3F(1920.0f / 4.0f, 1080.0f / 2.0f, 0.0f);
-            sba_Renderer->Draw(3, false, a_pFont, a_pFontMaterial, "Player " + std::to_string(a_WonID) + " won!", pos, PuRe_MatrixF(), size, 72.0f, c);
+            size = PuRe_Vector3F(32.0f, 32.0f, 0.0f);
+            pos = PuRe_Vector3F(100.0f, 100.0f,0.0f);
+            sba_Renderer->Draw(3, false, a_pFont, a_pFontMaterial, "Player " + std::to_string(a_WonID) + " won!", pos, PuRe_MatrixF(), size, 32.0f, c);
         }
         else
         {
@@ -53,10 +66,7 @@ namespace sba
                 secString = "0" + secString;
             std::string timeLeft = "Left Time: " + minString + ":" + secString;
             size = PuRe_Vector3F(32.0f, 32.0f, 0.0f);
-            pos = PuRe_Vector3F(200.0f, 1080.0f - 150.0f, 0.0f);
-
-            pos.X = 100.0f;
-            pos.Y = 100.0f;
+            pos = PuRe_Vector3F(100.0f, 100.0f, 0.0f);
             sba_Renderer->Draw(3, false, a_pFont, a_pFontMaterial, timeLeft, pos, PuRe_MatrixF(), size, 32.0f, c);
         }
     }
@@ -67,6 +77,7 @@ namespace sba
     CGUI::~CGUI()
     {
         SAFE_DELETE(this->m_pSpriteMaterial);
+        SAFE_DELETE(this->m_pHitMarkerSprite);
         SAFE_DELETE(this->m_pCrossHairSprite);
         SAFE_DELETE(this->m_pMinimap);
     }

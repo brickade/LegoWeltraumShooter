@@ -66,11 +66,11 @@ namespace sba
         ~CSpaceship();
 
         void CalculateData();
-        void Update(float a_DeltaTime) override;
+        void Update(int a_OID, float a_DeltaTime);
         void Thrust(float a_Thrust);
         void Spin(float a_Spin);
         void Move(PuRe_Vector2F a_Move);
-        void Shoot(std::vector<CBullet*>& a_rBullets, SPlayer* a_pOwner, PuRe_Vector3F a_Forward);
+        void Shoot(std::vector<CBullet*>& a_rBullets, SPlayer* a_pOwner);
         static void Collision(ong::Collider* thisCollider, ong::Contact* contact);
 
         void Deserialize(TheBrick::CSerializer& a_pSerializer, TheBrick::BrickArray& a_rBricks, ong::World& a_pWorld) override;

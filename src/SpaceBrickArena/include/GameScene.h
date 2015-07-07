@@ -25,7 +25,7 @@ namespace sba
     class CGameScene : public PuRe_IScene
     {
     private:
-        int m_Test;
+        unsigned int m_Test;
         CGameNetwork* m_pNetwork;
         //Determinate who won and save him even when others are still playing
         bool m_Won;
@@ -40,6 +40,11 @@ namespace sba
         PuRe_Camera* m_pUICam;
         //whether we are still in menu or not
         int m_TextureID;
+
+
+        PuRe_Vector3F m_Origin = PuRe_Vector3F(0.0f, 0.0f, 0.0f);
+        float m_OriginDistance = 250.0f;
+        float m_MaxOriginDistance = 500.0f;
 
         //Game UI
         CGUI* m_pUI;
