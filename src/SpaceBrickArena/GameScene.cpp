@@ -146,14 +146,17 @@ namespace sba
         PuRe_IInput* aInput = this->m_pApplication->GetInput();
         PuRe_Timer* aTimer = this->m_pApplication->GetTimer();
         float seconds = aTimer->GetElapsedSeconds();
-        this->UpdateGame(this->m_Bullets, this->m_Items, seconds);
-        for (unsigned int i = 0; i < sba_Players.size(); i++)
+        if (seconds < 2.0f)
         {
-            sba::SInputData input = this->HandleInput(sba_Players[i]->PadID,aInput);
-            this->ProcessInput(this->m_Bullets, sba_Players[i], &input, seconds);
+            this->UpdateGame(this->m_Bullets, this->m_Items, seconds);
+            for (unsigned int i = 0; i < sba_Players.size(); i++)
+            {
+                sba::SInputData input = this->HandleInput(sba_Players[i]->PadID,aInput);
+                this->ProcessInput(this->m_Bullets, sba_Players[i], &input, seconds);
+            }
+            sba::Space::Instance()->UpdatePhysics(aTimer);
+            this->m_EndTime -= seconds;
         }
-        sba::Space::Instance()->UpdatePhysics(aTimer);
-        this->m_EndTime -= seconds;
     }
 
     // **************************************************************************
@@ -437,8 +440,6 @@ namespace sba
                 PuRe_QuaternionF rotation = this->m_Cameras[camID]->GetQuaternion();
                 PuRe_Vector3F ppos = TheBrick::OngToPuRe(sba_Players[i]->Ship->m_pBody->getWorldCenter());
 
-                //PuRe_Vector3F cpos = this->m_Cameras[camID]->GetPosition();
-                //float zOffset = this->m_Cameras[camID]->getZOffset();
 
                 for (int j = 0; j<sba_Players.size(); j++)
                 {

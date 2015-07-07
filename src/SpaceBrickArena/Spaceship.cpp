@@ -277,7 +277,7 @@ namespace sba
             this->GetEngines(engines);
             unsigned int eID = 0;
             float amount = TheBrick::OngToPuRe(currVel).Length()/this->m_MaxSpeed;
-            printf("Amount: %f\n",amount);
+
             for (std::vector<TheBrick::CBrickInstance**>::iterator it = engines.begin(); it != engines.end(); ++it)
             {
                 TheBrick::CBrickInstance* engine = *(*it);
