@@ -25,6 +25,15 @@ namespace sba
 		if (brick == brick2 || brick > brick2)
 			return true;
 
+		SBrickDestruction* destrInstance = brick->GetDestructionInstance();
+		SBrickDestruction* destrInstance2 = brick2->GetDestructionInstance();
+
+		for (int i = 0; i < destrInstance->numConnections; ++i)
+		{
+			if (destrInstance->connections[i].other == destrInstance2)
+				return true;
+		}
+
 		float capacityX = 0.0f;
 		float numNubsX = 0;
 		float capacityZ = 0.0f;
@@ -34,7 +43,7 @@ namespace sba
 		for (size_t i = 0; i < brick->m_pBrick->GetNubs().size(); ++i)
 		{
 			ong::vec3 nubPos = ong::transformVec3(TheBrick::PuReToOng(brick->m_pBrick->GetNubs()[i].Position), brick->GetTransform());
-			for (int j = 0; j < brick2->m_pBrick->GetNubs().size(); ++j)
+			for (size_t j = 0; j < brick2->m_pBrick->GetNubs().size(); ++j)
 			{
 				//check for opposite direction
 				if (brick->m_pBrick->GetNubs()[i].Direction.Y * brick2->m_pBrick->GetNubs()[j].Direction.Y > 0)
@@ -49,11 +58,11 @@ namespace sba
 					++numNubsX;
 					++numNubsZ;
 					minX = ong_MIN(nubPos.x, minX);
-					maxX = ong_MIN(nubPos.x, maxX);
+					maxX = ong_MAX(nubPos.x, maxX);
 					minZ = ong_MIN(nubPos.z, minZ);
-					maxZ = ong_MIN(nubPos.z, maxZ);
+					maxZ = ong_MAX(nubPos.z, maxZ);
 
-					dir = brick->m_pBrick->GetNubs()[j].Direction.Y;
+					dir = brick->m_pBrick->GetNubs()[i].Direction.Y;
 					dir2 = brick2->m_pBrick->GetNubs()[j].Direction.Y;
 				}
 			}
@@ -76,11 +85,7 @@ namespace sba
 		jointDataZ0->baseCapacity = (-numNubsZ * jointDataZ0->fulcrum + capacityZ) * CDestructionManager::NUB_STRENGTH;
 		jointDataZ1->baseCapacity = (-numNubsZ * jointDataZ1->fulcrum + capacityZ) * CDestructionManager::NUB_STRENGTH;
 
-		SBrickDestruction* destrInstance = manager->m_BrickDestruction();
-		SBrickDestruction* destrInstance2 = manager->m_BrickDestruction();
 
-		destrInstance->brick = brick;
-		destrInstance2->brick = brick2;
 
 		assert(destrInstance->numConnections < SBrickDestruction::MAX_CONNECTIONS &&
 			destrInstance2->numConnections < SBrickDestruction::MAX_CONNECTIONS);
@@ -124,8 +129,9 @@ namespace sba
 		connection->brick = destrInstance;
 		connection2->brick = destrInstance2;
 
-		brick->SetDestructionInstance((sba::SBrickDestruction*)destrInstance);
-		brick2->SetDestructionInstance((sba::SBrickDestruction*)destrInstance2);
+		connection->other = destrInstance2;
+		connection2->other = destrInstance;
+
 	}
 
 	bool setUpBlocking(ong::Collider* a_Collider, void* a_Data)
@@ -171,6 +177,12 @@ namespace sba
 	void CDestructionManager::BuildDestruction(CDestructibleObject* a_pObject, TheBrick::CBrickInstance** a_Bricks, int a_NumBricks)
 	{
 
+		//create destruction instances
+		for (int i = 0; i < a_NumBricks; ++i)
+		{
+			a_Bricks[i]->SetDestructionInstance(m_BrickDestruction());
+		}
+
 		//set up joints
 		for (int i = 0; i < a_NumBricks; ++i)
 		{
@@ -178,15 +190,19 @@ namespace sba
 
 			for (size_t j = 0; j < brick->m_pCollider.size(); ++j)
 			{
+				CallbackData data;
+				data.brick = brick;
+				data.manager = this;
+
 				ong::Transform transformUp = brick->m_pCollider[j]->getTransform();
 				transformUp.p.y += 0.1f* TheBrick::CBrick::SEGMENT_HEIGHT;
 
-				a_pObject->m_pBody->queryShape(brick->m_pCollider[j]->getShape(), ong::transformTransform(transformUp, a_pObject->GetTransform()), setUpJoints, brick);
+				a_pObject->m_pBody->queryShape(brick->m_pCollider[j]->getShape(), ong::transformTransform(transformUp, a_pObject->GetTransform()), setUpJoints, &data);
 
 				ong::Transform transformDown = brick->m_pCollider[j]->getTransform();
 				transformUp.p.y -= 0.1f* TheBrick::CBrick::SEGMENT_HEIGHT;
 
-				a_pObject->m_pBody->queryShape(brick->m_pCollider[j]->getShape(), ong::transformTransform(transformDown, a_pObject->GetTransform()), setUpJoints, brick);
+				a_pObject->m_pBody->queryShape(brick->m_pCollider[j]->getShape(), ong::transformTransform(transformDown, a_pObject->GetTransform()), setUpJoints, &data);
 			}
 
 
@@ -234,6 +250,8 @@ namespace sba
 				}
 			}
 		}
+
+		return false;
 	}
 
 
@@ -324,7 +342,7 @@ namespace sba
 	}
 
 
-	bool BreakGraph(SBrickDestruction* a_pBrick, SBrickDestruction* a_pCenterBrick, float a_MaxFlow, int a_Axis, std::vector<SBrickDestruction*>& a_rSelection, std::vector<SJoint*>& a_rFront, int a_Tick)
+	bool CDestructionManager::BreakGraph(SBrickDestruction* a_pBrick, SBrickDestruction* a_pCenterBrick, float a_MaxFlow, int a_Axis, std::vector<SBrickDestruction*>& a_rSelection, std::vector<SJoint*>& a_rFront, int a_Tick)
 	{
 		a_pBrick->tick = a_Tick;
 		a_rSelection.push_back(a_pBrick);

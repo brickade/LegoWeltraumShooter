@@ -53,7 +53,7 @@ namespace sba
 
 	struct SBrickDestruction
 	{
-		static const int MAX_CONNECTIONS = 24;
+		static const int MAX_CONNECTIONS = 32;
 		static const int MAX_BLOCKING = 24;
 
 		TheBrick::CBrickInstance* brick;

@@ -102,6 +102,12 @@
     <ClCompile Include="InputField.cpp">
       <Filter>Utilities</Filter>
     </ClCompile>
+    <ClCompile Include="DestructibleObject.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="DestructionManager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Space.h" />
@@ -210,6 +216,12 @@
     </ClInclude>
     <ClInclude Include="include\InputField.h">
       <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DestructibleObject.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DestructionManager.h">
+      <Filter>Manager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
