@@ -107,13 +107,13 @@ namespace Editor
         }
 
         //Reset/Delete Ship
-        if (sba_Input->ButtonPressed(sba_Button::EditorResetShip, this->m_playerIdx))
+        /*if (sba_Input->ButtonPressed(sba_Button::EditorResetShip, this->m_playerIdx))
         {
             a_rShipHandler.ResetCurrentShip();
             this->m_pHistory->Clear();
             a_rShipHandler.UpdateCurrentShipData();
             this->m_CurrentBrickHeightIstInvalid = true;
-        }
+        }*/
     }
 
     // **************************************************************************
