@@ -62,7 +62,7 @@ namespace sba
             break;
         case EDirection::Down:
             this->m_FocusedElement += this->m_ElementsPerLine;
-            if (floor(this->m_FocusedElement / (float)this->m_ElementsPerLine) == floor(this->m_LastElement / (float)this->m_ElementsPerLine))
+            if (this->m_FocusedElement > this->m_LastElement && floor(this->m_FocusedElement / (float)this->m_ElementsPerLine) == floor(this->m_LastElement / (float)this->m_ElementsPerLine))
             { //Bei Nav in Leerposition der letzten Reihe in letztes Element der letzten Reihe springen
                 this->m_FocusedElement = this->m_LastElement;
             }
