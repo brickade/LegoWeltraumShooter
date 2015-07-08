@@ -41,19 +41,19 @@ namespace sba
             Input::EGamepadDirection::RightThumb,
             {
                 Input::EKeyboardDirection::Mouse,
-                Input::EKeyboardDirection::ArrowKeys,
-                Input::EKeyboardDirection::ArrowKeys,
-                Input::EKeyboardDirection::ArrowKeys
+                Input::EKeyboardDirection::Mouse,
+                Input::EKeyboardDirection::Mouse,
+                Input::EKeyboardDirection::Mouse
             }
         };
         this->m_pDirectionMapping[Input::EDirection::Navigate] =
         {
-            Input::EGamepadDirection::LeftThumb,
+            Input::EGamepadDirection::DPad,
             {
                 Input::EKeyboardDirection::ArrowKeys,
-                Input::EKeyboardDirection::WSAD,
-                Input::EKeyboardDirection::WSAD,
-                Input::EKeyboardDirection::WSAD
+                Input::EKeyboardDirection::ArrowKeys,
+                Input::EKeyboardDirection::ArrowKeys,
+                Input::EKeyboardDirection::ArrowKeys
             }
         };
         this->m_pDirectionMapping[Input::EDirection::EditorCameraRotate] =
@@ -61,9 +61,9 @@ namespace sba
             Input::EGamepadDirection::RightThumb,
             {
                 Input::EKeyboardDirection::Mouse,
-                Input::EKeyboardDirection::ArrowKeys,
-                Input::EKeyboardDirection::ArrowKeys,
-                Input::EKeyboardDirection::ArrowKeys
+                Input::EKeyboardDirection::Mouse,
+                Input::EKeyboardDirection::Mouse,
+                Input::EKeyboardDirection::Mouse
             }
         };
         this->m_pDirectionMapping[Input::EDirection::EditorMoveBrick] =
@@ -71,9 +71,9 @@ namespace sba
             Input::EGamepadDirection::LeftThumb,
             {
                 Input::EKeyboardDirection::Mouse,
-                Input::EKeyboardDirection::WSAD,
-                Input::EKeyboardDirection::WSAD,
-                Input::EKeyboardDirection::WSAD
+                Input::EKeyboardDirection::Mouse,
+                Input::EKeyboardDirection::Mouse,
+                Input::EKeyboardDirection::Mouse
             }
         };
         this->m_pDirectionMapping[Input::EDirection::EditorChooseElement] =
@@ -146,10 +146,10 @@ namespace sba
         {
             Input::EGamepadButton::Pad_A,
             {
-                Input::EKeyboardButton::Space,
-                Input::EKeyboardButton::Space,
-                Input::EKeyboardButton::Space,
-                Input::EKeyboardButton::Space
+                Input::EKeyboardButton::MouseLeft,
+                Input::EKeyboardButton::MouseLeft,
+                Input::EKeyboardButton::MouseLeft,
+                Input::EKeyboardButton::MouseLeft
             }
         };
         this->m_pButtonMapping[Input::EButton::EditorTogglePlacementSide] =
@@ -214,7 +214,7 @@ namespace sba
         };
         this->m_pButtonMapping[Input::EButton::EditorResetShip] =
         {
-            Input::EGamepadButton::Pad_Start,
+            Input::EGamepadButton::Left_Thumb,
             {
                 Input::EKeyboardButton::Delete,
                 Input::EKeyboardButton::Delete,
@@ -224,7 +224,7 @@ namespace sba
         };
         this->m_pButtonMapping[Input::EButton::EditorSaveShip] =
         {
-            Input::EGamepadButton::Left_Thumb,
+            Input::EGamepadButton::Pad_Start,
             {
                 Input::EKeyboardButton::CtrlS,
                 Input::EKeyboardButton::CtrlS,
@@ -294,17 +294,17 @@ namespace sba
         };
         this->m_pButtonMapping[Input::EButton::EditorAddNewShip] =
         {
-            Input::EGamepadButton::Right_Thumb,
+            Input::EGamepadButton::Pad_Start,
             {
-                Input::EKeyboardButton::F3,
-                Input::EKeyboardButton::F3,
-                Input::EKeyboardButton::F3,
-                Input::EKeyboardButton::F3
+                Input::EKeyboardButton::Insert,
+                Input::EKeyboardButton::Insert,
+                Input::EKeyboardButton::Insert,
+                Input::EKeyboardButton::Insert
             }
         };
         this->m_pButtonMapping[Input::EButton::EditorDeleteShip] =
         {
-            Input::EGamepadButton::Left_Thumb,
+            Input::EGamepadButton::Pad_X,
             {
                 Input::EKeyboardButton::Delete,
                 Input::EKeyboardButton::Delete,

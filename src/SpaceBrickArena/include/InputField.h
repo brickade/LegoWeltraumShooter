@@ -44,7 +44,7 @@ namespace sba
         CInputField(InputTypes::Type a_AllowedInputs = (InputTypes::Type)(InputTypes::NUMBERS | InputTypes::LETTERS_UPPERCASE | InputTypes::LETTERS_UPPERCASE), std::string a_InitValue = "", int a_MaxLength = 14);
         ~CInputField();
 
-        bool Update(PuRe_IInput& a_rInput); //Returns if the inputfield was closed in this update via Enter/Esc
+        bool Update(PuRe_IInput& a_rInput, int a_PlayerIndex); //Returns if the inputfield was closed in this update via Enter/Esc
     };
 }
 

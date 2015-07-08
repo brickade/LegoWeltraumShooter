@@ -1,5 +1,7 @@
 #include "include/InputField.h"
 
+#include "include/Space.h"
+
 namespace sba
 {
     // **************************************************************************
@@ -21,10 +23,10 @@ namespace sba
 
     // **************************************************************************
     // **************************************************************************
-    bool CInputField::Update(PuRe_IInput& a_rInput)
+    bool CInputField::Update(PuRe_IInput& a_rInput, int a_PlayerIndex)
     {
         //Delete character
-        if (a_rInput.KeyPressed(a_rInput.Backspace) && this->m_Value.length() > 0)
+        if (sba_Input->ButtonPressed(sba_Button::NavigationBack, a_PlayerIndex) && this->m_Value.length() > 0)
         {
             this->m_Value.erase(this->m_Value.length() - 1);
         }
@@ -111,12 +113,12 @@ namespace sba
         }
 
         //Close InputField
-        if (a_rInput.KeyPressed(a_rInput.Enter))
+        if (sba_Input->ButtonPressed(sba_Button::NavigationSelect, a_PlayerIndex))
         {
             this->m_OldValue = this->m_Value;
             return true;
         }
-        if (a_rInput.KeyPressed(a_rInput.ESC))
+        if (sba_Input->ButtonPressed(sba_Button::Exit, a_PlayerIndex))
         {
             this->m_Value = this->m_OldValue;
             return true;

@@ -67,7 +67,7 @@ namespace Editor
             }
         break;
         case ShipHandlerState::Rename:
-            if (this->m_pInputField->Update(*sba_Application->GetInput()))
+            if (this->m_pInputField->Update(*sba_Application->GetInput(), this->m_playerIdx))
             { //Close Rename
                 this->m_State = ShipHandlerState::Select;
                 if (this->m_pInputField->GetValue().size() == 0)
