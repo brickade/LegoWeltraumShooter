@@ -31,7 +31,7 @@ namespace sba
         if (Move.X > 0.1f || Move.X < -0.1f)
             input.MoveX = (char)(Move.X*100.0f);
         if (Move.Y > 0.1f || Move.Y < -0.1f)
-            input.MoveY = (char)(Move.Y*100.0f);
+            input.MoveY = -(char)(Move.Y*100.0f);
 
 
 
@@ -174,7 +174,7 @@ namespace sba
         {
             sba_Players[i]->Ship->CalculateData();
             ong::vec3 pos = ong::vec3(10.0f, 10.0f, 10.0f);
-            pos.x += sba_Players[i]->ID*30.0f;
+            pos.x += sba_Players[i]->ID*40.0f;
             sba_Players[i]->Ship->m_pBody->setPosition(pos);
         }
 
