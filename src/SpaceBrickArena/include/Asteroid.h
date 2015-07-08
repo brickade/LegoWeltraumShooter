@@ -12,7 +12,7 @@
 
 namespace sba
 {
-	class CAsteroid : public TheBrick::CGameObject
+	class CAsteroid : public CDestructibleObject
     {
     public:
         CAsteroid(ong::World& a_rWorld, ong::vec3 a_Position, ong::vec3 a_Velocity, ong::vec3 a_Rotation);

@@ -82,6 +82,9 @@ namespace ong
 		void applyTorque(const vec3& torque, float t);
 		void applyRelativeTorque(const vec3& torque, float t);
 
+		void setLinearMomentum(const vec3& momentum);
+		void setAngularMomentum(const vec3& momentum);
+
 		//	--ACCESORS--
 
 		bool queryRay(const vec3& origin, const vec3& dir, RayQueryResult* hit, float tmax = FLT_MAX);

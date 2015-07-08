@@ -83,6 +83,8 @@ namespace sba
 			SBrickDestruction* brick;
 			ong::vec3 point;
 			ong::vec3 impulse;
+			ong::vec3 originalMomentum;
+			ong::vec3 originalAngularMomentum;
 		};
 
 		bool BreakGraph(SBrickDestruction* a_pBrick, SBrickDestruction* a_pCenterBrick, float a_MaxFlow, int a_Axis, std::vector<SBrickDestruction*>& a_rSelection, std::vector<SJoint*>& a_rFront, int a_Tick);
@@ -90,7 +92,8 @@ namespace sba
 		float MaxFlow(SBrickDestruction* a_pBrick, SBrickDestruction* a_pCenterBrick, int a_Axis);
 		bool CheckAxis(SBrickDestruction* a_pBrick, SBrickDestruction* a_pCenterBrick, const ong::vec3& a_rPoint, const ong::vec3& a_rImpulse, int a_Axis);
 		void SetNewObject(SBrickDestruction* a_pBrick, TheBrick::CGameObject* a_pGameObject, int a_Tick);
-		void Destroy(SBrickDestruction* a_pBrick, const std::vector<SBrickDestruction*>& a_rSelection, const std::vector<SJoint*>& a_rFront, ong::vec3& a_rPoint, ong::vec3& a_rImpulse, int a_Axis, int a_Tick);
+		void SetNewObject(SBrickDestruction* a_pBrick, TheBrick::CGameObject* a_pGameObject);
+		void Destroy(SBrickDestruction* a_pBrick, const std::vector<SBrickDestruction*>& a_rSelection, const std::vector<SJoint*>& a_rFront, const ong::vec3& a_rPoint, const ong::vec3& a_rImpulse, int a_Axis, int a_Tick);
 
 		ong::Allocator<SJoint> m_Joints;
 		ong::Allocator<SJointData> m_JointData;

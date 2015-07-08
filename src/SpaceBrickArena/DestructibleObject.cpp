@@ -20,7 +20,7 @@ namespace sba
 	}
 
 
-	void impulseResponse(ong::Collider* thisCollider, ong::Contact* contact)
+	void CDestructibleObject::ImpulseResponse(ong::Collider* thisCollider, ong::Contact* contact)
 	{
 		TheBrick::CBrickInstance* brick = (TheBrick::CBrickInstance*)thisCollider->getUserData();
 		
@@ -50,7 +50,7 @@ namespace sba
 			for (auto pCollider : pBrick->m_pCollider)
 			{
 				ong::ColliderCallbacks cb = pCollider->getColliderCallbacks();
-				cb.postSolve = impulseResponse;
+				cb.postSolve = ImpulseResponse;
 				pCollider->setCallbacks(cb);
 
 			}

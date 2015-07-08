@@ -85,7 +85,8 @@ namespace ong
 
 		collider->setBody(nullptr);
 
-		calculateMassData();
+		if (m_numCollider != 0)
+			calculateMassData();
 
 		if (m_numCollider >= 2)
 		{
@@ -838,4 +839,17 @@ namespace ong
 	{
 		applyRelativeAngularImpulse(t * torque);
 	}
+
+
+	void Body::setLinearMomentum(const vec3& momentum)
+	{
+		m_pWorld->m_p[m_index].l = momentum;
+	}
+
+	void Body::setAngularMomentum(const vec3& momentum)
+	{
+		m_pWorld->m_p[m_index].a = momentum;
+	}
+
+
 }

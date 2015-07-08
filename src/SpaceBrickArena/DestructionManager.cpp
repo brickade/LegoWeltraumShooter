@@ -180,7 +180,9 @@ namespace sba
 		//create destruction instances
 		for (int i = 0; i < a_NumBricks; ++i)
 		{
-			a_Bricks[i]->SetDestructionInstance(m_BrickDestruction());
+			SBrickDestruction* destrInstance = m_BrickDestruction();
+			destrInstance->brick = a_Bricks[i];
+			a_Bricks[i]->SetDestructionInstance(destrInstance);
 		}
 
 		//set up joints
@@ -200,7 +202,7 @@ namespace sba
 				a_pObject->m_pBody->queryShape(brick->m_pCollider[j]->getShape(), ong::transformTransform(transformUp, a_pObject->GetTransform()), setUpJoints, &data);
 
 				ong::Transform transformDown = brick->m_pCollider[j]->getTransform();
-				transformUp.p.y -= 0.1f* TheBrick::CBrick::SEGMENT_HEIGHT;
+				transformDown.p.y -= 0.1f* TheBrick::CBrick::SEGMENT_HEIGHT;
 
 				a_pObject->m_pBody->queryShape(brick->m_pCollider[j]->getShape(), ong::transformTransform(transformDown, a_pObject->GetTransform()), setUpJoints, &data);
 			}
@@ -290,12 +292,15 @@ namespace sba
 
 	bool CDestructionManager::CheckAxis(SBrickDestruction* a_pBrick, SBrickDestruction* a_pCenterBrick, const ong::vec3& a_rPoint, const ong::vec3& a_rImpulse, int a_Axis)
 	{
+
 		// get maximum flow
 		float maxFlow = MaxFlow(a_pBrick, a_pCenterBrick, a_Axis);
-		 
+		printf("maxFlow: %f\n", maxFlow);
 		//if maximum flow is less than impulse break object
 		if (maxFlow > 0 && maxFlow < 1.0f)
 		{
+
+
 			std::vector<SBrickDestruction*> selection;
 			std::vector<SJoint*> front;
 			
@@ -304,36 +309,38 @@ namespace sba
 				return false;
 
 			// check if any of the front brick is wedged between two bricks
-			for (int i = 0; i < front.size(); ++i)
-			{
-				SBrickDestruction* brick = front[i]->connection->brick;
-				for (int j = 0; j < 2; ++j)
-				{
-					int numUp = 0;
-					int numDown = 0;
+			//for (int i = 0; i < front.size(); ++i)
+			//{
+			//	SBrickDestruction* brick = front[i]->connection->brick;
+			//	for (int j = 0; j < 2; ++j)
+			//	{
+			//		int numUp = 0;
+			//		int numDown = 0;
 
-					for (int j = 0; j < brick->numConnections; ++j)
-					{
-						if (brick->connections[j].dir == 1)
-						{
-							if (numDown > 0)
-								return false;
-							else
-								++numUp;
-						}
-						else if (brick->connections[j].dir == -1)
-						{
-							if (numUp > 0)
-								return false;
-							else
-								++numDown;
-						}
-					}
+			//		for (int j = 0; j < brick->numConnections; ++j)
+			//		{
+			//			if (brick->connections[j].dir == 1)
+			//			{
+			//				if (numDown > 0)
+			//					return false;
+			//				else
+			//					++numUp;
+			//			}
+			//			else if (brick->connections[j].dir == -1)
+			//			{
+			//				if (numUp > 0)
+			//					return false;
+			//				else
+			//					++numDown;
+			//			}
+			//		}
 
-					brick = front[i]->connection->other;
-				}
-			}
+			//		brick = front[i]->connection->other;
+			//	}
+			//}
 
+			Destroy(a_pBrick, selection, front, a_rPoint, a_rImpulse, a_Axis, m_Tick++);
+			return true;
 			
 
 		}
@@ -385,7 +392,7 @@ namespace sba
 		return true;
 	}
 
-	void CDestructionManager::Destroy(SBrickDestruction* a_pBrick, const std::vector<SBrickDestruction*>& a_rSelection, const std::vector<SJoint*>& a_rFront, ong::vec3& a_rPoint, ong::vec3& a_rImpulse, int a_Axis, int a_Tick)
+	void CDestructionManager::Destroy(SBrickDestruction* a_pBrick, const std::vector<SBrickDestruction*>& a_rSelection, const std::vector<SJoint*>& a_rFront, const ong::vec3& a_rPoint, const ong::vec3& a_rImpulse, int a_Axis, int a_Tick)
 	{
 		for (auto front : a_rFront)
 		{
@@ -403,6 +410,8 @@ namespace sba
 		newImpulse.brick = a_pBrick;
 		newImpulse.point = a_rPoint;
 		newImpulse.impulse = a_rImpulse;
+		newImpulse.originalMomentum = a_pBrick->brick->GetGameObject()->m_pBody->getLinearMomentum();
+		newImpulse.originalAngularMomentum = a_pBrick->brick->GetGameObject()->m_pBody->getAngularMomentum();
 
 		m_inpulses.push_back(newImpulse);
 
@@ -503,19 +512,49 @@ namespace sba
 	{
 		a_pBrick->tick = a_Tick;
 		a_pBrick->lastBroken = m_LastBrocken;
-		
+
 		a_pBrick->brick->GetGameObject()->RemoveBrickInstance(*a_pBrick->brick);
 		a_pNewGameObject->AddBrickInstance(a_pBrick->brick, *sba_Space->World);
+
+		for (int i = 0; i < a_pBrick->numConnections; ++i)
+		{
+			if (a_pBrick->connections[i].other->tick != a_Tick)
+			{
+				SetNewObject(a_pBrick->connections[i].other, a_pNewGameObject, a_Tick);
+			}
+		}
+	}
+ 
+
+	void MarkBricks(SBrickDestruction* a_pBrick, int a_Tick, int* a_pNumMarked)
+	{
+		a_pBrick->tick = a_Tick;
+		
+		++(*a_pNumMarked);
 		
 		for (int i = 0; i < a_pBrick->numConnections; ++i)
 		{
 			if (a_pBrick->connections[i].other->tick != a_Tick)
 			{
-				SetNewObject(a_pBrick, a_pNewGameObject, a_Tick);
+				MarkBricks(a_pBrick->connections[i].other, a_Tick, a_pNumMarked);
 			}
 		}
 	}
- 
+
+	void SetNewObject(TheBrick::CBrickInstance* a_pBrick, TheBrick::CGameObject* a_pGameObject)
+	{
+		a_pBrick->GetGameObject()->RemoveBrickInstance(*a_pBrick);
+		a_pGameObject->AddBrickInstance(a_pBrick, *sba_Space->World);
+
+		ong::ColliderCallbacks cb;
+		cb.postSolve = CDestructibleObject::ImpulseResponse;
+		for (auto collider : a_pBrick->m_pCollider)
+		{
+			collider->setCallbacks(cb);
+		}
+
+	}
+
 	void CDestructionManager::Update()
 	{
 		for (auto& impulse : m_inpulses)
@@ -528,23 +567,70 @@ namespace sba
 			descr.angularMomentum = brick->GetGameObject()->m_pBody->getAngularMomentum();
 			descr.type = ong::BodyType::Dynamic;
 
+			descr.linearMomentum = ong::vec3(0, 0, 0);
+			descr.angularMomentum = ong::vec3(0,0,0);
+
 			CDestructibleObject* oldObject = dynamic_cast<CDestructibleObject*>(brick->GetGameObject());
 			assert(oldObject);
 
+			
 			CDestructibleObject* newObject = new CDestructibleObject(*sba_Space->World, &descr);
+			newObject->m_Type = TheBrick::EGameObjectType::Object;
 
-			SetNewObject(impulse.brick, newObject, m_Tick++);
+			int numDestroyed = 0;
+			int destructionTick = m_Tick++;
+			MarkBricks(impulse.brick, destructionTick, &numDestroyed);
+
+			if (numDestroyed > oldObject->m_pBricks.size() / 2)
+			{
+				for (size_t i = 0; i < oldObject->m_pBricks.size(); ++i)
+				{
+					auto brick = oldObject->m_pBricks[i];
+					if (brick->GetDestructionInstance()->tick != destructionTick)
+					{
+						sba::SetNewObject(brick, newObject);
+						i--;
+					}
+				}
+			}
+			else
+			{
+				for (size_t i = 0; i < oldObject->m_pBricks.size(); ++i)
+				{
+					auto brick = oldObject->m_pBricks[i];
+					if (brick->GetDestructionInstance()->tick == destructionTick)
+					{
+						sba::SetNewObject(brick, newObject);
+						i--;
+					}
+				}
+			}
+
+			//SetNewObject(impulse.brick, newObject, m_Tick++);
 
 			SBrickDestruction* pNewCenterBrick = calcCenterBrick(newObject->m_pBody->getLocalCenter(), newObject->m_pBricks.data(), newObject->m_pBricks.size());
 			newObject->SetCenterBrick(pNewCenterBrick);
 
 			SBrickDestruction* pOldCenterBrick = calcCenterBrick(oldObject->m_pBody->getLocalCenter(), oldObject->m_pBricks.data(), oldObject->m_pBricks.size());
 			oldObject->SetCenterBrick(pOldCenterBrick);
+
+			if (brick->GetGameObject() == newObject)
+			{
+				printf("old: %f %f %f \n new: %f %f %f\n", oldObject->m_pBody->getLinearMomentum().x, oldObject->m_pBody->getLinearMomentum().y, oldObject->m_pBody->getLinearMomentum().z,
+					impulse.originalMomentum.x, impulse.originalMomentum.y, impulse.originalMomentum.z);
+
+				//oldObject->m_pBody->setLinearMomentum(impulse.originalMomentum);
+				//oldObject->m_pBody->setAngularMomentum(impulse.originalAngularMomentum);
+			}
+			else
+			{
+				//newObject->m_pBody->setLinearMomentum(impulse.originalMomentum);
+				//newObject->m_pBody->setAngularMomentum(impulse.originalAngularMomentum);
+			}
+
 		}
 
 		m_inpulses.clear();
-
-			
 	}
 
 

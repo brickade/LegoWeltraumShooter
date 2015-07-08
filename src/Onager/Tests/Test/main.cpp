@@ -15,7 +15,7 @@
 int main()
 {
 
-	Test* test = new DestructionTest();
+	Test* test = new Test();
 	test->init();
 
 	test->run();

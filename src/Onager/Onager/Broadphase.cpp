@@ -260,9 +260,12 @@ namespace ong
 	{
 		if (m_objectBucket[id->bucket].size() > 1)
 		{
-			m_objectBucket[id->bucket][id->idx] = m_objectBucket[id->bucket].back();
-			ProxyID* pOtherProxy = m_objectBucket[id->bucket][id->idx].id;
-			pOtherProxy->idx = id->idx;
+			if (&m_objectBucket[id->bucket][id->idx] != &m_objectBucket[id->bucket].back())
+			{
+				m_objectBucket[id->bucket][id->idx] = m_objectBucket[id->bucket].back();
+				ProxyID* pOtherProxy = m_objectBucket[id->bucket][id->idx].id;
+				pOtherProxy->idx = id->idx;
+			}
 			m_objectBucket[id->bucket].pop_back();
 		}
 		else

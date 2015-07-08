@@ -15,6 +15,8 @@ namespace sba
 		SBrickDestruction* m_pCenterBrick;
 	public:
 
+		static void ImpulseResponse(ong::Collider* thisCollider, ong::Contact* contact);
+
 		CDestructibleObject(ong::World& a_rWorld, ong::BodyDescription* a_pBodyDesc);
 
 		void SetCenterBrick(SBrickDestruction* a_pCenterBrick);

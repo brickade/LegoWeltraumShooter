@@ -66,7 +66,10 @@ namespace ong
 
 				float vn = dot(dv, man->normal);
 
+
 				float penetrationBias = -0.02f * invDt * ong_MIN(0.0f, (man->points[j].penetration + 0.02f));
+				penetrationBias = ong_MIN(0.3f, penetrationBias);
+				printf("penetration %f\n", penetrationBias);
 
 				float restititutionBias = 0.0f;
 
@@ -76,6 +79,8 @@ namespace ong
 
 				contactConstraints[i].veloctiyBias[j] = penetrationBias + restititutionBias;
 
+				
+				//warmstarting
 				if (c->accImpulseN[j] != 0.0f || c->accImpulseT[j] != 0.0f || c->accImpulseBT[j] != 0.0f)
 				{
 					vec3 impulse = c->accImpulseN[j] * c->manifold.normal + c->accImpulseT[j] * c->tangent + c->accImpulseBT[j] * c->biTangent;
@@ -104,9 +109,11 @@ namespace ong
 			int idxA = a->getIndex();
 			int idxB = b->getIndex();
 
+
 			ContactManifold* man = &c->manifold;
 			for (int i = 0; i < man->numPoints; ++i)
 			{
+
 				vec3 vA = w->v[idxA].v + cross(w->v[idxA].w, c->rA[i]);
 				vec3 vB = w->v[idxB].v + cross(w->v[idxB].w, c->rB[i]);
  
@@ -121,6 +128,7 @@ namespace ong
 				float impulseN0 = c->accImpulseN[i];
 				c->accImpulseN[i] = ong_MAX(impulseN0 + dImpulseN, 0.0f);
 				dImpulseN = c->accImpulseN[i] - impulseN0;
+
 
 				vec3 impulse = dImpulseN * man->normal;
 
@@ -160,10 +168,10 @@ namespace ong
 				
 
 				w->v[idxA].v -= w->m[idxA].invM * (impulse);
-				w->v[idxA].v += w->m[idxB].invM * (impulse);
+				w->v[idxB].v += w->m[idxB].invM * (impulse);
 										  
 				w->v[idxA].w -= w->m[idxA].invI * (cross(c->rA[i], impulse));
-				w->v[idxA].w += w->m[idxB].invI * (cross(c->rB[i], impulse));
+				w->v[idxB].w += w->m[idxB].invI * (cross(c->rB[i], impulse));
 
 			}
 		}
@@ -187,6 +195,8 @@ namespace ong
 
 			for (int j = 0; j < contacts[i]->manifold.numPoints; ++j)
 			{
+			
+
 				vec3 impulse = c->accImpulseN[j] * c->manifold.normal + c->accImpulseT[j] * c->tangent + c->accImpulseBT[j] * c->biTangent;
 
 				w->p[idxA].l -= impulse;
