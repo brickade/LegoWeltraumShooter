@@ -70,7 +70,12 @@ namespace sba
 
         int GetLineCount() const
         {
-            return (int)ceil((this->m_LastElement + 1) / this->m_LastElement);
+            return (int)ceil((this->m_LastElement + 1) / this->m_ElementsPerLine);
+        }
+
+        int GetFocusedLineId() const
+        {
+            return (int)floor(this->m_FocusedElement / this->m_ElementsPerLine);
         }
 
     public:

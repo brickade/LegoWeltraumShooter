@@ -45,16 +45,29 @@ namespace Editor
         for (int i = 0; i <= this->m_pNavigation->GetLastElementId(); i++)
         {
             PuRe_Vector2F listPos = PuRe_Vector2F((float)(i % this->m_pNavigation->GetElementsCountPerLine()), floorf(i / (float)this->m_pNavigation->GetElementsCountPerLine()));
+            if (this->m_pNavigation->GetLineCount() > this->m_ListShowMax)
+            { //Scrolling needed
+                //Calculate current scroll value
+                this->m_ListScrollCurrent = max(this->m_pNavigation->GetFocusedLineId() - this->m_ListScrollStart, 0);
+                //Scroll
+                listPos.Y -= this->m_ListScrollCurrent;
+                //Dont scroll last line
+                listPos.Y += max(this->m_ListShowMax + this->m_ListScrollCurrent - this->m_pNavigation->GetLineCount(), 0);
+                if (listPos.Y < 0 || listPos.Y > this->m_ListShowMax)
+                {
+                    continue;
+                }
+            }
             PuRe_Vector3F pos = PuRe_Vector3F(this->m_ListStart + this->m_ListStep * listPos, 0);
             pos.Y = a_pGraphics.GetDescription().ResolutionHeight - pos.Y; //Invert Y
             pos.X -= (1.0f - a_Visibility) * (this->m_pNavigation->GetElementsCountPerLine() * this->m_ListStep.X + this->m_ListStart.X);
             assert(this->m_Bricks[i]->GetPivotOffset().Length() > FLT_EPSILON * 5);
             PuRe_MatrixF rot = PuRe_MatrixF::Translation(-this->m_Bricks[i]->GetPivotOffset() * this->m_ElementSize) * PuRe_MatrixF::RotationAxis(PuRe_Vector3F(0, 1, 0), this->m_Rotation) * PuRe_MatrixF::Rotation(-this->m_Pitch, 0, 0);
-            
-            PuRe_Color color = PuRe_Color(0, 1.0f, 0);
+
+            PuRe_Color color = PuRe_Color(0, 1, 0);
             if (this->m_pNavigation->GetFocusedElementId() == i)
             {
-                color = PuRe_Color(0, 0.5f, 0);
+                color = PuRe_Color(0, 0, 1);
             }
 
             float size = this->m_ElementSize / this->m_Bricks[i]->GetPivotOffset().Length();
@@ -73,11 +86,11 @@ namespace Editor
         pos.X -= (1.0f - a_Visibility) * (this->m_pNavigation->GetElementsCountPerLine() * this->m_ListStep.X + this->m_ListStart.X);
 
         PuRe_MatrixF rot = PuRe_MatrixF::Translation(-this->m_Bricks[0]->GetPivotOffset() * this->m_TabSize) * PuRe_MatrixF::RotationAxis(PuRe_Vector3F(0, 1, 0), a_TabRotation) * PuRe_MatrixF::Rotation(-this->m_Pitch, 0, 0);
-        
-        PuRe_Color color = PuRe_Color(1.0f, 0, 0);
+
+        PuRe_Color color = PuRe_Color(1, 0, 0);
         if (a_IsSelected)
         {
-            color = PuRe_Color(0.5f, 0, 0);
+            color = PuRe_Color(0, 1, 1);
         }
 
         float size = this->m_TabSize / this->m_Bricks[0]->GetPivotOffset().Length();
