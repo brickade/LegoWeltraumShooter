@@ -58,6 +58,7 @@ namespace Editor
     // **************************************************************************
     void CWorker::Update(PuRe_IGraphics& a_pGraphics, PuRe_IWindow& a_pWindow, PuRe_Timer& a_pTimer, PuRe_SoundPlayer& a_pSoundPlayer, TheBrick::CBrick* a_pCurrentBrick, PuRe_Color& a_rCurrentColor, CShipHandler& a_rShipHandler)
     {
+#define EDITOR_DEBUG
         this->m_currentBrickColor = a_rCurrentColor;
         if (this->m_pCurrentBrick == nullptr || this->m_pCurrentBrick->m_pBrick != a_pCurrentBrick)
         {
@@ -83,7 +84,7 @@ namespace Editor
         if (this->m_CurrentBrickHeightIstInvalid)
         {
 #ifdef EDITOR_DEBUG
-            printf("Update Height on sec %f\n", a_pTimer.GetTotalElapsedSeconds());
+            printf("------------------------------\nUpdate Height on sec %f\n", a_pTimer.GetTotalElapsedSeconds());
 #endif
             this->UpdateHeight(a_rShipHandler);
             this->m_CurrentBrickHeightIstInvalid = false;

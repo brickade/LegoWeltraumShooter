@@ -107,16 +107,26 @@ namespace Editor
     // **************************************************************************
     bool CAssistant::SpecialCategoryRequirementsPassed(TheBrick::CBrickInstance& a_rBrickInstanceToTest, TheBrick::CGameObject& a_rGameObjectToTestAgainst, bool a_TestForOccludingOtherBricks)
     {
+#define SPECIALBRICK_DEBUG
+#ifdef SPECIALBRICK_DEBUG
+        printf("SpecialCategoryRequirementsTest entered\n");
+#endif
         int category = a_rBrickInstanceToTest.m_pBrick->GetCategoryId();
-        ong::vec3 rayOrigin = TheBrick::PuReToOng(a_rBrickInstanceToTest.PosToWorldSpace(a_rBrickInstanceToTest.m_pBrick->GetPivotOffset()));
+        ong::vec3 rayOrigin = TheBrick::PuReToOng(a_rBrickInstanceToTest.PosToWorldSpace(a_rBrickInstanceToTest.m_pBrick->GetPivotOffset() + PuRe_Vector3F(0, TheBrick::CBrick::SEGMENT_HEIGHT / 2.0f, 0)));
         ong::RayQueryResult hs = { 0 };
         ong::vec3 rayDir;
         //Front
         rayDir = TheBrick::PuReToOng(a_rBrickInstanceToTest.DirToWorldSpace(PuRe_Vector3F(0, 0, 1)));
         if (a_rGameObjectToTestAgainst.m_pBody->queryRay(rayOrigin, rayDir, &hs)) //Cast Ray
         {
+#ifdef SPECIALBRICK_DEBUG
+            printf("SpecialCategoryRequirementsPassed: Front cast hit\n");
+#endif
             if (category == CBrickCategory::CATEGORY_WEAPONS)
             {
+#ifdef SPECIALBRICK_DEBUG
+                printf("SpecialCategoryRequirementsPassed: Weapon check failed\n");
+#endif
                 return false;
             }
             if (a_TestForOccludingOtherBricks && !SpecialCategoryRequirementsPassed(*reinterpret_cast<TheBrick::CBrickInstance*>(hs.collider->getUserData()), *a_rBrickInstanceToTest.GetGameObject(), false))
@@ -128,8 +138,14 @@ namespace Editor
         rayDir = TheBrick::PuReToOng(a_rBrickInstanceToTest.DirToWorldSpace(PuRe_Vector3F(0, 0, -1)));
         if (a_rGameObjectToTestAgainst.m_pBody->queryRay(rayOrigin, rayDir, &hs)) //Cast Ray
         {
+#ifdef SPECIALBRICK_DEBUG
+            printf("SpecialCategoryRequirementsPassed: Back cast hit\n");
+#endif
             if (category == CBrickCategory::CATEGORY_ENGINES)
             {
+#ifdef SPECIALBRICK_DEBUG
+                printf("SpecialCategoryRequirementsPassed: Engine check failed\n");
+#endif
                 return false;
             }
             if (a_TestForOccludingOtherBricks && !SpecialCategoryRequirementsPassed(*reinterpret_cast<TheBrick::CBrickInstance*>(hs.collider->getUserData()), *a_rBrickInstanceToTest.GetGameObject(), false))
@@ -141,8 +157,14 @@ namespace Editor
         rayDir = TheBrick::PuReToOng(a_rBrickInstanceToTest.DirToWorldSpace(PuRe_Vector3F(-1, 0, 0)));
         if (a_rGameObjectToTestAgainst.m_pBody->queryRay(rayOrigin, rayDir, &hs)) //Cast Ray
         {
-            if (category == CBrickCategory::CATEGORY_COCKPITS || category == CBrickCategory::CATEGORY_WEAPONS)
+#ifdef SPECIALBRICK_DEBUG
+            printf("SpecialCategoryRequirementsPassed: Left cast hit\n");
+#endif
+            if (category == CBrickCategory::CATEGORY_COCKPITS)
             {
+#ifdef SPECIALBRICK_DEBUG
+                printf("SpecialCategoryRequirementsPassed: Cockpit check failed\n");
+#endif
                 return false;
             }
             if (a_TestForOccludingOtherBricks && !SpecialCategoryRequirementsPassed(*reinterpret_cast<TheBrick::CBrickInstance*>(hs.collider->getUserData()), *a_rBrickInstanceToTest.GetGameObject(), false))
@@ -154,6 +176,9 @@ namespace Editor
         rayDir = TheBrick::PuReToOng(a_rBrickInstanceToTest.DirToWorldSpace(PuRe_Vector3F(1, 0, 0)));
         if (a_rGameObjectToTestAgainst.m_pBody->queryRay(rayOrigin, rayDir, &hs)) //Cast Ray
         {
+#ifdef SPECIALBRICK_DEBUG
+            printf("SpecialCategoryRequirementsPassed: Right cast hit\n");
+#endif
             if (a_TestForOccludingOtherBricks && !SpecialCategoryRequirementsPassed(*reinterpret_cast<TheBrick::CBrickInstance*>(hs.collider->getUserData()), *a_rBrickInstanceToTest.GetGameObject(), false))
             { //Test if this brick occludes another brick
                 return false;
