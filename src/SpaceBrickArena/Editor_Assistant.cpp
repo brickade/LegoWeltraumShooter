@@ -107,7 +107,6 @@ namespace Editor
     // **************************************************************************
     bool CAssistant::SpecialCategoryRequirementsPassed(TheBrick::CBrickInstance& a_rBrickInstanceToTest, TheBrick::CGameObject& a_rGameObjectToTestAgainst, bool a_TestForOccludingOtherBricks)
     {
-#define SPECIALBRICK_DEBUG
 #ifdef SPECIALBRICK_DEBUG
         printf("SpecialCategoryRequirementsTest entered\n");
 #endif

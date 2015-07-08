@@ -58,7 +58,7 @@ namespace Editor
     // **************************************************************************
     void CWorker::Update(PuRe_IGraphics& a_pGraphics, PuRe_IWindow& a_pWindow, PuRe_Timer& a_pTimer, PuRe_SoundPlayer& a_pSoundPlayer, TheBrick::CBrick* a_pCurrentBrick, PuRe_Color& a_rCurrentColor, CShipHandler& a_rShipHandler)
     {
-#define EDITOR_DEBUG
+//#define EDITOR_DEBUG
         this->m_currentBrickColor = a_rCurrentColor;
         if (this->m_pCurrentBrick == nullptr || this->m_pCurrentBrick->m_pBrick != a_pCurrentBrick)
         {
@@ -70,7 +70,7 @@ namespace Editor
             this->m_CurrentBrickHeightIstInvalid = true;
         }
         this->m_pCamera->Update(&a_pGraphics, &a_pWindow, &a_pTimer);
-        this->UpdateTranslation(this->m_pCamera->GetForward(), a_pTimer.GetElapsedSeconds() * 3.0f);
+        this->UpdateTranslation(this->m_pCamera->GetForward(), a_pTimer.GetElapsedSeconds() * 9);
         this->UpdateRotation();
 
         //Update Placement Direction
@@ -134,9 +134,23 @@ namespace Editor
     void CWorker::UpdateTranslation(PuRe_Vector3F a_cameraLook, float a_speed)
     {
         PuRe_Vector2F MoveInput = sba_Input->Direction(sba_Direction::EditorMoveBrick, this->m_playerIdx) * a_speed;
-        if (a_cameraLook.Y > 0.6f)
+        if (a_cameraLook.Y > 0.8f)
         {
             MoveInput.Y *= -1;
+        }
+
+        //SpeedupTimer
+        if (MoveInput.Length() > FLT_EPSILON * 2)
+        {
+            this->m_GamepadSpeedupTimer += sba_Application->GetTimer()->GetElapsedSeconds();
+        }
+        else
+        {
+            this->m_GamepadSpeedupTimer = 0;
+        }
+        if (sba_Input->LastInputWasGamepad())
+        {
+            MoveInput *= PuRe_clamp((this->m_GamepadSpeedupTimer) * 4 - 1, 0.75f, 5);
         }
 
         //----------Apply
@@ -150,7 +164,7 @@ namespace Editor
         PuRe_Vector2F forwardN = forward;
         forwardN.Normalize();
         if (sba_Input->LastInputWasGamepad() && abs(abs(forward.X) - abs(forward.Y)) < 0.1f)
-        {
+        {   
             float alpha = 45;
             if (PuRe_Vector2F::Dot(forwardN.Side(), forwardRaw) > 0) //Detect right direction
             {

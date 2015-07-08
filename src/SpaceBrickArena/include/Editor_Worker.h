@@ -44,6 +44,8 @@ namespace Editor
         float m_nubDockThreshold = 0.01f;
         float m_nubDirThreshold = 0.01f;
 
+        float m_GamepadSpeedupTimer = 0;
+
         bool m_placeBelow;
 
         CHistory* m_pHistory;

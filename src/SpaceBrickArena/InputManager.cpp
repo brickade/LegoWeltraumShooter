@@ -495,7 +495,7 @@ namespace sba
             result = this->CalcKeyboardDirectionFromKeys(this->m_pInput->Eight, this->m_pInput->Five, this->m_pInput->Six, this->m_pInput->Four);
             break;
         case Input::EKeyboardDirection::Mouse:
-            result = this->m_pInput->GetRelativeMousePosition() * PuRe_Vector2F(1, -1) * 0.1f;
+            result = this->m_pInput->GetRelativeMousePosition() * PuRe_Vector2F(1, -1) * 0.05f;
             break;
         }
         return this->CheckLastInputIsKeyboard(result);
