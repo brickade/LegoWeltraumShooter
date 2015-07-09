@@ -14,6 +14,7 @@
 #include "Player.h"
 #include "NetworkHandler.h"
 #include "GameMap.h"
+#include "DestructionManager.h"
 
 namespace sba
 {
@@ -35,6 +36,7 @@ namespace sba
         sba::CInputManager* InputManager;
         sba::CBrickManager* BrickManager;
         sba::CShipManager* ShipManager;
+		sba::CDestructionManager* DestructionManager;
         PuRe_Font* Font;
         PuRe_IMaterial* m_pFinalMaterial;
         PuRe_IMaterial* SpriteMaterial;
@@ -52,6 +54,8 @@ namespace sba
 
         double m_LastPhysicsUpdate;
         float m_PhysicsFramerate = 60.0f;
+
+		std::vector<TheBrick::CGameObject*> m_MiscObjects;
     
     public:
         void Initialize(PuRe_IGraphics& a_pGraphics, PuRe_IInput& a_pInput, PuRe_SoundPlayer& a_pSoundPlayer, PuRe_Application& a_rpApplication);
@@ -61,6 +65,10 @@ namespace sba
 
         void CreatePlayer(int a_Pad, PuRe_IWindow* a_pWindow);
         void DeletePlayer(unsigned int a_Index);
+
+		// add global non updated objects (used for destruction)
+		void AddMiscObject(TheBrick::CGameObject* a_pObject);
+		void ClearMiscObjects();
 
     private:
         Space();

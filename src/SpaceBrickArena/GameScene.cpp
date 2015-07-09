@@ -626,5 +626,9 @@ namespace sba
         // DELETE RENDERER
         SAFE_DELETE(this->m_pFont);
         sba_BrickManager->RebuildRenderInstances();
+		// reset destruction
+		sba_Space->DestructionManager->Reset();
+		sba_Space->ClearMiscObjects();
+
     }
 }

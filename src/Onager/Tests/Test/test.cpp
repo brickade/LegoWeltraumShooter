@@ -566,12 +566,13 @@ void Test::init()
 
 
 
-void Test::stepPhysics(float physicsTimer)
+void Test::stepPhysics(float dt)
 {
-	while (physicsTimer >= 1.0f / 60.0f)
+	m_physicsTimer += dt;
+	while (m_physicsTimer >= 1.0f / 60.0f)
 	{
 		m_world->step(1.0f / 60.0f);
-		physicsTimer -= 1.0f / 60.0f;
+		m_physicsTimer -= 1.0f / 60.0f;
 	}
 }
 
@@ -583,7 +584,7 @@ void Test::run()
 	bool running = true;
 	int lastTime = SDL_GetTicks();
 
-	float physics = 0.0f;
+	m_physicsTimer = 0.0f;
 	float fps = 0.0f;
 	int fpsCount = 1;
 	while (running)
@@ -629,6 +630,11 @@ void Test::run()
 				{
 					m_entities.clear();
 					delete m_world;
+					gBox = ShapePtr();
+					gCapsule = ShapePtr();
+					gFloor = ShapePtr();
+					gSlope = ShapePtr();
+					gSphere = ShapePtr();
 					init();
 				}
 				else if (event.key.keysym.scancode == SDL_SCANCODE_V)
@@ -674,9 +680,7 @@ void Test::run()
 		}
 		else
 		{
-			physics += dt;
-			stepPhysics(physics);
-
+			stepPhysics(dt);
 		}
 		
 		std::vector<Entity*> deadEntities;

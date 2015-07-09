@@ -12,7 +12,7 @@ namespace ong
 
 	const float HGrid::CELL_TO_CELL_RATIO = 2.0f;
 	const float HGrid::MIN_CELL_SIZE = 1.0f;
-	const float HGrid::SPHERE_TO_CELL_RATIO = 0.25f;
+	const float HGrid::SPHERE_TO_CELL_RATIO = 0.5f;
 
 
 	HGrid::HGrid()
@@ -260,9 +260,12 @@ namespace ong
 	{
 		if (m_objectBucket[id->bucket].size() > 1)
 		{
-			m_objectBucket[id->bucket][id->idx] = m_objectBucket[id->bucket].back();
-			ProxyID* pOtherProxy = m_objectBucket[id->bucket][id->idx].id;
-			pOtherProxy->idx = id->idx;
+			if (&m_objectBucket[id->bucket][id->idx] != &m_objectBucket[id->bucket].back())
+			{
+				m_objectBucket[id->bucket][id->idx] = m_objectBucket[id->bucket].back();
+				ProxyID* pOtherProxy = m_objectBucket[id->bucket][id->idx].id;
+				pOtherProxy->idx = id->idx;
+			}
 			m_objectBucket[id->bucket].pop_back();
 		}
 		else
@@ -425,7 +428,9 @@ namespace ong
 		}
 
 		int bucket;
-		for (;;)
+		//todo FIX !!!
+		static int MAX_ITERS = 100;
+		for (int iter = 0 ; iter < MAX_ITERS;++ iter)
 		{
 			float ooSize = 1.0f / maxSize;
 

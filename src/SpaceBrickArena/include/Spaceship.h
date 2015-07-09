@@ -7,6 +7,7 @@
 #include "Onager/World.h"
 
 #include "TheBrick/GameObject.h"
+#include "DestructibleObject.h"
 #include "TheBrick/DebugDraw.h"
 #include "TheBrick/CSVParser.h"
 #include "Bullet.h"
@@ -16,7 +17,7 @@ namespace sba
 {
     class CBrick;
 
-    class CSpaceship : public TheBrick::CGameObject
+    class CSpaceship : public CDestructibleObject
     {
     public:
         static const int MAX_BRICK_COUNT;
@@ -24,6 +25,8 @@ namespace sba
         static const int MAX_BRICK_HEIGHT;
 
     private:
+		void CalculateProperties();
+
         ong::vec3 m_TargetVec;
         ong::vec3 m_TargetAng;
 
@@ -66,6 +69,8 @@ namespace sba
         ~CSpaceship();
 
         void CalculateData();
+		void ReCalculateData();
+
         void Update(int a_OID, float a_DeltaTime);
         void Thrust(float a_Thrust);
         void Spin(float a_Spin);

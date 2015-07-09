@@ -415,6 +415,11 @@ namespace ong
 	// transform
 
 
+	inline Transform invTransform(const Transform& t)
+	{
+		return Transform(rotate(-t.p, conjugate(t.q)), conjugate(t.q));
+	}
+
 	inline vec3 transformVec3(const vec3& v, const Transform& t)
 	{
 		return rotate(v, t.q) + t.p;

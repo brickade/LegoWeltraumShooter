@@ -17,7 +17,7 @@ namespace sba
 
     // **************************************************************************
     // **************************************************************************
-    CSpaceship::CSpaceship(ong::World& a_rWorld,std::string a_Name) : CGameObject(a_rWorld, nullptr)
+	CSpaceship::CSpaceship(ong::World& a_rWorld, std::string a_Name) : CDestructibleObject(a_rWorld, nullptr)
     {
         this->m_Type = TheBrick::EGameObjectType::Ship;
         this->m_TargetVec = ong::vec3(0.0f, 0.0f, 0.0f);
@@ -48,6 +48,7 @@ namespace sba
         CGameObject* object = static_cast<CGameObject*>(other->getBody()->getUserData());
         if (object->m_Type == TheBrick::EGameObjectType::Ship)
         {
+
             CSpaceship* oship = static_cast<CSpaceship*>(object);
             if (oship->m_Respawn == 0.0f)
                 oship->m_Life -= 10;
@@ -107,27 +108,33 @@ namespace sba
             
     }
 
+	void CSpaceship::CalculateProperties()
+	{
+		float mass = 1.0f / this->m_pBody->getInverseMass();
+		this->m_RotationAcceleration = PuRe_Vector3F(mass*50.0f, mass*100.0f, mass*100.0f);
+		this->m_SpeedAcceleration = mass*30.0f;
+		this->m_MaxRotationSpeed = PuRe_Vector3F(1.0f, 1.0f, 1.0f);
+		this->m_MaxSpeed = 15.0f*(20.0f / mass);
+		this->m_MaxLife = (int)(mass*10.0f);
+		
+		this->m_Shield = 0;
+	}
+
     // **************************************************************************
     // **************************************************************************
     void CSpaceship::CalculateData()
     {
-        float mass = 1.0f/this->m_pBody->getInverseMass();
-        this->m_RotationAcceleration = PuRe_Vector3F(mass*50.0f, mass*100.0f, mass*100.0f);
-        this->m_SpeedAcceleration = mass*30.0f;
-        this->m_MaxRotationSpeed = PuRe_Vector3F(1.0f, 1.0f, 1.0f);
-        this->m_MaxSpeed = 15.0f*(20.0f/mass);
-        this->m_MaxLife = (int)(mass*10.0f);
-        this->m_Life = this->m_MaxLife;
-        this->m_Shield = 0;
 
+		CalculateProperties();
+		this->m_Life = this->m_MaxLife;
 
 
         ong::Collider* c = this->m_pBody->getCollider();
-        ong::ColliderCallbacks cb;
-        cb.beginContact = CSpaceship::Collision;
-
         while (c)
         {
+			ong::ColliderCallbacks cb = c->getColliderCallbacks();
+			cb.beginContact = CSpaceship::Collision;
+
             c->setCallbacks(cb);
             c = c->getNext();
         }
@@ -144,6 +151,20 @@ namespace sba
             this->m_EngineEmitter.push_back(emitter);
         }
     }
+
+	void CSpaceship::ReCalculateData()
+	{
+		int oldMaxLife = m_MaxLife;
+		CalculateProperties();
+	
+
+		// adjust life procentual
+		int damage = m_Life - floorf(m_Life * (m_MaxLife / (float)oldMaxLife));
+		damage *= 5;
+		m_Life -= damage;
+		printf("damage: %d\n", damage);
+	}
+
 
     // **************************************************************************
     // **************************************************************************
@@ -278,17 +299,25 @@ namespace sba
         }
 
 
+
         //Add emitter
         std::vector<TheBrick::CBrickInstance**> engines;
         this->GetEngines(engines);
         unsigned int eID = 0;
         float amount = TheBrick::OngToPuRe(currVel).Length() / this->m_MaxSpeed;
 
+		//remove unused emitter from engine that were destroyed
+		while (engines.size() < m_EngineEmitter.size())
+		{
+			delete m_EngineEmitter.back();
+			m_EngineEmitter.pop_back();
+		}
+
         for (std::vector<TheBrick::CBrickInstance**>::iterator it = engines.begin(); it != engines.end(); ++it)
         {
             PuRe_ParticleEmitter* emitter = this->m_EngineEmitter[eID];
             if (this->m_Respawn == 0.0f)
-            {
+			{
                 TheBrick::CBrickInstance* engine = *(*it);
                 ong::Transform transform = engine->GetTransform();
                 ong::Transform ship = this->m_pBody->getTransform();
@@ -344,14 +373,14 @@ namespace sba
     // **************************************************************************
     void CSpaceship::Deserialize(TheBrick::CSerializer& a_pSerializer, TheBrick::BrickArray& a_rBricks, ong::World& a_pWorld)
     {
-        CGameObject::Deserialize(a_pSerializer, a_rBricks, a_pWorld);
+		CDestructibleObject::Deserialize(a_pSerializer, a_rBricks, a_pWorld);
     }
 
     // **************************************************************************
     // **************************************************************************
     void CSpaceship::Serialize(TheBrick::CSerializer& a_pSerializer)
     {
-        CGameObject::Serialize(a_pSerializer);
+		CDestructibleObject::Serialize(a_pSerializer);
     }
 
     // **************************************************************************

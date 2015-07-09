@@ -48,6 +48,12 @@
     <ClCompile Include="ServerTest.cpp">
       <Filter>Source Files\Network</Filter>
     </ClCompile>
+    <ClCompile Include="DestructionTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Destruction.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Debug\shader.ps">
@@ -104,6 +110,12 @@
       <Filter>Header Files\Network</Filter>
     </ClInclude>
     <ClInclude Include="ShapeTest.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DestructionTest.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Destruction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

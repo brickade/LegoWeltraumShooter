@@ -142,6 +142,8 @@
     <ClInclude Include="include\Asteroid.h" />
     <ClInclude Include="include\BrickManager.h" />
     <ClInclude Include="include\Bullet.h" />
+    <ClInclude Include="include\DestructibleObject.h" />
+    <ClInclude Include="include\DestructionManager.h" />
     <ClInclude Include="include\Editor_BrickCategory.h" />
     <ClInclude Include="include\Editor_BrickSupervisor.h" />
     <ClInclude Include="include\Editor_Assistant.h" />
@@ -181,6 +183,8 @@
     <ClCompile Include="Asteroid.cpp" />
     <ClCompile Include="BrickManager.cpp" />
     <ClCompile Include="Bullet.cpp" />
+    <ClCompile Include="DestructibleObject.cpp" />
+    <ClCompile Include="DestructionManager.cpp" />
     <ClCompile Include="Editor_BrickCategory.cpp" />
     <ClCompile Include="Editor_BrickSupervisor.cpp" />
     <ClCompile Include="Editor_Assistant.cpp" />

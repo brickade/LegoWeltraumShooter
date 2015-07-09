@@ -83,9 +83,6 @@ namespace ong
 
 		//resolution	  
 		{
-#ifdef _PROFILE
-			//Profiler profiler("resolution");
-#endif
 			WorldContext context;
 			context.r = m_r.data();
 			context.v = m_v.data();
@@ -103,14 +100,15 @@ namespace ong
 				solveContacts(&context, c, numContacts, contactConstraints);
 			}
 
-			for (int i = 0; i < numContacts; ++i)
-			{
-				c[i]->colliderA->callbackPostSolve(c[i]);
-				c[i]->colliderB->callbackPostSolve(c[i]);
-			}
+			postSolveContacts(&context, c, numContacts, contactConstraints);
+
+			//for (int i = 0; i < numContacts; ++i)
+			//{
+			//	c[i]->colliderA->callbackPostSolve(c[i]);
+			//	c[i]->colliderB->callbackPostSolve(c[i]);
+			//}
 
 			delete[] contactConstraints;
-
 		}
 
 		for (int i = 0; i < m_numBodies; ++i)
@@ -119,6 +117,8 @@ namespace ong
 
 			vec3 wAxis = dt * m_v[i].w;
 			float wScalar = sqrt(lengthSq(wAxis));
+			
+			wScalar = ong_MAX(-0.25f*ong_PI, ong_MIN(0.25f*ong_PI, wScalar));
 
 			if (wScalar != 0.0f)
 				m_r[i].q = QuatFromAxisAngle(1.0f / wScalar * wAxis, wScalar) * m_r[i].q;

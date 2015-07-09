@@ -87,6 +87,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ClientTest.cpp" />
+    <ClCompile Include="Destruction.cpp" />
+    <ClCompile Include="DestructionTest.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="HierarchieTest.cpp" />
     <ClCompile Include="main.cpp" />
@@ -109,6 +111,8 @@
     <ClInclude Include="BrickTest.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="ClientTest.h" />
+    <ClInclude Include="Destruction.h" />
+    <ClInclude Include="DestructionTest.h" />
     <ClInclude Include="Draw.h" />
     <ClInclude Include="FilterTest.h" />
     <ClInclude Include="HierarchieTest.h" />

@@ -595,6 +595,9 @@ namespace ong
 
     void ContactManager::collide(Body*a, Body*b)
     {
+		if (a->getNumCollider() == 0 || b->getNumCollider() == 0)
+			return;
+
         if (a->getNumCollider() > 1 && b->getNumCollider() > 1)
         {
             Transform t = invTransformTransform(b->getTransform(), a->getTransform());

@@ -41,7 +41,11 @@ namespace ong
 		}
 
 
-		assert(maxI != -1);
+		if (maxI == -1)
+		{
+			manifold->numPoints = 2;
+			return;
+		}
 
 		if (max < 0.0f)
 			std::swap(manifold->points[0], manifold->points[1]);
@@ -64,6 +68,13 @@ namespace ong
 					maxI = i, max = area;
 			}
 		}
+
+		if (maxI == -1)
+		{
+			manifold->numPoints = 3;
+			return;
+		}
+
 		manifold->points[3] = in[maxI];
 
 	}

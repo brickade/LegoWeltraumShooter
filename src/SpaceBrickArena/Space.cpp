@@ -27,6 +27,7 @@ namespace sba
         this->m_pIniReader = new sba::CIniReader((userpath + "Options.ini").c_str()); //Create IniFile
         this->ShipManager = new sba::CShipManager(shipPath.c_str()); 
         this->m_pNetworkhandler = new sba::CNetworkHandler(this->m_pIniReader);
+		this->DestructionManager = new sba::CDestructionManager();
 
         this->m_pSoundPlayer = new PuRe_SoundPlayer();
     }
@@ -111,8 +112,13 @@ namespace sba
                 Space::Instance()->World->step(1 / this->m_PhysicsFramerate);
             } while (a_pTimer->GetTotalElapsedSeconds() - this->m_LastPhysicsUpdate >= 1 / this->m_PhysicsFramerate);
             Space::Instance()->BrickManager->RebuildRenderInstances(); //Update RenderInstances
+
+			//update destruction
+			DestructionManager->Update();
+
         }
-    }
+
+	}
 
     // **************************************************************************
     // **************************************************************************
@@ -176,4 +182,21 @@ namespace sba
     {
         this->Renderer->Draw(1, false, this->Font, this->FontMaterial, a_Text, PuRe_Vector3F(a_Position, 0), PuRe_MatrixF::Identity(), PuRe_Vector3F(a_Size, a_Size, a_Size), a_Size * a_Width);
     }
+
+	void Space::AddMiscObject(TheBrick::CGameObject* a_pObject)
+	{
+		m_MiscObjects.push_back(a_pObject);
+	}
+
+	void Space::ClearMiscObjects()
+	{
+		for (auto pObject : m_MiscObjects)
+		{
+			delete pObject;
+		}
+		m_MiscObjects.clear();
+	}
+		
+		
+
 }

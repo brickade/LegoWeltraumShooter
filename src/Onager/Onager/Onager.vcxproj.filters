@@ -123,5 +123,8 @@
     <ClInclude Include="include\Onager\Settings.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\Onager\States.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -115,6 +115,7 @@
     <ClInclude Include="include\Onager\SAT.h" />
     <ClInclude Include="include\Onager\Settings.h" />
     <ClInclude Include="include\Onager\Shapes.h" />
+    <ClInclude Include="include\Onager\States.h" />
     <ClInclude Include="include\Onager\VolumeIntegration.h" />
     <ClInclude Include="include\Onager\World.h" />
     <ClInclude Include="Profiler.h" />
