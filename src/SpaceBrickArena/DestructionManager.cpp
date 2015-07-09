@@ -402,6 +402,8 @@ namespace sba
 			//todo fulcrum
 		
 			// remove connection
+			assert(a->brick->numConnections > 0 && b->brick->numConnections > 0);
+
 			*a = a->brick->connections[--a->brick->numConnections];
 			*b = b->brick->connections[--b->brick->numConnections];
 		}

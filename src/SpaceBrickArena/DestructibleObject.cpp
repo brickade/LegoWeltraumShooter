@@ -23,7 +23,8 @@ namespace sba
 	void CDestructibleObject::ImpulseResponse(ong::Collider* thisCollider, ong::Contact* contact)
 	{
 		TheBrick::CBrickInstance* brick = (TheBrick::CBrickInstance*)thisCollider->getUserData();
-		
+		TheBrick::CBrickInstance* other = (TheBrick::CBrickInstance*)(thisCollider == contact->colliderA ? contact->colliderB : contact->colliderA)->getUserData();
+
 		int dir = contact->colliderA == thisCollider ? -1 : 1;
 
 		ong::vec3 impulse = ong::vec3(0,0,0);
@@ -35,6 +36,16 @@ namespace sba
 		}
 
 		point = 1.0f / contact->manifold.numPoints * point;
+
+		switch (other->GetGameObject()->m_Type)
+		{
+		case TheBrick::EGameObjectType::Bullet:
+			impulse = 5.0f * impulse;
+			break;
+		case TheBrick::EGameObjectType::Ship:
+			impulse = 10.0f * impulse;
+			break;
+		}
 
 		sba_Space->DestructionManager->AddImpulse(brick, point, impulse);
 	}
