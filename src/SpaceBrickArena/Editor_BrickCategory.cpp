@@ -73,6 +73,11 @@ namespace Editor
             float size = this->m_ElementSize / this->m_Bricks[i]->GetPivotOffset().Length();
             size += this->m_ElementSize;
             size *= 0.5f;
+            //Tmp Engine resize
+            if (this->m_Bricks[i]->GetCategoryId() == CBrickCategory::CATEGORY_ENGINES)
+            {
+                size *= 0.65f;
+            }
             sba_Renderer->Draw(1, false, this->m_Bricks[i]->GetModel(), PuRe_Primitive::Triangles, sba_BrickManager->GetBrickUIMaterial(), pos, rot, PuRe_Vector3F::Zero(), PuRe_Vector3F(size, size, size), color);
         }
     }
@@ -96,6 +101,10 @@ namespace Editor
         float size = this->m_TabSize / this->m_Bricks[0]->GetPivotOffset().Length();
         size += this->m_TabSize;
         size *= 0.5f;
+        if (this->m_Bricks[0]->GetCategoryId() == CBrickCategory::CATEGORY_ENGINES)
+        {
+            size *= 0.65f;
+        }
         sba_Renderer->Draw(1, false, this->m_Bricks[0]->GetModel(), PuRe_Primitive::Triangles, sba_BrickManager->GetBrickUIMaterial(), pos, rot, PuRe_Vector3F::Zero(), PuRe_Vector3F(size, size, size), color);
     }
 

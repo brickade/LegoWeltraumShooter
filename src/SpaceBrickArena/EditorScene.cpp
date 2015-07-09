@@ -17,6 +17,7 @@ namespace Editor
         PuRe_GraphicsDescription gdesc = a_pApplication->GetGraphics()->GetDescription();
         
         this->InitCommonRenderComponents(&this->m_pPostMaterial, &this->m_pDirectionalLight, &this->m_pDirectionalLightMaterial, &this->m_pPointLight, &this->m_pPointLightMaterial, &this->m_pSkyBox, &this->m_pSkyBoxMaterial, &this->m_UICamera);
+        this->m_pUIMaterial = a_pApplication->GetGraphics()->LoadMaterial("../data/effects/UI/default");
 
         this->m_pBrickSupervisor = new Editor::CBrickSupervisor(this->m_PlayerIdx);
         this->m_pBrickSupervisor->Initialize(*a_pApplication->GetGraphics());
@@ -118,7 +119,7 @@ namespace Editor
             break;
         }
         //Post
-        this->PostRender(this->m_pWorker->GetCamera(), this->m_UICamera, this->m_pPostMaterial);
+        this->PostRender(this->m_pWorker->GetCamera(), this->m_UICamera, this->m_pUIMaterial, this->m_pPostMaterial);
     }
 
     // **************************************************************************
@@ -139,7 +140,7 @@ namespace Editor
 
     // **************************************************************************
     // **************************************************************************
-    void CEditorScene::PostRender(Editor::CCamera* a_pSceneCamera, PuRe_Camera* a_pUICamera, PuRe_IMaterial* a_pPostMaterial)
+    void CEditorScene::PostRender(Editor::CCamera* a_pSceneCamera, PuRe_Camera* a_pUICamera, PuRe_IMaterial* a_pUIMaterial, PuRe_IMaterial* a_pPostMaterial)
     {
         //Post
         sba_Renderer->Set(0, PuRe_Vector3F(0.2f, 0.2f, 0.2f), "ambient");
@@ -149,7 +150,7 @@ namespace Editor
         if (a_pUICamera != nullptr)
         {
             sba_Renderer->Render(0, 1, a_pUICamera, a_pPostMaterial, sba_FinalMaterial); //UI    
-            sba_Renderer->Render(0, 2, a_pUICamera, a_pPostMaterial, sba_FinalMaterial); //Font
+            sba_Renderer->Render(0, 2, a_pUICamera, a_pUIMaterial, sba_FinalMaterial); //Font
         }
         sba_Renderer->End();
     }
@@ -203,6 +204,7 @@ namespace Editor
         SAFE_DELETE(this->m_pWorker);
         SAFE_DELETE(this->m_pBrickSupervisor);
         SAFE_DELETE(this->m_pSkyBox);
+        SAFE_DELETE(this->m_pUIMaterial);
         SAFE_DELETE(this->m_pPostMaterial);
         sba_BrickManager->RebuildRenderInstances();
     }
