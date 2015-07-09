@@ -126,8 +126,8 @@ namespace ong
 		Collider* c = m_pCollider;
 		for (; c != nullptr; c = c->getNext())
 		{
-			if (c->isSensor())
-				continue;
+			//if (c->isSensor())
+			//	continue;
 
 			const MassData& data = c->getMassData();
 			Transform& t = c->getTransform();
@@ -147,8 +147,8 @@ namespace ong
 			I = I + _I;
 		}
 
-
-		cm = 1.0f / m* cm;
+		if (m != 0.0f)
+			cm = 1.0f / m* cm;
 
 		// center inertia to center of mass
 		I = I - m * (dot(cm, cm) * identity() - outerproduct(cm, cm));
