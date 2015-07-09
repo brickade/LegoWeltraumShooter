@@ -54,6 +54,8 @@ namespace sba
 
         double m_LastPhysicsUpdate;
         float m_PhysicsFramerate = 60.0f;
+
+		std::vector<TheBrick::CGameObject*> m_MiscObjects;
     
     public:
         void Initialize(PuRe_IGraphics& a_pGraphics, PuRe_IInput& a_pInput, PuRe_SoundPlayer& a_pSoundPlayer, PuRe_Application& a_rpApplication);
@@ -63,6 +65,10 @@ namespace sba
 
         void CreatePlayer(int a_Pad, PuRe_IWindow* a_pWindow);
         void DeletePlayer(unsigned int a_Index);
+
+		// add global non updated objects (used for destruction)
+		void AddMiscObject(TheBrick::CGameObject* a_pObject);
+		void ClearMiscObjects();
 
     private:
         Space();

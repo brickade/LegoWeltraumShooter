@@ -12,7 +12,7 @@ namespace ong
 
 	const float HGrid::CELL_TO_CELL_RATIO = 2.0f;
 	const float HGrid::MIN_CELL_SIZE = 1.0f;
-	const float HGrid::SPHERE_TO_CELL_RATIO = 0.25f;
+	const float HGrid::SPHERE_TO_CELL_RATIO = 0.5f;
 
 
 	HGrid::HGrid()

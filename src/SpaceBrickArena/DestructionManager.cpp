@@ -21,8 +21,8 @@ namespace sba
 		TheBrick::CBrickInstance* brick = ((CallbackData*)a_Data)->brick;
 		TheBrick::CBrickInstance* brick2 = (TheBrick::CBrickInstance*)a_Collider->getUserData();
 
-		// bricks are equal or brick connection is already proccesed
-		if (brick == brick2 || brick > brick2)
+		 //bricks are equal or brick connection is already proccesed
+		if (brick == brick2 /*|| brick > brick2*/)
 			return true;
 
 		SBrickDestruction* destrInstance = brick->GetDestructionInstance();
@@ -70,10 +70,10 @@ namespace sba
 
 		CDestructionManager* manager = ((CallbackData*)a_Data)->manager;
 
-		SJointData* jointDataX0 = manager->m_JointData();
-		SJointData* jointDataX1 = manager->m_JointData();
-		SJointData* jointDataZ0 = manager->m_JointData();
-		SJointData* jointDataZ1 = manager->m_JointData();
+		SJointData* jointDataX0 = (*manager->m_JointData)();
+		SJointData* jointDataX1 = (*manager->m_JointData)();
+		SJointData* jointDataZ0 = (*manager->m_JointData)();
+		SJointData* jointDataZ1 = (*manager->m_JointData)();
 
 		jointDataX0->fulcrum = minX - 0.5f* TheBrick::CBrick::SEGMENT_WIDTH;
 		jointDataX1->fulcrum = maxX + 0.5f* TheBrick::CBrick::SEGMENT_WIDTH;
@@ -94,15 +94,15 @@ namespace sba
 		SConnection* connection2 = destrInstance2->connections + destrInstance2->numConnections++;
 
 
-		SJoint* jointX0 = connection->joints[0][0] = manager->m_Joints();
-		SJoint* jointX1 = connection->joints[0][1] = manager->m_Joints();
-		SJoint* jointZ0 = connection->joints[1][0] = manager->m_Joints();
-		SJoint* jointZ1 = connection->joints[1][1] = manager->m_Joints();
+		SJoint* jointX0 = connection->joints[0][0] = (*manager->m_Joints)();
+		SJoint* jointX1 = connection->joints[0][1] = (*manager->m_Joints)();
+		SJoint* jointZ0 = connection->joints[1][0] = (*manager->m_Joints)();
+		SJoint* jointZ1 = connection->joints[1][1] = (*manager->m_Joints)();
 
-		SJoint* joint2X0 = connection2->joints[0][0] = manager->m_Joints();
-		SJoint* joint2X1 = connection2->joints[0][1] = manager->m_Joints();
-		SJoint* joint2Z0 = connection2->joints[1][0] = manager->m_Joints();
-		SJoint* joint2Z1 = connection2->joints[1][1] = manager->m_Joints();
+		SJoint* joint2X0 = connection2->joints[0][0] = (*manager->m_Joints)();
+		SJoint* joint2X1 = connection2->joints[0][1] = (*manager->m_Joints)();
+		SJoint* joint2Z0 = connection2->joints[1][0] = (*manager->m_Joints)();
+		SJoint* joint2Z1 = connection2->joints[1][1] = (*manager->m_Joints)();
 
 
 		jointX0->data = joint2X0->data = jointDataX0;
@@ -148,11 +148,8 @@ namespace sba
 	}
 
 	CDestructionManager::CDestructionManager()
-		:m_Joints(256),
-		m_JointData(128),
-		m_BrickDestruction(64)
-		
 	{
+		Reset();
 	}
 
 	SBrickDestruction* calcCenterBrick(ong::vec3 a_CenterOfMass, TheBrick::CBrickInstance** a_Bricks, int a_NumBricks)
@@ -180,7 +177,7 @@ namespace sba
 		//create destruction instances
 		for (int i = 0; i < a_NumBricks; ++i)
 		{
-			SBrickDestruction* destrInstance = m_BrickDestruction();
+			SBrickDestruction* destrInstance = (*m_BrickDestruction)();
 			destrInstance->brick = a_Bricks[i];
 			a_Bricks[i]->SetDestructionInstance(destrInstance);
 		}
@@ -295,17 +292,19 @@ namespace sba
 
 		// get maximum flow
 		float maxFlow = MaxFlow(a_pBrick, a_pCenterBrick, a_Axis);
-		printf("maxFlow: %f\n", maxFlow);
 		//if maximum flow is less than impulse break object
 		if (maxFlow > 0 && maxFlow < 1.0f)
 		{
 
 
-			std::vector<SBrickDestruction*> selection;
-			std::vector<SJoint*> front;
+			//std::vector<SBrickDestruction*> selection;
+			//std::vector<SJoint*> front;
 			
+			m_Selection.clear();
+			m_Front.clear();
+
 			int selectionTick = m_Tick++;
-			if (!BreakGraph(a_pBrick, a_pCenterBrick, maxFlow, a_Axis, selection, front, selectionTick))
+			if (!BreakGraph(a_pBrick, a_pCenterBrick, maxFlow, a_Axis, selectionTick))
 				return false;
 
 			// check if any of the front brick is wedged between two bricks
@@ -339,7 +338,7 @@ namespace sba
 			//	}
 			//}
 
-			Destroy(a_pBrick, selection, front, a_rPoint, a_rImpulse, a_Axis, m_Tick++);
+			Destroy(a_pBrick, a_rPoint, a_rImpulse, a_Axis, m_Tick++);
 			return true;
 			
 
@@ -349,10 +348,10 @@ namespace sba
 	}
 
 
-	bool CDestructionManager::BreakGraph(SBrickDestruction* a_pBrick, SBrickDestruction* a_pCenterBrick, float a_MaxFlow, int a_Axis, std::vector<SBrickDestruction*>& a_rSelection, std::vector<SJoint*>& a_rFront, int a_Tick)
+	bool CDestructionManager::BreakGraph(SBrickDestruction* a_pBrick, SBrickDestruction* a_pCenterBrick, float a_MaxFlow, int a_Axis, int a_Tick)
 	{
 		a_pBrick->tick = a_Tick;
-		a_rSelection.push_back(a_pBrick);
+		m_Selection.push_back(a_pBrick);
 
 		for (int i = 0; i < a_pBrick->numConnections; ++i)
 		{
@@ -367,12 +366,12 @@ namespace sba
 					{
 						if (pConnection->joints[a_Axis][j]->capacity >= pConnection->joints[a_Axis][j]->flow / a_MaxFlow)
 						{
-							if (!BreakGraph(pConnection->other, a_pCenterBrick, a_MaxFlow, a_Axis, a_rSelection, a_rFront, a_Tick))
+							if (!BreakGraph(pConnection->other, a_pCenterBrick, a_MaxFlow, a_Axis, a_Tick))
 								return false;
 						}
 						else
 						{
-							a_rFront.push_back(pConnection->joints[a_Axis][j]);
+							m_Front.push_back(pConnection->joints[a_Axis][j]);
 						}
 						break;
 					}
@@ -392,9 +391,9 @@ namespace sba
 		return true;
 	}
 
-	void CDestructionManager::Destroy(SBrickDestruction* a_pBrick, const std::vector<SBrickDestruction*>& a_rSelection, const std::vector<SJoint*>& a_rFront, const ong::vec3& a_rPoint, const ong::vec3& a_rImpulse, int a_Axis, int a_Tick)
+	void CDestructionManager::Destroy(SBrickDestruction* a_pBrick, const ong::vec3& a_rPoint, const ong::vec3& a_rImpulse, int a_Axis, int a_Tick)
 	{
-		for (auto front : a_rFront)
+		for (auto front : m_Front)
 		{
 			SConnection* a = front->connection;
 			SConnection* b = front->twin->connection;
@@ -406,14 +405,21 @@ namespace sba
 
 			*a = a->brick->connections[--a->brick->numConnections];
 			*b = b->brick->connections[--b->brick->numConnections];
+
+			// relink joints
+			for (int i = 0; i < 2; ++i)
+			{
+				for (int j = 0; j < 2; ++j)
+				{
+					a->joints[i][j]->connection = a;
+					b->joints[i][j]->connection = b;
+				}
+			}
+
 		}
 
 		SImpulse newImpulse;
 		newImpulse.brick = a_pBrick;
-		newImpulse.point = a_rPoint;
-		newImpulse.impulse = a_rImpulse;
-		newImpulse.originalMomentum = a_pBrick->brick->GetGameObject()->m_pBody->getLinearMomentum();
-		newImpulse.originalAngularMomentum = a_pBrick->brick->GetGameObject()->m_pBody->getAngularMomentum();
 
 		m_inpulses.push_back(newImpulse);
 
@@ -457,11 +463,11 @@ namespace sba
 						joint->capacity =
 						-a_pBrick->connections[i].dir * joint->data->baseCapacity / ((a_rPoint.y - joint->data->posY) * a_rImpulse.z - (a_rPoint.z - joint->data->fulcrum) * a_rImpulse.y);
 
-					if (joint->data->numBlocking && joint->capacity > 0)
-					{
-						joint->capacity = 1.0f;
-					}
-					else
+					//if (joint->data->numBlocking && joint->capacity > 0)
+					//{
+					//	joint->capacity = 1.0f;
+					//}
+					//else
 					{
 						joint->capacity = ong_MIN(1.0f, ong_MAX(0.0f, joint->capacity));
 					}
@@ -608,7 +614,6 @@ namespace sba
 				}
 			}
 
-			//SetNewObject(impulse.brick, newObject, m_Tick++);
 
 			SBrickDestruction* pNewCenterBrick = calcCenterBrick(newObject->m_pBody->getLocalCenter(), newObject->m_pBricks.data(), newObject->m_pBricks.size());
 			newObject->SetCenterBrick(pNewCenterBrick);
@@ -616,19 +621,24 @@ namespace sba
 			SBrickDestruction* pOldCenterBrick = calcCenterBrick(oldObject->m_pBody->getLocalCenter(), oldObject->m_pBricks.data(), oldObject->m_pBricks.size());
 			oldObject->SetCenterBrick(pOldCenterBrick);
 
+			
 			if (brick->GetGameObject() == newObject)
 			{
-				printf("old: %f %f %f \n new: %f %f %f\n", oldObject->m_pBody->getLinearMomentum().x, oldObject->m_pBody->getLinearMomentum().y, oldObject->m_pBody->getLinearMomentum().z,
-					impulse.originalMomentum.x, impulse.originalMomentum.y, impulse.originalMomentum.z);
-
-				//oldObject->m_pBody->setLinearMomentum(impulse.originalMomentum);
-				//oldObject->m_pBody->setAngularMomentum(impulse.originalAngularMomentum);
+				newObject->m_pBody->applyImpulse(1.0f/newObject->m_pBody->getInverseMass() * oldObject->m_pBody->getLinearVelocity());
+				newObject->m_pBody->applyAngularImpulse(ong::inverse(newObject->m_pBody->getInverseInertia()) * oldObject->m_pBody->getAngularVelocity());
 			}
 			else
 			{
-				//newObject->m_pBody->setLinearMomentum(impulse.originalMomentum);
-				//newObject->m_pBody->setAngularMomentum(impulse.originalAngularMomentum);
+				oldObject->m_pBody->applyImpulse(1.0f / oldObject->m_pBody->getInverseMass() * newObject->m_pBody->getLinearVelocity());
+				oldObject->m_pBody->applyAngularImpulse(ong::inverse(oldObject->m_pBody->getInverseInertia()) * newObject->m_pBody->getAngularVelocity());
 			}
+
+			if (newObject->m_Type == TheBrick::EGameObjectType::Ship)
+				((CSpaceship*)newObject)->ReCalculateData();
+			if (oldObject->m_Type == TheBrick::EGameObjectType::Ship)
+				((CSpaceship*)oldObject)->ReCalculateData();
+
+			sba_Space->AddMiscObject(newObject);
 
 		}
 
@@ -636,4 +646,17 @@ namespace sba
 	}
 
 
+	void CDestructionManager::Reset()
+	{
+		delete m_Joints;
+		delete m_JointData;
+		delete m_BrickDestruction;
+
+		m_Joints =  new ong::Allocator<SJoint>(256);
+		m_JointData = new ong::Allocator<SJointData>(128);
+		m_BrickDestruction = new ong::Allocator<SBrickDestruction>(64);
+
+		m_Tick = 0;
+		m_inpulses.clear();
+	}
 }

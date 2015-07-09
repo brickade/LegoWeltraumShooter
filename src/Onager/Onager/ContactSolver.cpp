@@ -69,7 +69,6 @@ namespace ong
 
 				float penetrationBias = -0.02f * invDt * ong_MIN(0.0f, (man->points[j].penetration + 0.02f));
 				penetrationBias = ong_MIN(0.3f, penetrationBias);
-				printf("penetration %f\n", penetrationBias);
 
 				float restititutionBias = 0.0f;
 

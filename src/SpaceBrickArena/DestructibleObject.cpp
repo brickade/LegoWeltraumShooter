@@ -40,7 +40,7 @@ namespace sba
 		switch (other->GetGameObject()->m_Type)
 		{
 		case TheBrick::EGameObjectType::Bullet:
-			impulse = 5.0f * impulse;
+			impulse = 10.0f * impulse;
 			break;
 		case TheBrick::EGameObjectType::Ship:
 			impulse = 10.0f * impulse;

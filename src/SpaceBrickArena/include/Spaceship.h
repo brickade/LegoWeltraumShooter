@@ -25,6 +25,8 @@ namespace sba
         static const int MAX_BRICK_HEIGHT;
 
     private:
+		void CalculateProperties();
+
         ong::vec3 m_TargetVec;
         ong::vec3 m_TargetAng;
 
@@ -67,6 +69,7 @@ namespace sba
         ~CSpaceship();
 
         void CalculateData();
+		void ReCalculateData();
         void Update(float a_DeltaTime) override;
         void Thrust(float a_Thrust);
         void Spin(float a_Spin);

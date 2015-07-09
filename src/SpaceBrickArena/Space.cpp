@@ -182,4 +182,21 @@ namespace sba
     {
         this->Renderer->Draw(a_RendertargetIndex, false, this->Font, this->FontMaterial, a_Text, PuRe_Vector3F(a_Position, 0), PuRe_MatrixF::Identity(), PuRe_Vector3F(a_Size, a_Size, a_Size), a_Size * a_Width);
     }
+
+	void Space::AddMiscObject(TheBrick::CGameObject* a_pObject)
+	{
+		m_MiscObjects.push_back(a_pObject);
+	}
+
+	void Space::ClearMiscObjects()
+	{
+		for (auto pObject : m_MiscObjects)
+		{
+			delete pObject;
+		}
+		m_MiscObjects.clear();
+	}
+		
+		
+
 }
