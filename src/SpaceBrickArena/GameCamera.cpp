@@ -126,7 +126,15 @@ namespace sba
         //    else
         //        this->m_TimeToRotate -= Seconds;
         //}
-     
+
+        float xshake = 0.0f;
+        float yshake = 0.0f;
+        if (a_pPlayer->Shake != 0.0f)
+        {
+            xshake = sin(Seconds*100.0f) * 0.4f * a_pPlayer->Shake * a_pPlayer->Shake;
+            yshake = cos(Seconds*100.0f) * 0.4f * a_pPlayer->Shake * a_pPlayer->Shake;
+        }
+
         if (ong::length(a_pPlayer->Ship->m_pBody->getAngularVelocity()) < 10.0f)
         {
             PuRe_QuaternionF quat = TheBrick::OngToPuRe(a_pPlayer->Ship->m_pBody->getOrientation());
@@ -138,15 +146,8 @@ namespace sba
                 this->m_QRotation.Z += diff.Z / 5.0f;
                 this->m_QRotation.W += diff.W / 5.0f;
             }
-            PuRe_QuaternionF camrot = PuRe_QuaternionF(this->m_CamRotation.X, this->m_CamRotation.Y, 0.0f) * PuRe_QuaternionF(0.13f,0.0f,0.0f);
+            PuRe_QuaternionF camrot = PuRe_QuaternionF(xshake / 100.0f, yshake / 100.0f, 0.0f) * PuRe_QuaternionF(this->m_CamRotation.X, this->m_CamRotation.Y, 0.0f) * PuRe_QuaternionF(0.13f, 0.0f, 0.0f);
             this->SetRotation(this->m_QRotation*camrot);
-        }
-        float xshake = 0.0f;
-        float yshake = 0.0f;
-        if (a_pPlayer->Shake != 0.0f)
-        {
-            xshake = sin(Seconds*100.0f) * 0.6f * a_pPlayer->Shake * a_pPlayer->Shake;
-            yshake = cos(Seconds*100.0f) * 0.6f * a_pPlayer->Shake * a_pPlayer->Shake;
         }
         this->Move(PuRe_Vector3F(xshake, yshake+8.0f, -this->m_ZOffset));
     }

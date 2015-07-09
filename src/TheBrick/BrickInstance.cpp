@@ -8,13 +8,15 @@ namespace TheBrick
 {
     // **************************************************************************
     // **************************************************************************
-    CBrickInstance::CBrickInstance(CBrick& a_pBrick, CGameObject& a_rGameObject, ong::World& a_pWorld, PuRe_Color a_pColor)
+    CBrickInstance::CBrickInstance(CBrick& a_pBrick, CGameObject& a_rGameObject, ong::World& a_pWorld, PuRe_Color a_pColor,bool a_isSensor)
     {
         this->m_pBrick = &a_pBrick;
         this->m_pGameObject = &a_rGameObject;
         for (size_t i = 0; i < this->m_pBrick->GetColliderData().size(); i++)
-        {
-            ong::Collider* collider = a_pWorld.createCollider(this->m_pBrick->GetColliderData()[i]);
+        {   
+            ong::ColliderData data = this->m_pBrick->GetColliderData()[i];
+            data.isSensor = a_isSensor;
+            ong::Collider* collider = a_pWorld.createCollider(data);
             collider->setUserData(this);
             this->m_pCollider.push_back(collider);
         }

@@ -61,7 +61,7 @@ namespace TheBrick
         }
 
     public:
-        CBrickInstance(CBrick& a_pBrick, CGameObject& a_rGameObject, ong::World& a_pWorld, PuRe_Color a_pColor = PuRe_Color(0.7f, 0.7f, 0.7f, 1.0f));
+        CBrickInstance(CBrick& a_pBrick, CGameObject& a_rGameObject, ong::World& a_pWorld, PuRe_Color a_pColor = PuRe_Color(0.7f, 0.7f, 0.7f, 1.0f), bool a_isSensor=false);
         ~CBrickInstance();
 
         void RotateAroundPivotOffset(PuRe_QuaternionF a_Quaternion);

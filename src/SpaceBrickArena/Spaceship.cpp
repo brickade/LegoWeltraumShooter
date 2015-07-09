@@ -150,8 +150,7 @@ namespace sba
         for (std::vector<TheBrick::CBrickInstance**>::iterator it = engines.begin(); it != engines.end(); ++it)
         {
             TheBrick::CBrickInstance* engine = *(*it);
-            ong::Transform transform = engine->GetTransform();
-            PuRe_Vector3F pos = engine->PosToWorldSpace(TheBrick::OngToPuRe(transform.p));
+            PuRe_Vector3F pos = engine->PosToWorldSpace(engine->GetCenter());
             PuRe_ParticleEmitter* emitter = new PuRe_ParticleEmitter(pos, PuRe_QuaternionF());
             this->m_EngineEmitter.push_back(emitter);
         }
@@ -324,30 +323,23 @@ namespace sba
             if (this->m_Respawn == 0.0f)
 			{
                 TheBrick::CBrickInstance* engine = *(*it);
-                ong::Transform transform = engine->GetTransform();
-                ong::Transform ship = this->m_pBody->getTransform();
-                this->m_pBody->getPosition();
-                PuRe_Vector3F pos = TheBrick::OngToPuRe(ong::transformTransform(transform, ship).p);
+                PuRe_Vector3F pos = engine->PosToWorldSpace(engine->GetCenter());
                 //TheBrick::OngToPuRe(this->m_pBody->getOrientation())
                 emitter->m_Position = pos;
                 emitter->m_Rotation = TheBrick::OngToPuRe(this->m_pBody->getOrientation());
 
                 if (emitter->GetAmount() < (96 * amount) + 4)
                 {
-                    PuRe_Vector3F pos = PuRe_Vector3F(0.0f, 0.0f, 0.0f);
-                    if (engine->m_pBrick->GetBrickId() == 702)
-                    {
-                        pos.X -= 0.75f;
-                        pos.Y -= 0.75f;
-                    }
-                    else
-                    {
-                        pos.X += 0.5f;
-                    }
+                    pos = PuRe_Vector3F(0.0f, 0.0f, 0.0f);
                     pos.X += (std::rand() % 100) / 1000.0f;
                     pos.Y += (std::rand() % 100) / 1000.0f;
+                    if (engine->m_pBrick->GetBrickId() != 702)
+                    {
+                        pos.X += 0.20f;
+                        pos.Y += 0.20f;
+                    }
+                    pos.Z += -3.0f;
 
-                    pos.Z = -5.0f;
                     PuRe_Vector3F size = PuRe_Vector3F(1.5f, 1.5f, 1.5f);
                     PuRe_Vector3F velocity = PuRe_Vector3F(0.0f, 0.0f, (-0.001f*amount) - 0.0005f);
                     PuRe_Color color;

@@ -12,16 +12,18 @@ namespace sba
     CItem::CItem(ong::World& a_rWorld, EItemType a_Type, ong::vec3 a_Position, ong::vec3 a_Velocity, ong::vec3 a_Rotation) : CGameObject(a_rWorld, nullptr), m_ItemType(a_Type)
     {
         this->m_Type = TheBrick::EGameObjectType::Item;
-        TheBrick::CBrickInstance* brick = new TheBrick::CBrickInstance(*sba_BrickManager->GetBrickArray()[1], *this, *sba_World);
+        PuRe_Color color;
         switch (a_Type)
         {
-            case EItemType::Repair:
-                brick->m_Color = PuRe_Color(1.0f,1.0f,0.0f);
+        case EItemType::Repair:
+            color = PuRe_Color(1.0f, 1.0f, 0.0f);
             break;
-            case EItemType::Shield:
-                brick->m_Color = PuRe_Color(0.0f,0.0f,1.0f);
+        case EItemType::Shield:
+            color = PuRe_Color(0.0f, 0.0f, 1.0f);
             break;
         }
+        TheBrick::CBrickInstance* brick = new TheBrick::CBrickInstance(*sba_BrickManager->GetBrickArray()[1], *this, *sba_World, color, true);
+
         this->m_pBody->setPosition(a_Position);
         this->m_pBody->applyImpulse(a_Velocity);
         this->m_pBody->applyAngularImpulse(a_Rotation);
