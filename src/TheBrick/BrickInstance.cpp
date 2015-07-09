@@ -92,6 +92,21 @@ namespace TheBrick
         return nullptr;
     }
 
+	PuRe_Vector3F CBrickInstance::GetCenter()
+	{
+		ong::vec3 center(0,0,0);
+		float mass = 0.0f;
+		for (auto c : m_pCollider)
+		{
+			center += c->getMassData().m * c->getMassData().cm;
+			mass += c->getMassData().m;
+		}
+		center = 1.0f / mass * center;
+
+		return TheBrick::OngToPuRe(center);
+	}
+
+
 	void CBrickInstance::SetDestructionInstance(sba::SBrickDestruction* a_DestructionInstance)
 	{
 		m_pDestructionInstance = a_DestructionInstance;

@@ -72,6 +72,9 @@ namespace TheBrick
 
         SNub* GetNubAtWorldPos(const PuRe_Vector3F& a_WorldPos, float a_threshold) const;
 
+		// returns center of mass in brick space
+		PuRe_Vector3F GetCenter();
+
 		void SetDestructionInstance(sba::SBrickDestruction* a_DestructionInstance);
 		sba::SBrickDestruction* GetDestructionInstance();
     };
