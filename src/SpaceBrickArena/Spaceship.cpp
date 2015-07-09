@@ -59,14 +59,6 @@ namespace sba
             if (Ship->m_Respawn == 0.0f)
                 Ship->m_Life -= 10;
 
-            //ong::vec3 diff = oship->m_pBody->getWorldCenter() - Ship->m_pBody->getWorldCenter(); //from oship to ship
-            //ong::vec3 impactVector = contact->manifold.normal;
-            //diff.x *= 50.0f;
-            //diff.y *= 50.0f;
-            //diff.z *= 50.0f;
-
-            //Ship->m_pBody->applyImpulse(-diff);
-            //oship->m_pBody->applyImpulse(diff);
         }
         else if (object->m_Type == TheBrick::EGameObjectType::Item)
         {
