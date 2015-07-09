@@ -22,6 +22,7 @@ namespace sba
 		void SetCenterBrick(SBrickDestruction* a_pCenterBrick);
 		SBrickDestruction* getCenterBrick();
 
+        void Build();
 
 		void Deserialize(TheBrick::CSerializer& a_pSerializer, TheBrick::BrickArray& a_rBricks, ong::World& a_pWorld) override;
 	};

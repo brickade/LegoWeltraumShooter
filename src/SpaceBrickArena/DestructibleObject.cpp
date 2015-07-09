@@ -48,26 +48,27 @@ namespace sba
 		}
 
 		sba_Space->DestructionManager->AddImpulse(brick, point, impulse);
-	}
+    }
+
+    void CDestructibleObject::Build()
+    {
+        sba_Space->DestructionManager->BuildDestruction(this, m_pBricks.data(), m_pBricks.size());
+
+        for (auto pBrick : m_pBricks)
+        {
+            for (auto pCollider : pBrick->m_pCollider)
+            {
+                ong::ColliderCallbacks cb = pCollider->getColliderCallbacks();
+                cb.postSolve = ImpulseResponse;
+                pCollider->setCallbacks(cb);
+
+            }
+        }
+    }
 
 	void CDestructibleObject::Deserialize(TheBrick::CSerializer& a_pSerializer, TheBrick::BrickArray& a_rBricks, ong::World& a_pWorld) 
 	{
 		CGameObject::Deserialize(a_pSerializer, a_rBricks, a_pWorld);
-
-		sba_Space->DestructionManager->BuildDestruction(this, m_pBricks.data(), m_pBricks.size());
-
-		for (auto pBrick : m_pBricks)
-		{
-			for (auto pCollider : pBrick->m_pCollider)
-			{
-				ong::ColliderCallbacks cb = pCollider->getColliderCallbacks();
-				cb.postSolve = ImpulseResponse;
-				pCollider->setCallbacks(cb);
-
-			}
-		}
-
-
 	}
 
 

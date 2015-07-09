@@ -33,6 +33,7 @@ namespace sba
     void CAsteroid::Deserialize(TheBrick::CSerializer& a_pSerializer, TheBrick::BrickArray& a_rBricks, ong::World& a_pWorld)
     {
 		CDestructibleObject::Deserialize(a_pSerializer, a_rBricks, a_pWorld);
+        Build();
     }
 
     // **************************************************************************

@@ -25,7 +25,11 @@ namespace sba
         static const int MAX_BRICK_HEIGHT;
 
     private:
-		void CalculateProperties();
+        TheBrick::SBrickData* m_pBrickArray;
+        unsigned int m_BrickCount;
+
+        void CalculateProperties();
+        void CalculateReset();
 
         ong::vec3 m_TargetVec;
         ong::vec3 m_TargetAng;
@@ -70,6 +74,8 @@ namespace sba
 
         void CalculateData();
 		void ReCalculateData();
+
+        void Respawn(ong::vec3 a_Position);
 
         void Update(int a_OID, float a_DeltaTime);
         void Thrust(float a_Thrust);

@@ -24,6 +24,7 @@ namespace sba
         this->m_TargetAng = ong::vec3(0.0f, 0.0f, 0.0f);
         this->m_Name = a_Name;
         this->m_Respawn = 0.0f;
+        this->m_pBrickArray = NULL;
     }
 
     // **************************************************************************
@@ -32,6 +33,9 @@ namespace sba
     {
         for (unsigned int i = 0; i < this->m_EngineEmitter.size(); i++)
             SAFE_DELETE(this->m_EngineEmitter[i]);
+        this->m_EngineEmitter.clear();
+        SAFE_DELETE_ARRAY(this->m_pBrickArray);
+        this->m_pBrickArray = NULL;
     }
 
     // **************************************************************************
@@ -109,7 +113,8 @@ namespace sba
     }
 
 	void CSpaceship::CalculateProperties()
-	{
+    {
+
 		float mass = 1.0f / this->m_pBody->getInverseMass();
 		this->m_RotationAcceleration = PuRe_Vector3F(mass*50.0f, mass*100.0f, mass*100.0f);
 		this->m_SpeedAcceleration = mass*30.0f;
@@ -123,22 +128,44 @@ namespace sba
 		this->m_MaxLife = (int)(mass*10.0f);
 		
 		this->m_Shield = 0;
-	}
+    }
 
     // **************************************************************************
     // **************************************************************************
-    void CSpaceship::CalculateData()
+    void CSpaceship::Respawn(ong::vec3 a_Position)
     {
+        unsigned int size = this->m_BrickCount;
+        for (size_t i = 0; i < this->m_pBricks.size(); i++)
+        {
+            SAFE_DELETE(this->m_pBricks[i]);
+            i--;
+        }
+        this->m_pBricks.clear();
 
-		CalculateProperties();
-		this->m_Life = this->m_MaxLife;
+        for (unsigned int i = 0; i < this->m_EngineEmitter.size(); i++)
+            SAFE_DELETE(this->m_EngineEmitter[i]);
+        this->m_EngineEmitter.clear();
+
+        for (unsigned int i=0;i<size;i++)
+            this->AddBrick(this->m_pBrickArray[i], sba_BrickManager->GetBrickArray(), *sba_World);
 
 
+        this->m_Respawn = 0.0f;
+        this->m_pBody->setPosition(a_Position);
+        this->CalculateProperties();
+        this->CalculateReset();
+
+    }
+
+    // **************************************************************************
+    // **************************************************************************
+    void CSpaceship::CalculateReset()
+    {
         ong::Collider* c = this->m_pBody->getCollider();
         while (c)
         {
-			ong::ColliderCallbacks cb = c->getColliderCallbacks();
-			cb.beginContact = CSpaceship::Collision;
+            ong::ColliderCallbacks cb = c->getColliderCallbacks();
+            cb.beginContact = CSpaceship::Collision;
 
             c->setCallbacks(cb);
             c = c->getNext();
@@ -154,6 +181,29 @@ namespace sba
             PuRe_ParticleEmitter* emitter = new PuRe_ParticleEmitter(pos, PuRe_QuaternionF());
             this->m_EngineEmitter.push_back(emitter);
         }
+
+        Build();
+
+        this->m_Life = this->m_MaxLife;
+    }
+
+    // **************************************************************************
+    // **************************************************************************
+    void CSpaceship::CalculateData()
+    {
+        //Set Data once
+        SAFE_DELETE_ARRAY(this->m_pBrickArray);
+        this->m_pBrickArray = new TheBrick::SBrickData[this->m_pBricks.size()];
+        this->m_BrickCount = this->m_pBricks.size();
+        for (unsigned int i=0;i<this->m_pBricks.size();i++)
+        {
+            this->m_pBrickArray[i].ID = this->m_pBricks[i]->m_pBrick->GetBrickId();
+            this->m_pBrickArray[i].Transform = this->m_pBricks[i]->GetTransform();
+            this->m_pBrickArray[i].Color = this->m_pBricks[i]->m_Color;
+        }
+
+        CalculateProperties();
+        this->CalculateReset();
     }
 
 	void CSpaceship::ReCalculateData()
@@ -251,14 +301,7 @@ namespace sba
         {
             this->m_Respawn -= a_DeltaTime;
             if (this->m_Respawn < 0.0f)
-            {
-                this->m_Respawn = 0.0f;
-                float x = a_OID * 30.0f;
-                float y = 0.0f;
-                float z = 0.0f;
-                this->m_pBody->setPosition(ong::vec3(x, y, z));
-                this->m_Life = this->m_MaxLife;
-            }
+                this->Respawn(ong::vec3(a_OID*40.0f,0.0f,0.0f));
         }
         else
         {
