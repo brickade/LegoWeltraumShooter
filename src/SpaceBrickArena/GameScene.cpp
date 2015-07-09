@@ -436,14 +436,7 @@ namespace sba
                         dist = (dist - this->m_OriginDistance) / (this->m_MaxOriginDistance - this->m_OriginDistance);
                         mapend[camID] = true;
                         greyscale[camID] = dist;
-                        //shake[camID].X = xshake*dist*0.1f;
-                        //shake[camID].X = yshake*dist*0.1f;
                     }
-                }
-                if (sba_Players[j]->Shake != 0.0f)
-                {
-                    //shake[camID].X = xshake*sba_Players[j]->Shake*sba_Players[j]->Shake;
-                    //shake[camID].X = yshake*sba_Players[j]->Shake*sba_Players[j]->Shake;
                 }
                 camID++;
 
