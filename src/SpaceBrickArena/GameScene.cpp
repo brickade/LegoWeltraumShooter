@@ -41,8 +41,7 @@ namespace sba
                 input.Thrust = 100;
         }
         float fThrust = sba_Input->Axis(Input::EAxis::Type::GameThrust, a_PlayerIdx);
-        if (fThrust > 0.1f)
-            input.Thrust = (char)(fThrust*100.0f);
+        input.Thrust = (char)(((fThrust+1.0f)/2.0f)*100.0f);
 
         float Spin = sba_Input->Axis(Input::EAxis::Type::GameSpin, a_PlayerIdx);
         if (Spin < -0.1f || Spin > 0.1f)
@@ -143,7 +142,7 @@ namespace sba
         PuRe_IInput* aInput = this->m_pApplication->GetInput();
         PuRe_Timer* aTimer = this->m_pApplication->GetTimer();
         float seconds = aTimer->GetElapsedSeconds();
-        if (seconds < 2.0f)
+        if (seconds < 1.0f)
         {
             this->UpdateGame(this->m_Bullets, this->m_Items, seconds);
             for (unsigned int i = 0; i < sba_Players.size(); i++)
@@ -219,8 +218,9 @@ namespace sba
             sba_Renderer->SetSSAO(0, sba_Space->m_SSAOMaterial, sba_Space->m_pNoiseTexture);
         }
 
+        this->m_pSphere = new PuRe_Sphere(graphics);
 
-
+        this->m_pShieldMaterial = graphics->LoadMaterial("../data/effects/shield/default");
         this->m_pFontMaterial = graphics->LoadMaterial("../data/effects/font/default");
         this->m_pUIMaterial = graphics->LoadMaterial("../data/effects/UI/default");
         this->m_pPostMaterial = graphics->LoadMaterial("../data/effects/Post/default");
@@ -331,7 +331,7 @@ namespace sba
                 else
                     playerShip = sba_Players[i]->Ship;
                 if (playerShip->m_Life > 0.0f)
-                    this->m_Cameras[camID]->UpdateData(sba_Players[i]->PadID, playerShip, a_pApplication->GetInput(), a_pApplication->GetTimer());
+                    this->m_Cameras[camID]->UpdateData(sba_Players[i]->PadID, sba_Players[i], a_pApplication->GetInput(), a_pApplication->GetTimer());
                 PuRe_QuaternionF rotation = this->m_Cameras[camID]->GetQuaternion();
 
                 if (this->m_SpaceEmitter[camID]->GetAmount() < 200)
@@ -362,7 +362,7 @@ namespace sba
 
                 float dist = (TheBrick::OngToPuRe(playerShip->m_pBody->getWorldCenter()) - this->m_Origin).Length();
                 if (dist > this->m_MaxOriginDistance)
-                   playerShip->m_Life = 0.0f;
+                   playerShip->m_Life = 0;
 
                 camID++;
             }
@@ -416,14 +416,10 @@ namespace sba
 
 
         float seconds = timer->GetTotalElapsedSeconds();
-        float xshake = sin(seconds*100.0f) / 100.0f;
-        float yshake = cos(seconds*100.0f) / 100.0f;
         float greyscale[4];
         bool mapend[4];
-        PuRe_Vector2F shake[4];
         memset(greyscale, 0, sizeof(greyscale));
         memset(mapend, 0, sizeof(mapend));
-        memset(shake, 0, sizeof(shake));
 
         int camID = 0;
         for (unsigned int j = 0; j<sba_Players.size(); j++)
@@ -440,14 +436,14 @@ namespace sba
                         dist = (dist - this->m_OriginDistance) / (this->m_MaxOriginDistance - this->m_OriginDistance);
                         mapend[camID] = true;
                         greyscale[camID] = dist;
-                        shake[camID].X = xshake*dist*0.1f;
-                        shake[camID].X = yshake*dist*0.1f;
+                        //shake[camID].X = xshake*dist*0.1f;
+                        //shake[camID].X = yshake*dist*0.1f;
                     }
                 }
                 if (sba_Players[j]->Shake != 0.0f)
                 {
-                    shake[camID].X = xshake*sba_Players[j]->Shake*sba_Players[j]->Shake;
-                    shake[camID].X = yshake*sba_Players[j]->Shake*sba_Players[j]->Shake;
+                    //shake[camID].X = xshake*sba_Players[j]->Shake*sba_Players[j]->Shake;
+                    //shake[camID].X = yshake*sba_Players[j]->Shake*sba_Players[j]->Shake;
                 }
                 camID++;
 
@@ -456,7 +452,7 @@ namespace sba
 
 
         /////////////  DRAW Light  ///////////////////////
-        sba_Renderer->Draw(0, true, this->m_pDirectionalLight, this->m_pDirectionalLightMaterial, PuRe_Vector3F(1.0f, 0.0f, 0.0f), PuRe_Color(0.3f, 0.3f, 0.3f));
+        sba_Renderer->Draw(0, true, this->m_pDirectionalLight, this->m_pDirectionalLightMaterial, PuRe_Vector3F(1.0f, 0.0f, 0.0f), PuRe_Color(1.0f, 1.0f, 1.0f));
         /////////////  DRAW SKY  /////////////////////// 
 #ifdef Skybox
         for (int i = 0; i<this->m_LocalPlayers; i++)
@@ -469,12 +465,26 @@ namespace sba
         sba_BrickManager->Render();
         ////////////////////////////////////////////////////
 
+        /////////////  DRAW Shield  ///////////////////////
+        PuRe_IVertexBuffer* sphereBuffer = this->m_pSphere->GetBuffer();
+        ////////////////////////////////////////////////////
+
         /////////////  DRAW Particles  ///////////////////////
         for (int i = 0; i<this->m_LocalPlayers; i++)
             sba_Renderer->Draw(1, true, this->m_SpaceEmitter[i], this->m_pParticleMaterial, this->m_pParticle1Sprite);
         //player emitter
         for (unsigned int i = 0; i<sba_Players.size(); i++)
-            sba_Players[i]->Ship->DrawEmitter(this->m_pParticle1Sprite, this->m_pParticleMaterial);
+        {
+            if(sba_Players[i]->Ship->m_Shield != 0)
+            {            
+                auto b = sba_Players[i]->Ship->m_pBody;
+                auto tree = b->getBVTree();
+                float length = ong::length(tree->aabb.e);
+                PuRe_Vector3F pos = TheBrick::OngToPuRe(sba_Players[i]->Ship->m_pBody->getWorldCenter());
+                sba_Renderer->Draw(0, true, sphereBuffer, sphereBuffer->GetSize(), PuRe_Primitive::Triangles, this->m_pShieldMaterial, pos, PuRe_MatrixF(), PuRe_Vector3F(), PuRe_Vector3F(length, length, length));
+            }
+            sba_Players[i]->Ship->DrawEmitter(this->m_pParticle1Sprite, this->m_pParticleMaterial,this->m_pPointLight,this->m_pPointLightMaterial);
+        }
         //////////////////////////////////////////////////
 
         ///////////  DRAW UI  ///////////////////////
@@ -521,9 +531,6 @@ namespace sba
             case 1:
                 sba_Renderer->Set(0, PuRe_Vector3F(0.1f, 0.1f, 0.1f), "ambient");
                 sba_Renderer->Set(1, PuRe_Vector3F(1.0f, 1.0f, 1.0f), "ambient");
-                sba_Renderer->Set(0, shake[i], "shake");
-                sba_Renderer->Set(1, shake[i], "shake");
-                sba_Renderer->Set(2, PuRe_Vector2F(0.0f, 0.0f), "shake");
                 sba_Renderer->Set(0, greyscale[i], "greyscale", i);
                 sba_Renderer->Render(i, 0, this->m_Cameras[i], this->m_pPostMaterial, sba_FinalMaterial, size);
                 sba_Renderer->Render(i, 1, this->m_Cameras[i], this->m_pUIMaterial, sba_FinalMaterial, size);
@@ -533,9 +540,6 @@ namespace sba
                 size.X = i*gdesc.ResolutionWidth / 2.0f;
                 sba_Renderer->Set(0, PuRe_Vector3F(0.1f, 0.1f, 0.1f), "ambient");
                 sba_Renderer->Set(1, PuRe_Vector3F(1.0f, 1.0f, 1.0f), "ambient");
-                sba_Renderer->Set(0, shake[i], "shake");
-                sba_Renderer->Set(1, shake[i], "shake");
-                sba_Renderer->Set(2, PuRe_Vector2F(0.0f, 0.0f), "shake");
                 sba_Renderer->Set(0, greyscale[i], "greyscale", i);
                 sba_Renderer->Render(i, 0, this->m_Cameras[i], this->m_pPostMaterial, sba_FinalMaterial, size);
                 sba_Renderer->Render(i, 1, this->m_Cameras[i], this->m_pUIMaterial, sba_FinalMaterial, size);
@@ -544,9 +548,6 @@ namespace sba
             default:
                 sba_Renderer->Set(0, PuRe_Vector3F(0.1f, 0.1f, 0.1f), "ambient");
                 sba_Renderer->Set(1, PuRe_Vector3F(1.0f, 1.0f, 1.0f), "ambient");
-                sba_Renderer->Set(0, shake[i], "shake");
-                sba_Renderer->Set(1, shake[i], "shake");
-                sba_Renderer->Set(2, PuRe_Vector2F(0.0f, 0.0f), "shake");
                 sba_Renderer->Set(0, greyscale[i], "greyscale", i);
                 size.X = (i % 2)*gdesc.ResolutionWidth / 2.0f;
                 size.Y = (1 - ((int)(i / 2)))*gdesc.ResolutionHeight / 2.0f;
@@ -592,6 +593,7 @@ namespace sba
         for (unsigned int i = 0; i < this->m_SpaceEmitter.size(); i++)
             SAFE_DELETE(this->m_SpaceEmitter[i]);
         // DELETE MATERIALS
+        SAFE_DELETE(this->m_pShieldMaterial);
         SAFE_DELETE(this->m_pSpriteMaterial);
         SAFE_DELETE(this->m_pParticleMaterial);
         SAFE_DELETE(this->m_pDirectionalLightMaterial);
@@ -613,6 +615,7 @@ namespace sba
             SAFE_DELETE(sba_Players[i]);
         }
         sba_Players.clear();
+        SAFE_DELETE(this->m_pSphere);
         SAFE_DELETE(this->m_pSkyBox);
         SAFE_DELETE(this->m_pPointLight);
         SAFE_DELETE(this->m_pDirectionalLight);

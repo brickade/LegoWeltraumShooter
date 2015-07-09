@@ -33,15 +33,14 @@ namespace sba
     }
 
 
-    void CGameCamera::UpdateData(int a_CID, sba::CSpaceship* a_pPlayer, PuRe_IInput* a_pInput, PuRe_Timer* a_pTimer)
+    void CGameCamera::UpdateData(int a_CID, SPlayer* a_pPlayer, PuRe_IInput* a_pInput, PuRe_Timer* a_pTimer)
     {
         //Seconds for frame independent movement
         float Seconds = a_pTimer->GetElapsedSeconds();
-
-        float speed = TheBrick::OngToPuRe(a_pPlayer->m_pBody->getLinearVelocity()).Length();
+        float speed = TheBrick::OngToPuRe(a_pPlayer->Ship->m_pBody->getLinearVelocity()).Length();
 
         this->m_ZOffset = 50.0f;
-        float zOffset = speed / a_pPlayer->GetMaxSpeed();
+        float zOffset = speed / a_pPlayer->Ship->GetMaxSpeed();
         zOffset = zOffset*zOffset;
         zOffset *= speed/50.0f;
         this->m_ZOffset += 25.0f*(zOffset);
@@ -50,8 +49,8 @@ namespace sba
             this->m_TimeToRotate = 0.0f;
 
 
-
-        this->SetPosition(TheBrick::OngToPuRe(a_pPlayer->m_pBody->getWorldCenter()));
+        PuRe_Vector3F pos = TheBrick::OngToPuRe(a_pPlayer->Ship->m_pBody->getWorldCenter());
+        this->SetPosition(pos);
 
 
         //PuRe_Vector2F rightStick = a_pInput->GetGamepadRightThumb(a_CID);
@@ -129,7 +128,7 @@ namespace sba
         //}
      
 
-        PuRe_QuaternionF quat = TheBrick::OngToPuRe(a_pPlayer->m_pBody->getOrientation());
+        PuRe_QuaternionF quat = TheBrick::OngToPuRe(a_pPlayer->Ship->m_pBody->getOrientation());
         if (this->m_QRotation != quat)
         {
             PuRe_QuaternionF diff = quat - this->m_QRotation;
@@ -141,7 +140,14 @@ namespace sba
         PuRe_QuaternionF camrot = PuRe_QuaternionF(this->m_CamRotation.X, this->m_CamRotation.Y, 0.0f) * PuRe_QuaternionF(0.13f,0.0f,0.0f);
         this->SetRotation(this->m_QRotation*camrot);
 
-        this->Move(PuRe_Vector3F(0.0f, 8.0f, -this->m_ZOffset));
+        float xshake = 0.0f;
+        float yshake = 0.0f;
+        if (a_pPlayer->Shake != 0.0f)
+        {
+            xshake = sin(Seconds*100.0f) * 0.6f * a_pPlayer->Shake * a_pPlayer->Shake;
+            yshake = cos(Seconds*100.0f) * 0.6f * a_pPlayer->Shake * a_pPlayer->Shake;
+        }
+        this->Move(PuRe_Vector3F(xshake, yshake+8.0f, -this->m_ZOffset));
     }
 
     PuRe_QuaternionF CGameCamera::GetAim()

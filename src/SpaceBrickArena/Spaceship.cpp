@@ -212,8 +212,8 @@ namespace sba
     // **************************************************************************
     void CSpaceship::Thrust(float a_Thrust)
     {
-        if (a_Thrust > 0.2f || a_Thrust < -0.2f)
-            this->m_TargetVec.z += a_Thrust * this->m_MaxSpeed;
+        printf("Thrust: %f\n",a_Thrust);
+        this->m_TargetVec.z += a_Thrust * this->m_MaxSpeed;
     }
     // **************************************************************************
     // **************************************************************************
@@ -269,7 +269,7 @@ namespace sba
             }
 
             //this->m_Transform = this->m_pBody->getTransform();
-            this->m_TargetVec = ong::vec3(0.0f, 0.0f, this->m_MaxSpeed/4.0f);
+            this->m_TargetVec = ong::vec3(0.0f, 0.0f, this->m_MaxSpeed/5.0f);
             this->m_TargetAng = ong::vec3(0.0f, 0.0f, 0.0f);
 
             ong::Transform t = ong::Transform(ong::vec3(0.0f, 0.0f, 0.0f), ong::Quaternion(ong::vec3(0, 0, 0), 1));
@@ -330,10 +330,14 @@ namespace sba
 
     // **************************************************************************
     // **************************************************************************
-    void CSpaceship::DrawEmitter(PuRe_Sprite* a_pSprite,PuRe_IMaterial* a_pMaterial)
+    void CSpaceship::DrawEmitter(PuRe_Sprite* a_pSprite, PuRe_IMaterial* a_pMaterial, PuRe_PointLight* a_pLight, PuRe_IMaterial* a_pLightMaterial)
     {
         for (unsigned int i = 0; i<this->m_EngineEmitter.size(); i++)
-            sba_Renderer->Draw(1, true, this->m_EngineEmitter[i], a_pMaterial, a_pSprite,-1,0.2f);
+        {
+            sba_Renderer->Draw(0, true, this->m_EngineEmitter[i], a_pMaterial, a_pSprite,-1,0.2f);
+            PuRe_Vector3F emitterpos = this->m_EngineEmitter[i]->m_Position + PuRe_Vector3F(0.0f,0.0f,-3.0f)*this->m_EngineEmitter[i]->m_Rotation;
+            sba_Renderer->Draw(0, false, a_pLight, a_pLightMaterial, emitterpos, PuRe_Color(0.25f, 0.5f, 1.0f, 1.0f), 4.0f, 10.0f);
+        }
     }
 
     // **************************************************************************

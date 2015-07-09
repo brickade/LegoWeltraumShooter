@@ -59,8 +59,7 @@ void main()
     	vec3 diffuseLight = Factor * LightColor.rgb;
 
 	float specularLight = 0.0;
-	if(Factor > 0.0)
+	if(Factor > 0.0&&norm.a != 0.0f)
 		specularLight = CalcSpecular(lightVector,pos,norm);
-
 	gl_FragColor = attenuation * LightIntensity * vec4(diffuseLight,specularLight);
 }

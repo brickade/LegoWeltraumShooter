@@ -42,9 +42,9 @@ vec3 getPosition(vec2 uv)
     return worldpos.rgb;
 }
 
-vec3 getNormal(vec2 uv)
+vec4 getNormal(vec2 uv)
 {
-    return normalize(texture2D(NormalMap, uv).xyz * 2.0f - 1.0f);
+    return normalize(texture2D(NormalMap, uv) * 2.0f - 1.0f);
 }
 
 vec2 getRandom(vec2 uv)
@@ -86,18 +86,18 @@ void main()
 
 	);
     vec2 uv = CalcTexCoord(); //same as UV Coordinate from Vertex
+    vec4 n = getNormal(uv);
+    float ao = 0.0f;
     vec3 p = getPosition(uv);
-    vec3 n = getNormal(uv);
     vec2 rand = getRandom(uv);
     
     vec4 viewpos = CamView * vec4(p,1);
-    float ao = 0.0f;
     float rad = g_sample_rad/viewpos.z;
 
     for (int j = 0; j < KERNEL_SIZE; ++j)
     {
-        vec2 coord = reflect(Kernels[j].xy, rand)*rad;
-        ao += doAmbientOcclusion(uv, coord, p, n);
+      vec2 coord = reflect(Kernels[j].xy, rand)*rad;
+      ao += doAmbientOcclusion(uv, coord, p, n.xyz);
     }
     ao /= KERNEL_SIZE;
 

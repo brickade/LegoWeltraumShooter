@@ -8,6 +8,7 @@
 #include <PuReEngine/Defines.h>
 
 #include "Space.h"
+#include <Onager/BVH.h>
 
 #include "GameCamera.h"
 #include "NetworkHandler.h"
@@ -49,10 +50,12 @@ namespace sba
         //Game UI
         CGUI* m_pUI;
 
+        PuRe_Sphere* m_pSphere;
         PuRe_Font* m_pFont;
         PuRe_PointLight* m_pPointLight;
         PuRe_DirectionalLight* m_pDirectionalLight;
         PuRe_SkyBox* m_pSkyBox;
+        PuRe_IMaterial* m_pShieldMaterial;
         PuRe_IMaterial* m_pFontMaterial;
         PuRe_IMaterial* m_pUIMaterial;
         PuRe_IMaterial* m_pSkyMaterial;

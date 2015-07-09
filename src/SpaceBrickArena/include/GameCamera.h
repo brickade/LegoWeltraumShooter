@@ -6,6 +6,8 @@
 
 #include "Spaceship.h"
 
+#include "Player.h"
+
 namespace sba
 {
   class CGameCamera : public PuRe_Camera
@@ -26,7 +28,7 @@ namespace sba
     ~CGameCamera();
 
     void Initialize();
-    void UpdateData(int a_CID, sba::CSpaceship* a_pPlayer, PuRe_IInput* a_pInput, PuRe_Timer* a_pTimer);
+    void UpdateData(int a_CID, SPlayer* a_pPlayer, PuRe_IInput* a_pInput, PuRe_Timer* a_pTimer);
 
     float getZOffset();
 

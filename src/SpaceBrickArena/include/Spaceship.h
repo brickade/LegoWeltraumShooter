@@ -77,7 +77,7 @@ namespace sba
         void Serialize(TheBrick::CSerializer& a_pSerializer);
 
         void Reset(TheBrick::CBrick& a_rStartBrick, ong::World& a_rWorld);
-        void DrawEmitter(PuRe_Sprite* a_pSprite, PuRe_IMaterial* a_pMaterial);
+        void DrawEmitter(PuRe_Sprite* a_pSprite, PuRe_IMaterial* a_pMaterial,PuRe_PointLight* a_pLight,PuRe_IMaterial* a_pLightMaterial);
 
         //Dont use raw pointer to avoid destructor call with std::vector clear/erase
         void GetWeapons(std::vector<TheBrick::CBrickInstance**>& a_rOutVector);

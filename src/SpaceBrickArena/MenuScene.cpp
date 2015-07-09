@@ -171,8 +171,8 @@ namespace Menu
         default:
             break;
         }
-        renderer->Render(0, 0, this->m_pSceneCamera, this->m_pPostMaterial, sba_FinalMaterial);
         renderer->Set(1, PuRe_Vector3F(1.0f, 1.0f, 1.0f), "ambient");
+        renderer->Render(0, 0, this->m_pSceneCamera, this->m_pPostMaterial, sba_FinalMaterial);
         renderer->Render(0, 1, this->m_pUICamera, this->m_pPostMaterial, sba_FinalMaterial);
         renderer->End();
     }

@@ -1,0 +1,10 @@
+#version 330 core
+
+in vec3 UV;
+
+
+void main()
+{
+	gl_FragData[0] = vec4(0.0,0.25,1.0,0.5);
+	gl_FragData[1] = (vec4(-1,0,0,0)+1)/2;
+}

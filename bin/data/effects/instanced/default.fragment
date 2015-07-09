@@ -11,5 +11,5 @@ uniform sampler2D Diffuse;
 void main()
 {
 	gl_FragData[0] = Color;
-	gl_FragData[1] = vec4(Normal,1);
+	gl_FragData[1] = (vec4(Normal,1)+1)/2;
 }

@@ -12,8 +12,6 @@ uniform vec3 ambient = vec3(0.1,0.1,0.1);
 
 uniform int BlurSize = 4;
 
-uniform vec2 shake;
-
 uniform float greyscale = 0.0;
 
 vec2 CalcTexCoord()
@@ -23,12 +21,14 @@ vec2 CalcTexCoord()
 
 void main()
 {
-	vec2 TexCoord = CalcTexCoord()+shake;
+	vec2 TexCoord = CalcTexCoord();
 	vec4 blend = texture2D( DiffuseMap, TexCoord );
 	vec4 light = texture2D( LightMap, TexCoord );
 
 	vec4 norm = (texture2D( NormalMap, TexCoord )*2)-1;
 	vec4 depth = texture2D( DepthMap, TexCoord );
+
+	gl_FragDepth = depth.r;
 	
 	float ssao = 0.0;
    	vec2 texelSize = 1.0 / Resolution;
