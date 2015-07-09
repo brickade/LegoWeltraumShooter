@@ -131,6 +131,18 @@ namespace Editor
 
     // **************************************************************************
     // **************************************************************************
+    void CWorker::Suspend()
+    {
+        //Delete CurrentBrick
+        if (this->m_pCurrentBrick != nullptr)
+        {
+            SAFE_DELETE(this->m_pCurrentBrick);
+            this->m_pCurrentBrick = nullptr;
+        }
+    }
+
+    // **************************************************************************
+    // **************************************************************************
     void CWorker::UpdateTranslation(PuRe_Vector3F a_cameraLook, float a_speed)
     {
         PuRe_Vector2F MoveInput = sba_Input->Direction(sba_Direction::EditorMoveBrick, this->m_playerIdx) * a_speed;

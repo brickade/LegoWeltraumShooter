@@ -80,6 +80,7 @@ namespace Editor
         void Initialize(PuRe_IGraphics& a_pGraphics);
         void Update(PuRe_IGraphics& a_pGraphics, PuRe_IWindow& a_pWindow, PuRe_Timer& a_pTimer, PuRe_SoundPlayer& a_pSoundPlayer, TheBrick::CBrick* a_pCurrentBrick, PuRe_Color& a_rCurrentColor, CShipHandler& a_rShipHandler);
         void Render(CShipHandler& a_rShipHandler);
+        void Suspend();
 
     private:
         void UpdateTranslation(PuRe_Vector3F a_cameraLook, float a_speed);

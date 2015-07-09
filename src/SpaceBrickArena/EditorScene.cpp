@@ -42,6 +42,7 @@ namespace Editor
         {
             if (this->m_State == EEditorState::EditShip)
             {
+                this->m_pWorker->Suspend();
                 this->m_State = EEditorState::SelectShip;
             }
             else if (this->m_pShipHandler->GetCurrentState() == CShipHandler::ShipHandlerState::Select)
