@@ -113,8 +113,13 @@ namespace sba
 		float mass = 1.0f / this->m_pBody->getInverseMass();
 		this->m_RotationAcceleration = PuRe_Vector3F(mass*50.0f, mass*100.0f, mass*100.0f);
 		this->m_SpeedAcceleration = mass*30.0f;
-		this->m_MaxRotationSpeed = PuRe_Vector3F(1.0f, 1.0f, 1.0f);
-		this->m_MaxSpeed = 15.0f*(20.0f / mass);
+        this->m_MaxRotationSpeed = PuRe_Vector3F(1.0f, 1.0f, 1.0f);
+
+        std::vector<TheBrick::CBrickInstance**> engines;
+        this->GetEngines(engines);
+        engines.size();
+        this->m_MaxSpeed = (engines.size()*200.0f/mass)+1.0f;
+
 		this->m_MaxLife = (int)(mass*10.0f);
 		
 		this->m_Shield = 0;
