@@ -324,7 +324,7 @@ namespace sba
             if (sba_Players[i]->PadID != -1)
             {
 
-                sba_Players[i]->Update(timer->GetElapsedSeconds());
+                sba_Players[i]->Update(timer->GetElapsedSeconds(),this->m_Origin,this->m_OriginDistance);
                 sba::CSpaceship* playerShip;
                 if (camID == 0 && this->m_Test != -1)
                     playerShip = sba_Players[this->m_Test]->Ship;
@@ -359,10 +359,6 @@ namespace sba
                     this->m_SpaceEmitter[camID]->Update(a_pApplication->GetTimer()->GetElapsedSeconds());
                 this->m_SpaceEmitter[camID]->m_Position = this->m_Cameras[camID]->GetPosition();
                 this->m_SpaceEmitter[camID]->m_Rotation = rotation;
-
-                float dist = (TheBrick::OngToPuRe(playerShip->m_pBody->getWorldCenter()) - this->m_Origin).Length();
-                if (dist > this->m_MaxOriginDistance)
-                   playerShip->m_Life = 0;
 
                 camID++;
             }
@@ -433,9 +429,8 @@ namespace sba
                     float dist = (TheBrick::OngToPuRe(sba_Players[j]->Ship->m_pBody->getWorldCenter()) - this->m_Origin).Length();
                     if (dist > this->m_OriginDistance)
                     {
-                        dist = (dist - this->m_OriginDistance) / (this->m_MaxOriginDistance - this->m_OriginDistance);
                         mapend[camID] = true;
-                        greyscale[camID] = dist;
+                        greyscale[camID] = 1.0f;
                     }
                 }
                 camID++;

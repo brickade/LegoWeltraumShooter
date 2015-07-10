@@ -6,6 +6,7 @@
 #include <PuReEngine/Defines.h>
 
 #include "Spaceship.h"
+#include "TheBrick/Conversion.h"
 
 namespace sba
 {
@@ -20,9 +21,10 @@ namespace sba
         float ShootCooldown;
         float Shake;
         float Marker;
+        float OutTime;
         CSpaceship* Ship;
 
-        void Update(float a_DeltaTime)
+        void Update(float a_DeltaTime,PuRe_Vector3F& a_rOrigin,float& a_rDistance)
         {
             if (this->Shake != 0.0f)
             {
@@ -36,6 +38,18 @@ namespace sba
                 if (this->Marker < 0.0f)
                     this->Marker = 0.0f;
             }
+            float dist = (TheBrick::OngToPuRe(this->Ship->m_pBody->getWorldCenter()) - a_rOrigin).Length();
+            if (dist > a_rDistance)
+            {
+                OutTime += a_DeltaTime;
+                if (OutTime > 10.0f)
+                {
+                    OutTime = 0.0f;
+                    this->Ship->m_Life = 0;
+                }
+            }
+            else if (OutTime != 0.0f)
+                OutTime = 0.0f;
         }
     };
 }
