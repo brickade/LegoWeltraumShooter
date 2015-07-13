@@ -446,7 +446,7 @@ namespace sba
                     if (dist > this->m_OriginDistance)
                     {
                         mapend[camID] = true;
-                        greyscale[camID] = 1.0f;
+                        greyscale[camID] = 0.5f;
                     }
                 }
                 camID++;
@@ -485,11 +485,12 @@ namespace sba
                 auto tree = b->getBVTree();
                 float length = ong::length(tree->aabb.e);
                 PuRe_Vector3F pos = TheBrick::OngToPuRe(sba_Players[i]->Ship->m_pBody->getWorldCenter());
+                sba_Renderer->Set(0,1.0f,"intensity");
                 sba_Renderer->Draw(0, true, sphereBuffer, sphereBuffer->GetSize(), PuRe_Primitive::Triangles, this->m_pShieldMaterial, pos, PuRe_MatrixF(), PuRe_Vector3F(), PuRe_Vector3F(length, length, length));
             }
             sba_Players[i]->Ship->DrawEmitter(this->m_pParticle1Sprite, this->m_pParticleMaterial,this->m_pPointLight,this->m_pPointLightMaterial);
         }
-        //////////////////////////////////////////////////
+        /////////////////////////////////////////////////
 
         ///////////  DRAW UI  ///////////////////////
         this->m_pUI->DisplayUI(this->m_pFont, this->m_pFontMaterial, this->m_EndTime, this->m_WonID,mapend);
@@ -519,6 +520,17 @@ namespace sba
                         sba_Renderer->Draw(1, false, this->m_pLockSprite, this->m_pSpriteMaterial, pos, rotation.GetMatrix(), PuRe_Vector3F(), PuRe_Vector3F(size, size, size), PuRe_Color(), PuRe_Vector2F(), PuRe_Vector2F(), camID);
                     }
                 }
+
+                ///////////  DRAW SPHERE  ///////////////////////
+                float intensity = (this->m_Cameras[camID]->GetPosition() - this->m_Origin).Length() / this->m_OriginDistance;
+                if (intensity > 1.0f) intensity = 1.0f;
+                intensity *= intensity;
+                sba_Renderer->Set(0, intensity, "intensity");
+                if (intensity < 1.0f)
+                    sba_Renderer->SetCulling(0, false);
+                sba_Renderer->Draw(0, true, sphereBuffer, sphereBuffer->GetSize(), PuRe_Primitive::Triangles, this->m_pShieldMaterial, this->m_Origin, PuRe_MatrixF(), PuRe_Vector3F(), PuRe_Vector3F(this->m_OriginDistance, this->m_OriginDistance, this->m_OriginDistance),PuRe_Color(),camID);
+                sba_Renderer->SetCulling(0, true);
+                /////////////////////////////////////////////////
                 camID++;
             }
         }

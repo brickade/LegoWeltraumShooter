@@ -3,8 +3,12 @@
 in vec3 UV;
 
 
+uniform float intensity;
+
 void main()
 {
-	gl_FragData[0] = vec4(0.0,0.25,1.0,0.5);
+	vec4 color = vec4(0.0,0.25,1.0,0.5);
+	color.a *= intensity;
+	gl_FragData[0] = color;
 	gl_FragData[1] = (vec4(-1,0,0,0)+1)/2;
 }

@@ -128,7 +128,7 @@ namespace Editor
     {
         sba_Renderer->Begin(PuRe_Color(0.1f, 0.5f, 0.1f));
         //Lights
-        sba_Renderer->Draw(0, true, a_pDirectionalLight, a_pDirectionalLightMaterial, PuRe_Vector3F(1.0f, 0.0f, 0.0f), PuRe_Color(0.3f, 0.3f, 0.3f));
+        sba_Renderer->Draw(0, true, a_pDirectionalLight, a_pDirectionalLightMaterial, PuRe_Vector3F(1.0f, -0.5f, 0.0f), PuRe_Color(1.0f, 1.0f, 1.0f));
         sba_Renderer->Draw(1, false, a_pDirectionalLight, a_pDirectionalLightMaterial, PuRe_Vector3F(1.0f, 0.0f, 1.0f), PuRe_Color(0.3f, 0.3f, 0.3f));
 
         //Skybox
@@ -143,7 +143,7 @@ namespace Editor
     void CEditorScene::PostRender(Editor::CCamera* a_pSceneCamera, PuRe_Camera* a_pUICamera, PuRe_IMaterial* a_pUIMaterial, PuRe_IMaterial* a_pPostMaterial)
     {
         //Post
-        sba_Renderer->Set(0, PuRe_Vector3F(0.2f, 0.2f, 0.2f), "ambient");
+        sba_Renderer->Set(0, PuRe_Vector3F(0.4f, 0.4f, 0.4f), "ambient");
         sba_Renderer->Set(1, PuRe_Vector3F(1, 1, 1), "ambient");
         sba_Renderer->Set(2, PuRe_Vector3F(1, 1, 1), "ambient");
         sba_Renderer->Render(0, 0, a_pSceneCamera, a_pPostMaterial, sba_FinalMaterial); //Scene
