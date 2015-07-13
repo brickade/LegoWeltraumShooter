@@ -43,30 +43,26 @@ namespace ong
 
 
 		// broadphase
+		ong_START_PROFILE(BROADPHASE);
 		Pair* pairs = new Pair[m_numBodies * m_numBodies];
 		int numPairs = 0;
-		{
-#ifdef _PROFILE
-			//Profiler Profiler("generatePairs");
-#endif
-			numPairs = m_hGrid.generatePairs(pairs);
-		}
+		numPairs = m_hGrid.generatePairs(pairs);
 
+		ong_END_PROFILE(BROADPHASE);
 		assert(numPairs <= m_numBodies*m_numBodies);
 
 		//narrowphase
-
+		ong_START_PROFILE(NARROWPHASE);
 		//todo ...
 		//m_contactManager.generateContacts(pairs, numPairs, m_numColliders*m_numColliders);
 
-		{
-#ifdef _PROFILE
-			//Profiler profiler("generatContacts");
-#endif
-			m_contactManager.generateContacts(pairs, numPairs, 3 * numPairs);
-		}
+		m_contactManager.generateContacts(pairs, numPairs, 3 * numPairs);
+		
+		ong_END_PROFILE(NARROWPHASE);
 
 		//integrate
+		ong_START_PROFILE(INTEGRATE);
+
 		for (int i = 0; i < m_numBodies; ++i)
 		{
 			mat3x3 q = toRotMat(m_r[i].q);
@@ -80,8 +76,10 @@ namespace ong
 			m_v[i].w = m_m[i].invI* m_p[i].a;
 		}
 
+		ong_END_PROFILE(INTEGRATE);
 
 		//resolution	  
+		ong_START_PROFILE(RESOLUTION);
 		{
 			WorldContext context;
 			context.r = m_r.data();
@@ -110,7 +108,9 @@ namespace ong
 
 			delete[] contactConstraints;
 		}
+		ong_END_PROFILE(RESOLUTION);
 
+		ong_START_PROFILE(INTEGRATE2);
 		for (int i = 0; i < m_numBodies; ++i)
 		{
 			m_r[i].p += dt * m_v[i].v;
@@ -123,7 +123,7 @@ namespace ong
 			if (wScalar != 0.0f)
 				m_r[i].q = QuatFromAxisAngle(1.0f / wScalar * wAxis, wScalar) * m_r[i].q;
 		}
-
+		ong_END_PROFILE(INTEGRATE2);
 
 		delete[] pairs;
 	}

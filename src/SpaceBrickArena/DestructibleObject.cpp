@@ -22,6 +22,9 @@ namespace sba
 
 	void CDestructibleObject::ImpulseResponse(ong::Collider* thisCollider, ong::Contact* contact)
 	{
+		if (contact->manifold.numPoints == 0)
+			return;
+
 		TheBrick::CBrickInstance* brick = (TheBrick::CBrickInstance*)thisCollider->getUserData();
 		TheBrick::CBrickInstance* other = (TheBrick::CBrickInstance*)(thisCollider == contact->colliderA ? contact->colliderB : contact->colliderA)->getUserData();
 

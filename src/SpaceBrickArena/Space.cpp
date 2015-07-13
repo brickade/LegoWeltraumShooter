@@ -1,5 +1,7 @@
 #include "include/Space.h"
 
+#include "Onager\Profiler.h"
+
 namespace sba
 {
     Space* Space::g_pInstance = 0;
@@ -106,16 +108,22 @@ namespace sba
     {
         if (a_pTimer->GetTotalElapsedSeconds() - this->m_LastPhysicsUpdate >= 1 / this->m_PhysicsFramerate)
         {
+			ong_START_PROFILE(STEP);
             do
             {
                 this->m_LastPhysicsUpdate += 1 / this->m_PhysicsFramerate;
                 Space::Instance()->World->step(1 / this->m_PhysicsFramerate);
             } while (a_pTimer->GetTotalElapsedSeconds() - this->m_LastPhysicsUpdate >= 1 / this->m_PhysicsFramerate);
+			ong_END_PROFILE(STEP);
+
+			ong_START_PROFILE(REBUILD_RENDER_INSTANCE);
             Space::Instance()->BrickManager->RebuildRenderInstances(); //Update RenderInstances
+			ong_END_PROFILE(REBUILD_RENDER_INSTANCE);
 
 			//update destruction
+			ong_START_PROFILE(DESTRUCTION);
 			DestructionManager->Update();
-
+			ong_END_PROFILE(DESTRUCTION);
         }
 
 	}

@@ -420,15 +420,22 @@ namespace sba
     // **************************************************************************
     void CSpaceship::Reset(TheBrick::CBrick& a_rStartBrick, ong::World& a_rWorld)
     {
+        this->Reset();
+        TheBrick::CBrickInstance* brickInstance = a_rStartBrick.CreateInstance(*this, a_rWorld);
+        brickInstance->SetTransform(ong::Transform(ong::vec3(0, 0, 0), ong::Quaternion(ong::vec3(0, 0, 0), 1)));
+        brickInstance->RotateAroundPivotOffset(PuRe_QuaternionF(0.0f, 0.0f, 0.0f));
+        brickInstance->m_Color = PuRe_Color(0, 0, 1);
+    }
+
+    // **************************************************************************
+    // **************************************************************************
+    void CSpaceship::Reset()
+    {
         for (size_t i = 0; i < this->m_pBricks.size(); i++)
         {
             SAFE_DELETE(this->m_pBricks[i]);
             i--;
         }
-        TheBrick::CBrickInstance* brickInstance = a_rStartBrick.CreateInstance(*this, a_rWorld);
-        brickInstance->SetTransform(ong::Transform(ong::vec3(0, 0, 0), ong::Quaternion(ong::vec3(0, 0, 0), 1)));
-        brickInstance->RotateAroundPivotOffset(PuRe_QuaternionF(0.0f, 0.0f, 0.0f));
-        brickInstance->m_Color = PuRe_Color(0, 0, 1);
     }
 
     // **************************************************************************

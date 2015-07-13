@@ -2,6 +2,9 @@
 
 #include "TheBrick/Conversion.h"
 
+
+#include "Onager\Profiler.h"
+
 namespace sba
 {
     // **************************************************************************
@@ -144,13 +147,19 @@ namespace sba
         float seconds = aTimer->GetElapsedSeconds();
         if (seconds < 1.0f)
         {
+			ong_START_PROFILE(UPDATE_GAME);
             this->UpdateGame(this->m_Bullets, this->m_Items, seconds);
+			ong_END_PROFILE(UPDATE_GAME);
+
             for (unsigned int i = 0; i < sba_Players.size(); i++)
             {
                 sba::SInputData input = this->HandleInput(sba_Players[i]->PadID, aInput);
                 this->ProcessInput(this->m_Bullets, sba_Players[i], &input, seconds);
             }
+
+			ong_START_PROFILE(UPDATE_PHYSICS);
             sba::Space::Instance()->UpdatePhysics(aTimer);
+			ong_END_PROFILE(UPDATE_PHYSICS);
             this->m_EndTime -= seconds;
         }
     }
@@ -276,6 +285,8 @@ namespace sba
     // **************************************************************************
     int CGameScene::Update(PuRe_Application* a_pApplication)
     {
+		ong_START_PROFILE(UPDATE);
+
         PuRe_Timer* timer = a_pApplication->GetTimer();
         if (sba_Network->IsConnected())
         {
@@ -412,6 +423,8 @@ namespace sba
             }
         }
 
+	ong_END_PROFILE(UPDATE);
+
         return 1;
     }
 
@@ -419,6 +432,8 @@ namespace sba
     // **************************************************************************
     void CGameScene::Render(PuRe_Application* a_pApplication)
     {
+		ong_START_PROFILE(RENDER);
+
         PuRe_Color clear = PuRe_Color(0.0f, 0.4f, 1.0f);
         PuRe_GraphicsDescription gdesc = a_pApplication->GetGraphics()->GetDescription();
         PuRe_Timer* timer = a_pApplication->GetTimer();
@@ -616,6 +631,8 @@ namespace sba
         //////////////////////////////////////////////////
 
         ////////////////// POST SCREEN ////////////////////////////////
+		ong_START_PROFILE(POST_SCREEN)
+
         sba_Renderer->Set(0, (float)this->m_TextureID, "textureID");
         PuRe_Vector3F size = PuRe_Vector3F(0.0f, 0.0f, 0.0f);
 
@@ -669,15 +686,20 @@ namespace sba
         sba_Renderer->Render(0, 3, this->m_pUICam, this->m_pUIMaterial, sba_FinalMaterial, size);
 
         sba_Renderer->End();
+
+		ong_END_PROFILE(POST_SCREEN)
         ////////////////////////////////////////////////////
 
-
+		ong_END_PROFILE(RENDER);
     }
 
     // **************************************************************************
     // **************************************************************************
     void CGameScene::Exit()
     {
+
+		ong_PRINT_PROFILE(stdout);
+
         if (sba_Network->IsConnected())
             SAFE_DELETE(this->m_pNetwork);
         SAFE_DELETE(this->m_pUI);

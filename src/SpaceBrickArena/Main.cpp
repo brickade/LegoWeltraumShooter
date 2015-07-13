@@ -5,6 +5,7 @@
 #include "include/MainScene.h"
 
 
+#include "Onager\Profiler.h"
 
 int PURE_MAIN
 {
@@ -35,6 +36,7 @@ int PURE_MAIN
     sba::CMainScene scene(papplication);
 
     papplication->Run(&scene);
+
 
     SAFE_DELETE(papplication);
     SAFE_DELETE(pplatform);

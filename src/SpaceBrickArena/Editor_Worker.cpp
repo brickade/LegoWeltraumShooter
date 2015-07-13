@@ -58,6 +58,16 @@ namespace Editor
     // **************************************************************************
     void CWorker::Update(PuRe_IGraphics& a_pGraphics, PuRe_IWindow& a_pWindow, PuRe_Timer& a_pTimer, PuRe_SoundPlayer& a_pSoundPlayer, TheBrick::CBrick* a_pCurrentBrick, PuRe_Color& a_rCurrentColor, CShipHandler& a_rShipHandler)
     {
+        bool firstBrick = false;
+        if (a_rShipHandler.GetCurrentSpaceShip()->m_pBricks.size() == 0)
+        { //First Brick
+            firstBrick = true;
+            this->m_currentPosition = PuRe_Vector2F::Zero();
+            this->m_currentBrickPosition = PuRe_Vector2I::Zero();
+            this->m_canPlaceHere = true;
+            this->m_placeBelow = false;
+            this->m_currentHeight = 0;
+        }
 //#define EDITOR_DEBUG
         this->m_currentBrickColor = a_rCurrentColor;
         if (this->m_pCurrentBrick == nullptr || this->m_pCurrentBrick->m_pBrick != a_pCurrentBrick)
@@ -70,18 +80,21 @@ namespace Editor
             this->m_CurrentBrickHeightIstInvalid = true;
         }
         this->m_pCamera->Update(&a_pGraphics, &a_pWindow, &a_pTimer);
-        this->UpdateTranslation(this->m_pCamera->GetForward(), a_pTimer.GetElapsedSeconds() * 9);
+        if (!firstBrick)
+        {
+            this->UpdateTranslation(this->m_pCamera->GetForward(), a_pTimer.GetElapsedSeconds() * 9);
+        }
         this->UpdateRotation();
 
         //Update Placement Direction
-        if (sba_Input->ButtonPressed(sba_Button::EditorTogglePlacementSide, this->m_playerIdx))
+        if (sba_Input->ButtonPressed(sba_Button::EditorTogglePlacementSide, this->m_playerIdx) && !firstBrick)
         {
             this->m_placeBelow = !this->m_placeBelow;
             this->m_CurrentBrickHeightIstInvalid = true;
         }
 
         //Update Height
-        if (this->m_CurrentBrickHeightIstInvalid)
+        if (this->m_CurrentBrickHeightIstInvalid && !firstBrick)
         {
 #ifdef EDITOR_DEBUG
             printf("------------------------------\nUpdate Height on sec %f\n", a_pTimer.GetTotalElapsedSeconds());
@@ -105,6 +118,13 @@ namespace Editor
             this->m_pCurrentBrick = a_pCurrentBrick->CreateInstance(*this->m_pCurrentBrickObject, *sba_World); //Create Instance
             this->ApplyToCurrentBrick();
         }
+
+#ifdef _DEBUG
+        if (sba_Application->GetInput()->KeyPressed(PuRe_IInput::F6))
+        {
+            sba_ShipManager->SaveShipToFileAsObject(*a_rShipHandler.GetCurrentSpaceShip());
+        }
+#endif
 
         //Reset/Delete Ship
         /*if (sba_Input->ButtonPressed(sba_Button::EditorResetShip, this->m_playerIdx))
