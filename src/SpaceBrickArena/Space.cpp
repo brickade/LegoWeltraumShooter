@@ -183,10 +183,23 @@ namespace sba
         this->Renderer->Draw(a_RendertargetIndex, false, this->Font, this->FontMaterial, a_Text, PuRe_Vector3F(a_Position, 0), PuRe_MatrixF::Identity(), PuRe_Vector3F(a_Size, a_Size, a_Size), a_Size * a_Width);
     }
 
-	void Space::AddMiscObject(TheBrick::CGameObject* a_pObject)
-	{
-		m_MiscObjects.push_back(a_pObject);
-	}
+    void Space::AddMiscObject(TheBrick::CGameObject* a_pObject)
+    {
+        m_MiscObjects.push_back(a_pObject);
+    }
+
+    void Space::DelMiscOutside(ong::vec3& a_rOrigin, float& a_rDistance)
+    {
+        for (unsigned int i = 0; i<m_MiscObjects.size(); i++)
+        {
+            if (ong::length(m_MiscObjects[i]->m_pBody->getWorldCenter() - a_rOrigin) > a_rDistance)
+            {
+                delete m_MiscObjects[i];
+                m_MiscObjects.erase(m_MiscObjects.begin()+i);
+                --i;
+            }
+        }
+    }
 
 	void Space::ClearMiscObjects()
 	{

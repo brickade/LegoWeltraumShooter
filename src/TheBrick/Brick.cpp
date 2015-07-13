@@ -103,6 +103,10 @@ namespace TheBrick
         {
             return;
         }
+        if (this->GetBrickId() == 900)
+            a_rRenderer.Set(0,1.0f,"glow");
+        else
+            a_rRenderer.Set(0, 0.0f, "glow");
         a_rRenderer.Draw(0, false, this->m_pModel, PuRe_Primitive::Triangles, this->m_pMaterial, this->m_pRenderInstances, this->m_RenderInstancesCount);
     }
 

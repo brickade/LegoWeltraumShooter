@@ -2,6 +2,7 @@
 
 uniform sampler2D DiffuseMap;
 uniform sampler2D NormalMap;
+uniform sampler2D GlowMap;
 uniform sampler2D LightMap;
 uniform sampler2D DepthMap;
 uniform sampler2D SSAOMap;
@@ -11,7 +12,6 @@ uniform vec2 Resolution;
 uniform vec3 ambient = vec3(0.1,0.1,0.1);
 
 uniform int BlurSize = 4;
-
 uniform float greyscale = 0.0;
 
 vec2 CalcTexCoord()
@@ -24,6 +24,25 @@ void main()
 	vec2 TexCoord = CalcTexCoord();
 	vec4 blend = texture2D( DiffuseMap, TexCoord );
 	vec4 light = texture2D( LightMap, TexCoord );
+	vec4 glow = texture2D( GlowMap, TexCoord );
+
+	vec4 glowed = vec4(0.0,0.0,0.0,0.0);
+  	vec2 blurSize = vec2(0.002, 0.002);
+
+	//Do glow
+
+  	glowed += texture2D( GlowMap, TexCoord- 5.0 * blurSize) * 0.02;
+  	glowed += texture2D( GlowMap, TexCoord- 4.0 * blurSize) * 0.05;
+  	glowed += texture2D( GlowMap, TexCoord- 3.0 * blurSize) * 0.09;
+  	glowed += texture2D( GlowMap, TexCoord- 2.0 * blurSize) * 0.12;
+  	glowed += texture2D( GlowMap, TexCoord- 1.0 * blurSize) * 0.15;
+  	glowed += texture2D( GlowMap, TexCoord) * 0.3;
+  	glowed += texture2D( GlowMap, TexCoord+ 1.0 * blurSize) * 0.15;
+  	glowed += texture2D( GlowMap, TexCoord+ 2.0 * blurSize) * 0.12;
+  	glowed += texture2D( GlowMap, TexCoord+ 3.0 * blurSize) * 0.09;
+  	glowed += texture2D( GlowMap, TexCoord+ 4.0 * blurSize) * 0.05;
+  	glowed += texture2D( GlowMap, TexCoord+ 5.0 * blurSize) * 0.02;
+	
 
 	vec4 norm = (texture2D( NormalMap, TexCoord )*2)-1;
 	vec4 depth = texture2D( DepthMap, TexCoord );
@@ -31,6 +50,8 @@ void main()
 	gl_FragDepth = depth.r;
 	
 	float ssao = 0.0;
+
+
    	vec2 texelSize = 1.0 / Resolution;
    	vec2 hlim = vec2(float(-BlurSize) * 0.5 + 0.5);
    	for (int y = 0; y < BlurSize; ++y) 
@@ -44,9 +65,11 @@ void main()
    	ssao = ssao / float(BlurSize * BlurSize);
  	
 	vec3 color = (blend.xyz * (ambient+light.xyz)+light.a) * ssao;
-	blend = vec4(color,blend.a);
-        if(blend.a < 0.1)
-         discard;
+
+	blend = clamp(vec4(color,blend.a) + glowed,0,1);
+	
+	if(blend.a < 0.001)
+		discard;
 
 	float grey = dot(blend.rgb,vec3(0.3, 0.59, 0.11));
 	blend = mix(blend,vec4(grey,grey,grey,blend.a),greyscale);
@@ -58,7 +81,9 @@ void main()
 	else if(textureID == 2.0)
 	    gl_FragColor = vec4(1-depth.r,1-depth.r,1-depth.r,1);
 	else if(textureID == 3.0)
+	    gl_FragColor = glowed;
+	else if(textureID == 4.0)
 	    gl_FragColor = light;
 	else
-	    gl_FragColor = vec4(ssao,ssao,ssao,1);
+	    gl_FragColor = vec4(texture(SSAOMap, TexCoord).rgb,1);
 }

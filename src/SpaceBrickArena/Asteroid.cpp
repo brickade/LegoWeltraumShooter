@@ -2,6 +2,7 @@
 
 #include "Onager/World.h"
 #include "TheBrick/BrickInstance.h"
+#include "include/Spaceship.h"
 
 namespace sba
 {

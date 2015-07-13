@@ -68,11 +68,11 @@ namespace sba
 
         got = this->m_Table.find("WindowWidth");
         if (got == this->m_Table.end())
-            this->m_Table["WindowWidth"] = "1024";
+            this->m_Table["WindowWidth"] = "1440";
 
         got = this->m_Table.find("WindowHeight");
         if (got == this->m_Table.end())
-            this->m_Table["WindowHeight"] = "768";
+            this->m_Table["WindowHeight"] = "720";
 
         got = this->m_Table.find("DisplayMode");
         if (got == this->m_Table.end())

@@ -67,7 +67,8 @@ namespace sba
         void DeletePlayer(unsigned int a_Index);
 
 		// add global non updated objects (used for destruction)
-		void AddMiscObject(TheBrick::CGameObject* a_pObject);
+        void AddMiscObject(TheBrick::CGameObject* a_pObject);
+        void DelMiscOutside(ong::vec3& a_rOrigin, float& a_rDistance);
 		void ClearMiscObjects();
 
     private:

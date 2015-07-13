@@ -53,11 +53,11 @@ namespace sba
         if (object->m_Type == TheBrick::EGameObjectType::Ship)
         {
 
-            CSpaceship* oship = static_cast<CSpaceship*>(object);
-            if (oship->m_Respawn == 0.0f)
-                oship->m_Life -= 10;
-            if (Ship->m_Respawn == 0.0f)
-                Ship->m_Life -= 10;
+            //CSpaceship* oship = static_cast<CSpaceship*>(object);
+            //if (oship->m_Respawn == 0.0f)
+            //    oship->m_Life -= 10;
+            //if (Ship->m_Respawn == 0.0f)
+            //    Ship->m_Life -= 10;
 
         }
         else if (object->m_Type == TheBrick::EGameObjectType::Item)
@@ -88,6 +88,7 @@ namespace sba
             {
                 if (Ship->m_Respawn == 0.0f)
                 {
+                    Ship->m_Shake = 1.0f;
                     Ship->m_Life -= bull->m_Damage;
                     if (Ship->m_Life < 0)
                         bull->m_pOwner->Points += 10;
@@ -251,7 +252,6 @@ namespace sba
                 bdesc.type = ong::BodyType::Dynamic;
                 a_rBullets.push_back(new CBullet(&bdesc, *w, a_pOwner,PuRe_Color(1.0f,0.0f,0.0f,1.0f)));
             }
-            a_pOwner->Shake = 1.0f;
         }
     }
 
@@ -279,7 +279,6 @@ namespace sba
     // **************************************************************************
     void CSpaceship::Thrust(float a_Thrust)
     {
-        printf("Thrust: %f\n",a_Thrust);
         this->m_TargetVec.z += a_Thrust * this->m_MaxSpeed;
     }
     // **************************************************************************
@@ -395,9 +394,11 @@ namespace sba
     {
         for (unsigned int i = 0; i<this->m_EngineEmitter.size(); i++)
         {
+            sba_Renderer->SetCulling(0,false);
             sba_Renderer->Draw(0, true, this->m_EngineEmitter[i], a_pMaterial, a_pSprite,-1,0.2f);
             PuRe_Vector3F emitterpos = this->m_EngineEmitter[i]->m_Position + PuRe_Vector3F(0.0f,0.0f,-3.0f)*this->m_EngineEmitter[i]->m_Rotation;
             sba_Renderer->Draw(0, false, a_pLight, a_pLightMaterial, emitterpos, PuRe_Color(0.25f, 0.5f, 1.0f, 1.0f), 4.0f, 10.0f);
+            sba_Renderer->SetCulling(0, true);
         }
     }
 

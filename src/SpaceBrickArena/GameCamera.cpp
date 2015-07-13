@@ -129,10 +129,10 @@ namespace sba
 
         float xshake = 0.0f;
         float yshake = 0.0f;
-        if (a_pPlayer->Shake != 0.0f)
+        if (a_pPlayer->Ship->m_Shake != 0.0f)
         {
-            xshake = sin(Seconds*100.0f) * 0.4f * a_pPlayer->Shake * a_pPlayer->Shake;
-            yshake = cos(Seconds*100.0f) * 0.4f * a_pPlayer->Shake * a_pPlayer->Shake;
+            xshake = sin(Seconds*100.0f) * 0.8f * a_pPlayer->Ship->m_Shake * a_pPlayer->Ship->m_Shake;
+            yshake = cos(Seconds*100.0f) * 0.8f * a_pPlayer->Ship->m_Shake * a_pPlayer->Ship->m_Shake;
         }
 
         if (ong::length(a_pPlayer->Ship->m_pBody->getAngularVelocity()) < 10.0f)

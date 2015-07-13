@@ -6,10 +6,12 @@ in vec3 Normal;
 in vec3 Position;
 
 uniform sampler2D Diffuse;
+uniform float glow;
 
 
 void main()
 {
 	gl_FragData[0] = Color;
 	gl_FragData[1] = (vec4(Normal,1)+1)/2;
+	gl_FragData[2] = Color*glow;
 }

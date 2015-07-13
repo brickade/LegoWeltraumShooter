@@ -40,8 +40,11 @@ namespace ong
 
 	void Collider::calculateMassProperties()
 	{
-		//if (!m_sensor)
-			calculateMassData(m_shape, m_pMaterial->density, &m_massData);
+        float density = 0.0f;
+        if (m_pMaterial != NULL)
+            density = m_pMaterial->density;
+		//(!m_sensor)
+        calculateMassData(m_shape, density, &m_massData);
 	}
 
 	void Collider::setMaterial(Material* material)

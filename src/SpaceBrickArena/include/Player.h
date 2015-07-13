@@ -19,18 +19,17 @@ namespace sba
         bool Timeout;
         int Points;
         float ShootCooldown;
-        float Shake;
         float Marker;
         float OutTime;
         CSpaceship* Ship;
 
         void Update(float a_DeltaTime,PuRe_Vector3F& a_rOrigin,float& a_rDistance)
         {
-            if (this->Shake != 0.0f)
+            if (this->Ship->m_Shake != 0.0f)
             {
-                this->Shake -= a_DeltaTime;
-                if (this->Shake < 0.0f)
-                    this->Shake = 0.0f;
+                this->Ship->m_Shake -= a_DeltaTime;
+                if (this->Ship->m_Shake < 0.0f)
+                    this->Ship->m_Shake = 0.0f;
             }
             if (this->Marker != 0.0f)
             {

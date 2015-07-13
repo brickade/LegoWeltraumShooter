@@ -19,7 +19,6 @@ namespace sba
         ~CAsteroid();
 
         void Update(float a_DeltaTime) override;
-
         void Deserialize(TheBrick::CSerializer& a_pSerializer, TheBrick::BrickArray& a_rBricks, ong::World& a_pWorld) override;
         void Serialize(TheBrick::CSerializer& a_pSerializer) override;
     };

@@ -22,9 +22,9 @@ namespace sba
         float fShoot = sba_Input->Axis(Input::EAxis::Type::GameShoot, a_PlayerIdx);
         bool bShoot = false;
         if (a_PlayerIdx == 0)
-            bShoot = sba_Input->ButtonIsPressed(Input::EButton::Type::GameShoot,a_PlayerIdx);
+            bShoot = sba_Input->ButtonIsPressed(Input::EButton::Type::GameShoot, a_PlayerIdx);
 
-        if (bShoot||fShoot == 1.0f)
+        if (bShoot || fShoot == 1.0f)
             input.Shoot = true;
 
         PuRe_Vector2F Move = sba_Input->Direction(Input::EDirection::Type::GameMove, a_PlayerIdx);
@@ -41,7 +41,7 @@ namespace sba
                 input.Thrust = 100;
         }
         float fThrust = sba_Input->Axis(Input::EAxis::Type::GameThrust, a_PlayerIdx);
-        input.Thrust = (char)(((fThrust+1.0f)/2.0f)*100.0f);
+        input.Thrust = (char)(((fThrust + 1.0f) / 2.0f)*100.0f);
 
         float Spin = sba_Input->Axis(Input::EAxis::Type::GameSpin, a_PlayerIdx);
         if (Spin < -0.1f || Spin > 0.1f)
@@ -90,9 +90,9 @@ namespace sba
             ship->Move(Move);
 
         if (a_Input->Spin != 0)
-            ship->Spin(a_Input->Spin/100.0f);
+            ship->Spin(a_Input->Spin / 100.0f);
 
-        ship->Update(a_pPlayer->ID,a_DeltaTime);
+        ship->Update(a_pPlayer->ID, a_DeltaTime);
     }
 
     void CGameScene::UpdateGame(std::vector<CBullet*>& a_rBullets, std::vector<CItem*>& a_rItems, float a_Deltatime)
@@ -147,7 +147,7 @@ namespace sba
             this->UpdateGame(this->m_Bullets, this->m_Items, seconds);
             for (unsigned int i = 0; i < sba_Players.size(); i++)
             {
-                sba::SInputData input = this->HandleInput(sba_Players[i]->PadID,aInput);
+                sba::SInputData input = this->HandleInput(sba_Players[i]->PadID, aInput);
                 this->ProcessInput(this->m_Bullets, sba_Players[i], &input, seconds);
             }
             sba::Space::Instance()->UpdatePhysics(aTimer);
@@ -159,7 +159,8 @@ namespace sba
     // **************************************************************************
     void CGameScene::HandleNetwork()
     {
-        this->m_pNetwork->UpdateNetwork(this->m_Bullets, this->m_Items,this->m_pApplication->GetInput(), this->m_pApplication->GetTimer()->GetElapsedSeconds(), this->m_EndTime, &CGameScene::HandleInput, &CGameScene::ProcessInput, &CGameScene::UpdateGame);
+        this->m_pNetwork->UpdateNetwork(this->m_Bullets, this->m_Items, this->m_pApplication->GetInput(), this->m_pApplication->GetTimer()->GetElapsedSeconds(), this->m_EndTime, &CGameScene::HandleInput, &CGameScene::ProcessInput, &CGameScene::UpdateGame);
+
     }
 
     // **************************************************************************
@@ -177,7 +178,7 @@ namespace sba
             sba_Players[i]->Ship->m_pBody->setPosition(pos);
         }
 
-        if (!sba_Map->GetMapData(this->m_Asteroids,this->m_Items) ) //Map doesn't exist!! we end here
+        if (!sba_Map->GetMapData(this->m_Asteroids, this->m_Items)) //Map doesn't exist!! we end here
             this->m_EndTime = -1000;
 
         this->m_TimeLimit = 5.0f;
@@ -228,6 +229,7 @@ namespace sba
         this->m_pPointLightMaterial = graphics->LoadMaterial("../data/effects/PointLight/default");
         this->m_pDirectionalLightMaterial = graphics->LoadMaterial("../data/effects/DirectionalLight/default");
         this->m_pParticleMaterial = graphics->LoadMaterial("../data/effects/particles/default");
+        this->m_pEngineMaterial = graphics->LoadMaterial("../data/effects/engine/default");
         this->m_pSpriteMaterial = graphics->LoadMaterial("../data/effects/sprite/default");
         this->m_pPointLight = new PuRe_PointLight(graphics);
         this->m_pDirectionalLight = new PuRe_DirectionalLight(graphics);
@@ -241,7 +243,7 @@ namespace sba
         this->m_pUI = new CGUI(graphics);
 
         //Create for each player a camera
-        for (int i = 0; i<this->m_LocalPlayers; i++)
+        for (int i = 0; i < this->m_LocalPlayers; i++)
         {
             CGameCamera* Cam = new CGameCamera(fsize, PuRe_Camera_Perspective);
             Cam->Initialize();
@@ -259,12 +261,12 @@ namespace sba
 
         this->m_TextureID = 0;
 
-        #ifdef Skybox
-            this->m_pSkyBox = new PuRe_SkyBox(graphics, sba_Map->GetSkybox());
-        #endif
+#ifdef Skybox
+        this->m_pSkyBox = new PuRe_SkyBox(graphics, sba_Map->GetSkybox());
+#endif
 
-            if (sba_Network->IsConnected())
-                this->m_pNetwork = new CGameNetwork();
+        if (sba_Network->IsConnected())
+            this->m_pNetwork = new CGameNetwork();
 
         this->StartGame();
 
@@ -281,7 +283,7 @@ namespace sba
         }
 
         //Handle ESC Button
-        if (this->m_EndTime+10.0f < 0.0f||a_pApplication->GetInput()->KeyPressed(a_pApplication->GetInput()->ESC))
+        if (this->m_EndTime + 10.0f < 0.0f || a_pApplication->GetInput()->KeyPressed(a_pApplication->GetInput()->ESC))
         {
             if (sba_Network->IsConnected())
             {
@@ -299,7 +301,7 @@ namespace sba
             //    this->m_TextureID = 4;
             this->m_Test--;
             if (this->m_Test < 0)
-                this->m_Test = sba_Players.size()-1;
+                this->m_Test = sba_Players.size() - 1;
         }
 
         else if (a_pApplication->GetInput()->KeyPressed(a_pApplication->GetInput()->Right))
@@ -308,7 +310,7 @@ namespace sba
             //if (this->m_TextureID > 4)
             //    this->m_TextureID = 0;
             this->m_Test++;
-            if (this->m_Test > sba_Players.size()-1)
+            if (this->m_Test > sba_Players.size() - 1)
                 this->m_Test = 0;
         }
 
@@ -324,7 +326,7 @@ namespace sba
             if (sba_Players[i]->PadID != -1)
             {
 
-                sba_Players[i]->Update(timer->GetElapsedSeconds(),this->m_Origin,this->m_OriginDistance);
+                sba_Players[i]->Update(timer->GetElapsedSeconds(), this->m_Origin, this->m_OriginDistance);
                 sba::CSpaceship* playerShip;
                 if (camID == 0 && this->m_Test != -1)
                     playerShip = sba_Players[this->m_Test]->Ship;
@@ -341,7 +343,7 @@ namespace sba
                         PuRe_Vector3F pos = PuRe_Vector3F(0.0f, 0.0f, 0.0f);
                         pos.X = ((std::rand() % 100) / 10.0f) - 5.0f;
                         pos.Y = ((std::rand() % 100) / 10.0f) - 5.0f;
-                        pos.Z = (std::rand() % 100) / 10.0f;
+                        pos.Z = (std::rand() % 100) / 2.0f;
                         PuRe_Vector3F size = PuRe_Vector3F(0.05f, 0.05f, 0.05f);
                         float rsize = (std::rand() % 10) / 10.0f;
                         size.X *= rsize;
@@ -397,6 +399,19 @@ namespace sba
             this->m_Won = true;
         }
 
+        //Delete objects outside
+        ong::vec3 origin = TheBrick::PuReToOng(this->m_Origin);
+        sba_Space->DelMiscOutside(origin, this->m_OriginDistance);
+        for (unsigned int i = 0; i < this->m_Asteroids.size(); i++)
+        {
+            if (ong::length(this->m_Asteroids[i]->m_pBody->getWorldCenter() - origin) > this->m_OriginDistance)
+            {
+                delete this->m_Asteroids[i];
+                this->m_Asteroids.erase(this->m_Asteroids.begin() + i);
+                --i;
+            }
+        }
+
         return 1;
     }
 
@@ -418,7 +433,7 @@ namespace sba
         memset(mapend, 0, sizeof(mapend));
 
         int camID = 0;
-        for (unsigned int j = 0; j<sba_Players.size(); j++)
+        for (unsigned int j = 0; j < sba_Players.size(); j++)
         {
             if (sba_Players[j]->PadID != -1)
             {
@@ -443,10 +458,10 @@ namespace sba
         sba_Renderer->Draw(0, true, this->m_pDirectionalLight, this->m_pDirectionalLightMaterial, PuRe_Vector3F(1.0f, 0.0f, 0.0f), PuRe_Color(1.0f, 1.0f, 1.0f));
         /////////////  DRAW SKY  /////////////////////// 
 #ifdef Skybox
-        for (int i = 0; i<this->m_LocalPlayers; i++)
+        for (int i = 0; i < this->m_LocalPlayers; i++)
             sba_Renderer->Set(0, greyscale[i], "greyscale", i);
         sba_Renderer->Draw(0, true, this->m_pSkyBox, this->m_pSkyMaterial);
-        #endif
+#endif
         ////////////////////////////////////////////////////
 
         /////////////  DRAW BRICKS  ///////////////////////
@@ -458,26 +473,29 @@ namespace sba
         ////////////////////////////////////////////////////
 
         /////////////  DRAW Particles  ///////////////////////
-        for (int i = 0; i<this->m_LocalPlayers; i++)
-            sba_Renderer->Draw(1, true, this->m_SpaceEmitter[i], this->m_pParticleMaterial, this->m_pParticle1Sprite);
+        for (int i = 0; i < this->m_LocalPlayers; i++)
+            sba_Renderer->Draw(1, false, this->m_SpaceEmitter[i], this->m_pParticleMaterial, this->m_pParticle1Sprite);
+        //bullet emitter
+        for (auto bullet : this->m_Bullets)
+            bullet->DrawEmitter(this->m_pParticle1Sprite, this->m_pParticleMaterial, this->m_pPointLight, this->m_pPointLightMaterial);
         //player emitter
-        for (unsigned int i = 0; i<sba_Players.size(); i++)
+        for (unsigned int i = 0; i < sba_Players.size(); i++)
         {
-            if(sba_Players[i]->Ship->m_Shield != 0)
-            {            
+            if (sba_Players[i]->Ship->m_Shield != 0)
+            {
                 auto b = sba_Players[i]->Ship->m_pBody;
                 auto tree = b->getBVTree();
                 float length = ong::length(tree->aabb.e);
                 PuRe_Vector3F pos = TheBrick::OngToPuRe(sba_Players[i]->Ship->m_pBody->getWorldCenter());
-                sba_Renderer->Set(0,1.0f,"intensity");
+                sba_Renderer->Set(0, 1.0f, "intensity");
                 sba_Renderer->Draw(0, true, sphereBuffer, sphereBuffer->GetSize(), PuRe_Primitive::Triangles, this->m_pShieldMaterial, pos, PuRe_MatrixF(), PuRe_Vector3F(), PuRe_Vector3F(length, length, length));
             }
-            sba_Players[i]->Ship->DrawEmitter(this->m_pParticle1Sprite, this->m_pParticleMaterial,this->m_pPointLight,this->m_pPointLightMaterial);
+            sba_Players[i]->Ship->DrawEmitter(this->m_pParticle1Sprite, this->m_pEngineMaterial, this->m_pPointLight, this->m_pPointLightMaterial);
         }
         /////////////////////////////////////////////////
 
         ///////////  DRAW UI  ///////////////////////
-        this->m_pUI->DisplayUI(this->m_pFont, this->m_pFontMaterial, this->m_EndTime, this->m_WonID,mapend);
+        this->m_pUI->DisplayUI(this->m_pFont, this->m_pFontMaterial, this->m_EndTime, this->m_WonID, mapend);
         camID = 0;
         for (unsigned int i = 0; i < sba_Players.size(); i++)
         {
@@ -485,22 +503,99 @@ namespace sba
             {
                 PuRe_QuaternionF rotation = this->m_Cameras[camID]->GetQuaternion();
                 PuRe_Vector3F ppos = TheBrick::OngToPuRe(sba_Players[i]->Ship->m_pBody->getWorldCenter());
+                PuRe_Vector3F campos = this->m_Cameras[camID]->GetPosition();
+                PuRe_Vector3F up = this->m_Cameras[camID]->GetUp();
+                PuRe_Vector3F forward = this->m_Cameras[camID]->GetForward();
 
+                PuReEngine::Core::Plane<float> Left = this->m_Cameras[camID]->GetFrustrumPlane(PuReEngine::Core::Planes::Left);
+                PuReEngine::Core::Plane<float> Right = this->m_Cameras[camID]->GetFrustrumPlane(PuReEngine::Core::Planes::Right);
+                PuReEngine::Core::Plane<float> Top = this->m_Cameras[camID]->GetFrustrumPlane(PuReEngine::Core::Planes::Top);
+                PuReEngine::Core::Plane<float> Bottom = this->m_Cameras[camID]->GetFrustrumPlane(PuReEngine::Core::Planes::Bottom);
+                PuReEngine::Core::Plane<float> Near = this->m_Cameras[camID]->GetFrustrumPlane(PuReEngine::Core::Planes::Near);
+                PuReEngine::Core::Plane<float> Far = this->m_Cameras[camID]->GetFrustrumPlane(PuReEngine::Core::Planes::Far);
 
-                for (unsigned int j = 0; j<sba_Players.size(); j++)
+                //PuRe_Vector2F nearfar = this->m_Cameras[camID]->GetNearFar();
+
+                //PuRe_Vector3F zAxis = -this->m_Cameras[camID]->GetForward(); //new forward vector
+                //PuRe_Vector3F xAxis = PuRe_Vector3F::Normalize(PuRe_Vector3F::Cross(this->m_Cameras[camID]->GetUp(), zAxis)); //new side vector
+                //PuRe_Vector3F yAxis = PuRe_Vector3F::Normalize(PuRe_Vector3F::Cross(zAxis, xAxis)); //new up vector
+
+                //PuRe_Vector3F nearCenter = campos - zAxis * nearfar.X;
+                //PuRe_Vector3F farCenter = campos - zAxis * nearfar.Y;
+
+                //float hNear = 2 * tan(this->m_Cameras[camID]->GetFOV() / 2.0f) * nearfar.X;
+                //float wNear = hNear * (gdesc.ResolutionWidth / gdesc.ResolutionHeight);
+
+                PuRe_Vector3F aux, normal, point;
+
+                for (unsigned int j = 0; j < sba_Players.size(); j++)
                 {
                     if (sba_Players[j]->PadID != i)
                     {
                         PuRe_Vector3F pos = TheBrick::OngToPuRe(sba_Players[j]->Ship->m_pBody->getWorldCenter());
-                        pos += TheBrick::OngToPuRe(ong::rotate(ong::vec3(0.0f,5.0f,0.0f),sba_Players[j]->Ship->m_pBody->getOrientation()));
+                        pos += TheBrick::OngToPuRe(ong::rotate(ong::vec3(0.0f, 5.0f, 0.0f), sba_Players[j]->Ship->m_pBody->getOrientation()));
                         PuRe_Vector3F diffPos = (ppos - pos);
-
-                        float diff = diffPos.Length()/500.0f;
+                        float diff = diffPos.Length() / 500.0f;
                         if (diff > 1.0f)
                             diff = 1.0f;
                         if (diff < 0.1f)
                             diff = 0.1f;
                         float size = 0.1f*diff;
+
+                        //PuRe_BoundingBox box;
+                        //box.m_Position = pos;
+                        //box.m_Size = PuRe_Vector3F(size,size,size);
+                        //box.m_Size += pos;
+
+                        PuRe_Vector3F CamToPos = PuRe_Vector3F::Normalize(campos - pos);
+                        PuRe_Vector3F ScreenPos;
+                        bool inside = true;
+                        float Val = -0.3f;
+                        if (PuRe_Vector3F::Dot(CamToPos, Left.Normal) > Val) //right
+                        {
+                            ScreenPos.X = 0.7f;
+                            inside = false;
+                        }
+                        else if (PuRe_Vector3F::Dot(CamToPos, Right.Normal) > Val) //left
+                        {
+                            ScreenPos.X = -0.7f;
+                            inside = false;
+                        }
+                        if (PuRe_Vector3F::Dot(CamToPos, Top.Normal) > Val) //top
+                        {
+                            ScreenPos.Y = 0.4f;
+                            inside = false;
+                        }
+                        else if (PuRe_Vector3F::Dot(CamToPos, Bottom.Normal) > Val) //bottom
+                        {
+                            ScreenPos.Y = -0.4f;
+                            inside = false;
+                        }
+                        else if (PuRe_Vector3F::Dot(CamToPos, Near.Normal) > Val) //behind
+                        {
+                            ScreenPos.Y = -0.4f;
+                            inside = false;
+                        }
+
+                        if (!inside)
+                        {
+                            ScreenPos = (ScreenPos*rotation);
+                            if (i == 0)
+                                printf("ScreenPos %f %f %f\n", ScreenPos.X, ScreenPos.Y, ScreenPos.Z);
+                            pos = campos;
+                            pos += forward;
+                            pos += ScreenPos;
+                            size = 0.001f;
+                        }
+                        //if (PuRe_Vector3F::Dot(CamToPos, Far.Normal) > 0.0f) //infront
+
+
+                                           //if (!this->m_Cameras[camID]->BoxInFrustum(&box))
+                                           //{
+                                           //float dot =
+                                           //}
+                        
+
                         sba_Renderer->Draw(1, false, this->m_pLockSprite, this->m_pSpriteMaterial, pos, rotation.GetMatrix(), PuRe_Vector3F(), PuRe_Vector3F(size, size, size), PuRe_Color(), PuRe_Vector2F(), PuRe_Vector2F(), camID);
                     }
                 }
@@ -509,11 +604,11 @@ namespace sba
                 float intensity = (this->m_Cameras[camID]->GetPosition() - this->m_Origin).Length() / this->m_OriginDistance;
                 if (intensity > 1.0f) intensity = 1.0f;
                 intensity *= intensity;
-                sba_Renderer->Set(0, intensity, "intensity");
+                sba_Renderer->Set(0, intensity, "intensity", camID);
                 if (intensity < 1.0f)
-                    sba_Renderer->SetCulling(0, false);
-                sba_Renderer->Draw(0, true, sphereBuffer, sphereBuffer->GetSize(), PuRe_Primitive::Triangles, this->m_pShieldMaterial, this->m_Origin, PuRe_MatrixF(), PuRe_Vector3F(), PuRe_Vector3F(this->m_OriginDistance, this->m_OriginDistance, this->m_OriginDistance),PuRe_Color(),camID);
-                sba_Renderer->SetCulling(0, true);
+                    sba_Renderer->SetCulling(0, false, camID);
+                sba_Renderer->Draw(0, true, sphereBuffer, sphereBuffer->GetSize(), PuRe_Primitive::Triangles, this->m_pShieldMaterial, this->m_Origin, PuRe_MatrixF(), PuRe_Vector3F(), PuRe_Vector3F(this->m_OriginDistance, this->m_OriginDistance, this->m_OriginDistance), PuRe_Color(), camID);
+                sba_Renderer->SetCulling(0, true, camID);
                 /////////////////////////////////////////////////
                 camID++;
             }
@@ -523,7 +618,7 @@ namespace sba
         ////////////////// POST SCREEN ////////////////////////////////
         sba_Renderer->Set(0, (float)this->m_TextureID, "textureID");
         PuRe_Vector3F size = PuRe_Vector3F(0.0f, 0.0f, 0.0f);
-        
+
         for (int i = 0; i < this->m_LocalPlayers; i++)
         {
             switch (this->m_LocalPlayers)
@@ -567,7 +662,7 @@ namespace sba
             sba_Renderer->Render(3, 1, this->m_Cameras[3], this->m_pUIMaterial, sba_FinalMaterial, size);
         }
 
-      
+
 
         size.X = 0.0f;
         size.Y = 0.0f;
@@ -596,6 +691,7 @@ namespace sba
         SAFE_DELETE(this->m_pShieldMaterial);
         SAFE_DELETE(this->m_pSpriteMaterial);
         SAFE_DELETE(this->m_pParticleMaterial);
+        SAFE_DELETE(this->m_pEngineMaterial);
         SAFE_DELETE(this->m_pDirectionalLightMaterial);
         SAFE_DELETE(this->m_pPointLightMaterial);
         SAFE_DELETE(this->m_pFontMaterial);
@@ -626,9 +722,9 @@ namespace sba
         // DELETE RENDERER
         SAFE_DELETE(this->m_pFont);
         sba_BrickManager->RebuildRenderInstances();
-		// reset destruction
-		sba_Space->DestructionManager->Reset();
-		sba_Space->ClearMiscObjects();
+        // reset destruction
+        sba_Space->DestructionManager->Reset();
+        sba_Space->ClearMiscObjects();
 
     }
 }
