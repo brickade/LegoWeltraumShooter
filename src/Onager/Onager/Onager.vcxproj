@@ -111,6 +111,7 @@
     <ClInclude Include="include\Onager\MassProperties.h" />
     <ClInclude Include="include\Onager\myMath.h" />
     <ClInclude Include="include\Onager\Narrowphase.h" />
+    <ClInclude Include="include\Onager\Profiler.h" />
     <ClInclude Include="include\Onager\QuickHull.h" />
     <ClInclude Include="include\Onager\SAT.h" />
     <ClInclude Include="include\Onager\Settings.h" />
@@ -118,7 +119,6 @@
     <ClInclude Include="include\Onager\States.h" />
     <ClInclude Include="include\Onager\VolumeIntegration.h" />
     <ClInclude Include="include\Onager\World.h" />
-    <ClInclude Include="Profiler.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
