@@ -8,6 +8,8 @@
 #include "include/EditorScene.h"
 #include "include/Editor_Camera.h"
 
+#include "include/Asteroid.h"
+
 namespace sba
 {
     // **************************************************************************
@@ -128,7 +130,7 @@ namespace sba
     // **************************************************************************
     void CShipManager::ResetShip(sba::CSpaceship& a_rShip)
     { //Reset given ship to default and update sprite
-        a_rShip.Reset(sba_BrickManager->GetBrick(341), *sba_World); //Plate6x6
+        a_rShip.Reset(/*sba_BrickManager->GetBrick(341), *sba_World*/); //Plate6x6
         this->UpdateSprite(a_rShip);
     }
 
@@ -157,6 +159,20 @@ namespace sba
             }
         }
     }
+
+#ifdef _DEBUG
+    // **************************************************************************
+    // **************************************************************************
+    void CShipManager::SaveShipToFileAsObject(sba::CSpaceship& a_rShip)
+    { //Save given ship to file
+        TheBrick::CSerializer serializer = TheBrick::CSerializer();
+        if (serializer.OpenWrite(std::string(this->PathFromShip(a_rShip)).append(".object").c_str()))
+        {
+            reinterpret_cast<TheBrick::CGameObject&>(a_rShip).Serialize(serializer);
+            serializer.Close();
+        }
+    }
+#endif
 
     // **************************************************************************
     // **************************************************************************
