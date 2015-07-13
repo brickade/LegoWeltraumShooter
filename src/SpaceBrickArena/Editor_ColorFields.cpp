@@ -146,7 +146,7 @@ namespace Editor
             {
                 size *= 1.4f;
             }
-            sba_Renderer->Draw(1, false, this->m_pQuad->GetBuffer(), this->m_pQuad->GetBuffer()->GetSize(), PuRe_Primitive::Trianglestrip, sba_BrickManager->GetBrickUIMaterial(), pos, PuRe_MatrixF::Identity(), PuRe_Vector3F::Zero(), PuRe_Vector3F(size, size, size), this->m_Colors[i]);
+            sba_Renderer->Draw(2, false, this->m_pQuad->GetBuffer(), this->m_pQuad->GetBuffer()->GetSize(), PuRe_Primitive::Trianglestrip, sba_BrickManager->GetBrickUIMaterial(), pos, PuRe_MatrixF::Identity(), PuRe_Vector3F::Zero(), PuRe_Vector3F(size, size, size), this->m_Colors[i]);
         }
     }
 
