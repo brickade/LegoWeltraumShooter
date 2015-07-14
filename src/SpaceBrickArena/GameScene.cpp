@@ -360,10 +360,7 @@ namespace sba
                         size.Y *= rsize;
                         size.Z *= rsize;
                         PuRe_Vector3F velocity = PuRe_Vector3F(0.0f, 0.0f, 0.0f);
-                        PuRe_Color color;
-                        color.R = (std::rand() % 255) / 255.0f;
-                        color.G = (std::rand() % 255) / 255.0f;
-                        color.B = (std::rand() % 255) / 255.0f;
+                        PuRe_Color color = PuRe_Color(1.0f,1.0f,1.0f,1.0f);
                         this->m_SpaceEmitter[camID]->Spawn(0.5f, pos, size, velocity, rotation, color);
                     }
                 }

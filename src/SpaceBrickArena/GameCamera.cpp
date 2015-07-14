@@ -1,5 +1,5 @@
 #include "include\GameCamera.h"
-
+#include "include/Space.h"
 #include "TheBrick/Conversion.h"
 
 namespace sba
@@ -45,8 +45,6 @@ namespace sba
         zOffset *= speed/50.0f;
         this->m_ZOffset += 25.0f*(zOffset);
 
-        if (a_pInput->GamepadPressed(a_pInput->Right_Thumb,a_CID))
-            this->m_TimeToRotate = 0.0f;
 
 
         PuRe_Vector3F pos = TheBrick::OngToPuRe(a_pPlayer->Ship->m_pBody->getWorldCenter());
@@ -134,6 +132,73 @@ namespace sba
             xshake = sin(Seconds*100.0f) * 0.8f * a_pPlayer->Ship->m_Shake * a_pPlayer->Ship->m_Shake;
             yshake = cos(Seconds*100.0f) * 0.8f * a_pPlayer->Ship->m_Shake * a_pPlayer->Ship->m_Shake;
         }
+        PuRe_Vector2F Move = sba_Input->Direction(Input::EDirection::Type::GameMove, a_CID);
+        if (Move.Length() > 1.0f)
+        {
+            Move.X *= abs(Move.X);
+            Move.Y *= abs(Move.Y);
+        }
+        else
+            Move = PuRe_Vector2F(0.0f,0.0f);
+
+        printf("X %f Y %f\n",Move.X,Move.Y);
+
+        float leng = ong::length(a_pPlayer->Ship->m_pBody->getLinearVelocity()) / a_pPlayer->Ship->GetMaxSpeed();
+        leng *= leng;
+        float max = 20.0f; //max movement
+        float x = Move.X*max*leng;
+        float y = (Move.Y*max*leng) + 8.0f*(1.0f - abs(Move.Y));
+
+        float secs = Seconds*10.0f; //speed it changes
+
+        //X Axis
+        if (this->m_CamMove.X != x)
+        {
+            if (this->m_CamMove.X > x) //Cam.X is greater than X
+            {
+                if (x > 0.0f) //X is greater than 0 , so Cam.X is between X and MAX
+                    this->m_CamMove.X -= secs;
+                else // X is less than 0 , so the player move the stick to the other side
+                    this->m_CamMove.X -= secs*4.0f;
+                if (this->m_CamMove.X < x)
+                    this->m_CamMove.X = x;
+            }
+            else if (this->m_CamMove.X < x)
+            {
+                if (x < 0.0f) //X is less than 0 , so Cam.X is between X and -MAX
+                    this->m_CamMove.X += secs;
+                else // X is greater , so the player move the stick to the other side
+                    this->m_CamMove.X += secs*4.0f;
+                if (this->m_CamMove.X > x)
+                    this->m_CamMove.X = x;
+            }
+        }
+
+        //Y Axis
+        if (this->m_CamMove.Y != y)
+        {
+            if (this->m_CamMove.Y > y) //Cam.X is greater than X
+            {
+                if (y > 0.0f) //X is greater than 0 , so Cam.X is between X and MAX
+                    this->m_CamMove.Y -= secs;
+                else // X is less than 0 , so the player move the stick to the other side
+                    this->m_CamMove.Y -= secs*2.0f;
+                if (this->m_CamMove.Y < y)
+                    this->m_CamMove.Y = y;
+            }
+            else if (this->m_CamMove.Y < y)
+            {
+                if (y < 0.0f) //X is less than 0 , so Cam.X is between X and -MAX
+                    this->m_CamMove.Y += secs;
+                else // X is greater , so the player move the stick to the other side
+                    this->m_CamMove.Y += secs*2.0f;
+                if (this->m_CamMove.Y > y)
+                    this->m_CamMove.Y = y;
+            }
+        }
+/*
+        this->m_CamRotation.X = -Move.Y*leng*0.5f;
+        this->m_CamRotation.Y = -Move.X*leng*0.5f;*/
 
         if (ong::length(a_pPlayer->Ship->m_pBody->getAngularVelocity()) < 10.0f)
         {
@@ -149,7 +214,9 @@ namespace sba
             PuRe_QuaternionF camrot = PuRe_QuaternionF(xshake / 100.0f, yshake / 100.0f, 0.0f) * PuRe_QuaternionF(this->m_CamRotation.X, this->m_CamRotation.Y, 0.0f) * PuRe_QuaternionF(0.13f, 0.0f, 0.0f);
             this->SetRotation(this->m_QRotation*camrot);
         }
-        this->Move(PuRe_Vector3F(xshake, yshake+8.0f, -this->m_ZOffset));
+        x = xshake + this->m_CamMove.X;
+        y = yshake + this->m_CamMove.Y;
+        this->Move(PuRe_Vector3F(x, y, -this->m_ZOffset));
     }
 
     PuRe_QuaternionF CGameCamera::GetAim()

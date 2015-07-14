@@ -248,7 +248,7 @@ namespace sba
                 
 
                 float len = TheBrick::OngToPuRe(this->m_pBody->getLinearVelocity()).Length();
-                PuRe_Vector3F speed = forward*100.0f + forward * len;
+                PuRe_Vector3F speed = forward*200.0f + forward * len;
                 speed *= 1.0f / 50.0f;
 
                 ong::BodyDescription bdesc;
@@ -258,7 +258,14 @@ namespace sba
                 bdesc.transform.p = TheBrick::PuReToOng(pos);
                 bdesc.transform.q = ship.q;
                 bdesc.type = ong::BodyType::Dynamic;
-                a_rBullets.push_back(new CBullet(&bdesc, *w, a_pOwner,PuRe_Color(1.0f,0.0f,0.0f,1.0f)));
+                unsigned int id=900;
+                PuRe_Color col = PuRe_Color(1.0f,0.0f,0.0f,1.0f);
+                if (weapon->m_pBrick->GetBrickId() == 800) //laser weapon
+                {
+                    id = 901;
+                    col = PuRe_Color(1.0f, 1.0f, 1.0f, 1.0f);
+                }
+                a_rBullets.push_back(new CBullet(&bdesc, *w, a_pOwner, col, id));
             }
         }
     }

@@ -20,7 +20,7 @@ void main()
 
 	if(c.a < 0.1)
 		discard;
-	gl_FragData[0] = c;
+	gl_FragData[0] = c*Color;
 	gl_FragData[1] = (vec4(-1,0,0,0)+1)/2;
-	gl_FragData[2] = c;
+	gl_FragData[2] = c*Color;
 }

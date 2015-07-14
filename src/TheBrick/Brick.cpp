@@ -103,10 +103,12 @@ namespace TheBrick
         {
             return;
         }
-        if (this->GetBrickId() == 900)
-            a_rRenderer.Set(0,1.0f,"glow");
+        if (this->GetBrickId() == 900) //mg
+            a_rRenderer.Set(0, PuRe_Color(0.5f,0.0f,0.0f,0.5f), "glow");
+        else if (this->GetBrickId() == 901) //laser
+            a_rRenderer.Set(0, PuRe_Color(0.0f, 1.0f, 0.0f, 1.0f), "glow");
         else
-            a_rRenderer.Set(0, 0.0f, "glow");
+            a_rRenderer.Set(0, PuRe_Color(0.0f, 0.0f, 0.0f, 0.0f), "glow");
         a_rRenderer.Draw(0, false, this->m_pModel, PuRe_Primitive::Triangles, this->m_pMaterial, this->m_pRenderInstances, this->m_RenderInstancesCount);
     }
 

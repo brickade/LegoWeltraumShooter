@@ -19,10 +19,12 @@ namespace sba
         int m_Damage;
         bool m_Collided;
         SPlayer* m_pOwner;
+        unsigned int m_ID;
         PuRe_ParticleEmitter* m_pEmitter;
+        PuRe_Color m_Color;
 
     public:
-        CBullet(ong::BodyDescription* a_desc, ong::World& a_rWorld, SPlayer* a_pOwner, PuRe_Color a_Color);
+        CBullet(ong::BodyDescription* a_desc, ong::World& a_rWorld, SPlayer* a_pOwner, PuRe_Color a_Color, unsigned int a_ID);
         ~CBullet();
         void Update(float a_DeltaTime) override;
         static void Collision(ong::Collider* thisCollider, ong::Contact* contact);

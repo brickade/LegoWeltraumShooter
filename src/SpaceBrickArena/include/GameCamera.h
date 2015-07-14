@@ -18,6 +18,7 @@ namespace sba
       PuRe_QuaternionF m_QRotation;
       PuRe_QuaternionF m_QAim;
       PuRe_Vector3F m_CamRotation;
+      PuRe_Vector3F m_CamMove;
       float m_TimeToRotate;
 
   public:

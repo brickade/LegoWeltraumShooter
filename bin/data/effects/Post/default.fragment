@@ -27,21 +27,21 @@ void main()
 	vec4 glow = texture2D( GlowMap, TexCoord );
 
 	vec4 glowed = vec4(0.0,0.0,0.0,0.0);
-  	vec2 blurSize = vec2(0.002, 0.002);
+  	vec2 blurSize = vec2(0.001, 0.001);
 
 	//Do glow
 
-  	glowed += texture2D( GlowMap, TexCoord- 5.0 * blurSize) * 0.02;
-  	glowed += texture2D( GlowMap, TexCoord- 4.0 * blurSize) * 0.05;
-  	glowed += texture2D( GlowMap, TexCoord- 3.0 * blurSize) * 0.09;
-  	glowed += texture2D( GlowMap, TexCoord- 2.0 * blurSize) * 0.12;
-  	glowed += texture2D( GlowMap, TexCoord- 1.0 * blurSize) * 0.15;
-  	glowed += texture2D( GlowMap, TexCoord) * 0.3;
-  	glowed += texture2D( GlowMap, TexCoord+ 1.0 * blurSize) * 0.15;
-  	glowed += texture2D( GlowMap, TexCoord+ 2.0 * blurSize) * 0.12;
-  	glowed += texture2D( GlowMap, TexCoord+ 3.0 * blurSize) * 0.09;
-  	glowed += texture2D( GlowMap, TexCoord+ 4.0 * blurSize) * 0.05;
-  	glowed += texture2D( GlowMap, TexCoord+ 5.0 * blurSize) * 0.02;
+  	glowed += texture2D( GlowMap, TexCoord- 5.0 * blurSize) * 0.05;
+  	glowed += texture2D( GlowMap, TexCoord- 4.0 * blurSize) * 0.1;
+  	glowed += texture2D( GlowMap, TexCoord- 3.0 * blurSize) * 0.15;
+  	glowed += texture2D( GlowMap, TexCoord- 2.0 * blurSize) * 0.2;
+  	glowed += texture2D( GlowMap, TexCoord- 1.0 * blurSize) * 0.3;
+  	glowed += texture2D( GlowMap, TexCoord) * 0.5;
+  	glowed += texture2D( GlowMap, TexCoord+ 1.0 * blurSize) * 0.3;
+  	glowed += texture2D( GlowMap, TexCoord+ 2.0 * blurSize) * 0.2;
+  	glowed += texture2D( GlowMap, TexCoord+ 3.0 * blurSize) * 0.15;
+  	glowed += texture2D( GlowMap, TexCoord+ 4.0 * blurSize) * 0.1;
+  	glowed += texture2D( GlowMap, TexCoord+ 5.0 * blurSize) * 0.05;
 	
 
 	vec4 norm = (texture2D( NormalMap, TexCoord )*2)-1;
