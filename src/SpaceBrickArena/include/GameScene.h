@@ -1,7 +1,6 @@
 #ifndef _GAMESCENE_H_
 #define _GAMESCENE_H_
 
-#define Skybox
 
 // Framework specific includes
 #include <PuReEngine/Core.h>
@@ -53,11 +52,9 @@ namespace sba
         PuRe_Font* m_pFont;
         PuRe_PointLight* m_pPointLight;
         PuRe_DirectionalLight* m_pDirectionalLight;
-        PuRe_SkyBox* m_pSkyBox;
         PuRe_IMaterial* m_pShieldMaterial;
         PuRe_IMaterial* m_pFontMaterial;
         PuRe_IMaterial* m_pUIMaterial;
-        PuRe_IMaterial* m_pSkyMaterial;
         PuRe_IMaterial* m_pPostMaterial;
         PuRe_IMaterial* m_pPointLightMaterial;
         PuRe_IMaterial* m_pDirectionalLightMaterial;

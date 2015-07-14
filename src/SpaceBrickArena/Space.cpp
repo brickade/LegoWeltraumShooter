@@ -55,6 +55,8 @@ namespace sba
         SAFE_DELETE(this->World);
         SAFE_DELETE(this->m_pNetworkhandler);
         SAFE_DELETE(this->m_pFinalMaterial);
+        SAFE_DELETE(this->m_pSkyBoxMaterial);
+        SAFE_DELETE(this->m_pSkybox);
     }
 
     // **************************************************************************
@@ -80,6 +82,8 @@ namespace sba
         this->FontMaterial = a_pGraphics.LoadMaterial("../data/effects/font/default");
         this->SpriteMaterial = a_pGraphics.LoadMaterial("../data/effects/sprite/default");
         this->m_pFinalMaterial = a_pGraphics.LoadMaterial("../data/effects/Final/default");
+        this->m_pSkyBoxMaterial = a_pGraphics.LoadMaterial("../data/effects/skybox/default");
+        sba_SkyBox = new PuRe_SkyBox(&a_pGraphics, sba_Map->GetSkybox());
 
         //load sounds
         int i = 0;

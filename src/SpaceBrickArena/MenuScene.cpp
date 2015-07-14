@@ -16,11 +16,9 @@ namespace Menu
         PuRe_IWindow* window = a_pApplication->GetWindow();
         PuRe_GraphicsDescription gdesc = graphics->GetDescription();
 
-        this->m_pSkyMaterial = graphics->LoadMaterial("../data/effects/skybox/default");
         this->m_pPostMaterial = graphics->LoadMaterial("../data/effects/Post/default");
         this->m_pFontMaterial = graphics->LoadMaterial("../data/effects/font/default");
 
-        this->m_pSkyBox = new PuRe_SkyBox(graphics, "../data/textures/cube/");
         this->m_pFont = new PuRe_Font(graphics, "../data/textures/font.png");
 
         //Camera
@@ -151,7 +149,7 @@ namespace Menu
 
         renderer->Begin(PuRe_Color(0.0f, 0.0f, 0.0f));
 
-        renderer->Draw(0, true, this->m_pSkyBox, this->m_pSkyMaterial);
+        renderer->Draw(0, true, sba_SkyBox, sba_SkyBoxMaterial);
         sba_BrickManager->Render();
 
         switch (this->m_Displayed)
@@ -189,10 +187,8 @@ namespace Menu
         SAFE_DELETE(this->m_pSceneCamera);
         SAFE_DELETE(this->m_pUICamera);
         /////// OBJECTS ///////
-        SAFE_DELETE(this->m_pSkyBox);
         SAFE_DELETE(this->m_pFont);
         /////// MATERIALS ///////
-        SAFE_DELETE(this->m_pSkyMaterial);
         SAFE_DELETE(this->m_pFontMaterial);
         SAFE_DELETE(this->m_pPostMaterial);
     }

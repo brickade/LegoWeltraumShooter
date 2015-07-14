@@ -472,9 +472,11 @@ namespace Menu
             return 2;
         }
         PuRe_Vector2F Navigate = sba_Input->Direction(sba_Direction::Navigate, a_PlayerIdx);
-
         if (!this->m_Focus)
+        {
+            Navigate.X = 0.0f;
             this->m_pNavigation->Update(*a_pTimer, Navigate);
+        }
 
         if (this->m_pNavigation->GetFocusedElementId() == 1&&this->m_Focus)
         {
@@ -824,8 +826,14 @@ namespace Menu
 
         for (int i = 0; i < 4; i++)
         {
-            bool leftPress = a_pInput->GamepadPressed(a_pInput->DPAD_Left, i);
-            bool rightPress = a_pInput->GamepadPressed(a_pInput->DPAD_Right, i);
+            PuRe_Vector2F Navigate = sba_Input->Direction(sba_Direction::Navigate, i);
+            bool leftPress = Navigate.X > 0.0f;
+            bool rightPress = Navigate.X < 0.0f;
+            if (i == 0 &&this->m_Focus)
+            {
+                leftPress = 0.0f;
+                rightPress = 0.0f;
+            }
             if (leftPress || rightPress)
             {
                 if (sba_Network->IsConnected())

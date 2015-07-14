@@ -55,12 +55,6 @@ namespace Menu
         /// @brief Font Object
         ///
         PuRe_Font* m_pFont;
-        /// @brief Skybox Object
-        ///
-        PuRe_SkyBox* m_pSkyBox;
-        /// @brief Skybox Material
-        ///
-        PuRe_IMaterial* m_pSkyMaterial;
         /// @brief PostScreen Material
         ///
         PuRe_IMaterial* m_pPostMaterial;

@@ -16,7 +16,7 @@ namespace Editor
     {
         PuRe_GraphicsDescription gdesc = a_pApplication->GetGraphics()->GetDescription();
         
-        this->InitCommonRenderComponents(&this->m_pPostMaterial, &this->m_pDirectionalLight, &this->m_pDirectionalLightMaterial, &this->m_pPointLight, &this->m_pPointLightMaterial, &this->m_pSkyBox, &this->m_pSkyBoxMaterial, &this->m_UICamera);
+        this->InitCommonRenderComponents(&this->m_pPostMaterial, &this->m_pDirectionalLight, &this->m_pDirectionalLightMaterial, &this->m_pPointLight, &this->m_pPointLightMaterial, &this->m_UICamera);
         this->m_pUIMaterial = a_pApplication->GetGraphics()->LoadMaterial("../data/effects/UI/default");
 
         this->m_pBrickSupervisor = new Editor::CBrickSupervisor(this->m_PlayerIdx);
@@ -101,7 +101,7 @@ namespace Editor
     void CEditorScene::Render(PuRe_Application* a_pApplication)
     {
         //Pre
-        this->PreRender(this->m_pDirectionalLight, this->m_pDirectionalLightMaterial, this->m_pSkyBox, this->m_pSkyBoxMaterial);
+        this->PreRender(this->m_pDirectionalLight, this->m_pDirectionalLightMaterial);
 
         //Bricks
         switch (this->m_State)
@@ -124,7 +124,7 @@ namespace Editor
 
     // **************************************************************************
     // **************************************************************************
-    void CEditorScene::PreRender(PuRe_DirectionalLight* a_pDirectionalLight, PuRe_IMaterial* a_pDirectionalLightMaterial, PuRe_SkyBox* a_pSkyBox, PuRe_IMaterial* a_pSkyBoxMaterial)
+    void CEditorScene::PreRender(PuRe_DirectionalLight* a_pDirectionalLight, PuRe_IMaterial* a_pDirectionalLightMaterial)
     {
         sba_Renderer->Begin(PuRe_Color(0.1f, 0.5f, 0.1f));
         //Lights
@@ -132,10 +132,7 @@ namespace Editor
         sba_Renderer->Draw(1, false, a_pDirectionalLight, a_pDirectionalLightMaterial, PuRe_Vector3F(1.0f, 0.0f, 1.0f), PuRe_Color(0.3f, 0.3f, 0.3f));
 
         //Skybox
-        if (a_pSkyBox != nullptr)
-        {
-            sba_Renderer->Draw(0, true, a_pSkyBox, a_pSkyBoxMaterial);
-        }
+        sba_Renderer->Draw(0, true, sba_SkyBox, sba_SkyBoxMaterial);
     }
 
     // **************************************************************************
@@ -157,14 +154,8 @@ namespace Editor
 
     // **************************************************************************
     // **************************************************************************
-    void CEditorScene::InitCommonRenderComponents(PuRe_IMaterial** a_ppPostMaterial, PuRe_DirectionalLight** a_ppDirectionalLight, PuRe_IMaterial** a_ppDirectionalLightMaterial, PuRe_PointLight** a_ppPointLight, PuRe_IMaterial** a_ppPointLightMaterial, PuRe_SkyBox** a_ppSkyBox, PuRe_IMaterial** a_ppSkyBoxMaterial, PuRe_Camera** a_ppUICamera)
+    void CEditorScene::InitCommonRenderComponents(PuRe_IMaterial** a_ppPostMaterial, PuRe_DirectionalLight** a_ppDirectionalLight, PuRe_IMaterial** a_ppDirectionalLightMaterial, PuRe_PointLight** a_ppPointLight, PuRe_IMaterial** a_ppPointLightMaterial, PuRe_Camera** a_ppUICamera)
     {
-        //Skybox
-        if (a_ppSkyBox != nullptr)
-        {
-            *a_ppSkyBox = new PuRe_SkyBox(sba_Application->GetGraphics(), "../data/textures/cube/");
-            *a_ppSkyBoxMaterial = sba_Application->GetGraphics()->LoadMaterial("../data/effects/skybox/default");
-        }
 
         //PostMaterial
         if (a_ppPostMaterial != nullptr)
@@ -203,7 +194,6 @@ namespace Editor
         SAFE_DELETE(this->m_pShipHandler);
         SAFE_DELETE(this->m_pWorker);
         SAFE_DELETE(this->m_pBrickSupervisor);
-        SAFE_DELETE(this->m_pSkyBox);
         SAFE_DELETE(this->m_pUIMaterial);
         SAFE_DELETE(this->m_pPostMaterial);
         sba_BrickManager->RebuildRenderInstances();

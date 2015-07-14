@@ -230,11 +230,13 @@ namespace sba
 
         this->m_pSphere = new PuRe_Sphere(graphics);
 
+        SAFE_DELETE(sba_SkyBox);
+        sba_SkyBox = new PuRe_SkyBox(graphics, sba_Map->GetSkybox());
+
         this->m_pShieldMaterial = graphics->LoadMaterial("../data/effects/shield/default");
         this->m_pFontMaterial = graphics->LoadMaterial("../data/effects/font/default");
         this->m_pUIMaterial = graphics->LoadMaterial("../data/effects/UI/default");
         this->m_pPostMaterial = graphics->LoadMaterial("../data/effects/Post/default");
-        this->m_pSkyMaterial = graphics->LoadMaterial("../data/effects/skybox/default");
         this->m_pPointLightMaterial = graphics->LoadMaterial("../data/effects/PointLight/default");
         this->m_pDirectionalLightMaterial = graphics->LoadMaterial("../data/effects/DirectionalLight/default");
         this->m_pParticleMaterial = graphics->LoadMaterial("../data/effects/particles/default");
@@ -270,12 +272,9 @@ namespace sba
 
         this->m_TextureID = 0;
 
-#ifdef Skybox
-        this->m_pSkyBox = new PuRe_SkyBox(graphics, sba_Map->GetSkybox());
-#endif
-
         if (sba_Network->IsConnected())
             this->m_pNetwork = new CGameNetwork();
+
 
         this->StartGame();
 
@@ -472,11 +471,9 @@ namespace sba
         /////////////  DRAW Light  ///////////////////////
         sba_Renderer->Draw(0, true, this->m_pDirectionalLight, this->m_pDirectionalLightMaterial, PuRe_Vector3F(1.0f, 0.0f, 0.0f), PuRe_Color(1.0f, 1.0f, 1.0f));
         /////////////  DRAW SKY  /////////////////////// 
-#ifdef Skybox
         for (int i = 0; i < this->m_LocalPlayers; i++)
             sba_Renderer->Set(0, greyscale[i], "greyscale", i);
-        sba_Renderer->Draw(0, true, this->m_pSkyBox, this->m_pSkyMaterial);
-#endif
+        sba_Renderer->Draw(0, true, sba_SkyBox, sba_SkyBoxMaterial);
         ////////////////////////////////////////////////////
 
         /////////////  DRAW BRICKS  ///////////////////////
@@ -718,7 +715,6 @@ namespace sba
         SAFE_DELETE(this->m_pPointLightMaterial);
         SAFE_DELETE(this->m_pFontMaterial);
         SAFE_DELETE(this->m_pPostMaterial);
-        SAFE_DELETE(this->m_pSkyMaterial);
         SAFE_DELETE(this->m_pUIMaterial);
         // DELETE OBJECTS
         for (unsigned int i = 0; i < this->m_Items.size(); i++)
@@ -734,7 +730,6 @@ namespace sba
         }
         sba_Players.clear();
         SAFE_DELETE(this->m_pSphere);
-        SAFE_DELETE(this->m_pSkyBox);
         SAFE_DELETE(this->m_pPointLight);
         SAFE_DELETE(this->m_pDirectionalLight);
         // DELETE CAMERAS

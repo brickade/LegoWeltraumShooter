@@ -42,12 +42,14 @@ namespace sba
         PuRe_IMaterial* SpriteMaterial;
         PuRe_IMaterial* FontMaterial;
         PuRe_IMaterial* m_SSAOMaterial;
+        PuRe_IMaterial* m_pSkyBoxMaterial;
         PuRe_Sprite* m_pNoiseTexture;
         PuRe_SoundPlayer* m_pSoundPlayer;
         std::vector<SPlayer*> m_Players;
         CNetworkHandler* m_pNetworkhandler;
         CGameMap* m_pMap;
         CIniReader* m_pIniReader;
+        PuRe_SkyBox* m_pSkybox;
 
     private:
         static Space* g_pInstance;
@@ -84,6 +86,8 @@ namespace sba
 #define sba_SoundPlayer sba::Space::Instance()->m_pSoundPlayer
 #define sba_Players sba::Space::Instance()->m_Players
 #define sba_FinalMaterial sba::Space::Instance()->m_pFinalMaterial
+#define sba_SkyBox sba::Space::Instance()->m_pSkybox
+#define sba_SkyBoxMaterial sba::Space::Instance()->m_pSkyBoxMaterial
 #define sba_Network sba::Space::Instance()->m_pNetworkhandler
 #define sba_Options sba::Space::Instance()->m_pIniReader
 #define sba_Map sba::Space::Instance()->m_pMap

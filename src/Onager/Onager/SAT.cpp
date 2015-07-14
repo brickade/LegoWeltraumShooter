@@ -55,6 +55,7 @@ namespace ong
 
 			in->push_back(P);
 
+
 			e2 = hull2->pEdges + e2->next;
 		} while (e2 != e20);
 
