@@ -28,7 +28,7 @@ namespace sba
 		SBrickDestruction* destrInstance = brick->GetDestructionInstance();
 		SBrickDestruction* destrInstance2 = brick2->GetDestructionInstance();
 
-		for (int i = 0; i < destrInstance->numConnections; ++i)
+		for (unsigned int i = 0; i < destrInstance->numConnections; ++i)
 		{
 			if (destrInstance->connections[i].other == destrInstance2)
 				return true;
@@ -62,8 +62,8 @@ namespace sba
 					minZ = ong_MIN(nubPos.z, minZ);
 					maxZ = ong_MAX(nubPos.z, maxZ);
 
-					dir = brick->m_pBrick->GetNubs()[i].Direction.Y;
-					dir2 = brick2->m_pBrick->GetNubs()[j].Direction.Y;
+					dir = (int)brick->m_pBrick->GetNubs()[i].Direction.Y;
+                    dir2 = (int)brick2->m_pBrick->GetNubs()[j].Direction.Y;
 				}
 			}
 		}
@@ -132,6 +132,7 @@ namespace sba
 		connection->other = destrInstance2;
 		connection2->other = destrInstance;
 
+        return false;
 	}
 
 	bool setUpBlocking(ong::Collider* a_Collider, void* a_Data)
@@ -144,7 +145,7 @@ namespace sba
 
 		float height = 0;
 
-
+        return false;
 	}
 
 	CDestructionManager::CDestructionManager()
@@ -275,7 +276,7 @@ namespace sba
 
 		// find maximum flow on source brick
 		float maxFlow = 0;
-		for (int i = 0; i < a_pBrick->numConnections; ++i)
+		for (unsigned int i = 0; i < a_pBrick->numConnections; ++i)
 		{
 			for (int j = 0; j < 2; ++j)
 			{
@@ -353,7 +354,7 @@ namespace sba
 		a_pBrick->tick = a_Tick;
 		m_Selection.push_back(a_pBrick);
 
-		for (int i = 0; i < a_pBrick->numConnections; ++i)
+		for (unsigned int i = 0; i < a_pBrick->numConnections; ++i)
 		{
 			SConnection* pConnection = a_pBrick->connections + i;
 			
@@ -445,7 +446,7 @@ namespace sba
 	void ClearFlowNetwork(SBrickDestruction* a_pBrick, const ong::vec3& a_rPoint, const ong::vec3& a_rImpulse, int tick)
 	{
 		a_pBrick->tick = tick;
-		for (int i = 0; i < a_pBrick->numConnections; ++i)
+		for (unsigned int i = 0; i < a_pBrick->numConnections; ++i)
 		{
 
 			for (int d = 0; d < 2; ++d)
@@ -524,7 +525,7 @@ namespace sba
 		a_pBrick->brick->GetGameObject()->RemoveBrickInstance(*a_pBrick->brick);
 		a_pNewGameObject->AddBrickInstance(a_pBrick->brick, *sba_Space->World);
 
-		for (int i = 0; i < a_pBrick->numConnections; ++i)
+        for (unsigned int i = 0; i < a_pBrick->numConnections; ++i)
 		{
 			if (a_pBrick->connections[i].other->tick != a_Tick)
 			{
@@ -534,13 +535,13 @@ namespace sba
 	}
  
 
-	void MarkBricks(SBrickDestruction* a_pBrick, int a_Tick, int* a_pNumMarked)
+	void MarkBricks(SBrickDestruction* a_pBrick, int a_Tick, unsigned int* a_pNumMarked)
 	{
 		a_pBrick->tick = a_Tick;
 		
 		++(*a_pNumMarked);
 		
-		for (int i = 0; i < a_pBrick->numConnections; ++i)
+		for (unsigned int i = 0; i < a_pBrick->numConnections; ++i)
 		{
 			if (a_pBrick->connections[i].other->tick != a_Tick)
 			{
@@ -585,7 +586,7 @@ namespace sba
 			CDestructibleObject* newObject = new CDestructibleObject(*sba_Space->World, &descr);
 			newObject->m_Type = TheBrick::EGameObjectType::Object;
 
-			int numDestroyed = 0;
+			unsigned int numDestroyed = 0;
 			int destructionTick = m_Tick++;
 			MarkBricks(impulse.brick, destructionTick, &numDestroyed);
 

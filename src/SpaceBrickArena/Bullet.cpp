@@ -51,7 +51,7 @@ namespace sba
     // **************************************************************************
     void CBullet::DrawEmitter(PuRe_Sprite* a_pSprite, PuRe_IMaterial* a_pMaterial, PuRe_PointLight* a_pLight, PuRe_IMaterial* a_pLightMaterial)
     {
-        sba_Renderer->Draw(0, true, this->m_pEmitter, a_pMaterial, a_pSprite,-1.0f,0.15f);
+        sba_Renderer->Draw(0, true, this->m_pEmitter, a_pMaterial, a_pSprite,-1,0.15f);
     }
 
     // **************************************************************************

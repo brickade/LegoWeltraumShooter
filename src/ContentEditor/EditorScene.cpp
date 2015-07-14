@@ -386,7 +386,7 @@ namespace Content
 		ong::ShapeDescription vertex;
 		vertex.shapeType = ong::ShapeType::SPHERE;
 		vertex.sphere.c = ong::vec3(0, 0, 0);
-		vertex.sphere.r = 0.01;
+		vertex.sphere.r = 0.01f;
 
 		m_VertexShape = m_World.createShape(vertex);
 		
@@ -449,14 +449,14 @@ namespace Content
 					
 					if (input->GetMouseScroll() < 0)
 					{
-						m_OrthoZoom *= 1.1;
+						m_OrthoZoom *= 1.1f;
 					}
 					else if ( input->GetMouseScroll() > 0)
 					{
-						m_OrthoZoom *= 0.9;
+						m_OrthoZoom *= 0.9f;
 					}
 					
-					m_pCamera->SetProjection(PuRe_MatrixF::ProjectionOrthogonalLH(m_OrthoZoom, gDescr.ResolutionHeight / (float)gDescr.ResolutionWidth * m_OrthoZoom, 0.1, 100.0f));
+					m_pCamera->SetProjection(PuRe_MatrixF::ProjectionOrthogonalLH(m_OrthoZoom, (float)(gDescr.ResolutionHeight / (float)gDescr.ResolutionWidth * m_OrthoZoom), 0.1f, 100.0f));
 					m_pCamera->Update();
 					
 				}
@@ -658,7 +658,7 @@ namespace Content
 		else if (input->KeyPressed(input->Two))
 		{
 			m_CameraType = CameraType::ORTHO;
-			m_pCamera->SetProjection(PuRe_MatrixF::ProjectionOrthogonalLH(m_OrthoZoom, gDescr.ResolutionHeight / (float)gDescr.ResolutionWidth * m_OrthoZoom, 0.1, 100.0f));
+            m_pCamera->SetProjection(PuRe_MatrixF::ProjectionOrthogonalLH(m_OrthoZoom, (gDescr.ResolutionWidth / (float)gDescr.ResolutionHeight) * m_OrthoZoom, 0.1f, 100.0f));
 			if (input->KeyIsPressed(input->Ctrl))
 			{
 				m_pCamera->SetPosition(PuRe_Vector3F(0, -50, 0));
@@ -675,7 +675,7 @@ namespace Content
 		else if (input->KeyPressed(input->Three))
 		{
 			m_CameraType = CameraType::ORTHO;
-			m_pCamera->SetProjection(PuRe_MatrixF::ProjectionOrthogonalLH(m_OrthoZoom, gDescr.ResolutionHeight / (float)gDescr.ResolutionWidth * m_OrthoZoom, 0.1, 100.0f));
+            m_pCamera->SetProjection(PuRe_MatrixF::ProjectionOrthogonalLH(m_OrthoZoom, (gDescr.ResolutionWidth / (float)gDescr.ResolutionHeight) * m_OrthoZoom, 0.1f, 100.0f));
 			if (input->KeyIsPressed(input->Ctrl))
 			{
 				m_pCamera->SetPosition(PuRe_Vector3F(0, 0, 50));
@@ -691,7 +691,7 @@ namespace Content
 		else if (input->KeyPressed(input->Four))
 		{
 			m_CameraType = CameraType::ORTHO;
-			m_pCamera->SetProjection(PuRe_MatrixF::ProjectionOrthogonalLH(m_OrthoZoom, gDescr.ResolutionHeight / (float)gDescr.ResolutionWidth * m_OrthoZoom, 0.1, 100.0f));
+            m_pCamera->SetProjection(PuRe_MatrixF::ProjectionOrthogonalLH(m_OrthoZoom, (gDescr.ResolutionWidth / (float)gDescr.ResolutionHeight) * m_OrthoZoom, 0.1f, 100.0f));
 			if (input->KeyIsPressed(input->Ctrl))
 			{
 				m_pCamera->SetPosition(PuRe_Vector3F(-50, 0, 0));

@@ -38,11 +38,17 @@ namespace Editor
     {
         PuRe_GraphicsDescription gdesc = a_pGraphics.GetDescription();
         this->m_pCamera = new CCamera(PuRe_Vector2F((float)gdesc.ResolutionWidth, (float)gdesc.ResolutionHeight), PuRe_Camera_Perspective, this->m_playerIdx);
-        this->m_pCamera->Initialize(PuRe_Vector3F(20, 135, 0), PuRe_Vector3F(-1, 0, 0));
+
         this->m_currentPosition = PuRe_Vector2F(0, 0);
         this->m_currentBrickPosition = PuRe_Vector2I(0, 0);
         this->m_currentHeight = 0;
         this->m_maxBrickDistance = 15 * 3;
+#ifdef _DEBUG
+        this->m_maxBrickDistance = 40 * 3;
+        this->m_pCamera->Initialize(PuRe_Vector3F(20, 135, 0), PuRe_Vector3F(-1, 0, 0),10.0f,120.0f,50.0f);
+#elif
+        this->m_pCamera->Initialize(PuRe_Vector3F(20, 135, 0), PuRe_Vector3F(-1, 0, 0));
+#endif
         this->m_pHistory = new CHistory(300, 100);
         this->m_placeBelow = false;
         this->m_pCurrentBrickObject = new TheBrick::CGameObject(*sba_World, nullptr);

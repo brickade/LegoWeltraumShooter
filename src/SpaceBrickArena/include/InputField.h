@@ -25,7 +25,7 @@ namespace sba
     private:
         std::string m_Value;
         std::string m_OldValue;
-        int m_MaxLength;
+        unsigned int m_MaxLength;
         InputTypes::Type m_AllowedInputs;
 
     public:

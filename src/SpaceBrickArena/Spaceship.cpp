@@ -11,9 +11,17 @@
 
 namespace sba
 {
+#ifdef _DEBUG
+    const int CSpaceship::MAX_BRICK_COUNT = 500;
+#elif
     const int CSpaceship::MAX_BRICK_COUNT = 200;
+    #endif
     const int CSpaceship::MAX_BRICK_WIDTH = 20;
+#ifdef _DEBUG
+    const int CSpaceship::MAX_BRICK_HEIGHT = 40 * 3;
+#elif
     const int CSpaceship::MAX_BRICK_HEIGHT = 15 * 3;
+#endif
 
     // **************************************************************************
     // **************************************************************************
@@ -206,7 +214,7 @@ namespace sba
 	
 
 		// adjust life procentual
-		int damage = m_Life - floorf(m_Life * (m_MaxLife / (float)oldMaxLife));
+		int damage = m_Life - (int)floorf(m_Life * (m_MaxLife / (float)oldMaxLife));
 		damage *= 5;
 		m_Life -= damage;
 		printf("damage: %d\n", damage);

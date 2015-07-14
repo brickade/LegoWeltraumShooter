@@ -585,6 +585,7 @@ namespace ong
 			}
 
 		}
+        return false;
 	}
 
 	bool HGrid::queryCollider(const Collider* collider)

@@ -22,7 +22,7 @@ namespace Content
 			{
 				c = strtok(nullptr, " \n");
 				assert(c != nullptr);
-				v[i] = atof(c);
+				v[i] = (float)atof(c);
 			}
 
 			v.z *= -1;

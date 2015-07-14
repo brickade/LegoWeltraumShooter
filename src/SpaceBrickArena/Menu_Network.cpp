@@ -196,7 +196,7 @@ namespace Menu
                 }
                 if (0 > this->m_Server)
                     this->m_Server = 0;
-                if (this->m_Servers.size()-1 < this->m_Server)
+                if (this->m_Servers.size()-1 < (unsigned int)this->m_Server)
                     this->m_Server = this->m_Servers.size()-1;
                 if (sba_Input->ButtonPressed(sba_Button::NavigationSelect, a_PlayerIdx))
                 {

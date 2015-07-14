@@ -46,8 +46,8 @@ namespace sba
                 {
                     sba_Renderer->Draw(2, false, a_pFont, a_pFontMaterial, "Turn around", pos, PuRe_MatrixF(), size*1.2f, 36.0f*1.2f, PuRe_Color(1.0f, 1.0f, 1.0f, (sin(a_EndTime) + 1.0f) / 2.0f), local);
                     pos.Y -= 200.0f;
-                    int time = 11 - std::ceil(sba_Players[i]->OutTime);
-                    sba_Renderer->Draw(2, false, a_pFont, a_pFontMaterial, std::to_string(time), pos, PuRe_MatrixF(), size*2.5f, 36.0f*2.5f, PuRe_Color(1.0f, 0.0f, 0.0f, (sin((a_EndTime*3.14 * 2) - 5) + 1) / 2), local);
+                    int time = 11 - (int)std::ceil(sba_Players[i]->OutTime);
+                    sba_Renderer->Draw(2, false, a_pFont, a_pFontMaterial, std::to_string(time), pos, PuRe_MatrixF(), size*2.5f, 36.0f*2.5f, PuRe_Color(1.0f, 0.0f, 0.0f, (float)((sin((a_EndTime*3.14 * 2) - 5) + 1) / 2)), local);
                 }
                 local++;
             }
