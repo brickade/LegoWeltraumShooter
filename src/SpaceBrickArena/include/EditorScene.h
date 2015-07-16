@@ -77,7 +77,7 @@ namespace Editor
         ///
         void Render(PuRe_Application* a_pApplication);
 
-        static void PreRender(PuRe_DirectionalLight* a_pDirectionalLight, PuRe_IMaterial* a_pDirectionalLightMaterial);
+        static void PreRender(PuRe_DirectionalLight* a_pDirectionalLight, PuRe_IMaterial* a_pDirectionalLightMaterial,bool a_Skybox);
         static void PostRender(Editor::CCamera* a_pSceneCamera, PuRe_Camera* a_pUICamera, PuRe_IMaterial* a_pUIMaterial, PuRe_IMaterial* a_pPostMaterial);
         //To make sure the Ship Previews get rendered the same way as in the Editor itself. Therefore more overhead, which is bad but its only at initialization, so i guess its worth it so we have no duplicated code and forget to update both parts... The only indipendent part is currently the Editor::CCamera which has its default setup in its own functions.
         static void InitCommonRenderComponents(PuRe_IMaterial** a_ppPostMaterial = nullptr, PuRe_DirectionalLight** a_ppDirectionalLight = nullptr, PuRe_IMaterial** a_ppDirectionalLightMaterial = nullptr, PuRe_PointLight** a_ppPointLight = nullptr, PuRe_IMaterial** a_ppPointLightMaterial = nullptr, PuRe_Camera** a_ppUICamera = nullptr);

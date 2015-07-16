@@ -101,7 +101,7 @@ namespace Editor
     void CEditorScene::Render(PuRe_Application* a_pApplication)
     {
         //Pre
-        this->PreRender(this->m_pDirectionalLight, this->m_pDirectionalLightMaterial);
+        this->PreRender(this->m_pDirectionalLight, this->m_pDirectionalLightMaterial,true);
 
         //Bricks
         switch (this->m_State)
@@ -124,7 +124,7 @@ namespace Editor
 
     // **************************************************************************
     // **************************************************************************
-    void CEditorScene::PreRender(PuRe_DirectionalLight* a_pDirectionalLight, PuRe_IMaterial* a_pDirectionalLightMaterial)
+    void CEditorScene::PreRender(PuRe_DirectionalLight* a_pDirectionalLight, PuRe_IMaterial* a_pDirectionalLightMaterial, bool a_Skybox)
     {
         sba_Renderer->Begin(PuRe_Color(0.1f, 0.5f, 0.1f));
         //Lights
@@ -132,7 +132,8 @@ namespace Editor
         sba_Renderer->Draw(1, false, a_pDirectionalLight, a_pDirectionalLightMaterial, PuRe_Vector3F(1.0f, 0.0f, 1.0f), PuRe_Color(0.3f, 0.3f, 0.3f));
 
         //Skybox
-        sba_Renderer->Draw(0, true, sba_SkyBox, sba_SkyBoxMaterial);
+        if (a_Skybox)
+            sba_Renderer->Draw(0, true, sba_SkyBox, sba_SkyBoxMaterial);
     }
 
     // **************************************************************************
