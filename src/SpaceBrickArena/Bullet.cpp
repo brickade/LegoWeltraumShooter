@@ -61,7 +61,7 @@ namespace sba
     void CBullet::Update(float a_DeltaTime)
     {
         this->m_lifeTime += a_DeltaTime;
-        if (this->m_ID != 901)
+        if (this->m_ID != 900&&this->m_ID != 902) //laser and mine no particles 
         {
             this->m_pEmitter->m_Position = TheBrick::OngToPuRe(this->m_pBody->getWorldCenter());
             this->m_pEmitter->m_Rotation = TheBrick::OngToPuRe(this->m_pBody->getOrientation());

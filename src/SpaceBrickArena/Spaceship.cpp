@@ -243,7 +243,6 @@ namespace sba
                 PuRe_Vector3F pos = TheBrick::OngToPuRe(ong::transformTransform(transform, ship).p);
 
                 PuRe_Vector3F forward = PuRe_Vector3F(0.0f, 0.0f, 1.0f) * TheBrick::OngToPuRe(wtransform.q);
-                pos = pos + forward*10.0f;
 
                 
 
@@ -253,18 +252,49 @@ namespace sba
 
                 ong::BodyDescription bdesc;
 
-                bdesc.linearMomentum = TheBrick::PuReToOng(speed);
+
                 bdesc.angularMomentum = ong::vec3(0, 0, 0);
-                bdesc.transform.p = TheBrick::PuReToOng(pos);
-                bdesc.transform.q = ship.q;
+                bdesc.transform.q = ship.q*transform.q;
                 bdesc.type = ong::BodyType::Dynamic;
-                unsigned int id=900;
+
+                unsigned int id=0;
                 PuRe_Color col = PuRe_Color(1.0f,0.0f,0.0f,1.0f);
-                if (weapon->m_pBrick->GetBrickId() == 800) //laser weapon
+                switch (weapon->m_pBrick->GetBrickId())
                 {
-                    id = 901;
+
+                case TheBrick::Laser-100: //Laser
+                    id = TheBrick::Laser;
+                    pos += forward*10.0f;
                     col = PuRe_Color(1.0f, 1.0f, 1.0f, 1.0f);
+                    break;
+
+                case TheBrick::MG - 100: //MG
+                    id = TheBrick::MG;
+                    pos += forward*10.0f;
+                    col = PuRe_Color(1.0f, 0.0f, 0.0f, 1.0f);
+                    break;
+
+                case TheBrick::Mine - 100: //Mine
+                    id = TheBrick::Mine;
+                    pos += forward*4.0f;
+                    speed *= 0.0f;
+                    col = PuRe_Color(1.0f, 0.0f, 1.0f, 1.0f);
+                    break;
+
+                case TheBrick::Rocket - 100: //Rocket
+                    pos += forward*10.0f;
+                    id = TheBrick::Rocket;
+                    col = PuRe_Color(1.0f, 0.0f, 0.0f, 1.0f);
+                    break;
+
+                case TheBrick::Torpedo - 100: //Torpedo
+                    pos += forward*10.0f;
+                    id = TheBrick::Torpedo;
+                    col = PuRe_Color(1.0f, 0.0f, 0.0f, 1.0f);
+                    break;
                 }
+                bdesc.linearMomentum = TheBrick::PuReToOng(speed);
+                bdesc.transform.p = TheBrick::PuReToOng(pos);
                 a_rBullets.push_back(new CBullet(&bdesc, *w, a_pOwner, col, id));
             }
         }

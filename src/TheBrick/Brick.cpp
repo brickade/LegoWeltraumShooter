@@ -103,12 +103,27 @@ namespace TheBrick
         {
             return;
         }
-        if (this->GetBrickId() == 900) //mg
-            a_rRenderer.Set(0, PuRe_Color(0.5f,0.0f,0.0f,0.5f), "glow");
-        else if (this->GetBrickId() == 901) //laser
+        switch (this->GetBrickId())
+        {
+        case Laser:
             a_rRenderer.Set(0, PuRe_Color(0.0f, 1.0f, 0.0f, 1.0f), "glow");
-        else
+            break;
+        case MG:
+            a_rRenderer.Set(0, PuRe_Color(0.5f, 0.0f, 0.0f, 0.5f), "glow");
+            break;
+        case Mine:
+            a_rRenderer.Set(0, PuRe_Color(0.5f, 0.0f, 0.5f, 0.5f), "glow");
+            break;
+        case Rocket:
+            a_rRenderer.Set(0, PuRe_Color(0.5f, 0.0f, 0.0f, 0.5f), "glow");
+            break;
+        case Torpedo:
+            a_rRenderer.Set(0, PuRe_Color(0.5f, 0.0f, 0.0f, 0.5f), "glow");
+            break;
+        default:
             a_rRenderer.Set(0, PuRe_Color(0.0f, 0.0f, 0.0f, 0.0f), "glow");
+        break;
+        }
         a_rRenderer.Draw(0, false, this->m_pModel, PuRe_Primitive::Triangles, this->m_pMaterial, this->m_pRenderInstances, this->m_RenderInstancesCount);
     }
 

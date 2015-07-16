@@ -17,6 +17,7 @@
 namespace TheBrick
 {
     typedef std::array<TheBrick::CBrick*, 910> BrickArray;
+    enum { Laser=900, MG=901,Mine=902,Rocket=903,Torpedo=904};
     class CBrick
     {
     // ------------------------------------------------------------------------
