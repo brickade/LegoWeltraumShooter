@@ -5,6 +5,7 @@
 #include <PuReEngine/Defines.h>
 
 #include "Navigation.h"
+#include "SpriteReader.h"
 #include "Space.h"
 
 namespace Menu
@@ -14,11 +15,14 @@ namespace Menu
     {
     private:
         sba::CNavigation* m_pNavigation;
+        sba::CSpriteReader* m_pSpriteReader;
         int* m_PlayerIdx;
     public:
         /// @brief Constructor
         ///
-        CMain();
+        /// @param Graphics for graphic initialization
+        ///
+        CMain(PuRe_IGraphics* a_pGraphics);
         /// @brief Destructor
         ///
         ~CMain();

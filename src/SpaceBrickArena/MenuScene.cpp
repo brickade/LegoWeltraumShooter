@@ -37,7 +37,7 @@ namespace Menu
         this->m_pUICamera = new PuRe_Camera(PuRe_Vector2F((float)1920, (float)1080), PuRe_CameraProjection::Orthogonal);
 
         this->m_Displayed = Main;
-        this->m_pMainMenu = new CMain();
+        this->m_pMainMenu = new CMain(graphics);
         this->m_pOptions = new COptions();
         this->m_pLobby = new CLobby(window);
         this->m_pNetwork = new CNetwork(a_pApplication->GetTimer());

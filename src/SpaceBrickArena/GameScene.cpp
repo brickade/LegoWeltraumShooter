@@ -521,19 +521,6 @@ namespace sba
                 PuReEngine::Core::Plane<float> Top = this->m_Cameras[camID]->GetFrustrumPlane(PuReEngine::Core::Planes::Top);
                 PuReEngine::Core::Plane<float> Bottom = this->m_Cameras[camID]->GetFrustrumPlane(PuReEngine::Core::Planes::Bottom);
                 PuReEngine::Core::Plane<float> Near = this->m_Cameras[camID]->GetFrustrumPlane(PuReEngine::Core::Planes::Near);
-                PuReEngine::Core::Plane<float> Far = this->m_Cameras[camID]->GetFrustrumPlane(PuReEngine::Core::Planes::Far);
-
-                //PuRe_Vector2F nearfar = this->m_Cameras[camID]->GetNearFar();
-
-                //PuRe_Vector3F zAxis = -this->m_Cameras[camID]->GetForward(); //new forward vector
-                //PuRe_Vector3F xAxis = PuRe_Vector3F::Normalize(PuRe_Vector3F::Cross(this->m_Cameras[camID]->GetUp(), zAxis)); //new side vector
-                //PuRe_Vector3F yAxis = PuRe_Vector3F::Normalize(PuRe_Vector3F::Cross(zAxis, xAxis)); //new up vector
-
-                //PuRe_Vector3F nearCenter = campos - zAxis * nearfar.X;
-                //PuRe_Vector3F farCenter = campos - zAxis * nearfar.Y;
-
-                //float hNear = 2 * tan(this->m_Cameras[camID]->GetFOV() / 2.0f) * nearfar.X;
-                //float wNear = hNear * (gdesc.ResolutionWidth / gdesc.ResolutionHeight);
 
                 PuRe_Vector3F aux, normal, point;
 
@@ -551,10 +538,6 @@ namespace sba
                             diff = 0.1f;
                         float size = 0.1f*diff;
 
-                        //PuRe_BoundingBox box;
-                        //box.m_Position = pos;
-                        //box.m_Size = PuRe_Vector3F(size,size,size);
-                        //box.m_Size += pos;
 
                         PuRe_Vector3F CamToPos = PuRe_Vector3F::Normalize(campos - pos);
                         PuRe_Vector3F ScreenPos;
@@ -589,21 +572,11 @@ namespace sba
                         if (!inside)
                         {
                             ScreenPos = (ScreenPos*rotation);
-                            if (i == 0)
-                                printf("ScreenPos %f %f %f\n", ScreenPos.X, ScreenPos.Y, ScreenPos.Z);
                             pos = campos;
                             pos += forward;
                             pos += ScreenPos;
                             size = 0.001f;
                         }
-                        //if (PuRe_Vector3F::Dot(CamToPos, Far.Normal) > 0.0f) //infront
-
-
-                                           //if (!this->m_Cameras[camID]->BoxInFrustum(&box))
-                                           //{
-                                           //float dot =
-                                           //}
-                        
 
                         sba_Renderer->Draw(1, false, this->m_pLockSprite, this->m_pSpriteMaterial, pos, rotation.GetMatrix(), PuRe_Vector3F(), PuRe_Vector3F(size, size, size), PuRe_Color(), PuRe_Vector2F(), PuRe_Vector2F(), camID);
                     }
