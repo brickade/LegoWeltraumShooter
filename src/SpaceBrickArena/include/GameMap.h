@@ -9,6 +9,14 @@
 
 namespace sba
 {
+    enum ELightType{ Directional,Point};
+    struct SLightData
+    {
+        ELightType Type;
+        PuRe_Vector3F Position;
+        PuRe_Color Color;
+    };
+
     class CGameMap
     {
     private:
@@ -19,7 +27,7 @@ namespace sba
         CGameMap();
         ~CGameMap();
     public:
-        bool GetMapData(std::vector<CAsteroid*>& a_rObjects, std::vector<CItem*>& a_rItems);
+        bool GetMapData(std::vector<CAsteroid*>& a_rObjects, std::vector<CItem*>& a_rItems, std::vector<SLightData*>& a_rLights);
         std::string GetSkybox();
         std::string GetName();
     };

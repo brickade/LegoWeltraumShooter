@@ -1,2 +1,2 @@
-logo = 0 0 886 207
-menu_kasten = 0 207 738 638
+logo = 0 0 830 208
+menue_tile = 0 208 743 654

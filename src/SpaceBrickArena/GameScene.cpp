@@ -187,7 +187,7 @@ namespace sba
             sba_Players[i]->Ship->m_pBody->setPosition(pos);
         }
 
-        if (!sba_Map->GetMapData(this->m_Asteroids, this->m_Items)) //Map doesn't exist!! we end here
+        if (!sba_Map->GetMapData(this->m_Asteroids, this->m_Items,this->m_Lights)) //Map doesn't exist!! we end here
             this->m_EndTime = -1000;
 
         this->m_TimeLimit = 5.0f;
@@ -466,7 +466,20 @@ namespace sba
 
 
         /////////////  DRAW Light  ///////////////////////
-        sba_Renderer->Draw(0, true, this->m_pDirectionalLight, this->m_pDirectionalLightMaterial, PuRe_Vector3F(1.0f, 0.0f, 0.0f), PuRe_Color(1.0f, 1.0f, 1.0f));
+        for (auto light : this->m_Lights)
+        {
+            switch (light->Type)
+            {
+            case ELightType::Directional:
+                sba_Renderer->Draw(0, true, this->m_pDirectionalLight, this->m_pDirectionalLightMaterial, light->Position, light->Color);
+                break;
+            case ELightType::Point:
+                sba_Renderer->Draw(0, true, this->m_pPointLight, this->m_pPointLightMaterial, light->Position, light->Color);
+                break;
+                default:
+                break;
+            }
+        }
         /////////////  DRAW SKY  /////////////////////// 
         for (int i = 0; i < this->m_LocalPlayers; i++)
             sba_Renderer->Set(0, greyscale[i], "greyscale", i);
@@ -693,6 +706,8 @@ namespace sba
             SAFE_DELETE(this->m_Bullets[i]);
         for (unsigned int i = 0; i < this->m_Asteroids.size(); i++)
             SAFE_DELETE(this->m_Asteroids[i]);
+        for (unsigned int i = 0; i < this->m_Lights.size(); i++)
+            SAFE_DELETE(this->m_Lights[i]);
         for (unsigned int i = 0; i < sba_Players.size(); i++)
         {
             SAFE_DELETE(sba_Players[i]->Ship);

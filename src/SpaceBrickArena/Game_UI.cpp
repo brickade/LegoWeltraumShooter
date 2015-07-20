@@ -15,7 +15,7 @@ namespace sba
     void CGUI::DisplayUI(PuRe_Font* a_pFont, PuRe_IMaterial* a_pFontMaterial, float a_EndTime, int a_WonID, bool* a_pDisplayEnd)
     {
         PuRe_Color c = PuRe_Color(1.0f, 1.0f, 1.0f, 1.0f);
-        PuRe_Vector3F size = PuRe_Vector3F(32.0f, 32.0f, 0.0f);
+        PuRe_Vector3F size = PuRe_Vector3F(36.0f, 36.0f, 0.0f);
         PuRe_Vector3F pos = PuRe_Vector3F(100.0f, 1080.0f - 100.0f, 0.0f);
         int local = 0;
         for (unsigned int i = 0; i<sba_Players.size(); i++)
@@ -57,9 +57,9 @@ namespace sba
 
         if (a_EndTime < 0.0f)
         {
-            size = PuRe_Vector3F(32.0f, 32.0f, 0.0f);
+            size = PuRe_Vector3F(36.0f, 36.0f, 0.0f);
             pos = PuRe_Vector3F(100.0f, 100.0f,0.0f);
-            sba_Renderer->Draw(3, false, a_pFont, a_pFontMaterial, "Player " + std::to_string(a_WonID+1) + " won!", pos, PuRe_MatrixF(), size, 32.0f, c);
+            sba_Renderer->Draw(3, false, a_pFont, a_pFontMaterial, "Player " + std::to_string(a_WonID+1) + " won!", pos, PuRe_MatrixF(), size, 36.0f, c);
         }
         else
         {
@@ -70,9 +70,9 @@ namespace sba
             if (secLeft < 10.0f)
                 secString = "0" + secString;
             std::string timeLeft = "Left Time: " + minString + ":" + secString;
-            size = PuRe_Vector3F(32.0f, 32.0f, 0.0f);
+            size = PuRe_Vector3F(36.0f, 36.0f, 0.0f);
             pos = PuRe_Vector3F(100.0f, 100.0f, 0.0f);
-            sba_Renderer->Draw(3, false, a_pFont, a_pFontMaterial, timeLeft, pos, PuRe_MatrixF(), size, 32.0f, c);
+            sba_Renderer->Draw(3, false, a_pFont, a_pFontMaterial, timeLeft, pos, PuRe_MatrixF(), size, 36.0f, c);
         }
     }
 

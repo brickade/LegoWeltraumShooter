@@ -166,7 +166,7 @@ namespace sba
     void CShipManager::SaveShipToFileAsObject(sba::CSpaceship& a_rShip)
     { //Save given ship to file
         TheBrick::CSerializer serializer = TheBrick::CSerializer();
-        if (serializer.OpenWrite(std::string(this->PathFromShip(a_rShip)).append(".object").c_str()))
+        if (serializer.OpenWrite(std::string("../data/objects/").append(a_rShip.GetName() + ".object").c_str()))
         {
             reinterpret_cast<TheBrick::CGameObject&>(a_rShip).Serialize(serializer);
             serializer.Close();

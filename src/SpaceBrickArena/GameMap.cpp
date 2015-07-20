@@ -41,7 +41,7 @@ namespace sba
 
     // **************************************************************************
     // **************************************************************************
-    bool CGameMap::GetMapData(std::vector<CAsteroid*>& a_rObjects,std::vector<CItem*>& a_rItems)
+    bool CGameMap::GetMapData(std::vector<CAsteroid*>& a_rObjects, std::vector<CItem*>& a_rItems, std::vector<SLightData*>& a_rLights)
     {
         FILE* pFile;
         std::string mapPath = "../data/maps/" + this->m_Name + ".map";
@@ -65,7 +65,7 @@ namespace sba
 
             enum read { Name, Pos, Vel, Rot };
             enum readC { One, Two };
-            enum Type { Object, Item };
+            enum Type { Object, Item, Light };
 
             std::string objectName;
             ong::vec3 pos, vel, rot;
@@ -98,8 +98,19 @@ namespace sba
                                 itype = EItemType::Repair;
                             else if (objectName == "shield")
                                 itype = EItemType::Shield;
-                            sba::CItem* item = new sba::CItem(*sba_World,itype,pos,vel,rot);
+                            sba::CItem* item = new sba::CItem(*sba_World, itype, pos, vel, rot);
                             a_rItems.push_back(item);
+                        }
+                        else if (otype == Type::Light)
+                        {
+                            SLightData* light = new SLightData();
+                            if (objectName == "directional")
+                                light->Type = ELightType::Directional;
+                            else if (objectName == "point")
+                                light->Type = ELightType::Point;
+                            light->Position = TheBrick::OngToPuRe(pos);
+                            light->Color = PuRe_Color(vel.x,vel.y,vel.z,1.0f);
+                            a_rLights.push_back(light);
                         }
                     }
                     readWhere = read::Name;
@@ -121,6 +132,11 @@ namespace sba
                         else if (buff.substr(0, buff.find_last_of("@")) == "item")
                         {
                             otype = Type::Item;
+                            objectName = buff.substr(buff.find_last_of("@") + 1);
+                        }
+                        else if (buff.substr(0, buff.find_last_of("@")) == "light")
+                        {
+                            otype = Type::Light;
                             objectName = buff.substr(buff.find_last_of("@") + 1);
                         }
                         readWhere = read::Pos;

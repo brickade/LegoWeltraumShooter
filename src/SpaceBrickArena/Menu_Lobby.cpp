@@ -979,20 +979,20 @@ namespace Menu
             color = PuRe_Color(1.0f, 0.0f, 0.0f);
         else
             color = PuRe_Color(1.0f, 1.0f, 1.0f);
-        a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "Start", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(36.0f, 36.0f, 0.0f), 32.0f, color);
+        a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "START", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(36.0f, 36.0f, 0.0f), 40.0f, color);
 
         if (this->m_pNavigation->GetFocusedElementId() == 1)
             color = PuRe_Color(1.0f, 0.0f, 0.0f);
         else
             color = PuRe_Color(1.0f, 1.0f, 1.0f);
         Position.Y -= 100.0f;
-        a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "Map: ", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(36.0f, 36.0f, 0.0f), 32.0f, color);
+        a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "MAP: ", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(36.0f, 36.0f, 0.0f), 40.0f, color);
         Position.X += 200.0f;
         if (this->m_pNavigation->GetFocusedElementId() == 1&&this->m_Focus)
             color = PuRe_Color(1.0f, 0.0f, 0.0f);
         else
             color = PuRe_Color(1.0f, 1.0f, 1.0f);
-        a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, sba_Map->GetName().c_str(), Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(36.0f, 36.0f, 0.0f), 32.0f, color);
+        a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, sba_Map->GetName().c_str(), Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(36.0f, 36.0f, 0.0f), 40.0f, color);
 
         Position.Y = 100.0f;
         Position.X = 100.0f;
@@ -1001,24 +1001,24 @@ namespace Menu
         else
             color = PuRe_Color(1.0f, 1.0f, 1.0f);
         Position.Y = 100.0f;
-        a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "Back", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(36.0f, 36.0f, 0.0f), 32.0f, color);
+        a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "BACK", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(36.0f, 36.0f, 0.0f), 40.0f, color);
 
         Position.X = 1920.0f - 600.0f;
         Position.Y = 1080.0f - 300.0f;
         color = PuRe_Color(1.0f, 1.0f, 1.0f);
-        a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "Player", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(26.0f, 26.0f, 0.0f), 24.0f, color);
+        a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "PLAYER", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(26.0f, 26.0f, 0.0f), 30.0f, color);
         Position.X += 300.0f;
-        a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "Ship", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(26.0f, 26.0f, 0.0f), 24.0f, color);
+        a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "SHIP", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(26.0f, 26.0f, 0.0f), 30.0f, color);
         Position.Y -= 64.0f;
         Position.X -= 300.0f;
         color = PuRe_Color(1.0f, 1.0f, 1.0f);
         for (unsigned int i = 0; i < sba_Players.size(); i++)
         {
-            std::string name = "Player " + std::to_string(sba_Players[i]->ID);
-            a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, name.c_str(), Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(26.0f, 26.0f, 0.0f), 24.0f, color);
+            std::string name = "PLAYER " + std::to_string(sba_Players[i]->ID);
+            a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, name.c_str(), Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(26.0f, 26.0f, 0.0f), 30.0f, color);
             Position.X += 300.0f;
             if (sba_Players[i]->Ship != NULL)
-                a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, sba_Players[i]->Ship->GetName(), Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(26.0f, 26.0f, 0.0f), 24.0f, color);
+                a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, sba_Players[i]->Ship->GetName(), Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(26.0f, 26.0f, 0.0f), 30.0f, color);
             Position.Y -= 64.0f;
             Position.X -= 300.0f;
         }
@@ -1032,7 +1032,7 @@ namespace Menu
         {
             PuRe_Color color = PuRe_Color(1.0f, 1.0f, 1.0f);
             color.A = ((sin(a_pTimer->GetTotalElapsedSeconds()*2.0f)) + 0.8f) / 2.0f;
-            a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "Press A to join ...", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(22.0f, 22.0f, 0.0f), 20.0f, color);
+            a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "PRESS A TO JOIN ...", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(22.0f, 22.0f, 0.0f), 26.0f, color);
             Position.Y -= 64.0f;
         }
 
@@ -1041,11 +1041,11 @@ namespace Menu
             Position.X = 1920.0f - 500.0f;
             Position.Y = 1080.0f - 50.0f;
             color = PuRe_Color(1.0f, 1.0f, 1.0f);
-            a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "Name: " + sba_Network->m_Name, Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(22.0f, 22.0f, 0.0f), 22.0f, color);
+            a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "NAME: " + sba_Network->m_Name, Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(22.0f, 22.0f, 0.0f), 26.0f, color);
             Position.Y -= 64.0f;
-            a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "IP: " + sba_Network->m_IP, Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(22.0f, 22.0f, 0.0f), 22.0f, color);
+            a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "IP: " + sba_Network->m_IP, Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(22.0f, 22.0f, 0.0f), 26.0f, color);
             Position.Y -= 64.0f;
-            a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "Port: " + sba_Network->m_Port, Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(22.0f, 22.0f, 0.0f), 22.0f, color);
+            a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "PORT: " + sba_Network->m_Port, Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(22.0f, 22.0f, 0.0f), 26.0f, color);
         }
     }
 }

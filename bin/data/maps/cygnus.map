@@ -40,3 +40,4 @@ object@asteroid2;90,60,100;0,0,0;0,0,0
 object@asteroid;90,60,90;0,0,0;0,2,0
 item@shield;-40,0,80;0,0,0;0,0.1,0
 item@repair;-80,0,80;0,0,0;0,0.1,0
+light@directional;1.0,0.0,0.0;1.0,1.0,1.0;0,0,0

@@ -212,13 +212,13 @@ namespace Menu
             color = PuRe_Color(1.0f, 0.0f, 0.0f);
         else
             color = PuRe_Color(1.0f, 1.0f, 1.0f);
-        a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "Resolution", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(36.0f, 36.0f, 0.0f), 32.0f, color);
+        a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "RESOLUTION", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(36.0f, 36.0f, 0.0f), 46.0f, color);
         Position.X += 800.0f;
         if (this->m_pNavigation->GetFocusedElementId() == 0&&this->m_Focus)
             color = PuRe_Color(1.0f, 0.0f, 0.0f);
         else
             color = PuRe_Color(1.0f, 1.0f, 1.0f);
-        a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, std::to_string(this->m_Resolutions[this->m_Resolution][0]) + "x" + std::to_string(this->m_Resolutions[this->m_Resolution][1]), Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(36.0f, 36.0f, 0.0f), 32.0f, color);
+        a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, std::to_string(this->m_Resolutions[this->m_Resolution][0]) + "x" + std::to_string(this->m_Resolutions[this->m_Resolution][1]), Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(36.0f, 36.0f, 0.0f), 46.0f, color);
         Position.X -= 800.0f;
 
         Position.Y -= 64.0f;
@@ -226,7 +226,7 @@ namespace Menu
             color = PuRe_Color(1.0f, 0.0f, 0.0f);
         else
             color = PuRe_Color(1.0f, 1.0f, 1.0f);
-        a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "DisplayMode", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(36.0f, 36.0f, 0.0f), 32.0f, color);
+        a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "DISPLAYMODE", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(36.0f, 36.0f, 0.0f), 46.0f, color);
         Position.X += 800.0f;
         if (this->m_pNavigation->GetFocusedElementId() == 1 && this->m_Focus)
             color = PuRe_Color(1.0f, 0.0f, 0.0f);
@@ -236,13 +236,13 @@ namespace Menu
         switch (this->m_DMode)
         {
         case PuRe_DisplaySetting::Windowed:
-            a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "Windowed", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(36.0f, 36.0f, 0.0f), 32.0f, color);
+            a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "WINDOWED", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(36.0f, 36.0f, 0.0f), 46.0f, color);
             break;
         case PuRe_DisplaySetting::FullscreenWindowed:
-            a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "FullscreenWindowed", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(36.0f, 36.0f, 0.0f), 32.0f, color);
+            a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "FULLSCREENWINDOWED", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(36.0f, 36.0f, 0.0f), 46.0f, color);
             break;
         default:
-            a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "Fullscreen", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(36.0f, 36.0f, 0.0f), 32.0f, color);
+            a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "FULLSCREEN", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(36.0f, 36.0f, 0.0f), 46.0f, color);
             break;
         }
         Position.X -= 800.0f;
@@ -252,16 +252,16 @@ namespace Menu
             color = PuRe_Color(1.0f, 0.0f, 0.0f);
         else
             color = PuRe_Color(1.0f, 1.0f, 1.0f);
-        a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "SSAO", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(36.0f, 36.0f, 0.0f), 32.0f, color);
+        a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "SSAO", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(36.0f, 36.0f, 0.0f), 46.0f, color);
         Position.X += 800.0f;
         if (this->m_pNavigation->GetFocusedElementId() == 2 && this->m_Focus)
             color = PuRe_Color(1.0f, 0.0f, 0.0f);
         else
             color = PuRe_Color(1.0f, 1.0f, 1.0f);
         if (this->m_SSAO)
-            a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "On", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(36.0f, 36.0f, 0.0f), 32.0f, color);
+            a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "ON", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(36.0f, 36.0f, 0.0f), 46.0f, color);
         else
-            a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "Off", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(36.0f, 36.0f, 0.0f), 32.0f, color);
+            a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "OFF", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(36.0f, 36.0f, 0.0f), 46.0f, color);
         Position.X -= 800.0f;
 
         Position.Y -= 128.0f;
@@ -269,6 +269,6 @@ namespace Menu
             color = PuRe_Color(1.0f, 0.0f, 0.0f);
         else
             color = PuRe_Color(1.0f, 1.0f, 1.0f);
-        a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "Back", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(36.0f, 36.0f, 0.0f), 32.0f, color);
+        a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "BACK", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(36.0f, 36.0f, 0.0f), 46.0f, color);
     }
 }

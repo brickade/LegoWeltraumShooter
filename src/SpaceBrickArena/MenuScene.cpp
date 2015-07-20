@@ -149,6 +149,7 @@ namespace Menu
 
         renderer->Begin(PuRe_Color(0.0f, 0.0f, 0.0f));
 
+        sba_Renderer->Set(0, 0.0f, "greyscale");
         renderer->Draw(0, true, sba_SkyBox, sba_SkyBoxMaterial);
         sba_BrickManager->Render();
 

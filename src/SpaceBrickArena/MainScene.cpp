@@ -41,6 +41,8 @@ namespace sba
         case 2: //Game Local Initialize
             this->m_pActiveScene->Exit();
             SAFE_DELETE(this->m_pActiveScene);
+            sba_SoundPlayer->StopSound("Theme");
+            sba_SoundPlayer->PlaySound("Ingame", true, true, std::stof(sba_Options->GetValue("MusicVolume")));
 
             this->m_pGameScene = new sba::CGameScene(a_pApplication, this->m_PlayerIdx, false);
             this->m_pGameScene->Initialize(a_pApplication);
@@ -72,6 +74,7 @@ namespace sba
             SAFE_DELETE(this->m_pActiveScene);
             sba_SoundPlayer->StopSound("Theme");
             sba_SoundPlayer->StopSound("Editor");
+            sba_SoundPlayer->StopSound("Ingame");
             sba_SoundPlayer->PlaySound("Theme", true, true, std::stof(sba_Options->GetValue("MusicVolume")));
 
             this->m_pMenuScene = new Menu::CMenuScene(a_pApplication, &this->m_PlayerIdx);

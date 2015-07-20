@@ -71,6 +71,7 @@ namespace sba
         std::vector<sba::CBullet*> m_Bullets;
         std::vector<sba::CAsteroid*> m_Asteroids;
         std::vector<sba::CItem*> m_Items;
+        std::vector<sba::SLightData*> m_Lights;
         /// @brief Engine's Application
         ///
         PuRe_Application* m_pApplication;
