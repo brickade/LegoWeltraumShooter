@@ -109,7 +109,7 @@ namespace TheBrick
             a_rRenderer.Set(0, PuRe_Color(0.0f, 1.0f, 0.0f, 1.0f), "glow");
             break;
         case MG:
-            a_rRenderer.Set(0, PuRe_Color(0.5f, 0.0f, 0.0f, 0.5f), "glow");
+            a_rRenderer.Set(0, PuRe_Color(0.75f, 0.0f, 0.0f, 0.75f), "glow");
             break;
         case Mine:
             a_rRenderer.Set(0, PuRe_Color(0.5f, 0.0f, 0.5f, 0.5f), "glow");

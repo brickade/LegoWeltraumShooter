@@ -85,6 +85,19 @@ namespace sba
         this->m_pSkyBoxMaterial = a_pGraphics.LoadMaterial("../data/effects/skybox/default");
         sba_SkyBox = new PuRe_SkyBox(&a_pGraphics, sba_Map->GetSkybox());
 
+        for (int i=0;i<4;i++)
+        {
+            std::string num = "Thrust" + std::to_string(i + 1);
+            this->m_Controls[i].Thrust = std::stoi(this->m_pIniReader->GetValue(num));
+            if (this->m_Controls[i].Thrust < 1) this->m_Controls[i].Thrust = 1; else if (this->m_Controls[i].Thrust > 3) this->m_Controls[i].Thrust = 3;
+            num = "Spin" + std::to_string(i + 1);
+            this->m_Controls[i].Spin = std::stoi(this->m_pIniReader->GetValue(num));
+            if (this->m_Controls[i].Spin < 1) this->m_Controls[i].Spin = 1; else if (this->m_Controls[i].Spin > 2) this->m_Controls[i].Spin = 2;
+            num = "Move" + std::to_string(i + 1);
+            this->m_Controls[i].Move = std::stoi(this->m_pIniReader->GetValue(num));
+            if (this->m_Controls[i].Move < 1) this->m_Controls[i].Move = 1; else if (this->m_Controls[i].Move > 4) this->m_Controls[i].Move = 4;
+        }
+
         //load sounds
         int i = 0;
         PuRe_IWindow* window = sba_Application->GetWindow();

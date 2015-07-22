@@ -32,6 +32,7 @@ namespace Menu
     class CMenuScene : public PuRe_IScene
     {
     private:
+        sba::CSpriteReader* m_pSpriteReader;
 
         CNetwork* m_pNetwork;
 

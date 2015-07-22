@@ -110,8 +110,9 @@ namespace sba
                 EditorMoveBrick,
                 EditorChooseElement,
                 Navigate,
-                GameMove,
-                LAST = GameMove
+                GameMove_1,
+                GameMove_2,
+                LAST = GameMove_2
             };
         };
 
@@ -122,9 +123,12 @@ namespace sba
                 EditorCameraZoom,
                 EditorColorSlider,
                 GameShoot,
-                GameThrust,
-                GameSpin,
-                LAST = GameSpin
+                GameThrust_1,
+                GameThrust_2,
+                GameThrust_3,
+                GameSpin_1,
+                GameSpin_2,
+                LAST = GameSpin_2
             };
         };
 

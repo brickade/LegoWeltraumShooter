@@ -18,6 +18,14 @@
 
 namespace sba
 {
+
+    struct SControl
+    {
+        unsigned char Thrust;
+        unsigned char Spin;
+        unsigned char Move;
+    };
+
     class Space
     {
     public:
@@ -50,6 +58,7 @@ namespace sba
         CGameMap* m_pMap;
         CIniReader* m_pIniReader;
         PuRe_SkyBox* m_pSkybox;
+        SControl m_Controls[4];
 
     private:
         static Space* g_pInstance;
@@ -91,6 +100,7 @@ namespace sba
 #define sba_Network sba::Space::Instance()->m_pNetworkhandler
 #define sba_Options sba::Space::Instance()->m_pIniReader
 #define sba_Map sba::Space::Instance()->m_pMap
+#define sba_Controls sba::Space::Instance()->m_Controls
 
 #define sba_World sba::Space::Instance()->World
 #define sba_Renderer sba::Space::Instance()->Renderer

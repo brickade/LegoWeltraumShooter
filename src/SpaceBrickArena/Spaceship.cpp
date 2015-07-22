@@ -11,6 +11,26 @@
 
 namespace sba
 {
+    const float g_Rand[] = { -56.0f, -250.0f, 45.0f, -360.0f, 106.0f,
+        256.0f, -421.0f, -343.0f, 281.0f, -91.0f,
+        -428.0f, 432.0f, 175.0f, 318.0f, 40.0f,
+        406.0f, -416.0f, 431.0f, -157.0f, 159.0f,
+        -450.0f, -150.0f, -500.0f, 183.0f, 145.0f,
+        -167.0f, 85.0f, -100.0f, 174.0f, -40.0f,
+        -134.0f, -142.0f, 66.0f, 184.0f, 463.0f,
+        397.0f, 38.0f, 358.0f, -355.0f, -401.0f,
+        -88.0f, -196.0f, -302.0f, 408.0f, 252.0f,
+        -486.0f, 212.0f, 337.0f, 215.0f, -465.0f,
+        -440.0f, -383.0f, 422.0f, -226.0f, 274.0f,
+        -306.0f, -1.0f, -456.0f, 351.0f, -177.0f,
+        147.0f, -201.0f, 384.0f, -224.0f, -251.0f,
+        -435.0f, -290.0f, 198.0f, 223.0f, -337.0f,
+        283.0f, -282.0f, -11.0f, -323.0f, 330.0f,
+        -232.0f, -321.0f, -417.0f, -150.0f, -19.0f,
+        -184.0f, 175.0f, 276.0f, 90.0f, 198.0f,
+        189.0f, 361.0f, 107.0f, -187.0f, -438.0f,
+        -380.0f, -298.0f, 299.0f, 298.0f, -137.0f,
+        367.0f, 107.0f, 254.0f, 1.0f, -400.0f };
 #ifdef _DEBUG
     const int CSpaceship::MAX_BRICK_COUNT = 500;
 #elif
@@ -271,6 +291,7 @@ namespace sba
                 case TheBrick::MG - 100: //MG
                     id = TheBrick::MG;
                     pos += forward*10.0f;
+                    speed *= 0.5f;
                     col = PuRe_Color(1.0f, 0.0f, 0.0f, 1.0f);
                     break;
 
@@ -284,12 +305,14 @@ namespace sba
                 case TheBrick::Rocket - 100: //Rocket
                     pos += forward*10.0f;
                     id = TheBrick::Rocket;
+                    speed *= 0.4f;
                     col = PuRe_Color(1.0f, 0.0f, 0.0f, 1.0f);
                     break;
 
                 case TheBrick::Torpedo - 100: //Torpedo
                     pos += forward*10.0f;
                     id = TheBrick::Torpedo;
+                    speed *= 0.2f;
                     col = PuRe_Color(1.0f, 0.0f, 0.0f, 1.0f);
                     break;
                 }
@@ -328,16 +351,24 @@ namespace sba
     }
     // **************************************************************************
     // **************************************************************************
-    void CSpaceship::Update(int a_OID,float a_DeltaTime)
+    void CSpaceship::Update(int a_OID, float a_DeltaTime, int a_Time)
     {
 
         ong::vec3 currVel = ong::rotate(this->m_pBody->getLinearVelocity(), ong::conjugate(this->m_pBody->getOrientation()));
-
         if (this->m_Respawn > 0.0f)
         {
             this->m_Respawn -= a_DeltaTime;
             if (this->m_Respawn < 0.0f)
-                this->Respawn(ong::vec3(a_OID*40.0f,0.0f,0.0f));
+            {
+                ong::vec3 pos;
+                int index = (a_OID + a_Time) % 100;
+                int index2 = (index + 1) % 100;
+                int index3 = (index + 2) % 100;
+                pos.x = g_Rand[index];
+                pos.y = g_Rand[index2];
+                pos.z = g_Rand[index3];
+                this->Respawn(pos);
+            }
         }
         else
         {

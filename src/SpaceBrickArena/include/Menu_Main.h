@@ -15,7 +15,6 @@ namespace Menu
     {
     private:
         sba::CNavigation* m_pNavigation;
-        sba::CSpriteReader* m_pSpriteReader;
         int* m_PlayerIdx;
     public:
         /// @brief Constructor
@@ -36,11 +35,12 @@ namespace Menu
         /// @brief Display the MainMenu
         ///
         /// @param Renderer to use
+        /// @param SpriteReader to display UI
         /// @param Font to use
         /// @param Material to display the Font
         /// @param ScreenSize
         ///
-        void Render(PuRe_Renderer* a_pRenderer,PuRe_Font* a_pFont,PuRe_IMaterial* a_pFontMaterial,PuRe_Vector2F a_Resolution);
+        void Render(PuRe_Renderer* a_pRenderer, sba::CSpriteReader* a_pSpriteReader,PuRe_Font* a_pFont, PuRe_IMaterial* a_pFontMaterial, PuRe_Vector2F a_Resolution);
     };
 }
 

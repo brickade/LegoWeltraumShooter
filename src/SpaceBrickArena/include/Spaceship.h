@@ -78,7 +78,7 @@ namespace sba
 
         void Respawn(ong::vec3 a_Position);
 
-        void Update(int a_OID, float a_DeltaTime);
+        void Update(int a_OID, float a_DeltaTime,int a_Time);
         void Thrust(float a_Thrust);
         void Spin(float a_Spin);
         void Move(PuRe_Vector2F a_Move);

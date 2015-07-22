@@ -30,7 +30,22 @@ namespace sba
         if (bShoot || fShoot == 1.0f)
             input.Shoot = true;
 
-        PuRe_Vector2F Move = sba_Input->Direction(Input::EDirection::Type::GameMove, a_PlayerIdx);
+        PuRe_Vector2F Move;
+        if (sba_Controls[a_PlayerIdx].Move == 1)
+            Move = sba_Input->Direction(Input::EDirection::Type::GameMove_1, a_PlayerIdx);
+        else if (sba_Controls[a_PlayerIdx].Move == 2)
+            Move = sba_Input->Direction(Input::EDirection::Type::GameMove_2, a_PlayerIdx);
+        else if (sba_Controls[a_PlayerIdx].Move == 3)
+        {
+            Move = sba_Input->Direction(Input::EDirection::Type::GameMove_1, a_PlayerIdx);
+            Move.Y = -Move.Y;
+        }
+        else if (sba_Controls[a_PlayerIdx].Move == 4)
+        {
+            Move = sba_Input->Direction(Input::EDirection::Type::GameMove_2, a_PlayerIdx);
+            Move.Y = -Move.Y;
+        }
+
         if (Move.X > 0.1f || Move.X < -0.1f)
             input.MoveX = (char)(Move.X*100.0f);
         if (Move.Y > 0.1f || Move.Y < -0.1f)
@@ -38,15 +53,28 @@ namespace sba
 
 
 
+        float fThrust;
         if (a_PlayerIdx == 0)
         {
             if (sba_Input->ButtonIsPressed(Input::EButton::Type::GameThrust, a_PlayerIdx))
-                input.Thrust = 100;
+                fThrust = 100;
         }
-        float fThrust = sba_Input->Axis(Input::EAxis::Type::GameThrust, a_PlayerIdx);
+
+        if (sba_Controls[a_PlayerIdx].Thrust == 1)
+            fThrust = sba_Input->Axis(Input::EAxis::Type::GameThrust_1, a_PlayerIdx);
+        else if (sba_Controls[a_PlayerIdx].Thrust == 1)
+            fThrust = sba_Input->Axis(Input::EAxis::Type::GameThrust_2, a_PlayerIdx);
+        else
+            fThrust = sba_Input->Axis(Input::EAxis::Type::GameThrust_3, a_PlayerIdx);
+
         input.Thrust = (char)(((fThrust + 1.0f) / 2.0f)*100.0f);
 
-        float Spin = sba_Input->Axis(Input::EAxis::Type::GameSpin, a_PlayerIdx);
+        float Spin;
+        if (sba_Controls[a_PlayerIdx].Spin == 1)
+            Spin = sba_Input->Axis(Input::EAxis::Type::GameSpin_1, a_PlayerIdx);
+        else
+            Spin = sba_Input->Axis(Input::EAxis::Type::GameSpin_2, a_PlayerIdx);
+
         if (Spin < -0.1f || Spin > 0.1f)
             input.Spin = -(char)(Spin*100.0f);
 
@@ -55,7 +83,7 @@ namespace sba
 
     // **************************************************************************
     // **************************************************************************
-    void CGameScene::ProcessInput(std::vector<CBullet*>& a_rBullets, SPlayer* a_pPlayer, sba::SInputData* a_Input, float a_DeltaTime)
+    void CGameScene::ProcessInput(std::vector<CBullet*>& a_rBullets, SPlayer* a_pPlayer, sba::SInputData* a_Input, float a_DeltaTime,int a_Time)
     {
         CSpaceship* ship = a_pPlayer->Ship;
         int camID = 0;
@@ -95,7 +123,7 @@ namespace sba
         if (a_Input->Spin != 0)
             ship->Spin(a_Input->Spin / 100.0f);
 
-        ship->Update(a_pPlayer->ID, a_DeltaTime);
+        ship->Update(a_pPlayer->ID, a_DeltaTime, a_Time);
     }
 
     void CGameScene::UpdateGame(std::vector<CBullet*>& a_rBullets, std::vector<CItem*>& a_rItems, float a_Deltatime)
@@ -145,6 +173,7 @@ namespace sba
         PuRe_IInput* aInput = this->m_pApplication->GetInput();
         PuRe_Timer* aTimer = this->m_pApplication->GetTimer();
         float seconds = aTimer->GetElapsedSeconds();
+        int tseconds = (int)aTimer->GetTotalElapsedSeconds();
         if (seconds < 1.0f)
         {
 			ong_START_PROFILE(UPDATE_GAME);
@@ -154,7 +183,7 @@ namespace sba
             for (unsigned int i = 0; i < sba_Players.size(); i++)
             {
                 sba::SInputData input = this->HandleInput(sba_Players[i]->PadID, aInput);
-                this->ProcessInput(this->m_Bullets, sba_Players[i], &input, seconds);
+                this->ProcessInput(this->m_Bullets, sba_Players[i], &input, seconds, tseconds);
             }
 
 			ong_START_PROFILE(UPDATE_PHYSICS);
@@ -182,8 +211,8 @@ namespace sba
         for (unsigned int i = 0; i < sba_Players.size(); i++)
         {
             sba_Players[i]->Ship->CalculateData();
-            ong::vec3 pos = ong::vec3(10.0f, 10.0f, 10.0f);
-            pos.x += sba_Players[i]->ID*40.0f;
+            ong::vec3 pos = ong::vec3(-125.0f, 0.0f, -300.0f);
+            pos.x += sba_Players[i]->ID*50.0f;
             sba_Players[i]->Ship->m_pBody->setPosition(pos);
         }
 

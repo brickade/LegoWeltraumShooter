@@ -23,6 +23,7 @@ namespace sba
 
         // allocate memory to contain the whole file:
         pbuffer = (char*)malloc(sizeof(char)*lSize);
+        memset(pbuffer, 0, sizeof(char)*lSize);
 
         // copy the file into the buffer:
         fread(pbuffer, 1, lSize, pfile);

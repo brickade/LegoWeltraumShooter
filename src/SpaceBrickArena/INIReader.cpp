@@ -90,6 +90,23 @@ namespace sba
         if (got == this->m_Table.end())
             this->m_Table["SoundVolume"] = "1.0";
 
+        std::string key;
+        for (int i=0;i<4;i++)
+        {
+            key = "Thrust" + std::to_string(i + 1);
+            got = this->m_Table.find(key);
+            if (got == this->m_Table.end())
+                this->m_Table[key] = "1";
+            key = "Spin" + std::to_string(i + 1);
+            got = this->m_Table.find(key);
+            if (got == this->m_Table.end())
+                this->m_Table[key] = "1";
+            key = "Move" + std::to_string(i + 1);
+            got = this->m_Table.find(key);
+            if (got == this->m_Table.end())
+                this->m_Table[key] = "1";
+        }
+
         std::string write;
         pFile = fopen(a_pFile, "w");
         for (auto it = this->m_Table.begin(); it != this->m_Table.end(); ++it)

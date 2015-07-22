@@ -274,12 +274,18 @@ namespace Menu
         return 1;
     }
 
-    void CNetwork::Render(PuRe_Renderer* a_pRenderer, PuRe_Timer* a_pTimer, PuRe_Font* a_pFont, PuRe_IMaterial* a_pFontMaterial, PuRe_Vector2F a_Resolution)
+    void CNetwork::Render(PuRe_Renderer* a_pRenderer, sba::CSpriteReader* a_pSpriteReader, PuRe_Timer* a_pTimer, PuRe_Font* a_pFont, PuRe_IMaterial* a_pFontMaterial, PuRe_Vector2F a_Resolution)
     {
         PuRe_Vector3F Position;
+        //DRAW UI
+        Position.X = 1920 / 2.0f;
+        Position.Y = 1080 / 2.0f;
+        a_pSpriteReader->Draw(1, a_pRenderer, "kasten_gross", a_pFontMaterial, Position, PuRe_Vector3F(), -1, PuRe_Vector2F(0.5f, 0.5f));
+        a_pSpriteReader->Draw(1, a_pRenderer, "network_kasten", a_pFontMaterial, Position, PuRe_Vector3F(), -1, PuRe_Vector2F(0.5f, 0.5f));
+        //Draw Bottom
         Position.X = 100.0f;
         Position.Y = 1080.0f;
-        Position.Y -= 100.0f;
+        Position.Y -= 150.0f;
 
         PuRe_Color color = PuRe_Color();
 
@@ -289,7 +295,7 @@ namespace Menu
             color = PuRe_Color(1.0f, 1.0f, 1.0f);
         a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "INTERNET", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(36.0f, 36.0f, 0.0f), 40.0f, color);
 
-        Position.X += 300.0f;
+        Position.X += 400.0f;
 
         if (this->m_pNavigation->GetFocusedElementId() == 1)
             color = PuRe_Color(1.0f, 0.0f, 0.0f);

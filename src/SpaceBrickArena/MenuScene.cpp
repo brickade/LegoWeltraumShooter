@@ -21,6 +21,8 @@ namespace Menu
 
         this->m_pFont = new PuRe_Font(graphics, "../data/textures/font.png");
 
+        this->m_pSpriteReader = new sba::CSpriteReader(graphics, "../data/textures/ui/menu.png", "../data/textures/ui/menu.txt");
+
         //Camera
         sba_Renderer->DeleteTargets();
         for (int i = 0; i < 3; i++)
@@ -34,6 +36,8 @@ namespace Menu
         }
 
         this->m_pSceneCamera = new PuRe_Camera(PuRe_Vector2F((float)1920, (float)1080), PuRe_CameraProjection::Perspective);
+        this->m_pSceneCamera->SetFoV(75.0f);
+        this->m_pSceneCamera->setNearFar(PuRe_Vector2F(0.1f, 1000.0f));
         this->m_pUICamera = new PuRe_Camera(PuRe_Vector2F((float)1920, (float)1080), PuRe_CameraProjection::Orthogonal);
 
         this->m_Displayed = Main;
@@ -53,6 +57,8 @@ namespace Menu
         PuRe_IGraphics* graphics = a_pApplication->GetGraphics();
         PuRe_IPlatform* platform = a_pApplication->GetPlatform();
         PuRe_IWindow* window = a_pApplication->GetWindow();
+
+        this->m_pSceneCamera->Rotate(timer->GetElapsedSeconds() / 10.0f, timer->GetElapsedSeconds() / 5.0f, timer->GetElapsedSeconds() / 8.0f);
 
         int result = 0;
         switch (this->m_Displayed)
@@ -156,16 +162,16 @@ namespace Menu
         switch (this->m_Displayed)
         {
         case Main:
-            this->m_pMainMenu->Render(renderer, this->m_pFont, this->m_pFontMaterial, resolution);
+            this->m_pMainMenu->Render(renderer,this->m_pSpriteReader, this->m_pFont, this->m_pFontMaterial, resolution);
             break;
         case Options:
-            this->m_pOptions->Render(renderer, this->m_pFont, this->m_pFontMaterial, resolution);
+            this->m_pOptions->Render(renderer, this->m_pSpriteReader, this->m_pFont, this->m_pFontMaterial, resolution);
             break;
         case Lobby:
-            this->m_pLobby->Render(renderer, timer, this->m_pFont, this->m_pFontMaterial, resolution);
+            this->m_pLobby->Render(renderer, this->m_pSpriteReader, timer, this->m_pFont, this->m_pFontMaterial, resolution);
             break;
         case Network:
-            this->m_pNetwork->Render(renderer, timer, this->m_pFont, this->m_pFontMaterial, resolution);
+            this->m_pNetwork->Render(renderer, this->m_pSpriteReader, timer, this->m_pFont, this->m_pFontMaterial, resolution);
             break;
         default:
             break;
@@ -180,7 +186,7 @@ namespace Menu
     // **************************************************************************
     void CMenuScene::Exit()
     {
-        /////// CAMERAS ///////
+        SAFE_DELETE(this->m_pSpriteReader);
         SAFE_DELETE(this->m_pLobby);
         SAFE_DELETE(this->m_pOptions);
         SAFE_DELETE(this->m_pNetwork);

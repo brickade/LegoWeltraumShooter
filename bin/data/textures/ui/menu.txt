@@ -1,0 +1,5 @@
+kasten_gross = 0 0 1820 1009
+logo = 1820 700 834 210
+menu_kasten = 1716 1009 748 662
+network_kasten = 1820 0 1440 700
+options_kasten = 0 1009 1716 739

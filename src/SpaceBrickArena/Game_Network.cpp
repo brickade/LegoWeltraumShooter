@@ -198,7 +198,7 @@ namespace sba
                         if (sba_Players[j]->ID == id)
                         {
                             input = &buffer->Inputs[i];
-                            pInput(a_rBullets,sba_Players[j], input, 1 / 60.0f);
+                            pInput(a_rBullets,sba_Players[j], input, 1 / 60.0f,(int)this->m_PhysicFrame);
                             break;
                         }
                     }

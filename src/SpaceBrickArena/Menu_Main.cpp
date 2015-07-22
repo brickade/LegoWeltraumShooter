@@ -6,13 +6,11 @@ namespace Menu
     CMain::CMain(PuRe_IGraphics* a_pGraphics)
     {
         this->m_pNavigation = new sba::CNavigation(1, 4);
-        this->m_pSpriteReader = new sba::CSpriteReader(a_pGraphics,"../data/textures/menu_main.png","../data/textures/menu_main.txt");
     }
 
     CMain::~CMain()
     {
         SAFE_DELETE(this->m_pNavigation);
-        SAFE_DELETE(this->m_pSpriteReader);
     }
 
     int CMain::Update(PuRe_Timer* a_pTimer, int a_PlayerIdx)
@@ -42,16 +40,16 @@ namespace Menu
         return 1;
     }
 
-    void CMain::Render(PuRe_Renderer* a_pRenderer, PuRe_Font* a_pFont, PuRe_IMaterial* a_pFontMaterial, PuRe_Vector2F a_Resolution)
+    void CMain::Render(PuRe_Renderer* a_pRenderer, sba::CSpriteReader* a_pSpriteReader, PuRe_Font* a_pFont, PuRe_IMaterial* a_pFontMaterial, PuRe_Vector2F a_Resolution)
     {
         PuRe_Vector3F Position;
         Position.X = 1920 / 2.0f;
         Position.Y = 1080;
         Position.Y -= 200.0f;
 
-        this->m_pSpriteReader->Draw(1, a_pRenderer, "logo", a_pFontMaterial, Position, PuRe_Vector3F(), -1, PuRe_Vector2F(0.5f, 0.5f));
+        a_pSpriteReader->Draw(1, a_pRenderer, "logo", a_pFontMaterial, Position, PuRe_Vector3F(), -1, PuRe_Vector2F(0.5f, 0.5f));
         Position.Y -= 450.0f;
-        this->m_pSpriteReader->Draw(1, a_pRenderer, "menue_tile", a_pFontMaterial, Position, PuRe_Vector3F(), -1, PuRe_Vector2F(0.5f, 0.5f));
+        a_pSpriteReader->Draw(1, a_pRenderer, "menu_kasten", a_pFontMaterial, Position, PuRe_Vector3F(), -1, PuRe_Vector2F(0.5f, 0.5f));
         Position.Y += 200.0f;
         Position.X -= 175.0f;
 

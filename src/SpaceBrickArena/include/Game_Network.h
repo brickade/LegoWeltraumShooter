@@ -24,7 +24,7 @@ namespace sba
     //typedef std::function<SInputData(int)> hInput;
 
     typedef void(*gUpdate)(std::vector<CBullet*>&, std::vector<CItem*>&,float);
-    typedef void(*pInput)(std::vector<CBullet*>&, SPlayer*, sba::SInputData*,float);
+    typedef void(*pInput)(std::vector<CBullet*>&, SPlayer*, sba::SInputData*, float, int);
     typedef SInputData(*hInput)(int, PuRe_IInput*);
 
     class CGameNetwork

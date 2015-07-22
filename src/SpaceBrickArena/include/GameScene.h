@@ -85,7 +85,7 @@ namespace sba
         static sba::SInputData HandleInput(int a_PlayerIdx, PuRe_IInput* a_pInput);
         /// @brief Process Input Data
         ///
-        static void ProcessInput(std::vector<CBullet*>& a_rBullets, SPlayer* a_pPlayer, sba::SInputData* a_Input, float a_DeltaTime);
+        static void ProcessInput(std::vector<CBullet*>& a_rBullets, SPlayer* a_pPlayer, sba::SInputData* a_Input, float a_DeltaTime, int a_Time);
         /// @brief Update a Game
         ///
         static void UpdateGame(std::vector<CBullet*>& a_rBullets, std::vector<CItem*>& a_rItems, float a_Deltatime);

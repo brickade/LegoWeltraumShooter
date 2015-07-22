@@ -132,7 +132,22 @@ namespace sba
             xshake = sin(Seconds*100.0f) * 0.8f * a_pPlayer->Ship->m_Shake * a_pPlayer->Ship->m_Shake;
             yshake = cos(Seconds*100.0f) * 0.8f * a_pPlayer->Ship->m_Shake * a_pPlayer->Ship->m_Shake;
         }
-        PuRe_Vector2F Move = sba_Input->Direction(Input::EDirection::Type::GameMove, a_CID);
+
+        PuRe_Vector2F Move;
+        if (sba_Controls[a_CID].Move == 1)
+            Move = sba_Input->Direction(Input::EDirection::Type::GameMove_1, a_CID);
+        else if (sba_Controls[a_CID].Move == 2)
+            Move = sba_Input->Direction(Input::EDirection::Type::GameMove_2, a_CID);
+        else if (sba_Controls[a_CID].Move == 3)
+        {
+            Move = sba_Input->Direction(Input::EDirection::Type::GameMove_1, a_CID);
+            Move.Y = -Move.Y;
+        }
+        else if (sba_Controls[a_CID].Move == 4)
+        {
+            Move = sba_Input->Direction(Input::EDirection::Type::GameMove_2, a_CID);
+            Move.Y = -Move.Y;
+        }
         if (Move.Length() > 1.0f)
         {
             Move.X *= abs(Move.X);

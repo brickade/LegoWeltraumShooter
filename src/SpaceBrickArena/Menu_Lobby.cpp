@@ -863,12 +863,12 @@ namespace Menu
 
                                 if (rightPress&&lastID == sba_ShipManager->GetShipCount()-1)
                                 {
-                                    p->ShipID = sba_ShipManager->GetShipCount() - 1;
+                                    p->ShipID = 0;
                                     last = true;
                                 }
                                 else if (leftPress&&lastID == 0)
                                 {
-                                    p->ShipID = 0;
+                                    p->ShipID = sba_ShipManager->GetShipCount()-1;
                                     last = true;
                                 }
                                 engines.clear();
@@ -966,7 +966,7 @@ namespace Menu
         return 1;
     }
 
-    void CLobby::Render(PuRe_Renderer* a_pRenderer, PuRe_Timer* a_pTimer, PuRe_Font* a_pFont, PuRe_IMaterial* a_pFontMaterial, PuRe_Vector2F a_Resolution)
+    void CLobby::Render(PuRe_Renderer* a_pRenderer, sba::CSpriteReader* a_pSpriteReader, PuRe_Timer* a_pTimer, PuRe_Font* a_pFont, PuRe_IMaterial* a_pFontMaterial, PuRe_Vector2F a_Resolution)
     {
         PuRe_Vector3F Position;
         Position.X = 100.0f;

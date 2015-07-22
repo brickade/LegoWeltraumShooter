@@ -6,17 +6,22 @@
 
 #include "Navigation.h"
 #include "Space.h"
+#include "SpriteReader.h"
 
 namespace Menu
 {
+    enum EHead { Settings,Controls};
     class COptions
     {
     private:
         sba::CNavigation* m_pNavigation;
+        sba::CNavigation* m_pControls[4];
+        bool m_CFocus[4];
         bool m_Focus;
         bool m_Switched;
         bool m_SSAO;
         PuRe_DisplaySetting m_DMode;
+        char m_Head;
     public:
         int m_Resolution;
         int m_Resolutions[7][2];
@@ -38,11 +43,12 @@ namespace Menu
         /// @brief Display the Options
         ///
         /// @param Renderer to use
+        /// @param SpriteReader to display UI
         /// @param Font to use
         /// @param Material to display the Font
         /// @param ScreenSize
         ///
-        void Render(PuRe_Renderer* a_pRenderer, PuRe_Font* a_pFont, PuRe_IMaterial* a_pFontMaterial, PuRe_Vector2F a_Resolution);
+        void Render(PuRe_Renderer* a_pRenderer, sba::CSpriteReader* a_pSpriteReader, PuRe_Font* a_pFont, PuRe_IMaterial* a_pFontMaterial, PuRe_Vector2F a_Resolution);
     };
 }
 

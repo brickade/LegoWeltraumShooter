@@ -36,16 +36,6 @@ namespace sba
     {
         //Direction
         memset(&this->m_pDirectionMapping, 0, sizeof(this->m_pDirectionMapping));
-        this->m_pDirectionMapping[Input::EDirection::GameMove] =
-        {
-            Input::EGamepadDirection::RightThumb,
-            {
-                Input::EKeyboardDirection::Mouse,
-                Input::EKeyboardDirection::Mouse,
-                Input::EKeyboardDirection::Mouse,
-                Input::EKeyboardDirection::Mouse
-            }
-        };
         this->m_pDirectionMapping[Input::EDirection::Navigate] =
         {
             Input::EGamepadDirection::DPad,
@@ -86,6 +76,26 @@ namespace sba
                 Input::EKeyboardDirection::IKJL
             }
         };
+        this->m_pDirectionMapping[Input::EDirection::GameMove_1] =
+        {
+            Input::EGamepadDirection::RightThumb,
+            {
+                Input::EKeyboardDirection::Mouse,
+                Input::EKeyboardDirection::Mouse,
+                Input::EKeyboardDirection::Mouse,
+                Input::EKeyboardDirection::Mouse
+            }
+        };
+        this->m_pDirectionMapping[Input::EDirection::GameMove_2] =
+        {
+            Input::EGamepadDirection::LeftThumb,
+            {
+                Input::EKeyboardDirection::Mouse,
+                Input::EKeyboardDirection::Mouse,
+                Input::EKeyboardDirection::Mouse,
+                Input::EKeyboardDirection::Mouse
+            }
+        };
 
         //Axis
         memset(&this->m_pAxisMapping, 0, sizeof(this->m_pAxisMapping));
@@ -119,7 +129,27 @@ namespace sba
                 Input::EKeyboardAxis::MouseScroll
             }
         };
-        this->m_pAxisMapping[Input::EAxis::GameThrust] =
+        this->m_pAxisMapping[Input::EAxis::GameThrust_1] =
+        {
+            Input::EGamepadAxis::LeftTrigger,
+            {
+                Input::EKeyboardAxis::WS,
+                Input::EKeyboardAxis::ArrowUD,
+                Input::EKeyboardAxis::ArrowUD,
+                Input::EKeyboardAxis::ArrowUD
+            }
+        };
+        this->m_pAxisMapping[Input::EAxis::GameThrust_2] =
+        {
+            Input::EGamepadAxis::RightThumbY,
+            {
+                Input::EKeyboardAxis::WS,
+                Input::EKeyboardAxis::ArrowUD,
+                Input::EKeyboardAxis::ArrowUD,
+                Input::EKeyboardAxis::ArrowUD
+            }
+        };
+        this->m_pAxisMapping[Input::EAxis::GameThrust_3] =
         {
             Input::EGamepadAxis::LeftThumbY,
             {
@@ -129,9 +159,19 @@ namespace sba
                 Input::EKeyboardAxis::ArrowUD
             }
         };
-        this->m_pAxisMapping[Input::EAxis::GameSpin] =
+        this->m_pAxisMapping[Input::EAxis::GameSpin_1] =
         {
             Input::EGamepadAxis::LeftThumbX,
+            {
+                Input::EKeyboardAxis::AD,
+                Input::EKeyboardAxis::ArrowUD,
+                Input::EKeyboardAxis::ArrowUD,
+                Input::EKeyboardAxis::ArrowUD
+            }
+        };
+        this->m_pAxisMapping[Input::EAxis::GameSpin_2] =
+        {
+            Input::EGamepadAxis::RightThumbX,
             {
                 Input::EKeyboardAxis::AD,
                 Input::EKeyboardAxis::ArrowUD,
