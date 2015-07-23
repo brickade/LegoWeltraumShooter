@@ -156,8 +156,6 @@ namespace sba
         else
             Move = PuRe_Vector2F(0.0f,0.0f);
 
-        printf("X %f Y %f\n",Move.X,Move.Y);
-
         float leng = ong::length(a_pPlayer->Ship->m_pBody->getLinearVelocity()) / a_pPlayer->Ship->GetMaxSpeed();
         leng *= leng;
         float max = 20.0f; //max movement

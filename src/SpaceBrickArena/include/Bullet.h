@@ -18,6 +18,7 @@ namespace sba
         float m_lifeTime;
         int m_Damage;
         bool m_Collided;
+        float m_Speed;
         SPlayer* m_pOwner;
         unsigned int m_ID;
         PuRe_ParticleEmitter* m_pEmitter;

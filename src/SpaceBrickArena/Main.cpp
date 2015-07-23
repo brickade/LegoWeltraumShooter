@@ -37,7 +37,6 @@ int PURE_MAIN
 
     papplication->Run(&scene);
 
-
     SAFE_DELETE(papplication);
     SAFE_DELETE(pplatform);
     SAFE_DELETE(sba_Options);

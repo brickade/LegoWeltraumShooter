@@ -12,6 +12,7 @@ namespace sba
     // **************************************************************************
     CBullet::CBullet(ong::BodyDescription* a_desc, ong::World& a_rWorld, SPlayer* a_pOwner,PuRe_Color a_Color,unsigned int a_ID) : CGameObject(a_rWorld, a_desc)
     {
+        this->m_Speed = ong::length(a_desc->linearMomentum);
         this->m_ID = a_ID;
         this->m_pOwner = a_pOwner;
         this->m_Type = TheBrick::EGameObjectType::Bullet;
@@ -39,7 +40,15 @@ namespace sba
     void CBullet::Collision(ong::Collider* thisCollider, ong::Contact* contact)
     {
         CBullet* bullet = (CBullet*)thisCollider->getBody()->getUserData();
-        bullet->m_lifeTime = 4.9f;
+        ong::Collider* other;
+        if (thisCollider == contact->colliderA)
+            other = contact->colliderB;
+        else
+            other = contact->colliderA;
+
+        CGameObject* object = static_cast<CGameObject*>(other->getBody()->getUserData());
+        if (object->m_Type != TheBrick::EGameObjectType::Bullet)
+            bullet->m_lifeTime = 4.9f;
     }
 
     // **************************************************************************
@@ -61,7 +70,42 @@ namespace sba
     void CBullet::Update(float a_DeltaTime)
     {
         this->m_lifeTime += a_DeltaTime;
-        if (this->m_ID != 900&&this->m_ID != 902) //laser and mine no particles 
+        if (this->m_ID == TheBrick::Rocket)
+        {
+            ong::vec3 pos = this->m_pBody->getWorldCenter();
+            ong::vec3 gpos = this->m_pBody->getWorldCenter();
+            float length = 999999999.0f;
+            for (unsigned int i = 0; i < sba_Players.size(); i++)
+            {
+                if (this->m_pOwner != sba_Players[i])
+                {
+                    ong::vec3 tpos = sba_Players[i]->Ship->m_pBody->getWorldCenter();
+                    float len = ong::lengthSq(pos - tpos);
+                    if (len < length)
+                    {
+                        len = length;
+                        gpos = tpos;
+                    }
+                }
+                    
+            }
+            //now points to the player
+            pos = ong::normalize(gpos - pos);
+            ong::vec3 forw = ong::rotate(ong::vec3(0, 0, 1), this->m_pBody->getOrientation());
+
+            float diff = ong::length(forw - pos);
+            diff = diff*diff;
+            ong::vec3 force = (ong::cross(forw, pos));
+            force.x *= diff;
+            force.y *= diff;
+            force.z *= diff;
+            this->m_pBody->applyTorque(force, a_DeltaTime);
+
+            ong::vec3 currVel = ong::rotate(this->m_pBody->getLinearVelocity(), ong::conjugate(this->m_pBody->getOrientation()));
+            ong::vec3 targetVec = ong::vec3(0.0f, 0.0f, this->m_Speed);
+            this->m_pBody->applyRelativeImpulse(1.0f / this->m_pBody->getInverseMass() * ong::vec3(targetVec.x - currVel.x, targetVec.y - currVel.y, 0));
+        }
+        if (this->m_ID != TheBrick::Laser&&this->m_ID != TheBrick::Mine) //laser and mine no particles 
         {
             this->m_pEmitter->m_Position = TheBrick::OngToPuRe(this->m_pBody->getWorldCenter());
             this->m_pEmitter->m_Rotation = TheBrick::OngToPuRe(this->m_pBody->getOrientation());

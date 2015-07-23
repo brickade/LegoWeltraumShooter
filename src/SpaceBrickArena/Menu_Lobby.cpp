@@ -969,9 +969,16 @@ namespace Menu
     void CLobby::Render(PuRe_Renderer* a_pRenderer, sba::CSpriteReader* a_pSpriteReader, PuRe_Timer* a_pTimer, PuRe_Font* a_pFont, PuRe_IMaterial* a_pFontMaterial, PuRe_Vector2F a_Resolution)
     {
         PuRe_Vector3F Position;
+        //DRAW UI
+        Position.X = 1450;
+        Position.Y = 550;
+        a_pSpriteReader->Draw(1, a_pRenderer, "lobby_kasten_tile", a_pFontMaterial, Position, PuRe_Vector3F(), -1, PuRe_Vector2F(0.5f, 0.5f));
+        Position.X -= 1050;
+        Position.Y -= 100;
+        a_pSpriteReader->Draw(1, a_pRenderer, "lobby_map", a_pFontMaterial, Position, PuRe_Vector3F(), -1, PuRe_Vector2F(0.5f, 0.5f));
+        //Draw Bottom
         Position.X = 100.0f;
-        Position.Y = 1080.0f;
-        Position.Y -= 100.0f;
+        Position.Y = 980.0f;
 
         PuRe_Color color = PuRe_Color();
 
@@ -1003,24 +1010,24 @@ namespace Menu
         Position.Y = 100.0f;
         a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "BACK", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(36.0f, 36.0f, 0.0f), 40.0f, color);
 
-        Position.X = 1920.0f - 600.0f;
-        Position.Y = 1080.0f - 300.0f;
+        Position.X = 1100;
+        Position.Y = 1000;
         color = PuRe_Color(1.0f, 1.0f, 1.0f);
         a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "PLAYER", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(26.0f, 26.0f, 0.0f), 30.0f, color);
-        Position.X += 300.0f;
+        Position.X += 470.0f;
         a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "SHIP", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(26.0f, 26.0f, 0.0f), 30.0f, color);
         Position.Y -= 64.0f;
-        Position.X -= 300.0f;
+        Position.X -= 470.0f;
         color = PuRe_Color(1.0f, 1.0f, 1.0f);
         for (unsigned int i = 0; i < sba_Players.size(); i++)
         {
-            std::string name = "PLAYER " + std::to_string(sba_Players[i]->ID);
-            a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, name.c_str(), Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(26.0f, 26.0f, 0.0f), 30.0f, color);
-            Position.X += 300.0f;
+            std::string name = "PLAYER " + std::to_string(sba_Players[i]->ID+1);
+            a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, name.c_str(), Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(20.0f, 20.0f, 0.0f), 26.0f, color);
+            Position.X += 470.0f;
             if (sba_Players[i]->Ship != NULL)
-                a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, sba_Players[i]->Ship->GetName(), Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(26.0f, 26.0f, 0.0f), 30.0f, color);
+                a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, sba_Players[i]->Ship->GetName(), Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(20.0f, 20.0f, 0.0f), 26.0f, color);
             Position.Y -= 64.0f;
-            Position.X -= 300.0f;
+            Position.X -= 470.0f;
         }
         int localPlayer = 0;
         for (unsigned int i = 0; i < sba_Players.size(); i++)
@@ -1032,7 +1039,7 @@ namespace Menu
         {
             PuRe_Color color = PuRe_Color(1.0f, 1.0f, 1.0f);
             color.A = ((sin(a_pTimer->GetTotalElapsedSeconds()*2.0f)) + 0.8f) / 2.0f;
-            a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "PRESS A TO JOIN ...", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(22.0f, 22.0f, 0.0f), 26.0f, color);
+            a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "PRESS A TO JOIN", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(22.0f, 22.0f, 0.0f), 26.0f, color);
             Position.Y -= 64.0f;
         }
 

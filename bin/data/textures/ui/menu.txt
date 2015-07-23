@@ -1,5 +1,7 @@
 kasten_gross = 0 0 1820 1009
-logo = 1820 700 834 210
-menu_kasten = 1716 1009 748 662
+lobby_kasten_tile = 1820 700 857 1031
+lobby_map = 2677 700 645 485
+logo = 0 1748 834 210
+menu_kasten = 3260 0 748 662
 network_kasten = 1820 0 1440 700
 options_kasten = 0 1009 1716 739

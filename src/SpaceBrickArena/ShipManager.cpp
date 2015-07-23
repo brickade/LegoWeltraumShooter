@@ -160,7 +160,7 @@ namespace sba
         }
     }
 
-#ifdef _DEBUG
+#ifdef EDITOR_DEV
     // **************************************************************************
     // **************************************************************************
     void CShipManager::SaveShipToFileAsObject(sba::CSpaceship& a_rShip)

@@ -43,10 +43,10 @@ namespace Editor
         this->m_currentBrickPosition = PuRe_Vector2I(0, 0);
         this->m_currentHeight = 0;
         this->m_maxBrickDistance = 15 * 3;
-#ifdef _DEBUG
+#ifdef EDITOR_DEV
         this->m_maxBrickDistance = 40 * 3;
         this->m_pCamera->Initialize(PuRe_Vector3F(20, 135, 0), PuRe_Vector3F(-1, 0, 0),10.0f,120.0f,50.0f);
-#elif
+#else
         this->m_pCamera->Initialize(PuRe_Vector3F(20, 135, 0), PuRe_Vector3F(-1, 0, 0));
 #endif
         this->m_pHistory = new CHistory(300, 100);
@@ -125,7 +125,7 @@ namespace Editor
             this->ApplyToCurrentBrick();
         }
 
-#ifdef _DEBUG
+#ifdef EDITOR_DEV
         if (sba_Application->GetInput()->KeyPressed(PuRe_IInput::F6))
         {
             sba_ShipManager->SaveShipToFileAsObject(*a_rShipHandler.GetCurrentSpaceShip());

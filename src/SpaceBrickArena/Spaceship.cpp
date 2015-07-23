@@ -31,15 +31,15 @@ namespace sba
         189.0f, 361.0f, 107.0f, -187.0f, -438.0f,
         -380.0f, -298.0f, 299.0f, 298.0f, -137.0f,
         367.0f, 107.0f, 254.0f, 1.0f, -400.0f };
-#ifdef _DEBUG
+#ifdef EDITOR_DEV
     const int CSpaceship::MAX_BRICK_COUNT = 500;
-#elif
+#else
     const int CSpaceship::MAX_BRICK_COUNT = 200;
     #endif
     const int CSpaceship::MAX_BRICK_WIDTH = 20;
-#ifdef _DEBUG
+#ifdef EDITOR_DEV
     const int CSpaceship::MAX_BRICK_HEIGHT = 40 * 3;
-#elif
+#else
     const int CSpaceship::MAX_BRICK_HEIGHT = 15 * 3;
 #endif
 
@@ -137,7 +137,7 @@ namespace sba
     {
 
 		float mass = 1.0f / this->m_pBody->getInverseMass();
-		this->m_RotationAcceleration = PuRe_Vector3F(mass*50.0f, mass*100.0f, mass*100.0f);
+		this->m_RotationAcceleration = PuRe_Vector3F(mass*100.0f, mass*200.0f, mass*200.0f);
 		this->m_SpeedAcceleration = mass*30.0f;
         this->m_MaxRotationSpeed = PuRe_Vector3F(1.0f, 1.0f, 1.0f);
 
@@ -263,6 +263,8 @@ namespace sba
                 PuRe_Vector3F pos = TheBrick::OngToPuRe(ong::transformTransform(transform, ship).p);
 
                 PuRe_Vector3F forward = PuRe_Vector3F(0.0f, 0.0f, 1.0f) * TheBrick::OngToPuRe(wtransform.q);
+                PuRe_Vector3F side = PuRe_Vector3F(1.0f, 0.0f, 0.0f) * TheBrick::OngToPuRe(wtransform.q);
+                PuRe_Vector3F up = PuRe_Vector3F(0.0f, 1.0f, 0.0f) * TheBrick::OngToPuRe(wtransform.q);
 
                 
 
@@ -318,7 +320,24 @@ namespace sba
                 }
                 bdesc.linearMomentum = TheBrick::PuReToOng(speed);
                 bdesc.transform.p = TheBrick::PuReToOng(pos);
-                a_rBullets.push_back(new CBullet(&bdesc, *w, a_pOwner, col, id));
+                if (weapon->m_pBrick->GetBrickId() == TheBrick::Rocket - 100)
+                {
+                    pos += side*1.0f;
+                    bdesc.transform.p = TheBrick::PuReToOng(pos);
+                    a_rBullets.push_back(new CBullet(&bdesc, *w, a_pOwner, col, id));
+                    pos -= side*2.0f;
+                    bdesc.transform.p = TheBrick::PuReToOng(pos);
+                    a_rBullets.push_back(new CBullet(&bdesc, *w, a_pOwner, col, id));
+                    pos += side*1.0f;
+                    pos += up*1.0f;
+                    bdesc.transform.p = TheBrick::PuReToOng(pos);
+                    a_rBullets.push_back(new CBullet(&bdesc, *w, a_pOwner, col, id));
+                    pos -= up*2.0f;
+                    bdesc.transform.p = TheBrick::PuReToOng(pos);
+                    a_rBullets.push_back(new CBullet(&bdesc, *w, a_pOwner, col, id));
+                }
+                else
+                    a_rBullets.push_back(new CBullet(&bdesc, *w, a_pOwner, col, id));
             }
         }
     }

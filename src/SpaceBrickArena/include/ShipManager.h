@@ -6,6 +6,8 @@
 
 #include "Spaceship.h"
 
+#define EDITOR_DEV
+
 namespace Editor
 {
     class CEditorScene;
@@ -52,7 +54,7 @@ namespace sba
         void AddNewShip(const char* a_pName); //Add default ship with specified name
         void ResetShip(sba::CSpaceship& a_rShip); //Reset given ship to default and update sprite
         void SaveShipToFile(sba::CSpaceship& a_rShip); //Save given ship to file
-#ifdef _DEBUG
+#ifdef EDITOR_DEV
         void SaveShipToFileAsObject(sba::CSpaceship& a_rShip); //Save given ship to file
 #endif
         void DeleteShip(sba::CSpaceship& a_rShip); //Delete given ship from disk and delete sprite and path
