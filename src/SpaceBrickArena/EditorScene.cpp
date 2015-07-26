@@ -196,6 +196,11 @@ namespace Editor
         SAFE_DELETE(this->m_pWorker);
         SAFE_DELETE(this->m_pBrickSupervisor);
         SAFE_DELETE(this->m_pUIMaterial);
+        SAFE_DELETE(this->m_UICamera);
+        SAFE_DELETE(this->m_pDirectionalLightMaterial);
+        SAFE_DELETE(this->m_pDirectionalLight);
+        SAFE_DELETE(this->m_pPointLightMaterial);
+        SAFE_DELETE(this->m_pPointLight);
         SAFE_DELETE(this->m_pPostMaterial);
         sba_BrickManager->RebuildRenderInstances();
     }

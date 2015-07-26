@@ -33,15 +33,15 @@ namespace sba
         367.0f, 107.0f, 254.0f, 1.0f, -400.0f };
 #ifdef EDITOR_DEV
     const int CSpaceship::MAX_BRICK_COUNT = 500;
+    const int CSpaceship::MAX_BRICK_WIDTH = 40 * 3;
 #else
     const int CSpaceship::MAX_BRICK_COUNT = 200;
-    #endif
-    const int CSpaceship::MAX_BRICK_WIDTH = 20;
-#ifdef EDITOR_DEV
-    const int CSpaceship::MAX_BRICK_HEIGHT = 40 * 3;
-#else
-    const int CSpaceship::MAX_BRICK_HEIGHT = 15 * 3;
+    const int CSpaceship::MAX_BRICK_WIDTH = 15 * 3;
 #endif
+    const int CSpaceship::MAX_BRICK_HEIGHT = CSpaceship::MAX_BRICK_WIDTH;
+    const int CSpaceship::MAX_COCKPITS = 2;
+    const int CSpaceship::MAX_ENGINES = 5;
+    const int CSpaceship::MAX_WEAPONS = 5;
 
     // **************************************************************************
     // **************************************************************************
@@ -159,7 +159,6 @@ namespace sba
         for (size_t i = 0; i < this->m_pBricks.size(); i++)
         {
             SAFE_DELETE(this->m_pBricks[i]);
-            i--;
         }
         this->m_pBricks.clear();
 
@@ -529,7 +528,6 @@ namespace sba
         for (size_t i = 0; i < this->m_pBricks.size(); i++)
         {
             SAFE_DELETE(this->m_pBricks[i]);
-            i--;
         }
     }
 

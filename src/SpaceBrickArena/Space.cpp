@@ -43,20 +43,25 @@ namespace sba
             SAFE_DELETE(this->m_Players[i]->Ship);
             SAFE_DELETE(this->m_Players[i]);
         }
-        this->m_Players.clear();
+        //this->m_Players.clear(); //Why? Stack wird eh abgeraeumt
+        SAFE_DELETE(this->m_pSkybox);
+        SAFE_DELETE(this->m_pSkyBoxMaterial);
+        SAFE_DELETE(this->m_pFinalMaterial);
+        SAFE_DELETE(this->SpriteMaterial);
+        SAFE_DELETE(this->FontMaterial);
+        SAFE_DELETE(this->Font);
+        SAFE_DELETE(this->m_pNoiseTexture);
+        SAFE_DELETE(this->m_SSAOMaterial);
+        SAFE_DELETE(this->Renderer);
         SAFE_DELETE(this->m_pSoundPlayer);
+        SAFE_DELETE(this->DestructionManager);
+        SAFE_DELETE(this->m_pNetworkhandler);
+        SAFE_DELETE(this->ShipManager);
         SAFE_DELETE(this->m_pIniReader);
         SAFE_DELETE(this->m_pMap);
-        SAFE_DELETE(this->Renderer);
-        SAFE_DELETE(this->m_SSAOMaterial);
-        SAFE_DELETE(this->ShipManager);
         SAFE_DELETE(this->BrickManager);
         SAFE_DELETE(this->InputManager);
         SAFE_DELETE(this->World);
-        SAFE_DELETE(this->m_pNetworkhandler);
-        SAFE_DELETE(this->m_pFinalMaterial);
-        SAFE_DELETE(this->m_pSkyBoxMaterial);
-        SAFE_DELETE(this->m_pSkybox);
     }
 
     // **************************************************************************

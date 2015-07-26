@@ -23,6 +23,9 @@ namespace sba
         static const int MAX_BRICK_COUNT;
         static const int MAX_BRICK_WIDTH;
         static const int MAX_BRICK_HEIGHT;
+        static const int MAX_COCKPITS;
+        static const int MAX_ENGINES;
+        static const int MAX_WEAPONS;
 
     private:
         TheBrick::SBrickData* m_pBrickArray;

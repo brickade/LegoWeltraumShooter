@@ -16,6 +16,11 @@ namespace Editor
     // **************************************************************************
     CBrickSupervisor::~CBrickSupervisor()
     {
+        SAFE_DELETE(this->m_pNavigation);
+        for (int i = 0; i < this->m_CategoriesCount; i++)
+        {
+            SAFE_DELETE(this->m_Categories[i]);
+        }
     }
 
     // **************************************************************************

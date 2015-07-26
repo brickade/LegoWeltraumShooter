@@ -16,6 +16,7 @@ namespace Editor
     // **************************************************************************
     CColorFields::~CColorFields()
     {
+        SAFE_DELETE(this->m_pNavigation);
         SAFE_DELETE(this->m_pQuad);
     }
 

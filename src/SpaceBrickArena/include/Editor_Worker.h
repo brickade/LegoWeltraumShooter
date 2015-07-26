@@ -27,50 +27,34 @@ namespace Editor
 
     class CWorker
     {
-
     public:
 
     private:
-        CCamera* m_pCamera;
+        int m_PlayerIdx;
+        float m_GamepadMovementSpeedupTimer = 0;
 
-        int m_currentBrickRotation;
-        int m_maxBrickDistance;
-        PuRe_Vector2I m_currentBrickPosition;
-        PuRe_Vector2F m_currentPosition;
-        int m_currentHeight;
-        bool m_CurrentBrickHeightIstInvalid;
-        PuRe_Color m_currentBrickColor;
-        bool m_canPlaceHere = false; 
-        float m_nubDockThreshold = 0.01f;
-        float m_nubDirThreshold = 0.01f;
-
-        float m_GamepadSpeedupTimer = 0;
-
-        bool m_placeBelow;
-
-        CHistory* m_pHistory;
-
-        int m_playerIdx;
+        PuRe_Vector2I m_CurrentPosition;
+        PuRe_Vector2F m_CurrentPositionCache;
+        int m_CurrentRotation;
+        int m_CurrentHeight;
+        bool m_CurrentHeightIsInvalid;
+        PuRe_Color m_CurrentColor;
+        bool m_PlaceBelow;
+        bool m_CanPlaceHere = false; 
 
         TheBrick::CGameObject* m_pCurrentBrickObject;
         TheBrick::CBrickInstance* m_pCurrentBrick;
+        
+        CCamera* m_pCamera;
+        CHistory* m_pHistory;
 
-        PuRe_IMaterial* m_pGridMaterial;
-        PuRe_Model* m_pGridBrick;
+        /*PuRe_IMaterial* m_pGridMaterial;
+        PuRe_Model* m_pGridBrick;*/
 
     public:
         CCamera* GetCamera() const
         {
             return this->m_pCamera;
-        }
-
-        float GetCurrentBrickRotation()
-        {
-            return this->m_currentBrickRotation * 90.0f;
-        }
-        PuRe_Vector2F GetCurrentBrickPosition()
-        {
-            return PuRe_Vector2F(this->m_currentBrickPosition.X * TheBrick::CBrick::SEGMENT_WIDTH, this->m_currentBrickPosition.Y * TheBrick::CBrick::SEGMENT_WIDTH);
         }
 
     public:

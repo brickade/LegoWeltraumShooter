@@ -28,6 +28,7 @@ namespace Editor
     // **************************************************************************
     CShipHandler::~CShipHandler()
     {
+        SAFE_DELETE(this->m_pInputField);
         SAFE_DELETE(this->m_pCurrentSpaceship);
         SAFE_DELETE(this->m_pNavigation);
     }
