@@ -285,7 +285,7 @@ namespace sba
     // **************************************************************************
     void CInputManager::DetectGamepads()
     {
-        this->m_ConnectedGamepadsCount = 0;
+        this->m_ConnectedGamepadsCount = this->m_pInput->GetGamepads();
     }
 
     // **************************************************************************
