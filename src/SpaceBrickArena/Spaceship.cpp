@@ -12,25 +12,25 @@
 namespace sba
 {
     const float g_Rand[] = { -56.0f, -250.0f, 45.0f, -360.0f, 106.0f,
-        256.0f, -421.0f, -343.0f, 281.0f, -91.0f,
-        -428.0f, 432.0f, 175.0f, 318.0f, 40.0f,
-        406.0f, -416.0f, 431.0f, -157.0f, 159.0f,
-        -450.0f, -150.0f, -500.0f, 183.0f, 145.0f,
+        256.0f, -221.0f, -343.0f, 281.0f, -91.0f,
+        -328.0f, 132.0f, 175.0f, 318.0f, 40.0f,
+        306.0f, -316.0f, 231.0f, -157.0f, 159.0f,
+        -150.0f, -150.0f, -400.0f, 183.0f, 145.0f,
         -167.0f, 85.0f, -100.0f, 174.0f, -40.0f,
-        -134.0f, -142.0f, 66.0f, 184.0f, 463.0f,
-        397.0f, 38.0f, 358.0f, -355.0f, -401.0f,
-        -88.0f, -196.0f, -302.0f, 408.0f, 252.0f,
-        -486.0f, 212.0f, 337.0f, 215.0f, -465.0f,
-        -440.0f, -383.0f, 422.0f, -226.0f, 274.0f,
-        -306.0f, -1.0f, -456.0f, 351.0f, -177.0f,
+        -134.0f, -142.0f, 66.0f, 184.0f, 363.0f,
+        397.0f, 38.0f, 358.0f, -355.0f, -201.0f,
+        -88.0f, -196.0f, -302.0f, 108.0f, 252.0f,
+        -286.0f, 212.0f, 337.0f, 215.0f, -365.0f,
+        -340.0f, -383.0f, 322.0f, -226.0f, 274.0f,
+        -306.0f, -1.0f, -256.0f, 351.0f, -177.0f,
         147.0f, -201.0f, 384.0f, -224.0f, -251.0f,
-        -435.0f, -290.0f, 198.0f, 223.0f, -337.0f,
+        -135.0f, -290.0f, 198.0f, 223.0f, -337.0f,
         283.0f, -282.0f, -11.0f, -323.0f, 330.0f,
-        -232.0f, -321.0f, -417.0f, -150.0f, -19.0f,
+        -232.0f, -321.0f, -117.0f, -150.0f, -19.0f,
         -184.0f, 175.0f, 276.0f, 90.0f, 198.0f,
         189.0f, 361.0f, 107.0f, -187.0f, -438.0f,
         -380.0f, -298.0f, 299.0f, 298.0f, -137.0f,
-        367.0f, 107.0f, 254.0f, 1.0f, -400.0f };
+        367.0f, 107.0f, 254.0f, 1.0f, 300.0f };
 #ifdef EDITOR_DEV
     const int CSpaceship::MAX_BRICK_COUNT = 500;
     const int CSpaceship::MAX_BRICK_WIDTH = 40 * 3;
@@ -105,6 +105,9 @@ namespace sba
                         if (Ship->m_Shield  > 100)
                             Ship->m_Shield = 100;
                         break;
+                    case sba::EItemType::Speed:
+                        Ship->m_SpeedFactor = 5.0f;
+                        break;
                 }
                 item->m_Collided = true;
             }
@@ -145,8 +148,6 @@ namespace sba
         this->GetEngines(engines);
         engines.size();
         this->m_MaxSpeed = (engines.size()*200.0f/mass)+1.0f;
-
-		this->m_MaxLife = (int)(mass*10.0f);
 		
 		this->m_Shield = 0;
     }
@@ -205,6 +206,9 @@ namespace sba
 
         Build();
 
+        float mass = 1.0f / this->m_pBody->getInverseMass();
+        this->m_MaxLife = (int)(mass*10.0f);
+        this->m_OldMass = mass;
         this->m_Life = this->m_MaxLife;
     }
 
@@ -222,6 +226,7 @@ namespace sba
             this->m_pBrickArray[i].Transform = this->m_pBricks[i]->GetTransform();
             this->m_pBrickArray[i].Color = this->m_pBricks[i]->m_Color;
         }
+        //set max life here because it is set here with full Data
 
         CalculateProperties();
         this->CalculateReset();
@@ -229,15 +234,22 @@ namespace sba
 
 	void CSpaceship::ReCalculateData()
 	{
-		int oldMaxLife = m_MaxLife;
-		CalculateProperties();
-	
+        CalculateProperties();
+
+        float mass = 1.0f / this->m_pBody->getInverseMass();
+        float maxmass = this->m_MaxLife/10.0f;
+        float maxxDiff = ((this->m_OldMass - mass) / maxmass);
 
 		// adjust life procentual
-		int damage = m_Life - (int)floorf(m_Life * (m_MaxLife / (float)oldMaxLife));
-		damage *= 5;
-		m_Life -= damage;
-		printf("damage: %d\n", damage);
+        int damage = (int)(this->m_MaxLife * maxxDiff);
+        damage *= 5;
+        assert(damage >= 0);	
+        this->m_Life -= damage;
+        //mass difference
+        this->m_OldMass = mass;
+        if (this->m_Life < 0) this->m_Life = 0;
+
+		printf("damage: %i\n", damage);
 	}
 
 
@@ -386,11 +398,20 @@ namespace sba
                 pos.x = g_Rand[index];
                 pos.y = g_Rand[index2];
                 pos.z = g_Rand[index3];
+                printf("Pos: %f %f %f \n",pos.x,pos.y,pos.z);
                 this->Respawn(pos);
             }
         }
         else
         {
+            if (this->m_SpeedFactor != 0.0f)
+            {
+                this->m_SpeedFactor -= a_DeltaTime;
+                if (this->m_SpeedFactor < 0.0f)
+                    this->m_SpeedFactor = 0.0f;
+                else
+                    this->m_TargetVec.z *= 2.0f;
+            }
             ong::vec3 currAng = ong::rotate(this->m_pBody->getAngularVelocity(), ong::conjugate(this->m_pBody->getOrientation()));
 
             float forAcc = this->m_SpeedAcceleration;

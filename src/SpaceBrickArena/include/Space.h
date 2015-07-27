@@ -61,6 +61,7 @@ namespace sba
         CGameMap* m_pMap;
         CIniReader* m_pIniReader;
         PuRe_SkyBox* m_pSkybox;
+        std::string m_pSkyBoxName;
         SControl m_Controls[4];
 
     private:
@@ -99,6 +100,7 @@ namespace sba
 #define sba_Players sba::Space::Instance()->m_Players
 #define sba_FinalMaterial sba::Space::Instance()->m_pFinalMaterial
 #define sba_SkyBox sba::Space::Instance()->m_pSkybox
+#define sba_SkyBoxName sba::Space::Instance()->m_pSkyBoxName
 #define sba_SkyBoxMaterial sba::Space::Instance()->m_pSkyBoxMaterial
 #define sba_Network sba::Space::Instance()->m_pNetworkhandler
 #define sba_Options sba::Space::Instance()->m_pIniReader

@@ -98,6 +98,8 @@ namespace sba
                                 itype = EItemType::Repair;
                             else if (objectName == "shield")
                                 itype = EItemType::Shield;
+                            else if (objectName == "speed")
+                                itype = EItemType::Speed;
                             sba::CItem* item = new sba::CItem(*sba_World, itype, pos, vel, rot);
                             a_rItems.push_back(item);
                         }

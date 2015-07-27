@@ -89,6 +89,7 @@ namespace sba
         this->m_pFinalMaterial = a_pGraphics.LoadMaterial("../data/effects/Final/default");
         this->m_pSkyBoxMaterial = a_pGraphics.LoadMaterial("../data/effects/skybox/default");
         sba_SkyBox = new PuRe_SkyBox(&a_pGraphics, sba_Map->GetSkybox());
+        sba_SkyBoxName = sba_Map->GetSkybox();
 
         for (int i=0;i<4;i++)
         {

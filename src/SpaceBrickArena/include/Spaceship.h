@@ -43,6 +43,8 @@ namespace sba
         PuRe_Vector3F m_RotationAcceleration; //X = Roll, Y = Yaw, Z = Pitch
         float m_MaxSpeed;
         float m_SpeedAcceleration;
+        float m_SpeedFactor;
+        float m_OldMass;
 
     public:
         int m_Shield;

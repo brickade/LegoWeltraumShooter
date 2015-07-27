@@ -41,6 +41,7 @@ namespace sba
 
         this->m_ZOffset = 50.0f;
         float zOffset = speed / a_pPlayer->Ship->GetMaxSpeed();
+        if (zOffset > 1.2f) zOffset = 1.2f;
         zOffset = zOffset*zOffset;
         zOffset *= speed/50.0f;
         this->m_ZOffset += 25.0f*(zOffset);

@@ -259,9 +259,12 @@ namespace sba
 
         this->m_pSphere = new PuRe_Sphere(graphics);
 
-        SAFE_DELETE(sba_SkyBox);
-        sba_SkyBox = new PuRe_SkyBox(graphics, sba_Map->GetSkybox());
-
+        if (sba_SkyBoxName != sba_Map->GetSkybox())
+        {
+            SAFE_DELETE(sba_SkyBox);
+            sba_SkyBox = new PuRe_SkyBox(graphics, sba_Map->GetSkybox());
+            sba_SkyBoxName = sba_Map->GetSkybox();
+        }
         this->m_pShieldMaterial = graphics->LoadMaterial("../data/effects/shield/default");
         this->m_pFontMaterial = graphics->LoadMaterial("../data/effects/font/default");
         this->m_pUIMaterial = graphics->LoadMaterial("../data/effects/UI/default");

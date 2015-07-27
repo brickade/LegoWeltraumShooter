@@ -11,7 +11,7 @@
 
 namespace sba
 {
-    enum EItemType { Shield, Repair };
+    enum EItemType { Shield, Repair, Speed };
     class CItem : public TheBrick::CGameObject
     {
     private:

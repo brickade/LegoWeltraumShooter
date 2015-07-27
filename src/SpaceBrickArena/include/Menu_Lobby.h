@@ -22,10 +22,11 @@ namespace Menu
         PuRe_IWindow* m_pWindow;
         bool m_GameEnd;
         bool m_Focus;
+        sba::CSpriteReader* m_pMapSprites;
     public:
         /// @brief Constructor
         ///
-        CLobby(PuRe_IWindow* a_pWindow);
+        CLobby(PuRe_IWindow* a_pWindow, PuRe_IGraphics* a_pGraphics);
         /// @brief Destructor
         ~CLobby();
     public:

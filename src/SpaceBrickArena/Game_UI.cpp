@@ -7,6 +7,7 @@ namespace sba
         this->m_pSpriteMaterial = a_pGraphics->LoadMaterial("../data/effects/sprite/default");
         this->m_pCrossHairSprite = new PuRe_Sprite(a_pGraphics, "../data/textures/crosshair.png");
         this->m_pHitMarkerSprite = new PuRe_Sprite(a_pGraphics, "../data/textures/hitmarker.png");
+        this->m_pUI = new sba::CSpriteReader(a_pGraphics, "../data/textures/ui/ingame.png", "../data/textures/ui/ingame.txt");
         this->m_pMinimap = new CMinimap(a_pGraphics);
     }
 
@@ -18,17 +19,81 @@ namespace sba
         PuRe_Vector3F size = PuRe_Vector3F(36.0f, 36.0f, 0.0f);
         PuRe_Vector3F pos = PuRe_Vector3F(100.0f, 1080.0f - 100.0f, 0.0f);
         int local = 0;
+        //scale for the shield and life to define where it starts
+        float balken_size = 246.0f;
         for (unsigned int i = 0; i<sba_Players.size(); i++)
         {
             if (sba_Players[i]->PadID != -1)
             {
-                pos.X = 100.0f;
-                pos.Y = 1080.0f - 100.0f;
-                sba_Renderer->Draw(2, false, a_pFont, a_pFontMaterial, "Life: " + std::to_string(sba_Players[i]->Ship->m_Life), pos, PuRe_MatrixF(), size, 36.0f, c, local);
+                pos.X = (1920.0f/2.0f)-150.0f;
+                pos.Y =  1080.0f/2.0f;
+                this->m_pUI->Draw(2, sba_Renderer, "life_shield_tile", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.5f, 0.5f));
+
+                float value = sba_Players[i]->Ship->m_Life / (float)sba_Players[i]->Ship->m_MaxLife;
+
+
+                pos.Y += 20.0f;
+                pos.X += 5.0f*(1.0f-value);
+
+                pos.Y -= balken_size*(1.0f - value)*0.45f;
+                this->m_pUI->Draw(2, sba_Renderer, "life_balken_tile", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.5f, 0.5f*value), PuRe_Vector2F(1.0f, value), PuRe_Vector2F(0.0f, (1.0f - value)*0.225f));
+                pos.Y += balken_size*(1.0f - value)*0.45f;
+
+                pos.X -= 5.0f*(1.0f - value);
+                pos.Y -= 20.0f;
+
+                pos.Y -= 175.0f;
+                this->m_pUI->Draw(2, sba_Renderer, "life_icon_tile", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.5f, 0.5f));
+                pos.Y += 175.0f;
+
+                pos.X += 300.0f;
+                this->m_pUI->Draw(2, sba_Renderer, "shield_tile", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.5f, 0.5f));
+
+                value = (sba_Players[i]->Ship->m_Shield / 100.0f);
+
+
+
+                pos.Y += 20.0f;
+                pos.X += 45.0f - 5.0f*(1.0f - value);
+
+                pos.Y -= balken_size*(1.0f - value)*0.45f;
+                this->m_pUI->Draw(2, sba_Renderer, "shield_balken_tile", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.5f, 0.5f*value), PuRe_Vector2F(1.0f, value), PuRe_Vector2F(0.0f, (1.0f - value)*0.225f));
+                pos.Y += balken_size*(1.0f - value)*0.45f;
+
+                pos.X -= 45.0f + 5.0f*(1.0f - value);
+                pos.Y -= 20.0f;
+
+                pos.Y -= 175.0f;
+                this->m_pUI->Draw(2, sba_Renderer, "shield_icon_tile", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.5f, 0.5f));
+                pos.Y += 175.0f;
+
+                pos.X = 1920.0f-200.0f;
+                pos.Y = 200.0f;
+                this->m_pUI->Draw(2, sba_Renderer, "map_tile", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.5f, 0.5f));
+
+                pos.X = 150.0f;
+                pos.Y = 150.0f;
+
+                pos.Y += 100.0f;
+                this->m_pUI->Draw(2, sba_Renderer, "icon_kasten", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.5f, 0.5f));
+                this->m_pUI->Draw(2, sba_Renderer, "laser_icon", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.5f, 0.5f));
                 pos.Y -= 100.0f;
-                sba_Renderer->Draw(2, false, a_pFont, a_pFontMaterial, "Shield: " + std::to_string(sba_Players[i]->Ship->m_Shield), pos, PuRe_MatrixF(), size, 36.0f, c, local);
+
+                pos.X += 100.0f;
+                this->m_pUI->Draw(2, sba_Renderer, "icon_kasten", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.5f, 0.5f));
+                this->m_pUI->Draw(2, sba_Renderer, "missle_icon", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.5f, 0.5f));
+                pos.X -= 100.0f;
+
+                pos.X -= 100.0f;
+                this->m_pUI->Draw(2, sba_Renderer, "icon_kasten", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.5f, 0.5f));
+                this->m_pUI->Draw(2, sba_Renderer, "mines_icon", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.5f, 0.5f));
+                pos.X += 100.0f;
+
                 pos.Y -= 100.0f;
-                sba_Renderer->Draw(2, false, a_pFont, a_pFontMaterial, "Points: " + std::to_string(sba_Players[i]->Points), pos, PuRe_MatrixF(), size, 36.0f, c, local);
+                this->m_pUI->Draw(2, sba_Renderer, "icon_kasten", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.5f, 0.5f));
+                this->m_pUI->Draw(2, sba_Renderer, "rocket_icon", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.5f, 0.5f));
+                pos.Y += 100.0f;
+
                 pos.X = 1920.0f / 2.0f;
                 pos.Y = 1080.0f / 2.0f;
                 sba_Renderer->Set(2, 1.0f, "alpha");
@@ -71,7 +136,7 @@ namespace sba
                 secString = "0" + secString;
             std::string timeLeft = "Left Time: " + minString + ":" + secString;
             size = PuRe_Vector3F(36.0f, 36.0f, 0.0f);
-            pos = PuRe_Vector3F(100.0f, 100.0f, 0.0f);
+            pos = PuRe_Vector3F(100.0f, 980.0f, 0.0f);
             sba_Renderer->Draw(3, false, a_pFont, a_pFontMaterial, timeLeft, pos, PuRe_MatrixF(), size, 36.0f, c);
         }
     }
@@ -85,5 +150,6 @@ namespace sba
         SAFE_DELETE(this->m_pHitMarkerSprite);
         SAFE_DELETE(this->m_pCrossHairSprite);
         SAFE_DELETE(this->m_pMinimap);
+        SAFE_DELETE(this->m_pUI);
     }
 }

@@ -3,12 +3,13 @@
 namespace Menu
 {
 
-    CLobby::CLobby(PuRe_IWindow* a_pWindow) : m_pWindow(a_pWindow)
+    CLobby::CLobby(PuRe_IWindow* a_pWindow, PuRe_IGraphics* a_pGraphics) : m_pWindow(a_pWindow)
     {
         this->m_pNavigation = new sba::CNavigation(1, 2);
         this->m_GameEnd = false;
         this->m_Start = false;
         this->m_Focus = false;
+        this->m_pMapSprites = new sba::CSpriteReader(a_pGraphics, "../data/textures/ui/lobby_maps.png", "../data/textures/ui/lobby_maps.txt");
     }
 
     CLobby::~CLobby()
@@ -38,6 +39,7 @@ namespace Menu
         }
         this->m_Threads.clear();
         SAFE_DELETE(this->m_pNavigation);
+        SAFE_DELETE(this->m_pMapSprites);
     }
 
     void CLobby::ListenLoop()
@@ -54,7 +56,7 @@ namespace Menu
                 if (sba_Players.size() < sba::MaxPlayers)
                 {
                     SOCKET s = sba_Network->Accept();
-                    if (this->m_Start||!this->m_Run)
+                    if (this->m_Start || !this->m_Run)
                         break;
                     if (s > 0)
                     {
@@ -71,7 +73,7 @@ namespace Menu
                         }
                         printf("User %i joined!\n", ID);
                         printf("Send user all other Users\n");
-                        for (unsigned i = 0; i<sba_Players.size();i++)
+                        for (unsigned i = 0; i < sba_Players.size(); i++)
                         {
                             printf("Send User %i!\n", sba_Players[i]->ID);
                             //send the Data to the Server
@@ -85,7 +87,7 @@ namespace Menu
                             //set data dynamic because we set our data self
                             int size = sizeof(up.Head.Type) + sizeof(up.ID) + nameSize;
                             //now send the packet to the host
-                            printf("Send Ship Name and his ID %i!!\n",up.ID);
+                            printf("Send Ship Name and his ID %i!!\n", up.ID);
                             sba_Network->Send((char*)&up, size, s, true);
                             //Get the Data from the ship the player has
                             printf("Start sending Bricks!!\n");
@@ -114,7 +116,7 @@ namespace Menu
                         iam.Pad = 0;
                         memcpy(iam.Map, sba_Map->GetName().c_str(), sba::MaxName);
                         sba_Network->Send((char*)&iam, sizeof(sba::SIamPacket), s, true);
-                        printf("IAm Packet send to ID %i!\n",ID);
+                        printf("IAm Packet send to ID %i!\n", ID);
 
                         std::thread* rThread = new std::thread(&CLobby::ReceiveData, this, s);
                         this->m_Threads.push_back(rThread);
@@ -143,14 +145,14 @@ namespace Menu
         long packetSize = 0;
         while (this->m_Run)
         {
-            
+
             long dataLeft = sba_Network->Receive(buffer, len, s, false);
-            if (this->m_Start||!this->m_Run)
+            if (this->m_Start || !this->m_Run)
                 break;
             if (dataLeft > 0)
             {
                 //we received something, copy received into our buffer + offset
-                memcpy(buffer2+leftData,buffer,dataLeft);
+                memcpy(buffer2 + leftData, buffer, dataLeft);
                 leftData += dataLeft;
 
                 sba_Network->m_Mutex.lock();
@@ -193,21 +195,21 @@ namespace Menu
                 if (rpacket->Head.Type == sba::EPacket::Map&&leftData >= sizeof(sba::SMapPacket))
                 {
                     sba::SMapPacket* smap = (sba::SMapPacket*)rpacket;
-                    printf("Map changed to %s!\n",smap->Name);
+                    printf("Map changed to %s!\n", smap->Name);
                     sba_Map->SetMap(smap->Name);
                     packetSize = sizeof(sba::SMapPacket);
                 }
                 else if (rpacket->Head.Type == sba::EPacket::Left&&leftData >= sizeof(sba::SLeftPacket))
                 {
                     sba::SLeftPacket* sleft = (sba::SLeftPacket*)rpacket;
-                    printf("%i left\n",sleft->Who);
+                    printf("%i left\n", sleft->Who);
                     for (unsigned int i = 0; i < sba_Players.size(); i++)
                     {
-                        if (sba_Network->GetHost()&&sba_Players[i]->PadID == -1) //send to all that are not local
+                        if (sba_Network->GetHost() && sba_Players[i]->PadID == -1) //send to all that are not local
                             sba_Network->Send((char*)sleft, sizeof(sba::SLeftPacket), sba_Players[i]->NetworkInformation, true);
                         if (sleft->Who == sba_Players[i]->ID) //client and host sees this
                         {
-                            printf("Deleted Player %i!\n",sleft->Who);
+                            printf("Deleted Player %i!\n", sleft->Who);
                             sba_Space->DeletePlayer(i);
                             --i;
                         }
@@ -291,7 +293,7 @@ namespace Menu
                         }
                         if (sba_Players[i]->ID == bp->ID)
                         {
-                            for (int j=0;j<bp->BrickNum;j++)
+                            for (int j = 0; j < bp->BrickNum; j++)
                                 sba_Players[i]->Ship->AddBrick(bp->Bricks[j], sba_BrickManager->GetBrickArray(), *sba_World);
                             break;
                         }
@@ -340,7 +342,7 @@ namespace Menu
                         }
                         if (up->ID == sba_Players[i]->ID)
                         {
-                            printf("Created ship %s for player %i!\n", up->Name,up->ID);
+                            printf("Created ship %s for player %i!\n", up->Name, up->ID);
                             exist = true;
                             SAFE_DELETE(sba_Players[i]->Ship);
                             sba_Players[i]->Ship = new sba::CSpaceship(*sba_World, up->Name);
@@ -372,20 +374,20 @@ namespace Menu
                     printf("Got who I am: %i!\n", iam->ID);
                     sba::SPlayer* p;
                     sba_Space->CreatePlayer(iam->Pad, this->m_pWindow);
-                    p = sba_Players[sba_Players.size()-1];
+                    p = sba_Players[sba_Players.size() - 1];
                     p->ID = iam->ID;
                     //send the Data to the Server
                     sba::SUserPacket up;
                     up.Head.Type = sba::EPacket::User;
                     up.ID = iam->ID;
-                    memset(up.Name,0,sba::MaxLength+1);
+                    memset(up.Name, 0, sba::MaxLength + 1);
                     strncpy(up.Name, p->Ship->GetName().c_str(), p->Ship->GetName().size());
                     up.Name[p->Ship->GetName().length()] = '\0';
                     int nameSize = (sizeof(char)*sba::MaxLength);
                     //set data dynamic because we set our data self
                     int size = sizeof(up.Head.Type) + sizeof(up.ID) + nameSize;
                     //now send the packet to the host
-                    printf("Send Ship Name and who I am %i!!\n",up.ID);
+                    printf("Send Ship Name and who I am %i!!\n", up.ID);
                     sba_Network->SendHost((char*)&up, size, true);
                     //Get the Data from the ship the player has
                     sba::SBrickPacket bp;
@@ -403,7 +405,7 @@ namespace Menu
                     break;
                 }
                 //we handeld our packet, so remove it from the buffer
-                printf("Data we had before: %i\n",leftData);
+                printf("Data we had before: %i\n", leftData);
                 leftData -= packetSize;
                 printf("Data left: %i\n", leftData);
                 memcpy(buffer2, buffer2 + (int)packetSize, len - packetSize);
@@ -478,7 +480,7 @@ namespace Menu
             this->m_pNavigation->Update(*a_pTimer, Navigate);
         }
 
-        if (this->m_pNavigation->GetFocusedElementId() == 1&&this->m_Focus)
+        if (this->m_pNavigation->GetFocusedElementId() == 1 && this->m_Focus)
         {
             bool canchange = true;
             if (sba_Network->IsConnected())
@@ -492,7 +494,7 @@ namespace Menu
                     rightPress = true;
                 else if (Navigate.X < -0.5f)
                     leftPress = true;
-                if (leftPress||rightPress)
+                if (leftPress || rightPress)
                 {
                     std::string file = a_pWindow->GetFileAtIndex(0, "../data/maps/");
                     std::string lastFile = file;
@@ -503,7 +505,7 @@ namespace Menu
                     //aslong as the file is not right
                     while (!right)
                     {
-                        if (!found&&file == working+".map")
+                        if (!found&&file == working + ".map")
                             found = true; //current one found
                         else if (found)
                         {
@@ -697,7 +699,7 @@ namespace Menu
                                 if (sba_Network->GetHost())
                                 {
                                     sba_Space->CreatePlayer(i, a_pWindow);
-                                    sba::SPlayer* p = sba_Players[sba_Players.size()-1];
+                                    sba::SPlayer* p = sba_Players[sba_Players.size() - 1];
                                     //we are the host, so create new players freely
 
                                     //send the Data to the Server
@@ -727,7 +729,7 @@ namespace Menu
                                             }
                                             if (!send)
                                             {
-                                                printf("Send Ship Name and who I am to player %i!!\n",sba_Players[m]->ID);
+                                                printf("Send Ship Name and who I am to player %i!!\n", sba_Players[m]->ID);
                                                 sba_Network->Send((char*)&up, size, sba_Players[m]->NetworkInformation, true);
                                                 //Get the Data from the ship the player has
                                                 sba::SBrickPacket bp;
@@ -780,7 +782,7 @@ namespace Menu
                             break;
                         }
                     }
-                    if (sba_Network->IsConnected()&&ID != -1)
+                    if (sba_Network->IsConnected() && ID != -1)
                     {
                         //we now have the ID and can send it to others
                         for (unsigned j = 0; j < sba_Players.size(); j++)
@@ -829,7 +831,7 @@ namespace Menu
             PuRe_Vector2F Navigate = sba_Input->Direction(sba_Direction::Navigate, i);
             bool leftPress = Navigate.X > 0.0f;
             bool rightPress = Navigate.X < 0.0f;
-            if (i == 0 &&this->m_Focus)
+            if (i == 0 && this->m_Focus)
             {
                 leftPress = 0.0f;
                 rightPress = 0.0f;
@@ -861,14 +863,14 @@ namespace Menu
                                 else
                                     p->ShipID--;
 
-                                if (rightPress&&lastID == sba_ShipManager->GetShipCount()-1)
+                                if (rightPress&&lastID == sba_ShipManager->GetShipCount() - 1)
                                 {
                                     p->ShipID = 0;
                                     last = true;
                                 }
                                 else if (leftPress&&lastID == 0)
                                 {
-                                    p->ShipID = sba_ShipManager->GetShipCount()-1;
+                                    p->ShipID = sba_ShipManager->GetShipCount() - 1;
                                     last = true;
                                 }
                                 engines.clear();
@@ -976,6 +978,9 @@ namespace Menu
         Position.X -= 1050;
         Position.Y -= 100;
         a_pSpriteReader->Draw(1, a_pRenderer, "lobby_map", a_pFontMaterial, Position, PuRe_Vector3F(), -1, PuRe_Vector2F(0.5f, 0.5f));
+        Position.X += 1;
+        Position.Y -= 12;
+        this->m_pMapSprites->Draw(1, a_pRenderer, sba_Map->GetName().c_str(), a_pFontMaterial, Position, PuRe_Vector3F(), -1, PuRe_Vector2F(0.5f, 0.5f));
         //Draw Bottom
         Position.X = 100.0f;
         Position.Y = 980.0f;
@@ -995,7 +1000,7 @@ namespace Menu
         Position.Y -= 100.0f;
         a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "MAP: ", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(36.0f, 36.0f, 0.0f), 40.0f, color);
         Position.X += 200.0f;
-        if (this->m_pNavigation->GetFocusedElementId() == 1&&this->m_Focus)
+        if (this->m_pNavigation->GetFocusedElementId() == 1 && this->m_Focus)
             color = PuRe_Color(1.0f, 0.0f, 0.0f);
         else
             color = PuRe_Color(1.0f, 1.0f, 1.0f);
@@ -1021,7 +1026,7 @@ namespace Menu
         color = PuRe_Color(1.0f, 1.0f, 1.0f);
         for (unsigned int i = 0; i < sba_Players.size(); i++)
         {
-            std::string name = "PLAYER " + std::to_string(sba_Players[i]->ID+1);
+            std::string name = "PLAYER " + std::to_string(sba_Players[i]->ID + 1);
             a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, name.c_str(), Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(20.0f, 20.0f, 0.0f), 26.0f, color);
             Position.X += 470.0f;
             if (sba_Players[i]->Ship != NULL)

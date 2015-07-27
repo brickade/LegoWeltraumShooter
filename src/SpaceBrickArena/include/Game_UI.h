@@ -5,6 +5,7 @@
 #include <PuReEngine/Defines.h>
 
 #include "Minimap.h"
+#include "SpriteReader.h"
 #include "Space.h"
 
 namespace sba
@@ -15,6 +16,7 @@ namespace sba
         PuRe_Sprite* m_pCrossHairSprite;
         PuRe_Sprite* m_pHitMarkerSprite;
         PuRe_IMaterial* m_pSpriteMaterial;
+        sba::CSpriteReader* m_pUI;
         CMinimap* m_pMinimap;
     public:
         CGUI(PuRe_IGraphics* a_pGraphics);

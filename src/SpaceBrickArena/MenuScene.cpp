@@ -43,7 +43,7 @@ namespace Menu
         this->m_Displayed = Main;
         this->m_pMainMenu = new CMain(graphics);
         this->m_pOptions = new COptions();
-        this->m_pLobby = new CLobby(window);
+        this->m_pLobby = new CLobby(window,graphics);
         this->m_pNetwork = new CNetwork(a_pApplication->GetTimer());
 
     }
