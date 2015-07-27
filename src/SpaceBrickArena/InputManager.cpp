@@ -303,6 +303,10 @@ namespace sba
     // **************************************************************************
     PuRe_Vector2F CInputManager::Direction(Input::EDirection::Type a_Direction, int a_PlayerIndex, float a_GamepadThreshold)
     {
+        if (!INPUTMANAGER_VALIDIDX(a_PlayerIndex))
+        {
+            return PuRe_Vector2F::Zero();
+        }
         Input::SDirectionMapping& mapping = this->m_pDirectionMapping[a_Direction]; //Catch Mouse pressed rotate camera stuff
         if (INPUTMANAGER_PASSTOGAMEPAD(a_PlayerIndex))
         {
@@ -336,6 +340,10 @@ namespace sba
     // **************************************************************************
     float CInputManager::Axis(Input::EAxis::Type a_Axis, int a_PlayerIndex, float a_GamepadThreshold)
     {
+        if (!INPUTMANAGER_VALIDIDX(a_PlayerIndex))
+        {
+            return 0.0f;
+        }
         Input::SAxisMapping& mapping = this->m_pAxisMapping[a_Axis];
         float result = 0;
         if (INPUTMANAGER_PASSTOGAMEPAD(a_PlayerIndex))
@@ -352,6 +360,10 @@ namespace sba
     // **************************************************************************
     bool CInputManager::ButtonPressed(Input::EButton::Type a_Button, int a_PlayerIndex)
     {
+        if (!INPUTMANAGER_VALIDIDX(a_PlayerIndex))
+        {
+            return false;
+        }
         Input::SButtonMapping& mapping = this->m_pButtonMapping[a_Button];
         if (INPUTMANAGER_PASSTOGAMEPAD(a_PlayerIndex))
         {
@@ -367,6 +379,10 @@ namespace sba
     // **************************************************************************
     bool CInputManager::ButtonIsPressed(Input::EButton::Type a_Button, int a_PlayerIndex)
     {
+        if (!INPUTMANAGER_VALIDIDX(a_PlayerIndex))
+        {
+            return false;
+        }
         Input::SButtonMapping& mapping = this->m_pButtonMapping[a_Button];
         if (INPUTMANAGER_PASSTOGAMEPAD(a_PlayerIndex))
         {
