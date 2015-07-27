@@ -27,7 +27,9 @@ namespace sba
         Input::SAxisMapping m_pAxisMapping[Input::EAxis::LAST + 1];
         Input::SButtonMapping m_pButtonMapping[Input::EButton::LAST + 1];
 
-        bool m_lastInputWasGamepad;
+        int m_ConnectedGamepadsCount;
+        bool m_LastInputWasGamepad;
+        double m_LastGamepadDetection;
 
     public:
         Input::SDirectionMapping* GetDirectionMapping()
@@ -47,7 +49,7 @@ namespace sba
 
         bool LastInputWasGamepad() const
         {
-            return this->m_lastInputWasGamepad;
+            return this->m_LastInputWasGamepad;
         }
 
     public:
@@ -60,6 +62,8 @@ namespace sba
         void Save(const char* a_pFile);
         void Deserialize(TheBrick::CSerializer& a_pSerializer);
         void Serialize(TheBrick::CSerializer& a_pSerializer);
+        void DetectGamepads();
+        void TryDetectGamepads(PuRe_Timer& a_rTimer, float a_RefreshRatePerSecond = 1.0f);
 
         PuRe_Vector2F Direction(Input::EDirection::Type a_Direction, int a_PlayerIndex, float a_GamepadThreshold = DEFAULT_GAMEPAD_THRESHOLD);
 
@@ -181,7 +185,7 @@ namespace sba
         {
             if (a_GamepadInput.Length() > 0.001f)
             {
-                this->m_lastInputWasGamepad = true;
+                this->m_LastInputWasGamepad = true;
             }
             return a_GamepadInput;
         }
@@ -190,7 +194,7 @@ namespace sba
         {
             if (a_KeyboardInput.Length() > 0.001f)
             {
-                this->m_lastInputWasGamepad = false;
+                this->m_LastInputWasGamepad = false;
             }
             return a_KeyboardInput;
         }
@@ -199,7 +203,7 @@ namespace sba
         {
             if (a_GamepadInput > 0.0001f)
             {
-                this->m_lastInputWasGamepad = true;
+                this->m_LastInputWasGamepad = true;
             }
             return a_GamepadInput;
         }
@@ -208,7 +212,7 @@ namespace sba
         {
             if (a_KeyboardInput > 0.0001f)
             {
-                this->m_lastInputWasGamepad = false;
+                this->m_LastInputWasGamepad = false;
             }
             return a_KeyboardInput;
         }
@@ -217,7 +221,7 @@ namespace sba
         {
             if (a_GamepadInput)
             {
-                this->m_lastInputWasGamepad = true;
+                this->m_LastInputWasGamepad = true;
             }
             return a_GamepadInput;
         }
@@ -226,13 +230,12 @@ namespace sba
         {
             if (a_KeyboardInput)
             {
-                this->m_lastInputWasGamepad = false;
+                this->m_LastInputWasGamepad = false;
             }
             return a_KeyboardInput;
         }
 
-
-
+#define INPUTMANAGER_PASSTOGAMEPAD(idx) (idx - this->m_ConnectedGamepadsCount < 0)
     };
 }
 

@@ -58,6 +58,7 @@ namespace Menu
         PuRe_IPlatform* platform = a_pApplication->GetPlatform();
         PuRe_IWindow* window = a_pApplication->GetWindow();
 
+        sba_Input->TryDetectGamepads(*timer);
         this->m_pSceneCamera->Rotate(timer->GetElapsedSeconds() / 10.0f, timer->GetElapsedSeconds() / 5.0f, timer->GetElapsedSeconds() / 8.0f);
 
         int result = 0;

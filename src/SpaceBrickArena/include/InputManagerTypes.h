@@ -169,19 +169,19 @@ namespace sba
         struct SDirectionMapping
         {
             EGamepadDirection::Type Gamepad;
-            EKeyboardDirection::Type Keyboard[4];
+            EKeyboardDirection::Type Keyboard;
         };
 
         struct SAxisMapping
         {
             EGamepadAxis::Type Gamepad;
-            EKeyboardAxis::Type Keyboard[4];
+            EKeyboardAxis::Type Keyboard;
         };
 
         struct SButtonMapping
         {
             EGamepadButton::Type Gamepad;
-            EKeyboardButton::Type Keyboard[4];
+            EKeyboardButton::Type Keyboard;
         };
     }
 }
