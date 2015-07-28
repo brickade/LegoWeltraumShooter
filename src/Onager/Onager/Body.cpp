@@ -773,6 +773,13 @@ namespace ong
 		m_pWorld->updateProxy(m_proxyID);
 	}
 
+	void Body::setOrientation(const Quaternion& orientation)
+	{
+		m_pWorld->m_r[m_index].q = orientation;
+
+		m_pWorld->updateProxy(m_proxyID);
+	}
+
 
 
 	void Body::applyImpulse(const vec3& impulse, const vec3& point)
