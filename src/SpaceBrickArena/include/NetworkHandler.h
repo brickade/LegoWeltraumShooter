@@ -21,7 +21,11 @@ namespace sba
     struct SInputData
     {
         unsigned char Player;
-        bool Shoot;
+        bool MG;
+        bool Rocket;
+        bool Torpedo;
+        bool Laser;
+        bool Mine;
         char Thrust;
         char Spin;
         char MoveX;

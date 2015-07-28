@@ -65,6 +65,7 @@ namespace ong
 
 
 		void setPosition(const vec3& position);
+		void setOrientation(const Quaternion& orientation);
 
 		void setUserData(void* pUserData);
 

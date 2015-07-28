@@ -312,7 +312,7 @@ namespace sba
 
     // **************************************************************************
     // **************************************************************************
-    void CSpaceship::Shoot(std::vector<CBullet*>& a_rBullets, SPlayer* a_pOwner)
+    void CSpaceship::Shoot(int a_Weapon, std::vector<CBullet*>& a_rBullets, SPlayer* a_pOwner)
     {
         if (this->m_Life > 0)
         {
@@ -325,88 +325,91 @@ namespace sba
             for (std::vector<TheBrick::CBrickInstance**>::iterator it = weapons.begin(); it != weapons.end(); ++it)
             {
                 TheBrick::CBrickInstance* weapon = *(*it);
-                ong::Transform transform = weapon->GetTransform();
-                ong::Transform ship = this->m_pBody->getTransform();
-                this->m_pBody->getPosition();
-                ong::Transform wtransform = ong::transformTransform(transform, ship);
-                PuRe_Vector3F pos = TheBrick::OngToPuRe(ong::transformTransform(transform, ship).p);
+                if (weapon->m_pBrick->GetBrickId() == a_Weapon)
+                {
+                    ong::Transform transform = weapon->GetTransform();
+                    ong::Transform ship = this->m_pBody->getTransform();
+                    this->m_pBody->getPosition();
+                    ong::Transform wtransform = ong::transformTransform(transform, ship);
+                    PuRe_Vector3F pos = TheBrick::OngToPuRe(ong::transformTransform(transform, ship).p);
 
-                PuRe_Vector3F forward = PuRe_Vector3F(0.0f, 0.0f, 1.0f) * TheBrick::OngToPuRe(wtransform.q);
-                PuRe_Vector3F side = PuRe_Vector3F(1.0f, 0.0f, 0.0f) * TheBrick::OngToPuRe(wtransform.q);
-                PuRe_Vector3F up = PuRe_Vector3F(0.0f, 1.0f, 0.0f) * TheBrick::OngToPuRe(wtransform.q);
+                    PuRe_Vector3F forward = PuRe_Vector3F(0.0f, 0.0f, 1.0f) * TheBrick::OngToPuRe(wtransform.q);
+                    PuRe_Vector3F side = PuRe_Vector3F(1.0f, 0.0f, 0.0f) * TheBrick::OngToPuRe(wtransform.q);
+                    PuRe_Vector3F up = PuRe_Vector3F(0.0f, 1.0f, 0.0f) * TheBrick::OngToPuRe(wtransform.q);
 
                 
 
-                float len = TheBrick::OngToPuRe(this->m_pBody->getLinearVelocity()).Length();
-                PuRe_Vector3F speed = forward*200.0f + forward * len;
-                speed *= 1.0f / 50.0f;
+                    float len = TheBrick::OngToPuRe(this->m_pBody->getLinearVelocity()).Length();
+                    PuRe_Vector3F speed = forward*200.0f + forward * len;
+                    speed *= 1.0f / 50.0f;
 
-                ong::BodyDescription bdesc;
+                    ong::BodyDescription bdesc;
 
 
-                bdesc.angularMomentum = ong::vec3(0, 0, 0);
-                bdesc.transform.q = ship.q*transform.q;
-                bdesc.type = ong::BodyType::Dynamic;
+                    bdesc.angularMomentum = ong::vec3(0, 0, 0);
+                    bdesc.transform.q = ship.q*transform.q;
+                    bdesc.type = ong::BodyType::Dynamic;
 
-                unsigned int id=0;
-                PuRe_Color col = PuRe_Color(1.0f,0.0f,0.0f,1.0f);
-                switch (weapon->m_pBrick->GetBrickId())
-                {
+                    unsigned int id=0;
+                    PuRe_Color col = PuRe_Color(1.0f,0.0f,0.0f,1.0f);
+                    switch (weapon->m_pBrick->GetBrickId())
+                    {
 
-                case TheBrick::Laser-100: //Laser
-                    id = TheBrick::Laser;
-                    pos += forward*10.0f;
-                    col = PuRe_Color(1.0f, 1.0f, 1.0f, 1.0f);
-                    break;
+                    case TheBrick::Laser-100: //Laser
+                        id = TheBrick::Laser;
+                        pos += forward*10.0f;
+                        col = PuRe_Color(1.0f, 1.0f, 1.0f, 1.0f);
+                        break;
 
-                case TheBrick::MG - 100: //MG
-                    id = TheBrick::MG;
-                    pos += forward*10.0f;
-                    speed *= 0.5f;
-                    col = PuRe_Color(1.0f, 0.0f, 0.0f, 1.0f);
-                    break;
+                    case TheBrick::MG - 100: //MG
+                        id = TheBrick::MG;
+                        pos += forward*10.0f;
+                        speed *= 0.5f;
+                        col = PuRe_Color(1.0f, 0.0f, 0.0f, 1.0f);
+                        break;
 
-                case TheBrick::Mine - 100: //Mine
-                    id = TheBrick::Mine;
-                    pos += forward*4.0f;
-                    speed *= 0.0f;
-                    col = PuRe_Color(1.0f, 0.0f, 1.0f, 1.0f);
-                    break;
+                    case TheBrick::Mine - 100: //Mine
+                        id = TheBrick::Mine;
+                        pos += forward*4.0f;
+                        speed *= 0.0f;
+                        col = PuRe_Color(1.0f, 0.0f, 1.0f, 1.0f);
+                        break;
 
-                case TheBrick::Rocket - 100: //Rocket
-                    pos += forward*10.0f;
-                    id = TheBrick::Rocket;
-                    speed *= 0.4f;
-                    col = PuRe_Color(1.0f, 0.0f, 0.0f, 1.0f);
-                    break;
+                    case TheBrick::Rocket - 100: //Rocket
+                        pos += forward*10.0f;
+                        id = TheBrick::Rocket;
+                        speed *= 0.4f;
+                        col = PuRe_Color(1.0f, 0.0f, 0.0f, 1.0f);
+                        break;
 
-                case TheBrick::Torpedo - 100: //Torpedo
-                    pos += forward*10.0f;
-                    id = TheBrick::Torpedo;
-                    speed *= 0.2f;
-                    col = PuRe_Color(1.0f, 0.0f, 0.0f, 1.0f);
-                    break;
+                    case TheBrick::Torpedo - 100: //Torpedo
+                        pos += forward*10.0f;
+                        id = TheBrick::Torpedo;
+                        speed *= 0.2f;
+                        col = PuRe_Color(1.0f, 0.0f, 0.0f, 1.0f);
+                        break;
+                    }
+                    bdesc.linearMomentum = TheBrick::PuReToOng(speed);
+                    bdesc.transform.p = TheBrick::PuReToOng(pos);
+                    if (weapon->m_pBrick->GetBrickId() == TheBrick::Rocket - 100)
+                    {
+                        pos += side*1.0f;
+                        bdesc.transform.p = TheBrick::PuReToOng(pos);
+                        a_rBullets.push_back(new CBullet(&bdesc, *w, a_pOwner, col, id));
+                        pos -= side*2.0f;
+                        bdesc.transform.p = TheBrick::PuReToOng(pos);
+                        a_rBullets.push_back(new CBullet(&bdesc, *w, a_pOwner, col, id));
+                        pos += side*1.0f;
+                        pos += up*1.0f;
+                        bdesc.transform.p = TheBrick::PuReToOng(pos);
+                        a_rBullets.push_back(new CBullet(&bdesc, *w, a_pOwner, col, id));
+                        pos -= up*2.0f;
+                        bdesc.transform.p = TheBrick::PuReToOng(pos);
+                        a_rBullets.push_back(new CBullet(&bdesc, *w, a_pOwner, col, id));
+                    }
+                    else
+                        a_rBullets.push_back(new CBullet(&bdesc, *w, a_pOwner, col, id));
                 }
-                bdesc.linearMomentum = TheBrick::PuReToOng(speed);
-                bdesc.transform.p = TheBrick::PuReToOng(pos);
-                if (weapon->m_pBrick->GetBrickId() == TheBrick::Rocket - 100)
-                {
-                    pos += side*1.0f;
-                    bdesc.transform.p = TheBrick::PuReToOng(pos);
-                    a_rBullets.push_back(new CBullet(&bdesc, *w, a_pOwner, col, id));
-                    pos -= side*2.0f;
-                    bdesc.transform.p = TheBrick::PuReToOng(pos);
-                    a_rBullets.push_back(new CBullet(&bdesc, *w, a_pOwner, col, id));
-                    pos += side*1.0f;
-                    pos += up*1.0f;
-                    bdesc.transform.p = TheBrick::PuReToOng(pos);
-                    a_rBullets.push_back(new CBullet(&bdesc, *w, a_pOwner, col, id));
-                    pos -= up*2.0f;
-                    bdesc.transform.p = TheBrick::PuReToOng(pos);
-                    a_rBullets.push_back(new CBullet(&bdesc, *w, a_pOwner, col, id));
-                }
-                else
-                    a_rBullets.push_back(new CBullet(&bdesc, *w, a_pOwner, col, id));
             }
         }
     }

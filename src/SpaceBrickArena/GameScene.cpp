@@ -22,13 +22,11 @@ namespace sba
         sba::SInputData input;
         memset(&input, 0, sizeof(sba::SInputData));
 
-        float fShoot = sba_Input->Axis(Input::EAxis::Type::GameShoot, a_PlayerIdx);
-        bool bShoot = false;
-        if (a_PlayerIdx == 0)
-            bShoot = sba_Input->ButtonIsPressed(Input::EButton::Type::GameShoot, a_PlayerIdx);
-
-        if (bShoot || fShoot == 1.0f)
-            input.Shoot = true;
+        input.MG = sba_Input->Axis(Input::EAxis::Type::GameShootMG, a_PlayerIdx) > 0.0f;
+        input.Laser = sba_Input->ButtonIsPressed(Input::EButton::Type::GameShootLaser, a_PlayerIdx);
+        input.Rocket = sba_Input->ButtonIsPressed(Input::EButton::Type::GameShootRocket, a_PlayerIdx);
+        input.Torpedo = sba_Input->ButtonIsPressed(Input::EButton::Type::GameShootTorpedo, a_PlayerIdx);
+        input.Mine = sba_Input->ButtonIsPressed(Input::EButton::Type::GameShootMine, a_PlayerIdx);
 
         PuRe_Vector2F Move;
         if (sba_Controls[a_PlayerIdx].Move == 1)
@@ -97,16 +95,65 @@ namespace sba
                     camID++;
             }
         }
-        if (a_pPlayer->ShootCooldown == 0.0f&&a_Input->Shoot)
+        float* cd = &a_pPlayer->MGCD;
+        if (*cd == 0.0f&&a_Input->MG)
         {
-            ship->Shoot(a_rBullets, a_pPlayer);
-            a_pPlayer->ShootCooldown = 0.25f;
+            ship->Shoot(TheBrick::MG - 100, a_rBullets, a_pPlayer);
+            *cd = 0.25f;
         }
-        else if (a_pPlayer->ShootCooldown != 0.0f)
+        else if (*cd != 0.0f)
         {
-            a_pPlayer->ShootCooldown -= a_DeltaTime;
-            if (a_pPlayer->ShootCooldown < 0.0f)
-                a_pPlayer->ShootCooldown = 0.0f;
+            *cd -= a_DeltaTime;
+            if (*cd < 0.0f)
+                *cd = 0.0f;
+        }
+        cd = &a_pPlayer->RocketCD;
+        if (*cd == 0.0f&&a_Input->Rocket)
+        {
+            ship->Shoot(TheBrick::Rocket - 100, a_rBullets, a_pPlayer);
+            *cd = 2.0f;
+        }
+        else if (*cd != 0.0f)
+        {
+            *cd -= a_DeltaTime;
+            if (*cd < 0.0f)
+                *cd = 0.0f;
+        }
+        cd = &a_pPlayer->TorpedoCD;
+        if (*cd == 0.0f&&a_Input->Torpedo)
+        {
+            ship->Shoot(TheBrick::Torpedo - 100, a_rBullets, a_pPlayer);
+            *cd = 1.0f;
+        }
+        else if (*cd != 0.0f)
+        {
+            *cd -= a_DeltaTime;
+            if (*cd < 0.0f)
+                *cd = 0.0f;
+        }
+        cd = &a_pPlayer->LaserCD;
+        if (*cd == 0.0f&&a_Input->Laser)
+        {
+            ship->Shoot(TheBrick::Laser - 100, a_rBullets, a_pPlayer);
+            *cd = 0.5f;
+        }
+        else if (*cd != 0.0f)
+        {
+            *cd -= a_DeltaTime;
+            if (*cd < 0.0f)
+                *cd = 0.0f;
+        }
+        cd = &a_pPlayer->MineCD;
+        if (*cd == 0.0f&&a_Input->Mine)
+        {
+            ship->Shoot(TheBrick::Mine - 100, a_rBullets, a_pPlayer);
+            *cd = 1.0f;
+        }
+        else if (*cd != 0.0f)
+        {
+            *cd -= a_DeltaTime;
+            if (*cd < 0.0f)
+                *cd = 0.0f;
         }
 
         if (a_Input->Thrust != 0)

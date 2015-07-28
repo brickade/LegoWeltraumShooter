@@ -1,5 +1,5 @@
 ::  ----------------------------------------------------------
-set ENGINE_PATH=C:\Users\Andre\Google Drive\Brickade\PRO\Engine
+set ENGINE_PATH=..\..\..\..\Google Drive\Brickade\PRO\Engine
 ::  ----------------------------------------------------------
 
 @echo off
@@ -23,4 +23,4 @@ xcopy "%ENGINE_PATH%\%folder%" ..\bin\x64\modules\ /q /y
 echo copied new stuff
 echo ---------------------------------
 
-::pause
+pause

@@ -477,8 +477,7 @@ namespace Menu
         if (!this->m_Focus)
         {
             Navigate.X = 0.0f;
-            if (this->m_pNavigation->Update(*a_pTimer, Navigate))
-                sba_SoundPlayer->PlaySound("menu_over", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
+            this->m_pNavigation->Update(*a_pTimer, Navigate);
         }
 
         if (this->m_pNavigation->GetFocusedElementId() == 1 && this->m_Focus)
