@@ -23,6 +23,31 @@ namespace sba
         this->m_Damage = 10;
         this->m_Collided = false;
         this->m_pEmitter = new PuRe_ParticleEmitter(TheBrick::OngToPuRe(this->m_pBody->getWorldCenter()), TheBrick::OngToPuRe(this->m_pBody->getTransform().q));
+        std::string sound;
+        switch (this->m_ID)
+        {
+
+        case TheBrick::Laser: //Laser
+            sound = "laser_v2";
+           break;
+
+        case TheBrick::MG: //MG
+            sound = "mg";
+            break;
+
+        case TheBrick::Mine: //Mine
+            sound = "mine";
+            break;
+
+        case TheBrick::Rocket: //Rocket
+            sound = "torpedo";
+            break;
+
+        case TheBrick::Torpedo: //Torpedo
+            sound = "torpedo";
+            break;
+        }
+        this->m_SoundChannel = sba_SoundPlayer->PlaySound(sound.c_str(), false, false, std::stof(sba_Options->GetValue("SoundVolume")), TheBrick::OngToPuRe(a_desc->transform.p), PuRe_Vector3F(0.0f, 0.0f, 0.0f), PuRe_Vector2F(1.0f, 10.0f));
 
         ong::Collider* c = this->m_pBody->getCollider();
         while (c)
@@ -48,7 +73,13 @@ namespace sba
 
         CGameObject* object = static_cast<CGameObject*>(other->getBody()->getUserData());
         if (object->m_Type != TheBrick::EGameObjectType::Bullet)
+        {
             bullet->m_lifeTime = 4.9f;
+            CSpaceship* ship = static_cast<CSpaceship*>(object);
+            //if it's a ship with a shield, we die
+            if (ship->m_Shield > 0.0f)
+                bullet->m_lifeTime = 10.0f;
+        }
     }
 
     // **************************************************************************
@@ -70,6 +101,8 @@ namespace sba
     void CBullet::Update(float a_DeltaTime)
     {
         this->m_lifeTime += a_DeltaTime;
+
+
         if (this->m_ID == TheBrick::Rocket)
         {
             ong::vec3 pos = this->m_pBody->getWorldCenter();
@@ -93,8 +126,8 @@ namespace sba
             pos = ong::normalize(gpos - pos);
             ong::vec3 forw = ong::rotate(ong::vec3(0, 0, 1), this->m_pBody->getOrientation());
 
-            float diff = ong::length(forw - pos);
-            diff = diff*diff;
+            float diff = ong::dot(forw,pos);
+
             ong::vec3 force = (ong::cross(forw, pos));
             force.x *= diff;
             force.y *= diff;
@@ -105,6 +138,8 @@ namespace sba
             ong::vec3 targetVec = ong::vec3(0.0f, 0.0f, this->m_Speed);
             this->m_pBody->applyRelativeImpulse(1.0f / this->m_pBody->getInverseMass() * ong::vec3(targetVec.x - currVel.x, targetVec.y - currVel.y, 0));
         }
+
+
         if (this->m_ID != TheBrick::Laser&&this->m_ID != TheBrick::Mine) //laser and mine no particles 
         {
             this->m_pEmitter->m_Position = TheBrick::OngToPuRe(this->m_pBody->getWorldCenter());
@@ -126,6 +161,7 @@ namespace sba
             this->m_pEmitter->Spawn(0.3f, pos, size, velocity, this->m_pEmitter->m_Rotation,color);
             this->m_pEmitter->Update(a_DeltaTime);
         }
+        sba_SoundPlayer->SetPosition(this->m_SoundChannel, TheBrick::OngToPuRe(this->m_pBody->getWorldCenter()),PuRe_Vector3F());
     }
 
 }

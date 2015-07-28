@@ -112,7 +112,8 @@ namespace sba
         while (file != "")
         {
             i++;
-            if (file.substr(file.find_last_of(".") + 1) != "mp3")
+            std::string end = file.substr(file.find_last_of(".") + 1);
+            if (end != "mp3"&&end != "wav")
             {
                 file = window->GetFileAtIndex(i, folderPath.c_str());
                 continue;

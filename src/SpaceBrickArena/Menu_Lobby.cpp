@@ -477,7 +477,8 @@ namespace Menu
         if (!this->m_Focus)
         {
             Navigate.X = 0.0f;
-            this->m_pNavigation->Update(*a_pTimer, Navigate);
+            if (this->m_pNavigation->Update(*a_pTimer, Navigate))
+                sba_SoundPlayer->PlaySound("menu_over", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
         }
 
         if (this->m_pNavigation->GetFocusedElementId() == 1 && this->m_Focus)
@@ -566,6 +567,7 @@ namespace Menu
         }
         if (sba_Input->ButtonPressed(sba_Button::NavigationSelect, a_PlayerIdx))
         {
+            sba_SoundPlayer->PlaySound("menu_confirm", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
             switch (this->m_pNavigation->GetFocusedElementId())
             {
             case 0: //Start
@@ -660,7 +662,10 @@ namespace Menu
             }
         }
         else if (sba_Input->ButtonPressed(sba_Button::NavigationBack, a_PlayerIdx))
+        {
+            sba_SoundPlayer->PlaySound("menu_back", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
             this->m_Focus = false;
+        }
 
         for (int i = 1; i < 4; i++)
         {

@@ -114,9 +114,12 @@ namespace Menu
 
         if (!this->m_Focus)
         {
-            this->m_pNavigation->Update(*a_pTimer, sba_Input->Direction(sba_Direction::Navigate, a_PlayerIdx));
+            PuRe_Vector2F nav = sba_Input->Direction(sba_Direction::Navigate, a_PlayerIdx);
+            if (this->m_pNavigation->Update(*a_pTimer, nav))
+                sba_SoundPlayer->PlaySound("menu_over", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
             if (sba_Input->ButtonPressed(sba_Button::NavigationSelect, a_PlayerIdx))
             {
+                sba_SoundPlayer->PlaySound("menu_confirm", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
                 switch (this->m_pNavigation->GetFocusedElementId())
                 {
                 case 0: //Internet
@@ -154,6 +157,7 @@ namespace Menu
                     sba_Network->Update(a_pInput, sba::EUpdate::Port);
                 if (sba_Input->ButtonPressed(sba_Button::NavigationSelect, a_PlayerIdx))
                 {
+                    sba_SoundPlayer->PlaySound("menu_confirm", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
                     if (this->m_Focus2)
                     {
                         //check if ip works
@@ -180,6 +184,7 @@ namespace Menu
                 }
                 if (sba_Input->ButtonPressed(sba_Button::NavigationBack, a_PlayerIdx))
                 {
+                    sba_SoundPlayer->PlaySound("menu_back", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
                     if (this->m_Focus2)
                         this->m_Focus = false;
                     else
@@ -200,6 +205,7 @@ namespace Menu
                     this->m_Server = this->m_Servers.size()-1;
                 if (sba_Input->ButtonPressed(sba_Button::NavigationSelect, a_PlayerIdx))
                 {
+                    sba_SoundPlayer->PlaySound("menu_confirm", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
                     if (this->m_Servers.size() != 0)
                     {
                         //test if he has a possible ship
@@ -216,6 +222,7 @@ namespace Menu
                 }
                 if (sba_Input->ButtonPressed(sba_Button::NavigationBack, a_PlayerIdx))
                 {
+                    sba_SoundPlayer->PlaySound("menu_back", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
                     if (this->m_Focus2)
                         this->m_Focus = false;
                     else
@@ -229,6 +236,7 @@ namespace Menu
                     sba_Network->Update(a_pInput, sba::EUpdate::Port);
                 if (sba_Input->ButtonPressed(sba_Button::NavigationSelect, a_PlayerIdx))
                 {
+                    sba_SoundPlayer->PlaySound("menu_confirm", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
                     if (this->m_Focus2)
                     {
                         int size = sba_Network->m_Name.length();
@@ -257,6 +265,7 @@ namespace Menu
                 }
                 if (sba_Input->ButtonPressed(sba_Button::NavigationBack, a_PlayerIdx))
                 {
+                    sba_SoundPlayer->PlaySound("menu_back", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
                     if (this->m_Focus2)
                         this->m_Focus = false;
                     else
@@ -265,7 +274,10 @@ namespace Menu
             break;
             default:
                 if (sba_Input->ButtonPressed(sba_Button::NavigationBack, a_PlayerIdx))
+                {
+                    sba_SoundPlayer->PlaySound("menu_back", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
                     this->m_Focus = false;
+                }
                 break;
             }
         }

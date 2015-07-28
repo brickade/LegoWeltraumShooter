@@ -59,6 +59,7 @@ namespace Menu
     int COptions::Update(PuRe_Renderer* a_pRenderer,PuRe_Timer* a_pTimer, PuRe_IWindow* a_pWindow, PuRe_IGraphics* a_pGraphics, int a_PlayerIdx)
     {
         PuRe_Vector2F nav = sba_Input->Direction(sba_Direction::Navigate, a_PlayerIdx);
+
         PuRe_GraphicsDescription gdesc = a_pGraphics->GetDescription();
         PuRe_Vector2I size = PuRe_Vector2I(gdesc.ResolutionWidth, gdesc.ResolutionHeight);
         if (!this->m_Focus)
@@ -86,6 +87,7 @@ namespace Menu
             nav.X = 0.0f;
             if (this->m_Head == Controls)
             {
+                nav.Y = 0.0f;
                 PuRe_Vector2F cnav;
                 for (int i=0;i<4;i++)
                 {
@@ -100,7 +102,8 @@ namespace Menu
                             else if (cnav.Y > 0.0f&&this->m_pControls[i]->GetFocusedElementId() == 0)
                                 this->m_pControls[i]->SetFocusedElementId(3);
                         }
-                        this->m_pControls[i]->Update(*a_pTimer, cnav);
+                        if (this->m_pControls[i]->Update(*a_pTimer, cnav))
+                            sba_SoundPlayer->PlaySound("menu_over", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
                     }
                     else if (cnav.X != 0.0f)
                     {
@@ -142,7 +145,10 @@ namespace Menu
                     this->m_pNavigation->SetFocusedElementId(1);
             }
             else
-                this->m_pNavigation->Update(*a_pTimer, nav);
+            {
+                if (this->m_pNavigation->Update(*a_pTimer, nav))
+                    sba_SoundPlayer->PlaySound("menu_over", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
+            }
         }
         else
         {
@@ -215,6 +221,8 @@ namespace Menu
                 }
             }
         }
+
+
         bool p1focus = this->m_CFocus[0];
         if (this->m_Head == Controls)
         {
@@ -222,6 +230,7 @@ namespace Menu
             {
                 if (sba_Input->ButtonPressed(sba_Button::NavigationSelect, i))
                 {
+                    sba_SoundPlayer->PlaySound("menu_confirm", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
                     if (i == 0&&this->m_pNavigation->GetFocusedElementId() != 3)
                         this->m_CFocus[i] = true;
                     else
@@ -230,6 +239,7 @@ namespace Menu
                 }
                 if (sba_Input->ButtonPressed(sba_Button::NavigationBack, i))
                 {
+                    sba_SoundPlayer->PlaySound("menu_back", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
                     if (this->m_CFocus[i])
                         this->m_CFocus[i] = false;
                 }
@@ -237,6 +247,7 @@ namespace Menu
         }
         if (sba_Input->ButtonPressed(sba_Button::NavigationSelect, a_PlayerIdx))
         {
+            sba_SoundPlayer->PlaySound("menu_confirm", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
             if (this->m_pNavigation->GetFocusedElementId() == 3)
                 return 0;
             if (this->m_Head != Controls)
@@ -244,6 +255,7 @@ namespace Menu
         }
         if (sba_Input->ButtonPressed(sba_Button::NavigationBack, a_PlayerIdx))
         {
+            sba_SoundPlayer->PlaySound("menu_back", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
             if (this->m_Focus)
             {
                 this->m_Focus = false;

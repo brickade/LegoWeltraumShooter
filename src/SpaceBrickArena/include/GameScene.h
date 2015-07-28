@@ -32,6 +32,7 @@ namespace sba
         int m_WonID;
         int m_WonIndex;
         //End time
+        float m_StartTimer;
         float m_TimeLimit;
         float m_EndTime;
         //used for networking

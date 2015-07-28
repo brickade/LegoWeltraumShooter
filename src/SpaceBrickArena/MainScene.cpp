@@ -17,7 +17,9 @@ namespace sba
         Space::Instance()->Initialize(*a_pApplication->GetGraphics(), *a_pApplication->GetInput(), *a_pApplication->GetSoundPlayer(), *a_pApplication);
         sba_BrickManager->Load();
         sba_ShipManager->Load();
-        sba_SoundPlayer->PlaySound("Theme",true,true,std::stof(sba_Options->GetValue("MusicVolume")));
+        sba_SoundPlayer->SetListeners(1);
+        sba_SoundPlayer->SetListenPosition(0, PuRe_Vector3F(), PuRe_Vector3F(), PuRe_Vector3F(0.0f, 0.0f, 1.0f), PuRe_Vector3F(0.0f, 1.0f, 0.0f));
+        sba_SoundPlayer->PlaySound("Theme", true, true, std::stof(sba_Options->GetValue("MusicVolume")));
 
         this->m_pMenuScene->Initialize(a_pApplication);
         this->m_pActiveScene = this->m_pMenuScene;
@@ -35,19 +37,18 @@ namespace sba
         int update = this->m_pActiveScene->Update(a_pApplication);
         switch (update)
         {
-        case 1:
-            return 1;
+        case 1: //Menu Scene
             break;
         case 2: //Game Local Initialize
             this->m_pActiveScene->Exit();
             SAFE_DELETE(this->m_pActiveScene);
-            sba_SoundPlayer->StopSound("Theme");
-            sba_SoundPlayer->PlaySound("Ingame", true, true, std::stof(sba_Options->GetValue("MusicVolume")));
+            for (unsigned i = 0; i<32; i++)
+                sba_SoundPlayer->StopSound(i);
+            sba_SoundPlayer->PlaySound("Ingame", true,true, std::stof(sba_Options->GetValue("MusicVolume")));
 
             this->m_pGameScene = new sba::CGameScene(a_pApplication, this->m_PlayerIdx, false);
             this->m_pGameScene->Initialize(a_pApplication);
             this->m_pActiveScene = this->m_pGameScene;
-            return 1;
             break;
         case 3: //Game Network Initialize
             this->m_pActiveScene->Exit();
@@ -56,37 +57,35 @@ namespace sba
             this->m_pGameScene = new sba::CGameScene(a_pApplication, this->m_PlayerIdx, true);
             this->m_pGameScene->Initialize(a_pApplication);
             this->m_pActiveScene = this->m_pGameScene;
-            return 1;
             break;
         case 4: //Editor Initialize
             this->m_pActiveScene->Exit();
             SAFE_DELETE(this->m_pActiveScene);
-            sba_SoundPlayer->StopSound("Theme");
-            sba_SoundPlayer->PlaySound("Editor", true, true, std::stof(sba_Options->GetValue("MusicVolume")));
+            for (int i = 0; i<sba_SoundPlayer->MaxChannels; i++)
+                sba_SoundPlayer->StopSound(i);
+            sba_SoundPlayer->PlaySound("Editor", true,true, std::stof(sba_Options->GetValue("MusicVolume")));
 
             this->m_pEditorScene = new Editor::CEditorScene(a_pApplication, this->m_PlayerIdx);
             this->m_pEditorScene->Initialize(a_pApplication);
             this->m_pActiveScene = this->m_pEditorScene;
-            return 1;
             break;
         case 5: //Menu Initialize
             this->m_pActiveScene->Exit();
             SAFE_DELETE(this->m_pActiveScene);
-            sba_SoundPlayer->StopSound("Theme");
-            sba_SoundPlayer->StopSound("Editor");
-            sba_SoundPlayer->StopSound("Ingame");
-            sba_SoundPlayer->PlaySound("Theme", true, true, std::stof(sba_Options->GetValue("MusicVolume")));
+            for (int i = 0; i<sba_SoundPlayer->MaxChannels; i++)
+                sba_SoundPlayer->StopSound(i);
+            sba_SoundPlayer->PlaySound("Theme", true,true, std::stof(sba_Options->GetValue("MusicVolume")));
 
             this->m_pMenuScene = new Menu::CMenuScene(a_pApplication, &this->m_PlayerIdx);
             this->m_pMenuScene->Initialize(a_pApplication);
             this->m_pActiveScene = this->m_pMenuScene;
-            return 1;
             break;
         default:
             return 0;
             break;
         }
-        return 0;
+        sba_SoundPlayer->Update();
+        return 1;
      }
 
     // **************************************************************************

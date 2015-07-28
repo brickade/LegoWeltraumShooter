@@ -89,6 +89,7 @@ namespace sba
         void Move(PuRe_Vector2F a_Move);
         void Shoot(std::vector<CBullet*>& a_rBullets, SPlayer* a_pOwner);
         static void Collision(ong::Collider* thisCollider, ong::Contact* contact);
+        static void ShieldCollision(ong::Collider* thisCollider, ong::Contact* contact);
 
         void Deserialize(TheBrick::CSerializer& a_pSerializer, TheBrick::BrickArray& a_rBricks, ong::World& a_pWorld) override;
         void Serialize(TheBrick::CSerializer& a_pSerializer);

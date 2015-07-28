@@ -23,6 +23,7 @@ namespace sba
         unsigned int m_ID;
         PuRe_ParticleEmitter* m_pEmitter;
         PuRe_Color m_Color;
+        int m_SoundChannel;
 
     public:
         CBullet(ong::BodyDescription* a_desc, ong::World& a_rWorld, SPlayer* a_pOwner, PuRe_Color a_Color, unsigned int a_ID);

@@ -9,6 +9,8 @@
 
 #include "include/Space.h"
 
+#include "Onager/BVH.h"
+
 namespace sba
 {
     const float g_Rand[] = { -56.0f, -250.0f, 45.0f, -360.0f, 106.0f,
@@ -68,6 +70,13 @@ namespace sba
 
     // **************************************************************************
     // **************************************************************************
+    void CSpaceship::ShieldCollision(ong::Collider* thisCollider, ong::Contact* contact)
+    {
+        printf("Shield Collided!\n");
+    }
+
+    // **************************************************************************
+    // **************************************************************************
     void CSpaceship::Collision(ong::Collider* thisCollider, ong::Contact* contact)
     {
         CSpaceship* Ship = (CSpaceship*)thisCollider->getBody()->getUserData();
@@ -101,7 +110,7 @@ namespace sba
                             Ship->m_Life = Ship->m_MaxLife;
                         break;
                     case sba::EItemType::Shield:
-                        Ship->m_Shield += 10;
+                        Ship->m_Shield += 100;
                         if (Ship->m_Shield  > 100)
                             Ship->m_Shield = 100;
                         break;
@@ -120,7 +129,21 @@ namespace sba
                 if (Ship->m_Respawn == 0.0f)
                 {
                     Ship->m_Shake = 1.0f;
-                    Ship->m_Life -= bull->m_Damage;
+                    int damage = bull->m_Damage;
+                    //If shield is on, make shield get damage before the ship
+                    if (Ship->m_Shield > 0)
+                    {
+                        Ship->m_Shield -= damage;
+                        if (Ship->m_Shield < 0)
+                        {
+                            damage = -Ship->m_Shield;
+                            Ship->m_Shield = 0;
+                        }
+                        else
+                            damage = 0;
+                    }
+
+                    Ship->m_Life -= damage;
                     if (Ship->m_Life < 0)
                         bull->m_pOwner->Points += 10;
                     bull->m_pOwner->Marker = 1.0f;
@@ -227,6 +250,40 @@ namespace sba
             this->m_pBrickArray[i].Color = this->m_pBricks[i]->m_Color;
         }
         //set max life here because it is set here with full Data
+
+
+        //Get Shape Data
+        //ong::ShapeDescription shape;
+        //shape.shapeType = ong::ShapeType::SPHERE;
+        //ong::vec3& sC = shape.sphere.c;
+        //float& sR = shape.sphere.r;
+
+        ////Get Length
+        //auto b = this->m_pBody;
+        //ong::BVTree* tree = b->getBVTree();
+        //float length = ong::length(tree->aabb.e)*1.2f; //some bigger
+
+        ////Set Length and Shape
+        //sC.x *= length;
+        //sC.z *= length;
+        //sC.y *= length;
+        //sR *= length;
+        //ong::ShapePtr shapeptr = sba_World->createShape(shape);
+
+        ////Set Data
+        //ong::ColliderDescription cDescr;
+        //cDescr.shape = shapeptr;
+        //cDescr.material = &TheBrick::CBrick::BRICK_MATERIAL;
+        //cDescr.transform = ong::Transform(ong::vec3(0, 0, 0), ong::Quaternion(ong::vec3(0, 0, 0), 1));
+        //cDescr.isSensor = true;
+        //ong::Collider* pCollider = sba_World->createCollider(cDescr);
+
+        //m_pBody->addCollider(pCollider);
+
+        ////Set Callback
+        //ong::ColliderCallbacks cb = pCollider->getColliderCallbacks();
+        //cb.beginContact = CSpaceship::ShieldCollision;
+        //pCollider->setCallbacks(cb);
 
         CalculateProperties();
         this->CalculateReset();

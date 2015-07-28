@@ -15,9 +15,15 @@ namespace Menu
 
     int CMain::Update(PuRe_Timer* a_pTimer, int a_PlayerIdx)
     {
-        this->m_pNavigation->Update(*a_pTimer, sba_Input->Direction(sba_Direction::Navigate, a_PlayerIdx));
+        PuRe_Vector2F nav = sba_Input->Direction(sba_Direction::Navigate, a_PlayerIdx);
+        nav.X = 0.0f;
+
+        if (this->m_pNavigation->Update(*a_pTimer, nav))
+            sba_SoundPlayer->PlaySound("menu_over", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
+
         if (sba_Input->ButtonPressed(sba_Button::NavigationSelect, a_PlayerIdx))
         {
+            sba_SoundPlayer->PlaySound("menu_confirm", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
             switch (this->m_pNavigation->GetFocusedElementId())
             {
             case 0: //Local

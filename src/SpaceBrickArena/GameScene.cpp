@@ -156,8 +156,26 @@ namespace sba
         }
 
         //Set Player Respawn
+        int listeners = 1;
+        ong::vec3 pos;
+        ong::vec3 forw = ong::vec3(0.0f, 0.0f, 1.0f);
+        ong::vec3 up = ong::vec3(0.0f, 1.0f, 0.0f);
+        ong::Quaternion q;
         for (unsigned int i = 0; i < sba_Players.size(); i++)
         {
+
+            if (sba_Players[i]->PadID != -1)
+            {
+                pos = sba_Players[i]->Ship->m_pBody->getWorldCenter();
+                q = sba_Players[i]->Ship->m_pBody->getOrientation();
+                forw = ong::vec3(0.0f, 0.0f, 1.0f);
+                forw = ong::rotate(forw, q);
+                up = ong::vec3(0.0f, 0.0f, 1.0f);
+                up = ong::rotate(up, q);
+                sba_SoundPlayer->SetListenPosition(listeners, TheBrick::OngToPuRe(pos), PuRe_Vector3F(), TheBrick::OngToPuRe(forw), TheBrick::OngToPuRe(up));
+                listeners++;
+            }
+
             if (sba_Players[i]->Ship->m_Respawn == 0 && sba_Players[i]->Ship->m_Life <= 0)
             {
                 sba_Players[i]->Ship->m_Respawn = 5.0f;
@@ -176,20 +194,26 @@ namespace sba
         int tseconds = (int)aTimer->GetTotalElapsedSeconds();
         if (seconds < 1.0f)
         {
-			ong_START_PROFILE(UPDATE_GAME);
-            this->UpdateGame(this->m_Bullets, this->m_Items, seconds);
-			ong_END_PROFILE(UPDATE_GAME);
-
-            for (unsigned int i = 0; i < sba_Players.size(); i++)
+            //Lagg avoid
+            if (this->m_StartTimer > 0.2f)
             {
-                sba::SInputData input = this->HandleInput(sba_Players[i]->PadID, aInput);
-                this->ProcessInput(this->m_Bullets, sba_Players[i], &input, seconds, tseconds);
-            }
+			    ong_START_PROFILE(UPDATE_GAME);
+                this->UpdateGame(this->m_Bullets, this->m_Items, seconds);
+			    ong_END_PROFILE(UPDATE_GAME);
 
-			ong_START_PROFILE(UPDATE_PHYSICS);
-            sba::Space::Instance()->UpdatePhysics(aTimer);
-			ong_END_PROFILE(UPDATE_PHYSICS);
-            this->m_EndTime -= seconds;
+                for (unsigned int i = 0; i < sba_Players.size(); i++)
+                {
+                    sba::SInputData input = this->HandleInput(sba_Players[i]->PadID, aInput);
+                    this->ProcessInput(this->m_Bullets, sba_Players[i], &input, seconds, tseconds);
+                }
+
+			    ong_START_PROFILE(UPDATE_PHYSICS);
+                sba::Space::Instance()->UpdatePhysics(aTimer);
+			    ong_END_PROFILE(UPDATE_PHYSICS);
+                this->m_EndTime -= seconds;
+            }
+            else
+                this->m_StartTimer += seconds;
         }
     }
 
@@ -208,19 +232,29 @@ namespace sba
         if (sba_Network->IsConnected())
             this->m_pNetwork->Initialize();
 
+        int listeners = 1;
+
         for (unsigned int i = 0; i < sba_Players.size(); i++)
         {
             sba_Players[i]->Ship->CalculateData();
             ong::vec3 pos = ong::vec3(-125.0f, 0.0f, -300.0f);
             pos.x += sba_Players[i]->ID*50.0f;
             sba_Players[i]->Ship->m_pBody->setPosition(pos);
+
+            if (sba_Players[i]->PadID != -1)
+                listeners++;
+
         }
+
+        sba_SoundPlayer->SetListeners(listeners);
+        sba_SoundPlayer->SetListenPosition(0, PuRe_Vector3F(), PuRe_Vector3F(), PuRe_Vector3F(0.0f, 0.0f, 1.0f), PuRe_Vector3F(0.0f, 1.0f, 0.0f));
 
         if (!sba_Map->GetMapData(this->m_Asteroids, this->m_Items,this->m_Lights)) //Map doesn't exist!! we end here
             this->m_EndTime = -1000;
 
         this->m_TimeLimit = 5.0f;
         this->m_EndTime = 60.0f*this->m_TimeLimit; //seconds * Minutes
+        this->m_StartTimer = 0.0f;
         sba_BrickManager->RebuildRenderInstances(); //Update RenderInstances
 
     }
@@ -539,7 +573,7 @@ namespace sba
             {
                 auto b = sba_Players[i]->Ship->m_pBody;
                 auto tree = b->getBVTree();
-                float length = ong::length(tree->aabb.e);
+                float length = ong::length(tree->aabb.e)*1.2f;
                 PuRe_Vector3F pos = TheBrick::OngToPuRe(sba_Players[i]->Ship->m_pBody->getWorldCenter());
                 sba_Renderer->Set(0, 1.0f, "intensity");
                 sba_Renderer->Draw(0, true, sphereBuffer, sphereBuffer->GetSize(), PuRe_Primitive::Triangles, this->m_pShieldMaterial, pos, PuRe_MatrixF(), PuRe_Vector3F(), PuRe_Vector3F(length, length, length));
@@ -710,7 +744,10 @@ namespace sba
     void CGameScene::Exit()
     {
 
-		ong_PRINT_PROFILE(stdout);
+        ong_PRINT_PROFILE(stdout);
+
+        sba_SoundPlayer->SetListeners(1);
+        sba_SoundPlayer->SetListenPosition(0, PuRe_Vector3F(), PuRe_Vector3F(), PuRe_Vector3F(0.0f, 0.0f, 1.0f), PuRe_Vector3F(0.0f, 1.0f, 0.0f));
 
         if (sba_Network->IsConnected())
             SAFE_DELETE(this->m_pNetwork);

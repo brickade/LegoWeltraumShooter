@@ -26,14 +26,17 @@ namespace sba
 
     // **************************************************************************
     // **************************************************************************
-    void CNavigation::Update(PuRe_Timer& a_pTimer, PuRe_Vector2F a_InputVector, bool a_LinkEnds)
+    bool CNavigation::Update(PuRe_Timer& a_pTimer, PuRe_Vector2F a_InputVector, bool a_LinkEnds)
     {
         EDirection::Type a_NewDirection = this->DirectionFromInputVector(a_InputVector);
+        //to play sound only when a new element is focused
+        bool scroll = false;
         if (a_NewDirection != this->m_PreviousState)
         {
             if (a_NewDirection != EDirection::None)
             {
                 this->Navigate(a_NewDirection, a_LinkEnds); //Navigate before scrolling
+                scroll = true;
             }
             this->m_FocusPosition = PuRe_Vector2F::Zero(); //Stop/reset scrolling
             this->m_pTimer->Reset();
@@ -43,6 +46,7 @@ namespace sba
             this->Scroll(a_InputVector, a_pTimer.GetTotalElapsedSeconds());
         }
         this->m_PreviousState = a_NewDirection;
+        return scroll;
     }
 
     // **************************************************************************
