@@ -44,7 +44,7 @@ namespace sba
 
 
         PuRe_Vector3F m_Origin = PuRe_Vector3F(0.0f, 0.0f, 0.0f);
-        float m_OriginDistance = 500.0f;
+        float m_OriginDistance = 750.0f;
 
         //Game UI
         CGUI* m_pUI;

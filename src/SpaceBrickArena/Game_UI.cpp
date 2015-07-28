@@ -25,7 +25,7 @@ namespace sba
         {
             if (sba_Players[i]->PadID != -1)
             {
-                pos.X = (1920.0f/2.0f)-200.0f;
+                pos.X = (1920.0f/2.0f)-400.0f;
                 pos.Y =  1080.0f/2.0f;
                 this->m_pUI->Draw(2, sba_Renderer, "life_shield_tile", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.5f, 0.5f));
 
@@ -46,7 +46,7 @@ namespace sba
                 this->m_pUI->Draw(2, sba_Renderer, "life_icon_tile", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.5f, 0.5f));
                 pos.Y += 175.0f;
 
-                pos.X += 400.0f;
+                pos.X += 800.0f;
                 this->m_pUI->Draw(2, sba_Renderer, "shield_tile", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.5f, 0.5f));
 
                 value = (sba_Players[i]->Ship->m_Shield / 100.0f);

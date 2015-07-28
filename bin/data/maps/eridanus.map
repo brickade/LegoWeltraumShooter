@@ -4,5 +4,7 @@ object@asteroid;50,150,50;0,0,1;0,0,0
 object@asteroid;50,-150,50;0,0,1;0,0,0
 object@asteroid;100,-150,50;0,0,1;0,0,0
 object@asteroid;100,150,50;0,0,1;0,0,0
-object@centerobject;0,0,0;0,0,0;0,0,0
+object@asteroid3;0,0,0;0,0,0;0,0,0
+object@asteroid4;50,0,0;0,0,0;0,0,0
+object@satellit;100,0,0;0,0,0;0,0,0
 light@directional;1.0,0.0,0.0;1.0,1.0,1.0;0,0,0

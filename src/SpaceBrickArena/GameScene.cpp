@@ -366,7 +366,7 @@ namespace sba
 
         this->m_pUI = new CGUI(graphics);
 
-        //Create for each player a camera
+        //Create for each player a camera76
         for (int i = 0; i < this->m_LocalPlayers; i++)
         {
             CGameCamera* Cam = new CGameCamera(fsize, PuRe_Camera_Perspective);

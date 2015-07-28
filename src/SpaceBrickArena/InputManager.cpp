@@ -59,7 +59,7 @@ namespace sba
         this->m_pDirectionMapping[Input::EDirection::EditorChooseElement] =
         {
             Input::EGamepadDirection::DPad,
-            Input::EKeyboardDirection::IKJL
+            Input::EKeyboardDirection::WSAD
 
         };
         this->m_pDirectionMapping[Input::EDirection::GameMove_1] =
@@ -182,7 +182,7 @@ namespace sba
         this->m_pButtonMapping[Input::EButton::EditorFadeHold] =
         {
             Input::EGamepadButton::Pad_Y,
-            Input::EKeyboardButton::Enter
+            Input::EKeyboardButton::Ctrl
         };
         this->m_pButtonMapping[Input::EButton::EditorFadeSupervisor] =
         {

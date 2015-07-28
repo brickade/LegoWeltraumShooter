@@ -196,7 +196,11 @@ namespace sba
 
 
         this->m_Respawn = 0.0f;
+        ong::vec3 null = ong::vec3(0, 0, 0);
         this->m_pBody->setPosition(a_Position);
+        this->m_pBody->setAngularMomentum(null);
+        this->m_pBody->setLinearMomentum(null);
+        this->m_pBody->setOrientation(ong::QuatFromTwoVectors(ong::normalize(a_Position), null));
         this->CalculateProperties();
         this->CalculateReset();
 

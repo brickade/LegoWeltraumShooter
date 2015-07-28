@@ -23,7 +23,7 @@ namespace sba
     {
         this->SetFoV(45.0f);
         this->m_ZOffset = 40.0f;
-        this->setNearFar(PuRe_Vector2F(0.1f, 1000.0f));
+        this->setNearFar(PuRe_Vector2F(0.1f, 1500.0f));
         this->m_QRotation = PuRe_QuaternionF();
     }
 
