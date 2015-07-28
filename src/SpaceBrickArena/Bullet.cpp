@@ -20,7 +20,6 @@ namespace sba
         brick->m_Color = a_Color;
         this->m_Color = a_Color;
         this->m_lifeTime = 0.0f;
-        this->m_Damage = 10;
         this->m_Collided = false;
         this->m_pEmitter = new PuRe_ParticleEmitter(TheBrick::OngToPuRe(this->m_pBody->getWorldCenter()), TheBrick::OngToPuRe(this->m_pBody->getTransform().q));
         std::string sound;
@@ -29,22 +28,27 @@ namespace sba
 
         case TheBrick::Laser: //Laser
             sound = "laser_v2";
+            this->m_Damage = 20;
            break;
 
         case TheBrick::MG: //MG
             sound = "mg";
+            this->m_Damage = 10;
             break;
 
         case TheBrick::Mine: //Mine
             sound = "mine";
+            this->m_Damage = 100;
             break;
 
         case TheBrick::Rocket: //Rocket
             sound = "torpedo";
+            this->m_Damage = 25;
             break;
 
         case TheBrick::Torpedo: //Torpedo
             sound = "torpedo";
+            this->m_Damage = 50;
             break;
         }
         this->m_SoundChannel = sba_SoundPlayer->PlaySound(sound.c_str(), false, false, std::stof(sba_Options->GetValue("SoundVolume")), TheBrick::OngToPuRe(a_desc->transform.p), PuRe_Vector3F(0.0f, 0.0f, 0.0f), PuRe_Vector2F(1.0f, 10.0f));
@@ -129,9 +133,6 @@ namespace sba
             float diff = ong::dot(forw,pos);
 
             ong::vec3 force = (ong::cross(forw, pos));
-            force.x *= diff;
-            force.y *= diff;
-            force.z *= diff;
             this->m_pBody->applyTorque(force, a_DeltaTime);
 
             ong::vec3 currVel = ong::rotate(this->m_pBody->getLinearVelocity(), ong::conjugate(this->m_pBody->getOrientation()));

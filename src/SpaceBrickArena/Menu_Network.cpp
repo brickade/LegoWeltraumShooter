@@ -115,8 +115,7 @@ namespace Menu
         if (!this->m_Focus)
         {
             PuRe_Vector2F nav = sba_Input->Direction(sba_Direction::Navigate, a_PlayerIdx);
-            if (this->m_pNavigation->Update(*a_pTimer, nav))
-                sba_SoundPlayer->PlaySound("menu_over", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
+            this->m_pNavigation->Update(*a_pTimer, nav);
             if (sba_Input->ButtonPressed(sba_Button::NavigationSelect, a_PlayerIdx))
             {
                 sba_SoundPlayer->PlaySound("menu_confirm", false, true, std::stof(sba_Options->GetValue("SoundVolume")));

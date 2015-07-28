@@ -18,7 +18,11 @@ namespace sba
         SOCKET NetworkInformation;
         bool Timeout;
         int Points;
-        float ShootCooldown;
+        float MGCD;
+        float RocketCD;
+        float TorpedoCD;
+        float LaserCD;
+        float MineCD;
         float Marker;
         float OutTime;
         CSpaceship* Ship;

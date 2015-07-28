@@ -87,7 +87,7 @@ namespace sba
         void Thrust(float a_Thrust);
         void Spin(float a_Spin);
         void Move(PuRe_Vector2F a_Move);
-        void Shoot(std::vector<CBullet*>& a_rBullets, SPlayer* a_pOwner);
+        void Shoot(int a_Weapon,std::vector<CBullet*>& a_rBullets, SPlayer* a_pOwner);
         static void Collision(ong::Collider* thisCollider, ong::Contact* contact);
         static void ShieldCollision(ong::Collider* thisCollider, ong::Contact* contact);
 

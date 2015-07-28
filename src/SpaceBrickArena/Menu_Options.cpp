@@ -102,8 +102,7 @@ namespace Menu
                             else if (cnav.Y > 0.0f&&this->m_pControls[i]->GetFocusedElementId() == 0)
                                 this->m_pControls[i]->SetFocusedElementId(3);
                         }
-                        if (this->m_pControls[i]->Update(*a_pTimer, cnav))
-                            sba_SoundPlayer->PlaySound("menu_over", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
+                        this->m_pControls[i]->Update(*a_pTimer, cnav);
                     }
                     else if (cnav.X != 0.0f)
                     {
@@ -146,8 +145,7 @@ namespace Menu
             }
             else
             {
-                if (this->m_pNavigation->Update(*a_pTimer, nav))
-                    sba_SoundPlayer->PlaySound("menu_over", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
+                this->m_pNavigation->Update(*a_pTimer, nav);
             }
         }
         else

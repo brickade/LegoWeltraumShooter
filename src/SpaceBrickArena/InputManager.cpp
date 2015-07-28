@@ -89,7 +89,7 @@ namespace sba
             Input::EKeyboardAxis::MouseScroll
 
         };
-        this->m_pAxisMapping[Input::EAxis::GameShoot] =
+        this->m_pAxisMapping[Input::EAxis::GameShootMG] =
         {
             Input::EGamepadAxis::RightTrigger,
             Input::EKeyboardAxis::MouseScroll
@@ -219,10 +219,25 @@ namespace sba
             Input::EGamepadButton::Pad_B,
             Input::EKeyboardButton::Backspace
         };
-        this->m_pButtonMapping[Input::EButton::GameShoot] =
+        this->m_pButtonMapping[Input::EButton::GameShootLaser] =
+        {
+            Input::EGamepadButton::Pad_Y,
+            Input::EKeyboardButton::I
+        };
+        this->m_pButtonMapping[Input::EButton::GameShootMine] =
+        {
+            Input::EGamepadButton::Pad_X,
+            Input::EKeyboardButton::J
+        };
+        this->m_pButtonMapping[Input::EButton::GameShootRocket] =
+        {
+            Input::EGamepadButton::Pad_B,
+            Input::EKeyboardButton::L
+        };
+        this->m_pButtonMapping[Input::EButton::GameShootTorpedo] =
         {
             Input::EGamepadButton::Pad_A,
-            Input::EKeyboardButton::MouseLeft
+            Input::EKeyboardButton::K
         };
         this->m_pButtonMapping[Input::EButton::GameThrust] =
         {

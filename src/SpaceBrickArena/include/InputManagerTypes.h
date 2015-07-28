@@ -122,7 +122,7 @@ namespace sba
             {
                 EditorCameraZoom,
                 EditorColorSlider,
-                GameShoot,
+                GameShootMG,
                 GameThrust_1,
                 GameThrust_2,
                 GameThrust_3,
@@ -155,7 +155,10 @@ namespace sba
                 EditorDeleteShip,
                 NavigationSelect,
                 NavigationBack,
-                GameShoot,
+                GameShootLaser,
+                GameShootRocket,
+                GameShootMine,
+                GameShootTorpedo,
                 GameThrust,
                 Exit,
                 LAST = Exit
