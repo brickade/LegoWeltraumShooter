@@ -58,6 +58,8 @@ namespace Editor
     // **************************************************************************
     void CWorker::Update(PuRe_IGraphics& a_pGraphics, PuRe_IWindow& a_pWindow, PuRe_Timer& a_pTimer, PuRe_SoundPlayer& a_pSoundPlayer, TheBrick::CBrick* a_pCurrentBrick, PuRe_Color& a_rCurrentColor, CShipHandler& a_rShipHandler)
     {
+        this->m_CurrentColor = a_rCurrentColor;
+        //-----First Brick Placement-----
         bool firstBrick = false;
         if (a_rShipHandler.GetCurrentSpaceShip()->m_pBricks.size() == 0)
         { //First Brick
@@ -68,8 +70,7 @@ namespace Editor
             this->m_PlaceBelow = false;
             this->m_CurrentHeight = 0;
         }
-//#define EDITOR_DEBUG
-        this->m_CurrentColor = a_rCurrentColor;
+        //-----Set Current Brick-----
         if (this->m_pCurrentBrick == nullptr || this->m_pCurrentBrick->m_pBrick != a_pCurrentBrick)
         {
             if (this->m_pCurrentBrick != nullptr)
@@ -79,61 +80,33 @@ namespace Editor
             this->m_pCurrentBrick = a_pCurrentBrick->CreateInstance(*this->m_pCurrentBrickObject, *sba_World); //Create Instance
             this->m_CurrentHeightIsInvalid = true;
         }
+        //-----Camera-----
         this->m_pCamera->Update(&a_pGraphics, &a_pWindow, &a_pTimer);
+        //-----Rotation-----
+        this->UpdateRotation();
         if (!firstBrick)
         {
+            //-----Translation-----
             this->UpdateTranslation(this->m_pCamera->GetForward(), a_pTimer.GetElapsedSeconds() * 9);
-        }
-        this->UpdateRotation();
-
-        //Update Placement Direction
-        if (sba_Input->ButtonPressed(sba_Button::EditorTogglePlacementSide, this->m_PlayerIdx) && !firstBrick)
-        {
-            this->m_PlaceBelow = !this->m_PlaceBelow;
-            this->m_CurrentHeightIsInvalid = true;
-        }
-
-        //Update Height
-        if (this->m_CurrentHeightIsInvalid && !firstBrick)
-        {
-#ifdef EDITOR_DEBUG
-            printf("------------------------------\nUpdate Height on sec %f\n", a_pTimer.GetTotalElapsedSeconds());
-#endif
-            this->UpdateHeight(a_rShipHandler);
-            this->m_CurrentHeightIsInvalid = false;
-        }
-        this->ApplyToCurrentBrick();
-        this->UpdatePlacement(a_rShipHandler);
-
-        //Safe Ship to file
-        if (sba_Input->ButtonPressed(sba_Button::EditorSaveShip, this->m_PlayerIdx))
-        {
-            //Delete CurrentBrick
-            if (this->m_pCurrentBrick != nullptr)
+            //-----Placement Direction-----
+            if (sba_Input->ButtonPressed(sba_Button::EditorTogglePlacementSide, this->m_PlayerIdx))
             {
-                SAFE_DELETE(this->m_pCurrentBrick);
+                this->m_PlaceBelow = !this->m_PlaceBelow;
+                this->m_CurrentHeightIsInvalid = true;
             }
-            a_rShipHandler.SaveCurrentShip(); //Save ship & preview
-            //Recreate CurrentBrick
-            this->m_pCurrentBrick = a_pCurrentBrick->CreateInstance(*this->m_pCurrentBrickObject, *sba_World); //Create Instance
-            this->ApplyToCurrentBrick();
+            //-----Height-----
+            if (this->m_CurrentHeightIsInvalid)
+            {
+                this->UpdateHeight(a_rShipHandler);
+                this->m_CurrentHeightIsInvalid = false;
+            }
         }
-
-#ifdef EDITOR_DEV
-        if (sba_Application->GetInput()->KeyPressed(PuRe_IInput::F6))
-        {
-            sba_ShipManager->SaveShipToFileAsObject(*a_rShipHandler.GetCurrentSpaceShip());
-        }
-#endif
-
-        //Reset/Delete Ship
-        /*if (sba_Input->ButtonPressed(sba_Button::EditorResetShip, this->m_playerIdx))
-        {
-            a_rShipHandler.ResetCurrentShip();
-            this->m_pHistory->Clear();
-            a_rShipHandler.UpdateCurrentShipData();
-            this->m_CurrentBrickHeightIstInvalid = true;
-        }*/
+        //-----Apply-----
+        this->ApplyToCurrentBrick();
+        //-----Placement-----
+        this->UpdatePlacement(a_rShipHandler);
+        //-----Miscellaneous-----
+        this->UpdateMiscellaneous(a_rShipHandler, a_pCurrentBrick);
     }
 
     // **************************************************************************
@@ -210,8 +183,8 @@ namespace Editor
         //Set Input in the according forward direction
         this->m_CurrentPositionCache += forward * MoveInput.Y;
         this->m_CurrentPositionCache += PuRe_Vector2F(forward.Y, -forward.X) * MoveInput.X;
-        this->m_CurrentPositionCache.X = PuRe_clamp(this->m_CurrentPosition.X, -(float)sba::CSpaceship::MAX_BRICK_WIDTH, (float)sba::CSpaceship::MAX_BRICK_WIDTH);
-        this->m_CurrentPositionCache.Y = PuRe_clamp(this->m_CurrentPosition.Y, -(float)sba::CSpaceship::MAX_BRICK_WIDTH, (float)sba::CSpaceship::MAX_BRICK_WIDTH);
+        this->m_CurrentPositionCache.X = PuRe_clamp(this->m_CurrentPositionCache.X, -(float)sba::CSpaceship::MAX_BRICK_WIDTH, (float)sba::CSpaceship::MAX_BRICK_WIDTH);
+        this->m_CurrentPositionCache.Y = PuRe_clamp(this->m_CurrentPositionCache.Y, -(float)sba::CSpaceship::MAX_BRICK_WIDTH, (float)sba::CSpaceship::MAX_BRICK_WIDTH);
 
         PuRe_Vector2I posCache = this->m_CurrentPosition;
         this->m_CurrentPosition = PuRe_Vector2I((int)round(this->m_CurrentPositionCache.X), (int)round(this->m_CurrentPositionCache.Y)); //Snap to grid
@@ -363,6 +336,35 @@ namespace Editor
     // **************************************************************************
     void CWorker::UpdatePlacement(CShipHandler& a_rShipHandler)
     {
+        //Check if can place and for max special bricks count
+        const CShipHandler::ShipDataCache& shipData = a_rShipHandler.GetCurrentShipData();
+        if (!this->m_CanPlaceHere
+            || (this->m_pCurrentBrick->m_pBrick->GetCategoryId() == CBrickCategory::CATEGORY_COCKPITS && shipData.Cockpits >= sba::CSpaceship::MAX_COCKPITS)
+            || (this->m_pCurrentBrick->m_pBrick->GetCategoryId() == CBrickCategory::CATEGORY_WEAPONS && shipData.Weapons >= sba::CSpaceship::MAX_WEAPONS)
+            || (this->m_pCurrentBrick->m_pBrick->GetCategoryId() == CBrickCategory::CATEGORY_ENGINES && shipData.Engines >= sba::CSpaceship::MAX_ENGINES))
+        {
+            return;
+        }
+
+        if (sba_Input->ButtonPressed(sba_Button::EditorPlaceBrick, this->m_PlayerIdx) && a_rShipHandler.GetCurrentSpaceShip()->m_pBricks.size() < (size_t)sba::CSpaceship::MAX_BRICK_COUNT)
+        { //Place BrickInstance
+            this->m_pCurrentBrick->m_Color = this->m_CurrentColor; //Apply right color
+            this->m_pHistory->CutRedos();
+            SHistoryStep step;
+            step.BrickInstance = a_rShipHandler.AddBrickInstanceToCurrentShip(*this->m_pCurrentBrick); //Add to ship
+            step.Brick = step.BrickInstance->m_pBrick;
+            step.Transform = this->m_pCurrentBrick->GetTransform();
+            step.Color = this->m_CurrentColor;
+            this->m_pHistory->AddStep(step); //Add History step
+            a_rShipHandler.UpdateCurrentShipData();
+            this->m_CurrentHeightIsInvalid = true;
+        }
+    }
+
+    // **************************************************************************
+    // **************************************************************************
+    void CWorker::UpdateMiscellaneous(CShipHandler& a_rShipHandler, TheBrick::CBrick* a_pCurrentBrick)
+    {
         if (sba_Input->ButtonIsPressed(sba_Button::EditorUndoRedoHold, this->m_PlayerIdx) && sba_Input->ButtonPressed(sba_Button::EditorUndo, this->m_PlayerIdx))
         { //Undo
             SHistoryStep* step = this->m_pHistory->Undo();
@@ -384,32 +386,32 @@ namespace Editor
                 this->m_CurrentHeightIsInvalid = true;
             }
         }
-        if (!this->m_CanPlaceHere)
-        {
-            return;
+
+        if (sba_Input->ButtonPressed(sba_Button::EditorSaveShip, this->m_PlayerIdx))
+        { //Safe Ship to file
+            if (this->m_pCurrentBrick != nullptr) //Delete CurrentBrick
+            {
+                SAFE_DELETE(this->m_pCurrentBrick);
+            }
+            a_rShipHandler.SaveCurrentShip(); //Save ship & preview
+            //Recreate CurrentBrick
+            this->m_pCurrentBrick = a_pCurrentBrick->CreateInstance(*this->m_pCurrentBrickObject, *sba_World); //Create Instance
+            this->ApplyToCurrentBrick();
         }
 
-        //Check for max special bricks count
-        const CShipHandler::ShipDataCache& shipData = a_rShipHandler.GetCurrentShipData();
-        if ((this->m_pCurrentBrick->m_pBrick->GetCategoryId() == CBrickCategory::CATEGORY_COCKPITS && shipData.Cockpits >= sba::CSpaceship::MAX_COCKPITS)
-            || (this->m_pCurrentBrick->m_pBrick->GetCategoryId() == CBrickCategory::CATEGORY_WEAPONS && shipData.Weapons >= sba::CSpaceship::MAX_WEAPONS)
-            || (this->m_pCurrentBrick->m_pBrick->GetCategoryId() == CBrickCategory::CATEGORY_ENGINES && shipData.Engines >= sba::CSpaceship::MAX_ENGINES))
-        {
-            return;
+#ifdef EDITOR_DEV
+        if (sba_Application->GetInput()->KeyPressed(PuRe_IInput::F6))
+        { //Safe Ship to file as object
+            sba_ShipManager->SaveShipToFileAsObject(*a_rShipHandler.GetCurrentSpaceShip());
         }
+#endif
 
-        if (sba_Input->ButtonPressed(sba_Button::EditorPlaceBrick, this->m_PlayerIdx) && a_rShipHandler.GetCurrentSpaceShip()->m_pBricks.size() < (size_t)sba::CSpaceship::MAX_BRICK_COUNT)
-        { //Place BrickInstance
-            this->m_pCurrentBrick->m_Color = this->m_CurrentColor; //Apply right color
-            this->m_pHistory->CutRedos();
-            SHistoryStep step;
-            step.BrickInstance = a_rShipHandler.AddBrickInstanceToCurrentShip(*this->m_pCurrentBrick); //Add to ship
-            step.Brick = step.BrickInstance->m_pBrick;
-            step.Transform = this->m_pCurrentBrick->GetTransform();
-            step.Color = this->m_CurrentColor;
-            this->m_pHistory->AddStep(step); //Add History step
+        /*if (sba_Input->ButtonPressed(sba_Button::EditorResetShip, this->m_playerIdx))
+        {         //Reset/Delete Ship
+            a_rShipHandler.ResetCurrentShip();
+            this->m_pHistory->Clear();
             a_rShipHandler.UpdateCurrentShipData();
-            this->m_CurrentHeightIsInvalid = true;
-        }
+            this->m_CurrentBrickHeightIstInvalid = true;
+        }*/
     }
 }

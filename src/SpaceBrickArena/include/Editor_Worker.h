@@ -42,6 +42,8 @@ namespace Editor
         bool m_PlaceBelow;
         bool m_CanPlaceHere = false; 
 
+        bool m_DeleteMode = false;
+
         TheBrick::CGameObject* m_pCurrentBrickObject;
         TheBrick::CBrickInstance* m_pCurrentBrick;
         
@@ -72,6 +74,7 @@ namespace Editor
         void UpdateHeight(CShipHandler& a_rShipHandler);
         void ApplyToCurrentBrick();
         void UpdatePlacement(CShipHandler& a_rShipHandler);
+        void UpdateMiscellaneous(CShipHandler& a_rShipHandler, TheBrick::CBrick* a_pCurrentBrick);
     };
 }
 
