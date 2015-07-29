@@ -648,7 +648,7 @@ namespace sba
                 PuReEngine::Core::Plane<float> Bottom = this->m_Cameras[camID]->GetFrustrumPlane(PuReEngine::Core::Planes::Bottom);
                 PuReEngine::Core::Plane<float> Near = this->m_Cameras[camID]->GetFrustrumPlane(PuReEngine::Core::Planes::Near);
 
-                PuRe_Vector3F aux, normal, point;
+                PuRe_Vector3F aux, normal, point,rot;
 
                 for (unsigned int j = 0; j < sba_Players.size(); j++)
                 {
@@ -658,6 +658,9 @@ namespace sba
                         pos += TheBrick::OngToPuRe(ong::rotate(ong::vec3(0.0f, 5.0f, 0.0f), sba_Players[j]->Ship->m_pBody->getOrientation()));
                         PuRe_Vector3F diffPos = (ppos - pos);
                         float diff = diffPos.Length() / 500.0f;
+
+                        rot = PuRe_Vector3F(0.0f, 0.0f, 180 * PuRe_DegToRad);
+
                         if (diff > 1.0f)
                             diff = 1.0f;
                         if (diff < 0.1f)
@@ -669,30 +672,51 @@ namespace sba
                         PuRe_Vector3F ScreenPos;
                         bool inside = true;
                         float Val = -0.3f;
-                        if (PuRe_Vector3F::Dot(CamToPos, Left.Normal) > Val) //right
-                        {
-                            ScreenPos.X = 0.7f;
-                            inside = false;
-                        }
-                        else if (PuRe_Vector3F::Dot(CamToPos, Right.Normal) > Val) //left
-                        {
-                            ScreenPos.X = -0.7f;
-                            inside = false;
-                        }
-                        if (PuRe_Vector3F::Dot(CamToPos, Top.Normal) > Val) //top
+
+                        if ((diff = PuRe_Vector3F::Dot(CamToPos, Top.Normal)) > Val) //top
                         {
                             ScreenPos.Y = 0.4f;
+                            ScreenPos.X = -diff;
                             inside = false;
+                            rot.Z = 0.0f;
+                            if (i == 0)
+                                printf("top\n");
                         }
-                        else if (PuRe_Vector3F::Dot(CamToPos, Bottom.Normal) > Val) //bottom
+                        else if ((diff = PuRe_Vector3F::Dot(CamToPos, Near.Normal)) > Val) //behind
                         {
                             ScreenPos.Y = -0.4f;
+                            ScreenPos.X = -diff;
                             inside = false;
+                            rot.Z = 180 * PuRe_DegToRad;
+                            if (i == 0)
+                                printf("behind\n");
                         }
-                        else if (PuRe_Vector3F::Dot(CamToPos, Near.Normal) > Val) //behind
+                        else if ((diff = PuRe_Vector3F::Dot(CamToPos, Left.Normal)) > Val) //right
+                        {
+                            ScreenPos.X = 0.7f;
+                            ScreenPos.Y = diff;
+                            inside = false;
+                            rot.Z = 270*PuRe_DegToRad;
+                            if (i == 0)
+                                printf("right\n");
+                        }
+                        else if ((diff = PuRe_Vector3F::Dot(CamToPos, Right.Normal)) > Val) //left
+                        {
+                            ScreenPos.X = -0.7f;
+                            ScreenPos.Y = -diff;
+                            inside = false;
+                            rot.Z = 90 * PuRe_DegToRad;
+                            if (i == 0)
+                                printf("left\n");
+                        }
+                        else if((diff = PuRe_Vector3F::Dot(CamToPos, Bottom.Normal)) > Val) //bottom
                         {
                             ScreenPos.Y = -0.4f;
+                            ScreenPos.X = diff;
                             inside = false;
+                            rot.Z = 180 * PuRe_DegToRad;
+                            if (i == 0)
+                                printf("bottom\n");
                         }
 
                         if (!inside)
@@ -701,7 +725,7 @@ namespace sba
                             pos = campos;
                             pos += forward;
                             pos += ScreenPos;
-                            size = 0.001f;
+                            size = 0.0005f;
                         }
 
                         sba_Renderer->Draw(1, false, this->m_pLockSprite, this->m_pSpriteMaterial, pos, rotation.GetMatrix(), PuRe_Vector3F(), PuRe_Vector3F(size, size, size), PuRe_Color(), PuRe_Vector2F(), PuRe_Vector2F(), camID);

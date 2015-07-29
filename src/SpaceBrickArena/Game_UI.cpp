@@ -102,7 +102,7 @@ namespace sba
                 if (sba_Players[i]->Marker != 0.0f)
                 {
                     sba_Renderer->Set(2, sba_Players[i]->Marker, "alpha");
-                    sba_Renderer->Draw(2, false, this->m_pHitMarkerSprite, this->m_pSpriteMaterial, pos, PuRe_MatrixF(), PuRe_Vector3F(0.0f, 0.0f, 0.0f), PuRe_Vector3F(0.5f, 0.5f, 0.5f), PuRe_Color(1.0f, 1.0f, 1.0f), PuRe_Vector2F(), PuRe_Vector2F(), local);
+                    sba_Renderer->Draw(2, false, this->m_pHitMarkerSprite, this->m_pSpriteMaterial, pos, PuRe_MatrixF(), PuRe_Vector3F(0.0f, 0.0f, 0.0f), PuRe_Vector3F(0.2f, 0.2f, 0.2f), PuRe_Color(1.0f, 1.0f, 1.0f), PuRe_Vector2F(), PuRe_Vector2F(), local);
                 }
                 sba_Renderer->Set(2, 1.0f, "alpha");
                 pos.Y = 1080.0f-100.0f;
