@@ -256,4 +256,10 @@
       <UniqueIdentifier>{6850121a-a426-4883-8919-85ef684ff716}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="resource.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="icon.ico" />
+  </ItemGroup>
 </Project>

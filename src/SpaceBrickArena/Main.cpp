@@ -1,6 +1,7 @@
 #include <PuReEngine/Platform.h>
 #include <PuReEngine/Core.h>
 // Application specific includes
+
 #include "include/INIReader.h"
 #include "include/MainScene.h"
 
