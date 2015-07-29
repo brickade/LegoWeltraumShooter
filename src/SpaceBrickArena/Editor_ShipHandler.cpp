@@ -5,6 +5,9 @@
 #include "TheBrick\BrickInstance.h"
 #include "TheBrick\Brick.h"
 #include "TheBrick/GameObject.h"
+#ifdef EDITOR_DEV
+#include "include/ShipManager.h"
+#endif
 
 namespace Editor
 {
@@ -50,6 +53,12 @@ namespace Editor
                 this->UpdateCurrentShipData();
             }        
         }
+#ifdef EDITOR_DEV
+            if (sba_Application->GetInput()->KeyPressed(PuRe_IInput::F7))
+            {
+                sba_ShipManager->BatchRenderShip(*this->m_pCurrentSpaceship);
+            }
+#endif
             if (sba_Input->ButtonPressed(sba_Button::EditorAddNewShip, this->m_playerIdx))
             {
                 this->AddShip("");

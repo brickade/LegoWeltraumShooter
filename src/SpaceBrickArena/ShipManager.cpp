@@ -42,7 +42,7 @@ namespace sba
         while (file != "")
         {
             i++;
-            if (file.substr(file.find_last_of(".")+1) != "ship")
+            if (file.substr(file.find_last_of(".") + 1) != "ship")
             {
                 file = window->GetFileAtIndex(i, this->m_FolderPath.c_str());
                 continue;
@@ -233,8 +233,69 @@ namespace sba
 
     // **************************************************************************
     // **************************************************************************
-    PuRe_Sprite* CShipManager::GetSpriteFromShip(sba::CSpaceship& a_rShip) const
-    {   
+    void CShipManager::UpdateShipName(sba::CSpaceship& a_rShip, std::string& a_rOldShipName)
+    {
+        std::string oldPath = this->PathFromName(a_rOldShipName.c_str());
+        std::string newPath = this->PathFromShip(a_rShip);
+        if (rename(std::string(oldPath).append(".ship").c_str(), std::string(newPath).append(".ship").c_str()) != 0)
+        {
+            printf("cant rename ship bro");
+        }
+        if (rename(std::string(oldPath).append(".dds").c_str(), std::string(newPath).append(".dds").c_str()) != 0)
+        {
+            printf("cant rename dds bro");
+        }
+
+        for (std::vector<std::pair<std::string, PuRe_Sprite*>>::iterator it = this->m_Sprites.begin(); it != this->m_Sprites.end(); ++it)
+        {
+            if ((*it).first.compare(oldPath) == 0)
+            {
+                it->first = newPath;
+                break;
+            }
+        }
+        //!!!#####!!!
+        //###Texture Path in PuRe_Sprite in m_Sprites.second is now invalid. Currently doesnt matter. When someone uses that info, he needs to reload the sprite here!
+        //!!!#####!!!
+    }
+
+    // **************************************************************************
+    // **************************************************************************
+    void CShipManager::BatchRenderShip(const sba::CSpaceship& a_rShip) const
+    {
+        std::string spritePath = std::string("../../render/SpacebrickArena_").append(a_rShip.GetName() + "_");
+        PuRe_Sprite* sprite;
+        Editor::CCamera* camera;
+        for (int y = -20; y < 20; y += 20)
+        {
+            for (int x = 0; x < 360; x += 40)
+            {
+                //Path
+                std::string path = std::string(spritePath).append(std::to_string(y).append("_") + std::to_string(x));
+                
+                //Setup Camera
+                camera = new Editor::CCamera(PuRe_Vector2F(3840, 2160), PuRe_Camera_Perspective, 0);
+                camera->Initialize(PuRe_Vector3F((float)y, (float)x, 0), PuRe_Vector3F(0, 0, 7.5f));
+                camera->Update(sba_Application->GetGraphics(), sba_Application->GetWindow(), sba_Application->GetTimer(), true);
+                
+                //Render
+                sprite = this->GetSpriteFromShip(a_rShip, true, camera);
+                //Save
+                sprite->GetTexture()->SaveTextureToFile(path.append(".dds").c_str());
+
+                //Delete
+                delete sprite;
+                delete camera;
+                
+                printf("Rendered %s\n", path.c_str());
+            }
+        }
+    }
+
+    // **************************************************************************
+    // **************************************************************************
+    PuRe_Sprite* CShipManager::GetSpriteFromShip(const sba::CSpaceship& a_rShip, bool a_Big, Editor::CCamera* a_pCamera) const
+    {
         struct local
         {
             static void SetRes(int x, int y)
@@ -255,45 +316,27 @@ namespace sba
                 }
             }
         };
-#ifdef EDITOR_DEV
-        local::SetRes(3840, 2160);
-#else
-        local::SetRes(960, 540);
-#endif
+        if (a_Big)
+        {
+            local::SetRes(3840, 2160);
+        }
+        else
+        {
+            local::SetRes(960, 540);
+        }
         sba_BrickManager->RebuildRenderInstances();
-        Editor::CEditorScene::PreRender(this->m_pDirectionalLight, this->m_pDirectionalLightMaterial,false);
+        Editor::CEditorScene::PreRender(this->m_pDirectionalLight, this->m_pDirectionalLightMaterial, false);
         sba_BrickManager->Render();
-        Editor::CEditorScene::PostRender(this->m_pCamera, nullptr, nullptr, this->m_pPostMaterial);
+        if (a_Big)
+        {
+            Editor::CEditorScene::PostRender(a_pCamera, nullptr, nullptr, this->m_pPostMaterial);
+        }
+        else
+        {
+            Editor::CEditorScene::PostRender(this->m_pCamera, nullptr, nullptr, this->m_pPostMaterial);
+        }
         PuRe_Sprite* sprite = new PuRe_Sprite(sba_Application->GetGraphics(), sba_Renderer->GetResult(), true);
         local::SetRes(1920, 1080);
         return sprite;
-    }
-
-    // **************************************************************************
-    // **************************************************************************
-    void CShipManager::UpdateShipName(sba::CSpaceship& a_rShip, std::string& a_rOldShipName)
-    {
-        std::string oldPath = this->PathFromName(a_rOldShipName.c_str());
-        std::string newPath = this->PathFromShip(a_rShip);
-        if (rename(std::string(oldPath).append(".ship").c_str(), std::string(newPath).append(".ship").c_str()) != 0)
-        {
-            printf("cant rename ship bro");
-        }
-        if (rename(std::string(oldPath).append(".dds").c_str(), std::string(newPath).append(".dds").c_str()) != 0)
-        {
-            printf("cant rename dds bro");
-        }
-        
-        for (std::vector<std::pair<std::string, PuRe_Sprite*>>::iterator it = this->m_Sprites.begin(); it != this->m_Sprites.end(); ++it)
-        {
-            if ((*it).first.compare(oldPath) == 0)
-            {
-                it->first = newPath;
-                break;
-            }
-        }
-        //!!!#####!!!
-        //###Texture Path in PuRe_Sprite in m_Sprites.second is now invalid. Currently doesnt matter. When someone uses that info, he needs to reload the sprite here!
-        //!!!#####!!!
     }
 }
