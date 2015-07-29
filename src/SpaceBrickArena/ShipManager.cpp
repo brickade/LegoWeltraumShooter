@@ -263,23 +263,51 @@ namespace sba
     // **************************************************************************
     void CShipManager::BatchRenderShip(const sba::CSpaceship& a_rShip) const
     {
-        std::string spritePath = std::string("../../render/SpacebrickArena_").append(a_rShip.GetName() + "_");
+        struct local
+        {
+            static void SetRes(int x, int y)
+            {
+                PuRe_Renderer& renderer = *sba_Renderer;
+                PuRe_Vector2I size = PuRe_Vector2I(x, y);
+                sba_Application->GetGraphics()->ChangeResolution(size);
+
+                renderer.DeleteTargets();
+                for (int i = 0; i < 3; i++)
+                {
+                    renderer.AddTarget(size);
+                }
+                if (true) //TODO: Muss hier aus Options wissen ob SSAO gesetzt ist
+                {
+                    renderer.SetSSAO(0, sba::Space::Instance()->m_SSAOMaterial, sba::Space::Instance()->m_pNoiseTexture);
+                    renderer.SetSSAO(1, sba::Space::Instance()->m_SSAOMaterial, sba::Space::Instance()->m_pNoiseTexture);
+                }
+            }
+        };
+        local::SetRes(3840, 2160);
+        sba_BrickManager->RebuildRenderInstances();
+
+        std::string spritePath = std::string("../render/SpacebrickArena_").append(a_rShip.GetName() + "_");
         PuRe_Sprite* sprite;
         Editor::CCamera* camera;
-        for (int y = -20; y < 20; y += 20)
+        int c = 0;
+        for (int y = -60; y <= 60; y += 20)
         {
-            for (int x = 0; x < 360; x += 40)
+            for (int x = 0; x <= 360; x += 20)
             {
                 //Path
-                std::string path = std::string(spritePath).append(std::to_string(y).append("_") + std::to_string(x));
+                std::string path = std::string(spritePath).append(std::to_string(c++) + "_" + std::to_string(y) + "_" + std::to_string(x));
                 
                 //Setup Camera
                 camera = new Editor::CCamera(PuRe_Vector2F(3840, 2160), PuRe_Camera_Perspective, 0);
-                camera->Initialize(PuRe_Vector3F((float)y, (float)x, 0), PuRe_Vector3F(0, 0, 7.5f));
+                camera->Initialize(PuRe_Vector3F((float)y, (float)x, 0), PuRe_Vector3F(0, 0, 3.0f));
                 camera->Update(sba_Application->GetGraphics(), sba_Application->GetWindow(), sba_Application->GetTimer(), true);
                 
                 //Render
-                sprite = this->GetSpriteFromShip(a_rShip, true, camera);
+                Editor::CEditorScene::PreRender(this->m_pDirectionalLight, this->m_pDirectionalLightMaterial, false);
+                sba_BrickManager->Render();
+                Editor::CEditorScene::PostRender(camera, nullptr, nullptr, this->m_pPostMaterial);
+                sprite = new PuRe_Sprite(sba_Application->GetGraphics(), sba_Renderer->GetResult(), true);
+
                 //Save
                 sprite->GetTexture()->SaveTextureToFile(path.append(".dds").c_str());
 
@@ -287,9 +315,10 @@ namespace sba
                 delete sprite;
                 delete camera;
                 
-                printf("Rendered %s\n", path.c_str());
+                printf("Rendered %i: %s\n", c, path.c_str());
             }
         }
+        local::SetRes(1920, 1080);
     }
 
     // **************************************************************************
