@@ -255,7 +255,11 @@ namespace sba
                 }
             }
         };
+#ifdef EDITOR_DEV
+        local::SetRes(3840, 2160);
+#else
         local::SetRes(960, 540);
+#endif
         sba_BrickManager->RebuildRenderInstances();
         Editor::CEditorScene::PreRender(this->m_pDirectionalLight, this->m_pDirectionalLightMaterial,false);
         sba_BrickManager->Render();

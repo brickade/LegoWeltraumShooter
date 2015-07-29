@@ -182,7 +182,7 @@ namespace sba
         this->m_pButtonMapping[Input::EButton::EditorFadeHold] =
         {
             Input::EGamepadButton::Pad_Y,
-            Input::EKeyboardButton::Ctrl
+            Input::EKeyboardButton::Shift
         };
         this->m_pButtonMapping[Input::EButton::EditorFadeSupervisor] =
         {
