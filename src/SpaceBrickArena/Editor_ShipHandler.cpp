@@ -67,9 +67,9 @@ namespace Editor
             {
                 sba_ShipManager->BatchRenderShip(*this->m_pCurrentSpaceship, 3840, 2160);
             }
-            else if (sba_Application->GetInput()->KeyPressed(PuRe_IInput::F10)) //QUHD
+            else if (sba_Application->GetInput()->KeyPressed(PuRe_IInput::F10)) //FUHD
             {
-                sba_ShipManager->BatchRenderShip(*this->m_pCurrentSpaceship, 15360, 8640);
+                sba_ShipManager->BatchRenderShip(*this->m_pCurrentSpaceship, 7680, 4320);
             }
 #endif
             if (sba_Input->ButtonPressed(sba_Button::EditorAddNewShip, this->m_playerIdx))

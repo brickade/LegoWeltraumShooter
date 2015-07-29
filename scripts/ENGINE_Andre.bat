@@ -23,4 +23,4 @@ xcopy "%ENGINE_PATH%\%folder%" ..\bin\x64\modules\ /q /y
 echo copied new stuff
 echo ---------------------------------
 
-pause
+::pause
