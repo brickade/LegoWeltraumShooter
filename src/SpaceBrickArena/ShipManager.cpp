@@ -261,7 +261,7 @@ namespace sba
 
     // **************************************************************************
     // **************************************************************************
-    void CShipManager::BatchRenderShip(const sba::CSpaceship& a_rShip) const
+    void CShipManager::BatchRenderShip(const sba::CSpaceship& a_rShip, int a_Width, int a_Height) const
     {
         struct local
         {
@@ -283,7 +283,7 @@ namespace sba
                 }
             }
         };
-        local::SetRes(3840, 2160);
+        local::SetRes(a_Width, a_Height);
         sba_BrickManager->RebuildRenderInstances();
 
         std::string spritePath = std::string("../render/SpacebrickArena_").append(a_rShip.GetName() + "_");
@@ -298,7 +298,7 @@ namespace sba
                 std::string path = std::string(spritePath).append(std::to_string(c++) + "_" + std::to_string(y) + "_" + std::to_string(x));
                 
                 //Setup Camera
-                camera = new Editor::CCamera(PuRe_Vector2F(3840, 2160), PuRe_Camera_Perspective, 0);
+                camera = new Editor::CCamera(PuRe_Vector2F((float)a_Width, (float)a_Height), PuRe_Camera_Perspective, 0);
                 camera->Initialize(PuRe_Vector3F((float)y, (float)x, 0), PuRe_Vector3F(0, 0, 3.0f));
                 camera->Update(sba_Application->GetGraphics(), sba_Application->GetWindow(), sba_Application->GetTimer(), true);
                 
@@ -323,7 +323,7 @@ namespace sba
 
     // **************************************************************************
     // **************************************************************************
-    PuRe_Sprite* CShipManager::GetSpriteFromShip(const sba::CSpaceship& a_rShip, bool a_Big, Editor::CCamera* a_pCamera) const
+    PuRe_Sprite* CShipManager::GetSpriteFromShip(const sba::CSpaceship& a_rShip) const
     {
         struct local
         {
@@ -345,25 +345,11 @@ namespace sba
                 }
             }
         };
-        if (a_Big)
-        {
-            local::SetRes(3840, 2160);
-        }
-        else
-        {
-            local::SetRes(960, 540);
-        }
+        local::SetRes(960, 540);
         sba_BrickManager->RebuildRenderInstances();
         Editor::CEditorScene::PreRender(this->m_pDirectionalLight, this->m_pDirectionalLightMaterial, false);
         sba_BrickManager->Render();
-        if (a_Big)
-        {
-            Editor::CEditorScene::PostRender(a_pCamera, nullptr, nullptr, this->m_pPostMaterial);
-        }
-        else
-        {
-            Editor::CEditorScene::PostRender(this->m_pCamera, nullptr, nullptr, this->m_pPostMaterial);
-        }
+        Editor::CEditorScene::PostRender(this->m_pCamera, nullptr, nullptr, this->m_pPostMaterial);
         PuRe_Sprite* sprite = new PuRe_Sprite(sba_Application->GetGraphics(), sba_Renderer->GetResult(), true);
         local::SetRes(1920, 1080);
         return sprite;

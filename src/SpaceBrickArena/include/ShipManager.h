@@ -63,7 +63,7 @@ namespace sba
 
         void UpdateShipName(sba::CSpaceship& a_rShip, std::string& a_rOldShipName); //Update Ship and sprite name on disk and path in m_Sprites
         
-        void BatchRenderShip(const sba::CSpaceship& a_rShip) const;
+        void BatchRenderShip(const sba::CSpaceship& a_rShip, int a_Width = 1920, int a_Height = 1080) const;
     private:
         const char* PathFromShip(sba::CSpaceship& a_rShip) const
         {
@@ -79,7 +79,7 @@ namespace sba
             return tmp->c_str();
         }
 
-        PuRe_Sprite* GetSpriteFromShip(const sba::CSpaceship& a_rShip, bool a_Big = false, Editor::CCamera* a_pCamera = nullptr) const;
+        PuRe_Sprite* GetSpriteFromShip(const sba::CSpaceship& a_rShip) const;
     };
 }
 

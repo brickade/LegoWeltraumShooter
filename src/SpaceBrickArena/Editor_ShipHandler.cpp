@@ -43,20 +43,33 @@ namespace Editor
         switch (this->m_State)
         {
         case ShipHandlerState::Select:
-        { //focus initialization throws error. Dumb compiler.
-            int focus = this->m_pNavigation->GetFocusedElementId();
-            this->m_pNavigation->Update(*sba_Application->GetTimer(), sba_Input->Direction(sba_Direction::Navigate, this->m_playerIdx), false);
-            if (this->m_pNavigation->GetFocusedElementId() != focus)
-            { //Load other ship
-                SAFE_DELETE(this->m_pCurrentSpaceship);
-                this->m_pCurrentSpaceship = sba_ShipManager->GetShip(this->m_pNavigation->GetFocusedElementId());
-                this->UpdateCurrentShipData();
-            }        
-        }
+            { //focus initialization throws error. Dumb compiler.
+                int focus = this->m_pNavigation->GetFocusedElementId();
+                this->m_pNavigation->Update(*sba_Application->GetTimer(), sba_Input->Direction(sba_Direction::Navigate, this->m_playerIdx), false);
+                if (this->m_pNavigation->GetFocusedElementId() != focus)
+                { //Load other ship
+                    SAFE_DELETE(this->m_pCurrentSpaceship);
+                    this->m_pCurrentSpaceship = sba_ShipManager->GetShip(this->m_pNavigation->GetFocusedElementId());
+                    this->UpdateCurrentShipData();
+                }        
+            }
 #ifdef EDITOR_DEV
-            if (sba_Application->GetInput()->KeyPressed(PuRe_IInput::F7))
+            //Batch Rendering
+            if (sba_Application->GetInput()->KeyPressed(PuRe_IInput::F7)) //qHD
             {
-                sba_ShipManager->BatchRenderShip(*this->m_pCurrentSpaceship);
+                sba_ShipManager->BatchRenderShip(*this->m_pCurrentSpaceship, 960, 540);
+            }
+            else if (sba_Application->GetInput()->KeyPressed(PuRe_IInput::F8)) //FHD
+            {
+                sba_ShipManager->BatchRenderShip(*this->m_pCurrentSpaceship, 1920, 1080);
+            }
+            else if (sba_Application->GetInput()->KeyPressed(PuRe_IInput::F9)) //UHD
+            {
+                sba_ShipManager->BatchRenderShip(*this->m_pCurrentSpaceship, 3840, 2160);
+            }
+            else if (sba_Application->GetInput()->KeyPressed(PuRe_IInput::F10)) //QUHD
+            {
+                sba_ShipManager->BatchRenderShip(*this->m_pCurrentSpaceship, 15360, 8640);
             }
 #endif
             if (sba_Input->ButtonPressed(sba_Button::EditorAddNewShip, this->m_playerIdx))

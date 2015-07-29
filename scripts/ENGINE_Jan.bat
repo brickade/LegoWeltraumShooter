@@ -9,9 +9,9 @@ set /p folder=Engine Folder: Brickade\PRO\Engine\
 if "%folder%"=="" exit
 echo ----------------------------------------------------------
 
-rd src\PuReEngine /q /s
-rd bin\Win32\modules /q /s
-rd bin\x64\modules /q /s
+rd ..\src\PuReEngine /q /s
+rd ..\bin\Win32\modules /q /s
+rd ..\bin\x64\modules /q /s
 echo deleted old shit
 echo ---------------------------------
 
