@@ -728,6 +728,9 @@ namespace sba
                             size = 0.0005f;
                         }
 
+                        PuRe_QuaternionF rotq = PuRe_QuaternionF(rot);
+                        rotation *= rotq;
+
                         sba_Renderer->Draw(1, false, this->m_pLockSprite, this->m_pSpriteMaterial, pos, rotation.GetMatrix(), PuRe_Vector3F(), PuRe_Vector3F(size, size, size), PuRe_Color(), PuRe_Vector2F(), PuRe_Vector2F(), camID);
                     }
                 }
