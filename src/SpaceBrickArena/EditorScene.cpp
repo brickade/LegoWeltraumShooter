@@ -60,6 +60,7 @@ namespace Editor
             //------------------------------
             if (sba_Input->ButtonPressed(sba_Button::NavigationSelect, this->m_PlayerIdx) && this->m_pShipHandler->GetCurrentState() == CShipHandler::ShipHandlerState::Select)
             {
+                this->m_pWorker->Resume(*this->m_pShipHandler);
                 this->m_State = EEditorState::EditShip;
                 break;
             }

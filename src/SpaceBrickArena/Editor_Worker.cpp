@@ -132,6 +132,27 @@ namespace Editor
             SAFE_DELETE(this->m_pCurrentBrick);
             this->m_pCurrentBrick = nullptr;
         }
+        //Clear History
+        this->m_pHistory->Clear();
+    }
+
+    // **************************************************************************
+    // **************************************************************************
+    void CWorker::Resume(CShipHandler& a_rShipHandler)
+    {
+        //Rebuild History
+        std::vector<TheBrick::CBrickInstance*>& bricks = a_rShipHandler.GetCurrentSpaceShip()->m_pBricks;
+        for (size_t i = 0; i < bricks.size(); i++)
+        {
+            TheBrick::CBrickInstance* brick = bricks[i];
+            //Add History step
+            SHistoryStep step;
+            step.BrickInstance = brick;
+            step.Brick = step.BrickInstance->m_pBrick;
+            step.Transform = brick->GetTransform();
+            step.Color = brick->m_Color;
+            this->m_pHistory->AddStep(step); 
+        }
     }
 
     // **************************************************************************
