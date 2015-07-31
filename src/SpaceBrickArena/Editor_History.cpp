@@ -68,10 +68,10 @@ namespace Editor
             step.DeleteBrick_Step = reinterpret_cast<SHistoryStep*>(a_pBrickInstance->m_UserData);
             if (a_AdhesiveBricks != nullptr)
             {
-                step.DeleteAdhesiveBricks_Steps.reserve(a_AdhesiveBricks->size());
+                step.DeleteAdhesiveBricks_Steps.reserve(a_AdhesiveBricks->size()); //Allocate at once not each time
                 for (size_t i = 0; i < a_AdhesiveBricks->size(); i++)
                 {
-                    step.DeleteAdhesiveBricks_Steps[i] = reinterpret_cast<SHistoryStep*>((*a_AdhesiveBricks)[i]->m_UserData);
+                    step.DeleteAdhesiveBricks_Steps.push_back(reinterpret_cast<SHistoryStep*>((*a_AdhesiveBricks)[i]->m_UserData));
                 }
             }
         }

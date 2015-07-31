@@ -10,6 +10,7 @@
 #include "TheBrick/DebugDraw.h"
 #include "include/Editor_Assistant.h"
 #include "include/Editor_BrickCategory.h"
+#include "include/DestructionManager.h"
 
 namespace Editor
 {
@@ -435,22 +436,69 @@ namespace Editor
         //Display brick to delete
         this->m_BrickToDelete.BrickInstance->m_Color = PuRe_Color(0.05f, 0.05f, 0.05f);
 
+        sba::CSpaceship* ship = a_rShipHandler.GetCurrentSpaceShip();
+        sba_Space->DestructionManager->BuildDestruction(ship, ship->m_pBricks.data(), ship->m_pBricks.size());
+
         /*BrickToDeleteCache brickToDelete;
         brickToDelete.BrickInstance = hitBrick;
         this->m_AdhesiveBricksToDelete.push_back(brickToDelete);*/
 
-        //Traverse bricks from center brick with all bricks
-        
-        //Traverse bricks from center brick without brick to delete
-        
-        //Get adhesive bricks and store them
-        
+        if (this->m_BrickToDelete.BrickInstance == ship->m_pBricks[0])
+        { //BrickToDelete is center brick = no need to detect adhesive bricks
+            for (auto brick : ship->m_pBricks)
+            {
+                if (brick == ship->m_pBricks[0])
+                {
+                    continue;
+                }
+                //Build adhesive brick storage
+                BrickToDeleteCache cache;
+                cache.BrickInstance = brick;
+                cache.Color = brick->m_Color;
+                this->m_AdhesiveBricksToDelete.push_back(cache);
+                //Display adhesive bricks
+                brick->m_Color = PuRe_Color(0.05f, 0.05f, 0.05f);
+            }
+            return;
+        }
 
-        //Display adhesive bricks
-        for (std::vector<BrickToDeleteCache>::iterator it = this->m_AdhesiveBricksToDelete.begin(); it != this->m_AdhesiveBricksToDelete.end(); ++it)
+        //Cut connections from BrickToDelete to other bricks so that BrickToDelete is a dead end
+        this->m_BrickToDelete.BrickInstance->GetDestructionInstance()->numConnections = 0;;
+
+        //Start from center brick and traverse all bricks
+        TraverseBricks(*ship->m_pBricks[0]->GetDestructionInstance());
+
+        //Collect adhesive bricks
+        for (auto brick : ship->m_pBricks)
         {
-            it->Color = it->BrickInstance->m_Color;
-            it->BrickInstance->m_Color = PuRe_Color(0.05f, 0.05f, 0.05f);
+            if (brick->GetDestructionInstance()->tick != 0)
+            {
+                //Build adhesive brick storage
+                BrickToDeleteCache cache;
+                cache.BrickInstance = brick;
+                cache.Color = brick->m_Color;
+                this->m_AdhesiveBricksToDelete.push_back(cache);
+                //Display adhesive bricks
+                brick->m_Color = PuRe_Color(0.05f, 0.05f, 0.05f);
+            }
+        }
+
+        //Reset data generated for destruction (resets ticks)
+        sba_Space->DestructionManager->Reset();
+    }
+
+    // **************************************************************************
+    // **************************************************************************
+    void CWorker::TraverseBricks(sba::SBrickDestruction& a_rStartBrickDestruction)
+    {
+        if (a_rStartBrickDestruction.tick == 0)
+        {
+            return;
+        }
+        a_rStartBrickDestruction.tick = 0;
+        for (unsigned int i = 0; i < a_rStartBrickDestruction.numConnections; i++)
+        {
+            TraverseBricks(*a_rStartBrickDestruction.connections[i].other); //Recursion
         }
     }
 

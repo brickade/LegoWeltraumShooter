@@ -85,12 +85,14 @@ namespace Editor
         void UpdateRotation();
         void UpdateHeight(CShipHandler& a_rShipHandler);
         void UpdateDeleteHeight(CShipHandler& a_rShipHandler);
+        static void TraverseBricks(sba::SBrickDestruction& a_rStartBrickDestruction);
         void ApplyToCurrentBrick();
         void UpdatePlacement(CShipHandler& a_rShipHandler);
         void UpdateDelete(CShipHandler& a_rShipHandler);
         void UpdateMiscellaneous(CShipHandler& a_rShipHandler, TheBrick::CBrick* a_pCurrentBrick);
 
         void RestoreAdhesiveBricksToDelete();
+        
     };
 }
 
