@@ -79,6 +79,10 @@ namespace Menu
                     //create first player
                 this->m_Displayed = Lobby;
                 sba_Space->CreatePlayer(0, window);
+
+				//bot
+				//sba_Space->CreatePlayer(1, window);
+
                 break;
             case 3: //Multiplayer
                 this->m_Displayed = Network;

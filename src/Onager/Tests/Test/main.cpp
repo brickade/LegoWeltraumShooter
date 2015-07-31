@@ -8,6 +8,7 @@
 #include "ClientTest.h"
 #include "ShapeTest.h"
 #include "DestructionTest.h"
+#include "ForceTest.h"
 #include "myMath.h"
 
 #undef main
@@ -15,7 +16,7 @@
 int main()
 {
 
-	Test* test = new Test();
+	Test* test = new ForceTest();
 	test->init();
 
 	test->run();

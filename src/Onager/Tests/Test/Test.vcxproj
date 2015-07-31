@@ -115,6 +115,7 @@
     <ClInclude Include="DestructionTest.h" />
     <ClInclude Include="Draw.h" />
     <ClInclude Include="FilterTest.h" />
+    <ClInclude Include="forceTest.h" />
     <ClInclude Include="HierarchieTest.h" />
     <ClInclude Include="NetworkTest.h" />
     <ClInclude Include="Player.h" />
