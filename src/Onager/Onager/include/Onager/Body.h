@@ -36,6 +36,7 @@ namespace ong
 		Transform transform;
 		vec3 linearMomentum;
 		vec3 angularMomentum;
+		bool continuousPhysics;
 	};
 
 
@@ -54,6 +55,7 @@ namespace ong
 	{
 	public:
 
+
 		//	--MANIPULATORS--
 
 		void calculateMassData();
@@ -66,8 +68,10 @@ namespace ong
 
 		void setPosition(const vec3& position);
 		void setOrientation(const Quaternion& orientation);
-
+		
 		void setUserData(void* pUserData);
+
+		
 
 		void applyImpulse(const vec3& impulse);
 		void applyImpulse(const vec3& impulse, const vec3& point);
@@ -93,7 +97,10 @@ namespace ong
 		bool queryCollider(Collider* collider, ColliderQueryCallBack callback);
 		bool queryShape(ShapePtr shape, const Transform& transform);
 		bool queryShape(ShapePtr shape, const Transform& transform, ShapeQueryCallBack callback, void* userData);
+		
+		vec3 closestPoint(const vec3& p) const;
 
+		AABB getMovingAABB();
 		const AABB& getAABB();
 
 		Collider* getCollider();
@@ -110,6 +117,8 @@ namespace ong
 		const vec3& getLocalCenter() const;
 
 		const Quaternion& getOrientation() const;
+		
+		bool getContinuousPhysics() const;
 
 		vec3 getLinearMomentum();
 		vec3 getRelativeLinearMomentum();
@@ -145,6 +154,9 @@ namespace ong
 		void setPrevious(Body* body);
 
 		void setIndex(int idx);
+		void setCpIndex(int idx);
+
+		void setContinuousPhysics(bool useCCD);
 
 		void clearContacts();
 		void addContact(ContactIter* iter);
@@ -159,18 +171,21 @@ namespace ong
 		//	--ACCESSORS--
 
 		int getIndex();
-
+		int getCpIndex();
+		
 	private:
 		enum
 		{
-			DYNAMIC = 1,
-			STATIC = 2,
-			TYPE = DYNAMIC + STATIC,
+			DYNAMIC = 0x1,
+			STATIC = 0x2,
+			TYPE = DYNAMIC | STATIC,
+			CP = 0x4,
 		};
 
 		World* m_pWorld;
 
 		int m_index;
+		int m_cpIndex;
 
 		int m_flags;
 
@@ -184,7 +199,9 @@ namespace ong
 		ContactIter* m_pContacts;
 
 		const ProxyID* m_proxyID;
+		
 		AABB m_aabb;
+		AABB m_cpAABB;
 
 		void* m_pUserData;
 
@@ -193,11 +210,21 @@ namespace ong
 	};
 
 
+	bool overlap(Body* a, Body* b, const Transform& transformA = { vec3(0, 0, 0), Quaternion(vec3(0, 0, 0), 1) },
+		const Transform& transformB = { vec3(0, 0, 0), Quaternion(vec3(0, 0, 0), 1) });
 
+
+	// inlines
 	inline void Body::setIndex(int idx)
 	{
 		m_index = idx;
 	}
+
+	inline void Body::setCpIndex(int idx)
+	{
+		m_cpIndex = idx;
+	}
+
 
 	inline void Body::setProxyID(const ProxyID* idx)
 	{
@@ -221,10 +248,23 @@ namespace ong
 		m_pUserData = pUserData;
 	}
 
+	inline void Body::setContinuousPhysics(bool useCCD)
+	{
+		if (useCCD)
+			m_flags |= CP;
+		else
+			m_flags &= ~CP;
+	}
 
 	inline int Body::getIndex()
 	{
 		return m_index;
+	}
+
+
+	inline int Body::getCpIndex()
+	{
+		return m_cpIndex;
 	}
 
 
@@ -272,6 +312,11 @@ namespace ong
 	inline BodyType::Type Body::getType()
 	{
 		return (BodyType::Type)(m_flags & TYPE);
+	}
+
+	inline bool Body::getContinuousPhysics() const
+	{
+		return m_flags & CP;
 	}
 
 	inline int Body::getNumContacts()

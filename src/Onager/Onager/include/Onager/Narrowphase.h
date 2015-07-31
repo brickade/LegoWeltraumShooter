@@ -25,15 +25,17 @@ namespace ong
 		ContactManager();
 
 		void generateContacts(Pair* pairs, int numPairs, int maxContacts);
+		void generateContact(Pair* pair);
+		void updateContact(Contact* contact);
 		void removeBody(Body* body);
 		void removeContact(Contact* pContact);
 
 		Contact** getContacts(int* numContacts);
-
+		Contact** getCpContacts;
 
 	private:
 		void collide(Body* a, Body* b);
-
+		
 		void collide(BVTree* tree1, BVTree* tree2, BVTree* a, BVTree* b, const vec3& t, const mat3x3& rot);
 		void collide(BVTree* tree, BVTree* a, Collider* b, const vec3& t, const mat3x3& rot);
 		void collide(Collider* c1, Collider* c2);
@@ -42,6 +44,7 @@ namespace ong
 
 		uint32 m_tick;
 		std::vector<Contact*> m_contacts;
+		std::vector<Contact*> m_cpContacts;
 		Allocator<Contact> m_contactAllocator;
 		Allocator<ContactIter> m_contactIterAllocator;
 	};

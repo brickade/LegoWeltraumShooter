@@ -29,6 +29,14 @@ namespace ong
 		float invM;
 	};
 
+	struct ContinuousState
+	{
+		int bodyIdx;
+		vec3 p0;
+		vec3 p1; // movement in this frame
+		float t;
+	};
+
 	struct WorldContext
 	{
 		PositionState* r;

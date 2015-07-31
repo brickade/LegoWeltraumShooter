@@ -30,7 +30,7 @@ namespace ong
 
 	const ProxyID* HGrid::addBody(Body* pBody)
 	{
-		AABB aabb = pBody->getAABB();
+		AABB aabb = pBody->getMovingAABB();
 		ProxyID* id = m_proxyIDAllocator();
 
 		Object object;
@@ -88,7 +88,7 @@ namespace ong
 
 	void HGrid::updateBody(const ProxyID* pProxyID)
 	{
-		AABB aabb = pProxyID->pBody->getAABB();
+		AABB aabb = pProxyID->pBody->getMovingAABB();
 
 		Object object = m_objectBucket[pProxyID->bucket][pProxyID->idx];
 
@@ -230,7 +230,7 @@ namespace ong
 									Body* a = obj.id->pBody;
 									Body* b = obj2.id->pBody;
 
-									if (overlap(&a->getAABB(), &b->getAABB()))
+									if (overlap(&a->getMovingAABB(), &b->getMovingAABB()))
 									{
 										if (a->getType() == BodyType::Static && b->getType() == BodyType::Static)
 											continue;
@@ -254,6 +254,7 @@ namespace ong
 
 		return numPairs;
 	}
+
 
 
 	void HGrid::removeFromBucket(const ProxyID* id)
