@@ -298,36 +298,34 @@ namespace Menu
         Position.Y = 1080.0f;
         Position.Y -= 150.0f;
 
-        PuRe_Color color = PuRe_Color();
+        PuRe_Color color = PuRe_Color(1.0f,1.0f,1.0f);
+        PuRe_Vector3F highlight = Position;
+        highlight.X += 175.0f;
 
         if (this->m_pNavigation->GetFocusedElementId() == 0)
-            color = PuRe_Color(1.0f, 0.0f, 0.0f);
-        else
-            color = PuRe_Color(1.0f, 1.0f, 1.0f);
+            a_pSpriteReader->Draw(1, a_pRenderer, "auswahl_highlight_menue", a_pFontMaterial, highlight, PuRe_Vector3F(), -1, PuRe_Vector2F(0.5f, 0.5f));
         a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "INTERNET", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(36.0f, 36.0f, 0.0f), 40.0f, color);
 
         Position.X += 400.0f;
+        highlight.X += 340.0f;
 
         if (this->m_pNavigation->GetFocusedElementId() == 1)
-            color = PuRe_Color(1.0f, 0.0f, 0.0f);
-        else
-            color = PuRe_Color(1.0f, 1.0f, 1.0f);
+            a_pSpriteReader->Draw(1, a_pRenderer, "auswahl_highlight_menue", a_pFontMaterial, highlight, PuRe_Vector3F(), -1, PuRe_Vector2F(0.3f, 0.5f));
         a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "LAN", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(36.0f, 36.0f, 0.0f), 40.0f, color);
         Position.X += 300.0f;
+        highlight.X += 410.0f;
 
         if (this->m_pNavigation->GetFocusedElementId() == 2)
-            color = PuRe_Color(1.0f, 0.0f, 0.0f);
-        else
-            color = PuRe_Color(1.0f, 1.0f, 1.0f);
+            a_pSpriteReader->Draw(1, a_pRenderer, "auswahl_highlight_menue", a_pFontMaterial, highlight, PuRe_Vector3F(), -1, PuRe_Vector2F(0.8f, 0.5f));
         a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "HOST A GAME", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(36.0f, 36.0f, 0.0f), 40.0f, color);
 
-
-        if (this->m_pNavigation->GetFocusedElementId() == 3)
-            color = PuRe_Color(1.0f, 0.0f, 0.0f);
-        else
-            color = PuRe_Color(1.0f, 1.0f, 1.0f);
         Position.Y = 100.0f;
         Position.X = 100.0f;
+        highlight = Position;
+        highlight.X += 125.0f;
+
+        if (this->m_pNavigation->GetFocusedElementId() == 3)
+            a_pSpriteReader->Draw(1, a_pRenderer, "auswahl_highlight_menue", a_pFontMaterial, highlight, PuRe_Vector3F(), -1, PuRe_Vector2F(0.5f, 0.5f));
         a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "BACK", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(36.0f, 36.0f, 0.0f), 40.0f, color);
         
         std::string text;
@@ -336,69 +334,63 @@ namespace Menu
         case 0:
             Position.Y = 1080.0f - 380.0f;
             Position.X = 400.0f;
+            highlight = Position;
+            highlight.X += 70.0f;
             if (this->m_Focus&&this->m_Focus2)
-                color = PuRe_Color(1.0f, 0.0f, 0.0f);
-            else
-                color = PuRe_Color(1.0f, 1.0f, 1.0f);
+                a_pSpriteReader->Draw(1, a_pRenderer, "auswahl_highlight_menue", a_pFontMaterial, highlight, PuRe_Vector3F(), -1, PuRe_Vector2F(0.2f, 0.5f));
             text = "IP: " + sba_Network->m_IP;
             a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, text.c_str(), Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(24.0f, 24.0f, 0.0f), 30.0f, color);
             Position.X += 500.0f;
+            highlight.X += 510.0f;
             text = "Port: " + sba_Network->m_Port;
             if (this->m_Focus&&!this->m_Focus2)
-                color = PuRe_Color(1.0f, 0.0f, 0.0f);
-            else
-                color = PuRe_Color(1.0f, 1.0f, 1.0f);
+                a_pSpriteReader->Draw(1, a_pRenderer, "auswahl_highlight_menue", a_pFontMaterial, highlight, PuRe_Vector3F(), -1, PuRe_Vector2F(0.2f, 0.5f));
             a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, text.c_str(), Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(24.0f, 24.0f, 0.0f), 30.0f, color);
             break;
         case 1: //Lan
-            Position.Y = 1080.0f - 180.0f;
-            Position.X = 200.0f;
-            color = PuRe_Color(1.0f, 1.0f, 1.0f);
+            Position.Y = 1080.0f - 230.0f;
+            Position.X = 250.0f;
             a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "NAME", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(24.0f, 24.0f, 0.0f), 30.0f, color);
-            Position.X += 400.0f;
-            color = PuRe_Color(1.0f, 1.0f, 1.0f);
+            Position.X += 350.0f;
             a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "IP", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(24.0f, 24.0f, 0.0f), 30.0f, color);
-            Position.X += 400.0f;
-            color = PuRe_Color(1.0f, 1.0f, 1.0f);
+            Position.X += 350.0f;
             a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "PORT", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(24.0f, 24.0f, 0.0f), 30.0f, color);
-            Position.X += 400.0f;
-            color = PuRe_Color(1.0f, 1.0f, 1.0f);
+            Position.X += 350.0f;
             a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "PLAYER", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(24.0f, 24.0f, 0.0f), 30.0f, color);
 
             for (unsigned int i = 0; i < this->m_Servers.size(); i++)
             {
-                if (this->m_Focus&&this->m_Server == i)
-                    color = PuRe_Color(1.0f, 0.0f, 0.0f);
-                else
-                    color = PuRe_Color(1.0f, 1.0f, 1.0f);
                 Position.Y -= 40.0f;
-                Position.X = 200.0f;
+                Position.X = 250.0f;
+                highlight = Position;
+                highlight.X += 650.0f;
+                if (this->m_Focus&&this->m_Server == i)
+                    a_pSpriteReader->Draw(1, a_pRenderer, "auswahl_highlight_menue", a_pFontMaterial, highlight, PuRe_Vector3F(), -1, PuRe_Vector2F(1.5f, 0.5f));
                 a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, this->m_Servers[i].Name, Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(24.0f, 24.0f, 0.0f), 30.0f, color);
-                Position.X += 400.0f;
+                Position.X += 350.0f;
                 a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, this->m_Servers[i].IP, Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(24.0f, 24.0f, 0.0f), 30.0f, color);
-                Position.X += 400.0f;
+                Position.X += 350.0f;
                 a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, this->m_Servers[i].Port, Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(24.0f, 24.0f, 0.0f), 30.0f, color);
-                Position.X += 400.0f;
+                Position.X += 350.0f;
                 a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, std::to_string(this->m_Servers[i].Players), Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(24.0f, 24.0f, 0.0f), 30.0f, color);
             }
             break;
         case 2: //Host
             Position.Y = 1080.0f - 380.0f;
             Position.X = 400.0f;
+            highlight = Position;
+            highlight.X += 90.0f;
             if (this->m_Focus&&this->m_Focus2)
-                color = PuRe_Color(1.0f, 0.0f, 0.0f);
-            else
-                color = PuRe_Color(1.0f, 1.0f, 1.0f);
+                a_pSpriteReader->Draw(1, a_pRenderer, "auswahl_highlight_menue", a_pFontMaterial, highlight, PuRe_Vector3F(), -1, PuRe_Vector2F(0.2f, 0.5f));
             text = "Name: ";
             a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, text.c_str(), Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(24.0f, 24.0f, 0.0f), 30.0f, color);
             Position.X += text.length()*26.0f; 
             a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, sba_Network->m_Name, Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(22.0f, 22.0f, 0.0f), 30.0f, color);
             Position.X += 500.0f;
+            highlight.X += 620.0f;
             text = "Port: " + sba_Network->m_Port;
             if (this->m_Focus&&!this->m_Focus2)
-                color = PuRe_Color(1.0f, 0.0f, 0.0f);
-            else
-                color = PuRe_Color(1.0f, 1.0f, 1.0f);
+                a_pSpriteReader->Draw(1, a_pRenderer, "auswahl_highlight_menue", a_pFontMaterial, highlight, PuRe_Vector3F(), -1, PuRe_Vector2F(0.2f, 0.5f));
             a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, text.c_str(), Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(24.0f, 24.0f, 0.0f), 30.0f, color);
             break;
         }

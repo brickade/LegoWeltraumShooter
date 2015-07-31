@@ -43,7 +43,7 @@ namespace sba
 
         case TheBrick::Rocket: //Rocket
             sound = "torpedo";
-            this->m_Damage = 25;
+            this->m_Damage = 5;
             break;
 
         case TheBrick::Torpedo: //Torpedo

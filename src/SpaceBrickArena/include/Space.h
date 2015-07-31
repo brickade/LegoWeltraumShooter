@@ -16,6 +16,7 @@
 #include "INIReader.h"
 #include "Player.h"
 #include "NetworkHandler.h"
+#include "SpriteReader.h"
 #include "GameMap.h"
 #include "DestructionManager.h"
 
@@ -56,6 +57,7 @@ namespace sba
         PuRe_IMaterial* m_pSkyBoxMaterial;
         PuRe_Sprite* m_pNoiseTexture;
         PuRe_SoundPlayer* m_pSoundPlayer;
+        CSpriteReader* m_pButtonSprite;
         std::vector<SPlayer*> m_Players;
         CNetworkHandler* m_pNetworkhandler;
         CGameMap* m_pMap;
@@ -104,6 +106,7 @@ namespace sba
 #define sba_SkyBoxMaterial sba::Space::Instance()->m_pSkyBoxMaterial
 #define sba_Network sba::Space::Instance()->m_pNetworkhandler
 #define sba_Options sba::Space::Instance()->m_pIniReader
+#define sba_Buttons sba::Space::Instance()->m_pButtonSprite
 #define sba_Map sba::Space::Instance()->m_pMap
 #define sba_Controls sba::Space::Instance()->m_Controls
 

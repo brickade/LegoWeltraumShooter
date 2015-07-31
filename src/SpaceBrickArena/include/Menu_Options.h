@@ -20,6 +20,7 @@ namespace Menu
         bool m_Focus;
         bool m_Switched;
         bool m_SSAO;
+        float m_Music,m_Sound;
         PuRe_DisplaySetting m_DMode;
         char m_Head;
     public:

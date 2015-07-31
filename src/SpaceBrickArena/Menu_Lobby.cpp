@@ -1001,10 +1001,10 @@ namespace Menu
         if (this->m_pNavigation->GetFocusedElementId() == 1&&!this->m_Focus)
             a_pSpriteReader->Draw(1, a_pRenderer, "auswahl_highlight_menue", a_pFontMaterial, highlight, PuRe_Vector3F(), -1, PuRe_Vector2F(0.5f, 0.5f));
         a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "MAP: ", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(36.0f, 36.0f, 0.0f), 40.0f, color);
-        Position.X += 200.0f;
+        Position.X += 300.0f;
         if (this->m_pNavigation->GetFocusedElementId() == 1 && this->m_Focus)
         {
-            highlight.X += 200.0f;
+            highlight.X += 300.0f;
             a_pSpriteReader->Draw(1, a_pRenderer, "auswahl_highlight_menue", a_pFontMaterial, highlight, PuRe_Vector3F(), -1, PuRe_Vector2F(0.5f, 0.5f));
         }
         a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, sba_Map->GetName().c_str(), Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(36.0f, 36.0f, 0.0f), 40.0f, color);
@@ -1012,7 +1012,7 @@ namespace Menu
 
         if (sba_Network->IsConnected())
         {
-            Position.X -= 200.0f;
+            Position.X -= 300.0f;
             Position.Y -= 100.0f;
             a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "IP: " + sba_Network->m_IP +":" + sba_Network->m_Port, Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(36.0f, 36.0f, 0.0f), 40.0f, color);
         }

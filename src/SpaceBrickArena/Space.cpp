@@ -43,7 +43,7 @@ namespace sba
             SAFE_DELETE(this->m_Players[i]->Ship);
             SAFE_DELETE(this->m_Players[i]);
         }
-        //this->m_Players.clear(); //Why? Stack wird eh abgeraeumt
+        SAFE_DELETE(this->m_pButtonSprite);
         SAFE_DELETE(this->m_pSkybox);
         SAFE_DELETE(this->m_pSkyBoxMaterial);
         SAFE_DELETE(this->m_pFinalMaterial);
@@ -87,6 +87,7 @@ namespace sba
         this->SpriteMaterial = a_pGraphics.LoadMaterial("../data/effects/sprite/default");
         this->m_pFinalMaterial = a_pGraphics.LoadMaterial("../data/effects/Final/default");
         this->m_pSkyBoxMaterial = a_pGraphics.LoadMaterial("../data/effects/skybox/default");
+        this->m_pButtonSprite = new CSpriteReader(&a_pGraphics, "../data/textures/ui/buttons.png", "../data/textures/ui/buttons.txt");
         sba_SkyBox = new PuRe_SkyBox(&a_pGraphics, sba_Map->GetSkybox());
         sba_SkyBoxName = sba_Map->GetSkybox();
 

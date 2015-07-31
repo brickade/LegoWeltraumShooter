@@ -229,24 +229,44 @@ namespace sba
             Input::EGamepadButton::Pad_B,
             Input::EKeyboardButton::Backspace
         };
-        this->m_pButtonMapping[Input::EButton::GameShootLaser] =
+        this->m_pButtonMapping[Input::EButton::GameShootLaser1] =
         {
             Input::EGamepadButton::Pad_Y,
             Input::EKeyboardButton::I
         };
-        this->m_pButtonMapping[Input::EButton::GameShootMine] =
+        this->m_pButtonMapping[Input::EButton::GameShootLaser2] =
+        {
+            Input::EGamepadButton::DPAD_Up,
+            Input::EKeyboardButton::I
+        };
+        this->m_pButtonMapping[Input::EButton::GameShootMine1] =
         {
             Input::EGamepadButton::Pad_X,
             Input::EKeyboardButton::J
         };
-        this->m_pButtonMapping[Input::EButton::GameShootRocket] =
+        this->m_pButtonMapping[Input::EButton::GameShootMine2] =
+        {
+            Input::EGamepadButton::DPAD_Left,
+            Input::EKeyboardButton::J
+        };
+        this->m_pButtonMapping[Input::EButton::GameShootRocket1] =
         {
             Input::EGamepadButton::Pad_B,
             Input::EKeyboardButton::L
         };
-        this->m_pButtonMapping[Input::EButton::GameShootTorpedo] =
+        this->m_pButtonMapping[Input::EButton::GameShootRocket2] =
+        {
+            Input::EGamepadButton::DPAD_Right,
+            Input::EKeyboardButton::L
+        };
+        this->m_pButtonMapping[Input::EButton::GameShootTorpedo1] =
         {
             Input::EGamepadButton::Pad_A,
+            Input::EKeyboardButton::K
+        };
+        this->m_pButtonMapping[Input::EButton::GameShootTorpedo2] =
+        {
+            Input::EGamepadButton::DPAD_Down,
             Input::EKeyboardButton::K
         };
         this->m_pButtonMapping[Input::EButton::GameThrustB_1] =

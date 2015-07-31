@@ -23,10 +23,10 @@ namespace sba
         memset(&input, 0, sizeof(sba::SInputData));
 
         input.MG = sba_Input->Axis(Input::EAxis::Type::GameShootMG, a_PlayerIdx) > 0.0f;
-        input.Laser = sba_Input->ButtonIsPressed(Input::EButton::Type::GameShootLaser, a_PlayerIdx);
-        input.Rocket = sba_Input->ButtonIsPressed(Input::EButton::Type::GameShootRocket, a_PlayerIdx);
-        input.Torpedo = sba_Input->ButtonIsPressed(Input::EButton::Type::GameShootTorpedo, a_PlayerIdx);
-        input.Mine = sba_Input->ButtonIsPressed(Input::EButton::Type::GameShootMine, a_PlayerIdx);
+        input.Laser = sba_Input->ButtonIsPressed(Input::EButton::Type::GameShootLaser1, a_PlayerIdx) || sba_Input->ButtonIsPressed(Input::EButton::Type::GameShootLaser2, a_PlayerIdx);
+        input.Rocket = sba_Input->ButtonIsPressed(Input::EButton::Type::GameShootRocket1, a_PlayerIdx) || sba_Input->ButtonIsPressed(Input::EButton::Type::GameShootRocket2, a_PlayerIdx);
+        input.Torpedo = sba_Input->ButtonIsPressed(Input::EButton::Type::GameShootTorpedo1, a_PlayerIdx) || sba_Input->ButtonIsPressed(Input::EButton::Type::GameShootTorpedo2, a_PlayerIdx);
+        input.Mine = sba_Input->ButtonIsPressed(Input::EButton::Type::GameShootMine1, a_PlayerIdx) || sba_Input->ButtonIsPressed(Input::EButton::Type::GameShootMine2, a_PlayerIdx);
 
         PuRe_Vector2F Move;
         if (sba_Controls[a_PlayerIdx].Move == 1)
@@ -44,10 +44,8 @@ namespace sba
             Move.Y = -Move.Y;
         }
 
-        if (Move.X > 0.1f || Move.X < -0.1f)
-            input.MoveX = (char)(Move.X*100.0f);
-        if (Move.Y > 0.1f || Move.Y < -0.1f)
-            input.MoveY = -(char)(Move.Y*100.0f);
+        input.MoveX = (char)(Move.X*100.0f);
+        input.MoveY = -(char)(Move.Y*100.0f);
 
 
 
@@ -77,8 +75,7 @@ namespace sba
         else
             Spin = sba_Input->Axis(Input::EAxis::Type::GameSpin_2, a_PlayerIdx);
 
-        if (Spin < -0.1f || Spin > 0.1f)
-            input.Spin = -(char)(Spin*100.0f);
+        input.Spin = -(char)(Spin*100.0f);
 
         return input;
     }
@@ -168,7 +165,6 @@ namespace sba
             Move.X = a_Input->MoveX / 100.0f;
         if (a_Input->MoveY != 0)
             Move.Y = a_Input->MoveY / 100.0f;
-        if (Move.Length() > 0.1f)
             ship->Move(Move);
 
         if (a_Input->Spin != 0)
