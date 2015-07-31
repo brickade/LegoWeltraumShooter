@@ -69,8 +69,8 @@ namespace ong
 		//narrow
 
 
-		static const int MAX_HITS = 3;
-		static const float MIN_INTERVAL = 0.01f;
+		static const int MAX_HITS = 7;
+		static const float MIN_INTERVAL = 0.0001f;
 		int numHits = 1;
 		float maxT = t1;
 
@@ -119,6 +119,12 @@ namespace ong
 				//	t1 = t;
 				//}
 			}
+
+			if (!(numHits < MAX_HITS))
+				printf("hits!\n");
+			if (!((t1 - t0) > MIN_INTERVAL))
+				printf("interval!\n");
+
 		}
 
 		if (t1 >= maxT)

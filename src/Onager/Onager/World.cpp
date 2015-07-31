@@ -103,10 +103,6 @@ namespace ong
 			//narrowphase
 			m_contactManager.generateContacts(pairs, numPairs, 3 * numPairs);
 
-
-
-
-
 			//resolution	  
 			{
 				WorldContext context;
@@ -179,6 +175,9 @@ namespace ong
 				Pair** minPairs = new Pair*[numCPairs];
 				int numMinPairs = 0;
 				float minT = 1.0f;
+
+				static float TIME_OF_IMPACT_EPSILON = 0.01f;
+
 				// find minimum next impacts
 				for (int i = 0; i < numCPairs; ++i)
 				{
@@ -187,11 +186,46 @@ namespace ong
 					if (t <= t0 || t >= 1.0f)
 						continue;
 
+
+
+
 					if (t < minT)
 					{
-						numMinPairs = 1;
+						// check if any of the minpairs intersects also on new time
+						if (t < minT - TIME_OF_IMPACT_EPSILON)
+						{
+							for (int i = 0; i < numMinPairs; ++i)
+							{
+								vec3 v = vec3(0, 0, 0);
+								Body* a = minPairs[i]->A, *b = minPairs[i]->B;
+								if (a->getContinuousPhysics())
+									v += m_cp[a->getCpIndex()].p1 - m_cp[a->getCpIndex()].p0;
+								if (b->getContinuousPhysics())
+									v -= m_cp[b->getCpIndex()].p1 - m_cp[b->getCpIndex()].p0;
+
+								if (!overlap(a, b, Transform(t*v, Quaternion(vec3(0, 0, 0), 1))))
+								{
+									minPairs[i] = minPairs[--numMinPairs];
+								}
+							}
+						}
 						minT = t;
-						minPairs[0] = &cPairs[i];
+						minPairs[numMinPairs++] = &cPairs[i];
+					}
+					else if (t - TIME_OF_IMPACT_EPSILON < minT)
+					{
+						//check if smaller t is also valid time of impact
+						vec3 v = vec3(0, 0, 0);
+						Body* a = cPairs[i].A, *b = cPairs[i].B;
+						if (a->getContinuousPhysics())
+							v += m_cp[a->getCpIndex()].p1 - m_cp[a->getCpIndex()].p0;
+						if (b->getContinuousPhysics())
+							v -= m_cp[b->getCpIndex()].p1 - m_cp[b->getCpIndex()].p0;
+
+						if (overlap(a, b, Transform(t*v, Quaternion(vec3(0, 0, 0), 1))))
+						{
+							minPairs[numMinPairs++] = cPairs+i;
+						}
 					}
 					else if (t == minT)
 					{
@@ -203,7 +237,8 @@ namespace ong
 					break;
 
 				for (int i = 0; i < numMinPairs; ++i)
-				{				//advance body to time of impact
+				{	
+					//advance body to time of impact
 					if (minPairs[i]->A->getContinuousPhysics() && m_cp[minPairs[i]->A->getCpIndex()].t != minT)
 					{
 						advanceCpBody(this, minPairs[i]->A, minT);

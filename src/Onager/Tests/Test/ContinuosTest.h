@@ -62,7 +62,7 @@ public:
 		m_entities.push_back(new Entity(body, vec3(1, 0, 0)));
 
 		bDescr.linearMomentum = vec3(000.0f, 0.0f, -500.0f);
-		bDescr.transform.p = vec3(0.25f, 0.0f, 8.0f);
+		bDescr.transform.p = vec3(0.24f, 0.0f, 8.0f);
 		body = m_world->createBody(bDescr);
 		cDescr.shape = sphere;
 		body->addCollider(m_world->createCollider(cDescr));
