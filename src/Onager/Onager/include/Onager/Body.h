@@ -8,8 +8,6 @@
 
 #include <float.h>
 
-//DEBUG
-#include <vector>
 
 namespace ong
 {
@@ -57,9 +55,6 @@ namespace ong
 	{
 	public:
 
-
-		//DEBUG
-		std::vector<vec3> CP_POINTS;
 
 		//	--MANIPULATORS--
 

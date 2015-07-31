@@ -36,9 +36,7 @@ namespace ong
 		world->m_cp[cpIdx].t = t;
 		world->m_r[idx].p = world->m_cp[cpIdx].p0;
 
-		//DEBUG
-		body->CP_POINTS.push_back(world->m_cp[cpIdx].p0);
-		//printf("advance body %d to %f\n", body->getIndex(), t);
+
 	}
 
 
@@ -73,9 +71,6 @@ namespace ong
 		Body* b = m_pBody;
 		while (b != nullptr)
 		{
-			//DEBUG
-			b->CP_POINTS.clear();
-
 
 			b->calculateAABB();
 			m_hGrid.updateBody(b->getProxyID());
