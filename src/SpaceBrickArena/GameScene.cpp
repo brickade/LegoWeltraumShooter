@@ -59,7 +59,11 @@ namespace sba
         }
 
         if (sba_Controls[a_PlayerIdx].Thrust == 1)
+        {
             fThrust = sba_Input->Axis(Input::EAxis::Type::GameThrust_1, a_PlayerIdx);
+            if (sba_Input->ButtonIsPressed(Input::EButton::Type::GameThrustB_1, a_PlayerIdx))
+                fThrust -= 1.0f;
+        }
         else if (sba_Controls[a_PlayerIdx].Thrust == 1)
             fThrust = sba_Input->Axis(Input::EAxis::Type::GameThrust_2, a_PlayerIdx);
         else

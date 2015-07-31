@@ -85,6 +85,7 @@ namespace sba
             break;
         }
         sba_SoundPlayer->Update();
+        printf("FPS: %i\n", a_pApplication->GetTimer()->GetFPS());
         return 1;
      }
 

@@ -160,6 +160,7 @@ namespace sba
                 GameShootMine,
                 GameShootTorpedo,
                 GameThrust,
+                GameThrustB_1,
                 Exit,
                 LAST = Exit
             };

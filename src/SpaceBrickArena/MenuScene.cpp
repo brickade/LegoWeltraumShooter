@@ -32,7 +32,6 @@ namespace Menu
         if (sba_Options->GetValue("SSAO") == "On")
         {
             sba_Renderer->SetSSAO(0, sba_Space->m_SSAOMaterial, sba_Space->m_pNoiseTexture);
-            sba_Renderer->SetSSAO(1, sba_Space->m_SSAOMaterial, sba_Space->m_pNoiseTexture);
         }
 
         this->m_pSceneCamera = new PuRe_Camera(PuRe_Vector2F((float)1920, (float)1080), PuRe_CameraProjection::Perspective);
