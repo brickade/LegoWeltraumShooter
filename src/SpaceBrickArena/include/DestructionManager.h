@@ -30,7 +30,6 @@ namespace sba
 		float fulcrum;
 		float posY;
 		float baseCapacity;
-		//ong::uint8 numBlocking;
 	};
 
 	struct SJoint
@@ -54,19 +53,13 @@ namespace sba
 	struct SBrickDestruction
 	{
 		static const int MAX_CONNECTIONS = 32;
-		//static const int MAX_BLOCKING = 1;
 
 		TheBrick::CBrickInstance* brick;
 
-		unsigned int numConnections;
+		unsigned int numConnections = 0;
 		SConnection connections[MAX_CONNECTIONS];
 
-		//int numBlocking;
-		//SJoint* blocking[MAX_BLOCKING];
-
-		int tick;
-		int lastBroken;
-
+		int tick = -1;
 	};
 
 
@@ -77,7 +70,7 @@ namespace sba
 		friend bool setUpBlocking(ong::Collider*, void*);
 
 		static const float NUB_STRENGTH;
-
+	
 		struct SImpulse
 		{
 			SBrickDestruction* brick;
@@ -96,13 +89,16 @@ namespace sba
 		ong::Allocator<SBrickDestruction>* m_BrickDestruction;
 
 		ong::uint32 m_Tick;
-		ong::uint32 m_LastBrocken;
+		ong::int32 m_DestructionCounter;
 		std::vector<SImpulse> m_inpulses;
 
 		std::vector<SBrickDestruction*> m_Selection;
 		std::vector<SJoint*> m_Front;
 		
 	public:
+		static const int DESTRUCTION_COOLDOWN = 50;
+
+		
 		CDestructionManager();
 
 		void BuildDestruction(CDestructibleObject* a_Object, TheBrick::CBrickInstance** a_Bricks, int a_NumBricks);
@@ -110,6 +106,9 @@ namespace sba
 
 		void Update();
 		void Reset();
+
+		int GetDestructionCounter() const;
+
 	};
 
 

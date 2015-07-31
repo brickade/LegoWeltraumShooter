@@ -106,34 +106,45 @@ namespace sba
     {
         this->m_lifeTime += a_DeltaTime;
 
+		int targetID;
 
         if (this->m_ID == TheBrick::Rocket)
         {
             ong::vec3 pos = this->m_pBody->getWorldCenter();
             ong::vec3 gpos = this->m_pBody->getWorldCenter();
-            float length = 999999999.0f;
+            float length = FLT_MAX;
             for (unsigned int i = 0; i < sba_Players.size(); i++)
             {
                 if (this->m_pOwner != sba_Players[i])
                 {
-                    ong::vec3 tpos = sba_Players[i]->Ship->m_pBody->getWorldCenter();
+					ong::vec3 tpos = sba_Players[i]->Ship->m_pBody->getWorldCenter() + a_DeltaTime * sba_Players[i]->Ship->m_pBody->getLinearVelocity();
                     float len = ong::lengthSq(pos - tpos);
                     if (len < length)
                     {
-                        len = length;
+                        length = len;
                         gpos = tpos;
+						targetID = i;
                     }
                 }
                     
             }
+
+
             //now points to the player
-            pos = ong::normalize(gpos - pos);
+            ong::vec3 forceDir = ong::normalize(gpos - pos);
             ong::vec3 forw = ong::rotate(ong::vec3(0, 0, 1), this->m_pBody->getOrientation());
+
+			// "accuracy" of rockets
+			static const float TORQUE_STRENGTH = 0.4f;
+			static const float DAMPING_FACTOR = 0.1f;
 
             float diff = ong::dot(forw,pos);
 
-            ong::vec3 force = (ong::cross(forw, pos));
-            this->m_pBody->applyTorque(force, a_DeltaTime);
+            ong::vec3 torque = (ong::cross(forw, TORQUE_STRENGTH * forceDir));
+
+			ong::vec3 damp = DAMPING_FACTOR * this->m_pBody->getAngularVelocity();
+
+			this->m_pBody->applyTorque(torque-damp, a_DeltaTime);
 
             ong::vec3 currVel = ong::rotate(this->m_pBody->getLinearVelocity(), ong::conjugate(this->m_pBody->getOrientation()));
             ong::vec3 targetVec = ong::vec3(0.0f, 0.0f, this->m_Speed);

@@ -279,7 +279,6 @@ namespace sba
                 if (true) //TODO: Muss hier aus Options wissen ob SSAO gesetzt ist
                 {
                     renderer.SetSSAO(0, sba::Space::Instance()->m_SSAOMaterial, sba::Space::Instance()->m_pNoiseTexture);
-                    renderer.SetSSAO(1, sba::Space::Instance()->m_SSAOMaterial, sba::Space::Instance()->m_pNoiseTexture);
                 }
             }
         };
@@ -341,7 +340,6 @@ namespace sba
                 if (true) //TODO: Muss hier aus Options wissen ob SSAO gesetzt ist
                 {
                     renderer.SetSSAO(0, sba::Space::Instance()->m_SSAOMaterial, sba::Space::Instance()->m_pNoiseTexture);
-                    renderer.SetSSAO(1, sba::Space::Instance()->m_SSAOMaterial, sba::Space::Instance()->m_pNoiseTexture);
                 }
             }
         };

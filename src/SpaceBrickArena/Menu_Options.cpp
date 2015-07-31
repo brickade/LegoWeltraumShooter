@@ -294,13 +294,11 @@ namespace Menu
                     if (this->m_SSAO)
                     {
                         sba_Renderer->SetSSAO(0, sba::Space::Instance()->m_SSAOMaterial, sba::Space::Instance()->m_pNoiseTexture);
-                        sba_Renderer->SetSSAO(1, sba::Space::Instance()->m_SSAOMaterial, sba::Space::Instance()->m_pNoiseTexture);
                         sba_Options->SetValue("SSAO", "On");
                     }
                     else
                     {
                         sba_Renderer->SetSSAO(0, NULL,NULL);
-                        sba_Renderer->SetSSAO(1, NULL, NULL);
                         sba_Options->SetValue("SSAO", "Off");
                     }
                     break;
@@ -432,7 +430,7 @@ namespace Menu
                 switch (sba_Controls[i].Thrust)
                 {
                 case 1:
-                    a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "Left Trigger", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(20.0f, 20.0f, 0.0f), 30.0f, color);
+                    a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "Left Trigger + Shoulder", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(20.0f, 20.0f, 0.0f), 30.0f, color);
                     break;
                 case 2:
                     a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "Right Thumb", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(20.0f, 20.0f, 0.0f), 30.0f, color);

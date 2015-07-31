@@ -30,8 +30,11 @@ namespace TheBrick
     CGameObject::~CGameObject()
     {
         //Delete BrickInstances
+
         for (size_t i = 0; i < this->m_pBricks.size(); i++)
         {
+            //BrickInstance calls "RemoveBrickInstance", which removes the brick instance from the vector
+            //so DELETE also calls "ERASE" from vector here!!
             SAFE_DELETE(this->m_pBricks[i]);
             i--;
         }

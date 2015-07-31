@@ -79,7 +79,6 @@ namespace sba
         if (this->m_pIniReader->GetValue("SSAO") == "On")
         {
             this->Renderer->SetSSAO(0, this->m_SSAOMaterial, this->m_pNoiseTexture);
-            this->Renderer->SetSSAO(1, this->m_SSAOMaterial, this->m_pNoiseTexture);
         }
         this->BrickManager->Initialize();
         this->InputManager->Initialize();

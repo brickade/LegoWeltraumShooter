@@ -118,5 +118,8 @@
     <ClInclude Include="Destruction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="forceTest.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

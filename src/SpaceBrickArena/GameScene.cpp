@@ -59,7 +59,11 @@ namespace sba
         }
 
         if (sba_Controls[a_PlayerIdx].Thrust == 1)
+        {
             fThrust = sba_Input->Axis(Input::EAxis::Type::GameThrust_1, a_PlayerIdx);
+            if (sba_Input->ButtonIsPressed(Input::EButton::Type::GameThrustB_1, a_PlayerIdx))
+                fThrust -= 1.0f;
+        }
         else if (sba_Controls[a_PlayerIdx].Thrust == 1)
             fThrust = sba_Input->Axis(Input::EAxis::Type::GameThrust_2, a_PlayerIdx);
         else
@@ -679,8 +683,8 @@ namespace sba
                             ScreenPos.X = -diff;
                             inside = false;
                             rot.Z = 0.0f;
-                            if (i == 0)
-                                printf("top\n");
+                            //if (i == 0)
+                            //    printf("top\n");
                         }
                         else if ((diff = PuRe_Vector3F::Dot(CamToPos, Near.Normal)) > Val) //behind
                         {
@@ -688,8 +692,8 @@ namespace sba
                             ScreenPos.X = -diff;
                             inside = false;
                             rot.Z = 180 * PuRe_DegToRad;
-                            if (i == 0)
-                                printf("behind\n");
+                            //if (i == 0)
+                            //    printf("behind\n");
                         }
                         else if ((diff = PuRe_Vector3F::Dot(CamToPos, Left.Normal)) > Val) //right
                         {
@@ -697,8 +701,8 @@ namespace sba
                             ScreenPos.Y = diff;
                             inside = false;
                             rot.Z = 270*PuRe_DegToRad;
-                            if (i == 0)
-                                printf("right\n");
+                            //if (i == 0)
+                            //    printf("right\n");
                         }
                         else if ((diff = PuRe_Vector3F::Dot(CamToPos, Right.Normal)) > Val) //left
                         {
@@ -706,8 +710,8 @@ namespace sba
                             ScreenPos.Y = -diff;
                             inside = false;
                             rot.Z = 90 * PuRe_DegToRad;
-                            if (i == 0)
-                                printf("left\n");
+                            //if (i == 0)
+                            //    printf("left\n");
                         }
                         else if((diff = PuRe_Vector3F::Dot(CamToPos, Bottom.Normal)) > Val) //bottom
                         {
@@ -715,8 +719,8 @@ namespace sba
                             ScreenPos.X = diff;
                             inside = false;
                             rot.Z = 180 * PuRe_DegToRad;
-                            if (i == 0)
-                                printf("bottom\n");
+                            //if (i == 0)
+                            //    printf("bottom\n");
                         }
 
                         if (!inside)

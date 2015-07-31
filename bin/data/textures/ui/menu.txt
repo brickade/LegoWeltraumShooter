@@ -1,3 +1,4 @@
+auswahl_highlight_menue = 834 1748 438 88
 kasten_gross = 0 0 1820 1009
 lobby_kasten_tile = 1820 700 857 1031
 lobby_map = 2677 700 645 485

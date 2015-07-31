@@ -6,7 +6,6 @@
 #include <stdio.h>
 #include <GL\GLU.h>
 #include <GL\GL.h>
-#include "../Profiler.h"
 
 class RayMarchTest : public Test
 {
