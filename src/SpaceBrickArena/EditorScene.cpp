@@ -30,8 +30,12 @@ namespace Editor
         this->m_pColorFields = new Editor::CColorFields(this->m_PlayerIdx);
         this->m_pColorFields->Initialize(*a_pApplication->GetGraphics());
 
+        this->m_pModeMenu = new Editor::CModeMenu(this->m_PlayerIdx);
+        this->m_pModeMenu->Initialize(*a_pApplication->GetGraphics());
+
         this->m_pBrickSupervisorFader = new sba::CUIElementFader(sba_Button::EditorFadeSupervisor, this->m_PlayerIdx);
         this->m_pColorFieldsFader = new sba::CUIElementFader(sba_Button::EditorFadeColors, this->m_PlayerIdx);
+        this->m_pModeMenuFader = new sba::CUIElementFader(sba_Button::EditorFadeMenu, this->m_PlayerIdx);
     }
 
     // **************************************************************************
@@ -73,10 +77,17 @@ namespace Editor
             if (this->m_pBrickSupervisorFader->Update(*a_pApplication->GetTimer()))
             {
                 this->m_pColorFieldsFader->Hide();
+                this->m_pModeMenuFader->Hide();
             }
             if (this->m_pColorFieldsFader->Update(*a_pApplication->GetTimer()))
             {
                 this->m_pBrickSupervisorFader->Hide();
+                this->m_pModeMenuFader->Hide();
+            }
+            if (this->m_pModeMenuFader->Update(*a_pApplication->GetTimer()))
+            {
+                this->m_pBrickSupervisorFader->Hide();
+                this->m_pColorFieldsFader->Hide();
             }
             if (!sba_Input->ButtonIsPressed(sba_Button::EditorFadeHold, this->m_PlayerIdx) && !sba_Input->ButtonIsPressed(sba_Button::EditorUndoRedoHold, this->m_PlayerIdx))
             {
@@ -88,9 +99,13 @@ namespace Editor
                 {
                     this->m_pColorFields->Update(*a_pApplication->GetGraphics(), *a_pApplication->GetWindow(), *a_pApplication->GetTimer(), *a_pApplication->GetSoundPlayer());
                 }
+                if (this->m_pModeMenuFader->IsVisible())
+                {
+                    this->m_pModeMenu->Update(*a_pApplication->GetGraphics(), *a_pApplication->GetWindow(), *a_pApplication->GetTimer(), *a_pApplication->GetSoundPlayer());
+                }
             }
 
-            this->m_pWorker->Update(*a_pApplication->GetGraphics(), *a_pApplication->GetWindow(), *a_pApplication->GetTimer(), *a_pApplication->GetSoundPlayer(), this->m_pBrickSupervisor->GetSelectedBrick(), this->m_pColorFields->GetCurrentColor(), *this->m_pShipHandler);
+            this->m_pWorker->Update(*a_pApplication->GetGraphics(), *a_pApplication->GetWindow(), *a_pApplication->GetTimer(), *a_pApplication->GetSoundPlayer(), this->m_pBrickSupervisor->GetSelectedBrick(), this->m_pColorFields->GetCurrentColor(), *this->m_pShipHandler, (this->m_pModeMenu->SelectedMode() == 1));
             break;
         }
         sba_BrickManager->RebuildRenderInstances(); //Update RenderInstances
@@ -117,6 +132,7 @@ namespace Editor
             sba_BrickManager->Render();
             this->m_pBrickSupervisor->Render(*a_pApplication->GetGraphics(), this->m_pBrickSupervisorFader->GetVisibility());
             this->m_pColorFields->Render(*a_pApplication->GetGraphics(), this->m_pColorFieldsFader->GetVisibility());
+            this->m_pModeMenu->Render(*a_pApplication->GetGraphics(), this->m_pModeMenuFader->GetVisibility());
             break;
         }
         //Post
@@ -190,8 +206,10 @@ namespace Editor
     // **************************************************************************
     void CEditorScene::Exit()
     {
+        SAFE_DELETE(this->m_pModeMenuFader);
         SAFE_DELETE(this->m_pColorFieldsFader);
         SAFE_DELETE(this->m_pBrickSupervisorFader);
+        SAFE_DELETE(this->m_pModeMenu);
         SAFE_DELETE(this->m_pColorFields);
         SAFE_DELETE(this->m_pShipHandler);
         SAFE_DELETE(this->m_pWorker);

@@ -12,6 +12,7 @@
 #include "Editor_ShipHandler.h"
 #include "Editor_BrickSupervisor.h"
 #include "Editor_ColorFields.h"
+#include "Editor_ModeMenu.h"
 #include "UIElementFader.h"
 
 namespace Editor
@@ -46,8 +47,10 @@ namespace Editor
         Editor::CWorker* m_pWorker;
         Editor::CShipHandler* m_pShipHandler;
         Editor::CColorFields* m_pColorFields;
+        Editor::CModeMenu* m_pModeMenu;
         sba::CUIElementFader* m_pBrickSupervisorFader;
         sba::CUIElementFader* m_pColorFieldsFader;
+        sba::CUIElementFader* m_pModeMenuFader;
 
     public:
         /// @brief Constructor to Initialize the MainScene

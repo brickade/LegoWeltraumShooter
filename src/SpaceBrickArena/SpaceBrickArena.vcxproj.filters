@@ -111,6 +111,9 @@
     <ClCompile Include="SpriteReader.cpp">
       <Filter>Utilities</Filter>
     </ClCompile>
+    <ClCompile Include="Editor_ModeMenu.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Space.h" />
@@ -228,6 +231,9 @@
     </ClInclude>
     <ClInclude Include="include\SpriteReader.h">
       <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Editor_ModeMenu.h">
+      <Filter>Editor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

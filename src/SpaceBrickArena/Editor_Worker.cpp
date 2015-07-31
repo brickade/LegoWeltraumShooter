@@ -56,9 +56,24 @@ namespace Editor
 
     // **************************************************************************
     // **************************************************************************
-    void CWorker::Update(PuRe_IGraphics& a_pGraphics, PuRe_IWindow& a_pWindow, PuRe_Timer& a_pTimer, PuRe_SoundPlayer& a_pSoundPlayer, TheBrick::CBrick* a_pCurrentBrick, PuRe_Color& a_rCurrentColor, CShipHandler& a_rShipHandler)
+    void CWorker::Update(PuRe_IGraphics& a_pGraphics, PuRe_IWindow& a_pWindow, PuRe_Timer& a_pTimer, PuRe_SoundPlayer& a_pSoundPlayer, TheBrick::CBrick* a_pCurrentBrick, PuRe_Color& a_rCurrentColor, CShipHandler& a_rShipHandler, bool a_Delete)
     {
-        this->m_CurrentColor = a_rCurrentColor;
+        if (a_Delete)
+        {
+            this->m_CurrentColor = PuRe_Color(1, 1, 1);
+            this->m_CanPlaceHere = false;
+        }
+        else
+        {
+            this->m_CurrentColor = a_rCurrentColor;
+            if (this->m_BrickToDelete.BrickInstance != nullptr)
+            {
+                this->m_BrickToDelete.BrickInstance->m_Color = this->m_BrickToDelete.Color;
+                this->m_BrickToDelete.BrickInstance = nullptr;
+            }
+            this->RestoreAdhesiveBricksToDelete();
+            this->m_AdhesiveBricksToDelete.clear();
+        }
         //-----First Brick Placement-----
         bool firstBrick = false;
         if (a_rShipHandler.GetCurrentSpaceShip()->m_pBricks.size() == 0)
@@ -71,7 +86,16 @@ namespace Editor
             this->m_CurrentHeight = 0;
         }
         //-----Set Current Brick-----
-        if (this->m_pCurrentBrick == nullptr || this->m_pCurrentBrick->m_pBrick != a_pCurrentBrick)
+        if (a_Delete && (this->m_pCurrentBrick == nullptr || this->m_pCurrentBrick->m_pBrick->GetBrickId() != 2))
+        {
+            if (this->m_pCurrentBrick != nullptr)
+            {
+                SAFE_DELETE(this->m_pCurrentBrick);
+            }
+            this->m_pCurrentBrick = sba_BrickManager->GetBrick(2).CreateInstance(*this->m_pCurrentBrickObject, *sba_World); //Create Instance
+            this->m_CurrentHeightIsInvalid = true;
+        }
+        else if (!a_Delete && (this->m_pCurrentBrick == nullptr || this->m_pCurrentBrick->m_pBrick != a_pCurrentBrick))
         {
             if (this->m_pCurrentBrick != nullptr)
             {
@@ -83,7 +107,10 @@ namespace Editor
         //-----Camera-----
         this->m_pCamera->Update(&a_pGraphics, &a_pWindow, &a_pTimer);
         //-----Rotation-----
-        this->UpdateRotation();
+        if (!a_Delete)
+        {
+            this->UpdateRotation();
+        }
         if (!firstBrick)
         {
             //-----Translation-----
@@ -97,14 +124,28 @@ namespace Editor
             //-----Height-----
             if (this->m_CurrentHeightIsInvalid)
             {
-                this->UpdateHeight(a_rShipHandler);
+                if (a_Delete)
+                {
+                    this->UpdateDeleteHeight(a_rShipHandler);
+                }
+                else
+                {
+                    this->UpdateHeight(a_rShipHandler);
+                }
                 this->m_CurrentHeightIsInvalid = false;
             }
         }
         //-----Apply-----
         this->ApplyToCurrentBrick();
         //-----Placement-----
-        this->UpdatePlacement(a_rShipHandler);
+        if (a_Delete)
+        {
+            this->UpdateDelete(a_rShipHandler);
+        }
+        else
+        {
+            this->UpdatePlacement(a_rShipHandler);
+        }
         //-----Miscellaneous-----
         this->UpdateMiscellaneous(a_rShipHandler, a_pCurrentBrick);
     }
@@ -126,12 +167,24 @@ namespace Editor
     // **************************************************************************
     void CWorker::Suspend()
     {
-        //Delete CurrentBrick
+        //Delete
         if (this->m_pCurrentBrick != nullptr)
         {
             SAFE_DELETE(this->m_pCurrentBrick);
             this->m_pCurrentBrick = nullptr;
         }
+        if (this->m_BrickToDelete.BrickInstance != nullptr)
+        {
+            SAFE_DELETE(this->m_BrickToDelete.BrickInstance);
+            this->m_BrickToDelete.BrickInstance = nullptr;
+        }
+        for (std::vector<BrickToDeleteCache>::iterator it = this->m_AdhesiveBricksToDelete.begin(); it != this->m_AdhesiveBricksToDelete.end(); ++it)
+        {
+            SAFE_DELETE(it->BrickInstance);
+            it->BrickInstance = nullptr;
+        }
+        this->m_AdhesiveBricksToDelete.clear();
+
         //Clear History
         this->m_pHistory->Clear();
     }
@@ -141,17 +194,11 @@ namespace Editor
     void CWorker::Resume(CShipHandler& a_rShipHandler)
     {
         //Rebuild History
+        this->m_pHistory->Clear();
         std::vector<TheBrick::CBrickInstance*>& bricks = a_rShipHandler.GetCurrentSpaceShip()->m_pBricks;
         for (size_t i = 0; i < bricks.size(); i++)
         {
-            TheBrick::CBrickInstance* brick = bricks[i];
-            //Add History step
-            SHistoryStep step;
-            step.BrickInstance = brick;
-            step.Brick = step.BrickInstance->m_pBrick;
-            step.Transform = brick->GetTransform();
-            step.Color = brick->m_Color;
-            this->m_pHistory->AddStep(step); 
+            this->m_pHistory->AddStep(bricks[i]);
         }
     }
 
@@ -323,6 +370,92 @@ namespace Editor
 
     // **************************************************************************
     // **************************************************************************
+    void CWorker::UpdateDeleteHeight(CShipHandler& a_rShipHandler)
+    {
+        //Set cursor above all bricks
+        this->m_CurrentHeight = sba::CSpaceship::MAX_BRICK_HEIGHT + 3;
+        if (this->m_PlaceBelow)
+        {
+            this->m_CurrentHeight *= -1;
+        }
+        this->ApplyToCurrentBrick();
+
+        //Casting Nub Requirements
+        ong::vec3 nubToCastFromDirection = ong::vec3(0, -1, 0);
+        bool nubToCastFromShouldBeMale = false;
+        if (this->m_PlaceBelow)
+        {
+            nubToCastFromShouldBeMale = true;
+            nubToCastFromDirection.y *= -1;
+        }
+
+        //Get RayCastHit
+        std::vector<ong::RayQueryResult> hitResults;
+        std::vector<ong::vec3> hitResultRayOrigins;
+        if (!CAssistant::GetClosestHitsFromBrickInstanceNubs(*this->m_pCurrentBrick, *a_rShipHandler.GetCurrentSpaceShip(), nubToCastFromShouldBeMale, nubToCastFromDirection, &hitResults, &hitResultRayOrigins))
+        { //Nothing hit
+            this->m_CurrentHeight = 0;
+#ifdef EDITOR_DEBUG
+            printf("Nothing hit\n");
+#endif
+            if (this->m_BrickToDelete.BrickInstance != nullptr)
+            {
+                this->m_BrickToDelete.BrickInstance->m_Color = this->m_BrickToDelete.Color; //Restore color
+                this->m_BrickToDelete.BrickInstance = nullptr;
+            }
+            //Restore old state adhesive bricks
+            this->RestoreAdhesiveBricksToDelete();
+            this->m_AdhesiveBricksToDelete.clear();
+            //Refresh graph
+            return;
+        }
+        assert(hitResults.size() == hitResultRayOrigins.size());
+        assert(hitResults.size() == 1);
+
+        //Set cursor on hit brick
+        const ong::Transform& brickTransform = ong::transformTransform(this->m_pCurrentBrick->GetTransform(), this->m_pCurrentBrick->GetGameObject()->GetTransform());
+        this->m_CurrentHeight = (int)round((hitResults[0].point.y + (brickTransform.p.y - hitResultRayOrigins[0].y)) / TheBrick::CBrick::SEGMENT_HEIGHT);
+
+        TheBrick::CBrickInstance* hitBrick = reinterpret_cast<TheBrick::CBrickInstance*>(hitResults[0].collider->getUserData());
+        if (this->m_BrickToDelete.BrickInstance == hitBrick)
+        { //Hit the same brick, state still valid
+            return;
+        }
+        
+        //Restore old state adhesive bricks
+        this->RestoreAdhesiveBricksToDelete();
+        this->m_AdhesiveBricksToDelete.clear();
+        //Set new brick to delete
+        if (this->m_BrickToDelete.BrickInstance != nullptr)
+        { //Restore color
+            this->m_BrickToDelete.BrickInstance->m_Color = this->m_BrickToDelete.Color;
+        }
+        this->m_BrickToDelete.BrickInstance = hitBrick;
+        this->m_BrickToDelete.Color = hitBrick->m_Color;
+        //Display brick to delete
+        this->m_BrickToDelete.BrickInstance->m_Color = PuRe_Color(0.05f, 0.05f, 0.05f);
+
+        /*BrickToDeleteCache brickToDelete;
+        brickToDelete.BrickInstance = hitBrick;
+        this->m_AdhesiveBricksToDelete.push_back(brickToDelete);*/
+
+        //Traverse bricks from center brick with all bricks
+        
+        //Traverse bricks from center brick without brick to delete
+        
+        //Get adhesive bricks and store them
+        
+
+        //Display adhesive bricks
+        for (std::vector<BrickToDeleteCache>::iterator it = this->m_AdhesiveBricksToDelete.begin(); it != this->m_AdhesiveBricksToDelete.end(); ++it)
+        {
+            it->Color = it->BrickInstance->m_Color;
+            it->BrickInstance->m_Color = PuRe_Color(0.05f, 0.05f, 0.05f);
+        }
+    }
+
+    // **************************************************************************
+    // **************************************************************************
     void CWorker::ApplyToCurrentBrick()
     {
         if (this->m_pCurrentBrick == nullptr)
@@ -335,7 +468,7 @@ namespace Editor
         this->m_pCurrentBrick->SetTransform(transform);
         this->m_pCurrentBrick->RotateAroundPivotOffset(PuRe_QuaternionF(0.0f, this->m_CurrentRotation * 90.0f * 0.0174532925f, 0.0f));
         //#define ALPHAREADY
-        if (this->m_CanPlaceHere)
+        if (this->m_CanPlaceHere || this->m_BrickToDelete.BrickInstance != nullptr)
         {
 #ifdef ALPHAREADY
             this->m_pCurrentBrick->m_Color = PuRe_Color(this->m_currentBrickColor.R, this->m_currentBrickColor.G, this->m_currentBrickColor.B, this->m_currentBrickColor.A * 0.6f);
@@ -371,12 +504,7 @@ namespace Editor
         { //Place BrickInstance
             this->m_pCurrentBrick->m_Color = this->m_CurrentColor; //Apply right color
             this->m_pHistory->CutRedos();
-            SHistoryStep step;
-            step.BrickInstance = a_rShipHandler.AddBrickInstanceToCurrentShip(*this->m_pCurrentBrick); //Add to ship
-            step.Brick = step.BrickInstance->m_pBrick;
-            step.Transform = this->m_pCurrentBrick->GetTransform();
-            step.Color = this->m_CurrentColor;
-            this->m_pHistory->AddStep(step); //Add History step
+            this->m_pHistory->AddStep(a_rShipHandler.AddBrickInstanceToCurrentShip(*this->m_pCurrentBrick)); //Add History step and add new instance to ship
             a_rShipHandler.UpdateCurrentShipData();
             this->m_CurrentHeightIsInvalid = true;
         }
@@ -384,27 +512,131 @@ namespace Editor
 
     // **************************************************************************
     // **************************************************************************
+    void CWorker::UpdateDelete(CShipHandler& a_rShipHandler)
+    {
+        if (this->m_BrickToDelete.BrickInstance == nullptr)
+        {
+            return;
+        }
+        if (sba_Input->ButtonPressed(sba_Button::EditorDeleteBrick, this->m_PlayerIdx))
+        { //Delete BrickInstances
+            //Restore Color
+            this->RestoreAdhesiveBricksToDelete();
+            this->m_BrickToDelete.BrickInstance->m_Color = this->m_BrickToDelete.Color;
+
+            this->m_pHistory->CutRedos(); //Cut Redos
+
+            //Add History step
+            std::vector<TheBrick::CBrickInstance*>* adhesiveInstances = new std::vector<TheBrick::CBrickInstance*>(this->m_AdhesiveBricksToDelete.size());
+            for (size_t i = 0; i < adhesiveInstances->size(); i++)
+            {
+                (*adhesiveInstances)[i] = this->m_AdhesiveBricksToDelete[i].BrickInstance;
+            }
+            this->m_pHistory->AddStep(this->m_BrickToDelete.BrickInstance, adhesiveInstances, true);
+            SAFE_DELETE(adhesiveInstances);
+            //Set states
+            a_rShipHandler.UpdateCurrentShipData();
+            this->m_CurrentHeightIsInvalid = true;
+            
+            //Delete
+            SAFE_DELETE(this->m_BrickToDelete.BrickInstance);
+            this->m_BrickToDelete.BrickInstance = nullptr;
+            for (std::vector<BrickToDeleteCache>::iterator it = this->m_AdhesiveBricksToDelete.begin(); it != this->m_AdhesiveBricksToDelete.end(); ++it)
+            {
+                SAFE_DELETE(it->BrickInstance);
+                //it->BrickInstance = nullptr;
+            }
+            this->m_AdhesiveBricksToDelete.clear();
+        }
+    }
+
+    // **************************************************************************
+    // **************************************************************************
     void CWorker::UpdateMiscellaneous(CShipHandler& a_rShipHandler, TheBrick::CBrick* a_pCurrentBrick)
     {
-        if (sba_Input->ButtonIsPressed(sba_Button::EditorUndoRedoHold, this->m_PlayerIdx) && sba_Input->ButtonPressed(sba_Button::EditorUndo, this->m_PlayerIdx))
-        { //Undo
-            SHistoryStep* step = this->m_pHistory->Undo();
-            if (step != nullptr)
-            {
-                delete step->BrickInstance;
-                a_rShipHandler.UpdateCurrentShipData();
-                this->m_CurrentHeightIsInvalid = true;
+        //SpeedupTimer
+        if (sba_Input->ButtonIsPressed(sba::Input::EButton::EditorUndoRedoHold, this->m_PlayerIdx))
+        {
+            if (sba_Input->ButtonIsPressed(sba_Button::EditorUndo, this->m_PlayerIdx))
+            { //Undo timer < 0
+                if (this->m_UndoRedoScrollTimer > 0)
+                {
+                    this->m_UndoRedoScrollTimer = 0;
+                }
+                this->m_UndoRedoScrollTimer -= sba_Application->GetTimer()->GetElapsedSeconds();
             }
-        }
-        else if (sba_Input->ButtonIsPressed(sba_Button::EditorUndoRedoHold, this->m_PlayerIdx) && sba_Input->ButtonPressed(sba_Button::EditorRedo, this->m_PlayerIdx))
-        { //Redo
-            SHistoryStep* step = this->m_pHistory->Redo();
-            if (step != nullptr)
+            else if (sba_Input->ButtonIsPressed(sba_Button::EditorRedo, this->m_PlayerIdx))
+            { //Redo timer > 0
+                if (this->m_UndoRedoScrollTimer < 0)
+                {
+                    this->m_UndoRedoScrollTimer = 0;
+                }
+                this->m_UndoRedoScrollTimer += sba_Application->GetTimer()->GetElapsedSeconds();
+            }
+            else
             {
-                step->BrickInstance = new TheBrick::CBrickInstance(*step->Brick, *a_rShipHandler.GetCurrentSpaceShip(), *sba_World, step->Color);
-                step->BrickInstance->SetTransform(step->Transform);
-                a_rShipHandler.UpdateCurrentShipData();
-                this->m_CurrentHeightIsInvalid = true;
+                this->m_UndoRedoScrollTimer = 0;
+            }
+            /*if (sba_Input->LastInputWasGamepad())
+            {
+                MoveInput *= PuRe_clamp((this->m_GamepadMovementSpeedupTimer) * 4 - 1, 0.75f, 5);
+            }*/
+            if (this->m_UndoRedoScrollTimer < -this->m_ScrollingStart || sba_Input->ButtonPressed(sba_Button::EditorUndo, this->m_PlayerIdx))
+            { //Undo
+                if (this->m_UndoRedoScrollTimer < -this->m_ScrollingStart)
+                {
+                    this->m_UndoRedoScrollTimer += this->m_ScrollingStep;
+                }
+                SHistoryStep* step = this->m_pHistory->Undo();
+                if (step != nullptr)
+                {
+                    if (step->Delete)
+                    { //Undo Brick Delete
+                        CHistory::RecreateBrick(step->DeleteBrick_Step, *a_rShipHandler.GetCurrentSpaceShip(), *sba_World);
+                        for (size_t i = 0; i < step->DeleteAdhesiveBricks_Steps.size(); i++)
+                        {
+                            CHistory::RecreateBrick(step->DeleteAdhesiveBricks_Steps[i], *a_rShipHandler.GetCurrentSpaceShip(), *sba_World);
+                        }
+                        a_rShipHandler.UpdateCurrentShipData();
+                        this->m_CurrentHeightIsInvalid = true;
+                    }
+                    else
+                    { //Undo Brick Placement
+                        SAFE_DELETE(step->Brick.BrickInstance);
+                        step->Brick.BrickInstance = nullptr;
+                        a_rShipHandler.UpdateCurrentShipData();
+                        this->m_CurrentHeightIsInvalid = true;
+                    }
+                }
+            }
+            else if (this->m_UndoRedoScrollTimer > this->m_ScrollingStart || sba_Input->ButtonPressed(sba_Button::EditorRedo, this->m_PlayerIdx))
+            { //Redo
+                if (this->m_UndoRedoScrollTimer > this->m_ScrollingStart)
+                {
+                    this->m_UndoRedoScrollTimer -= this->m_ScrollingStep;
+                }
+                SHistoryStep* step = this->m_pHistory->Redo();
+                if (step != nullptr)
+                {
+                    if (step->Delete)
+                    { //Redo Brick Delete
+                        SAFE_DELETE(step->DeleteBrick_Step->Brick.BrickInstance);
+                        step->DeleteBrick_Step->Brick.BrickInstance = nullptr;
+                        for (size_t i = 0; i < step->DeleteAdhesiveBricks_Steps.size(); i++)
+                        {
+                            SAFE_DELETE(step->DeleteAdhesiveBricks_Steps[i]->Brick.BrickInstance);
+                            step->DeleteAdhesiveBricks_Steps[i]->Brick.BrickInstance = nullptr;
+                        }
+                        a_rShipHandler.UpdateCurrentShipData();
+                        this->m_CurrentHeightIsInvalid = true;
+                    }
+                    else
+                    { //Redo Brick Placement
+                        CHistory::RecreateBrick(step, *a_rShipHandler.GetCurrentSpaceShip(), *sba_World);
+                        a_rShipHandler.UpdateCurrentShipData();
+                        this->m_CurrentHeightIsInvalid = true;
+                    }
+                }
             }
         }
 
@@ -413,6 +645,7 @@ namespace Editor
             if (this->m_pCurrentBrick != nullptr) //Delete CurrentBrick
             {
                 SAFE_DELETE(this->m_pCurrentBrick);
+                this->m_pCurrentBrick = nullptr;
             }
             a_rShipHandler.SaveCurrentShip(); //Save ship & preview
             //Recreate CurrentBrick
@@ -434,5 +667,15 @@ namespace Editor
             a_rShipHandler.UpdateCurrentShipData();
             this->m_CurrentBrickHeightIstInvalid = true;
         }*/
+    }
+
+    // **************************************************************************
+    // **************************************************************************
+    void CWorker::RestoreAdhesiveBricksToDelete()
+    {
+        for (std::vector<BrickToDeleteCache>::iterator it = this->m_AdhesiveBricksToDelete.begin(); it != this->m_AdhesiveBricksToDelete.end(); ++it)
+        {
+            it->BrickInstance->m_Color = it->Color;
+        }
     }
 }

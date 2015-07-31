@@ -8,14 +8,26 @@
 
 #include <TheBrick/BrickInstance.h>
 
+namespace sba
+{
+    class CSpaceship;
+}
+
 namespace Editor
 {
-    struct SHistoryStep
+    struct SHistoryBrick
     {
         TheBrick::CBrickInstance* BrickInstance;
         TheBrick::CBrick* Brick;
         ong::Transform Transform;
         PuRe_Color Color;
+    };
+    struct SHistoryStep
+    {
+        SHistoryBrick Brick;
+        bool Delete;
+        SHistoryStep* DeleteBrick_Step;
+        std::vector<SHistoryStep*> DeleteAdhesiveBricks_Steps;
     };
 
     class CHistory
@@ -34,10 +46,13 @@ namespace Editor
         ~CHistory();
 
         void AddStep(SHistoryStep& step);
+        void AddStep(TheBrick::CBrickInstance* a_pBrickInstance, std::vector<TheBrick::CBrickInstance*>* a_AdhesiveBricks = nullptr, bool a_Delete = false);
         void CutRedos();
         void Clear();
         SHistoryStep* Undo();
         SHistoryStep* Redo();
+
+        static void RecreateBrick(SHistoryStep* a_HistoryStep, sba::CSpaceship& a_rSpaceship, ong::World& a_rWorld);
     };
 }
 

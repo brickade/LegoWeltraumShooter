@@ -137,6 +137,7 @@ namespace sba
             enum Type
             {
                 EditorPlaceBrick,
+                EditorDeleteBrick,
                 EditorTogglePlacementSide,
                 EditorUndoRedoHold,
                 EditorUndo,
@@ -150,6 +151,7 @@ namespace sba
                 EditorFadeHold,
                 EditorFadeSupervisor,
                 EditorFadeColors,
+                EditorFadeMenu,
                 EditorRenameShip,
                 EditorAddNewShip,
                 EditorDeleteShip,

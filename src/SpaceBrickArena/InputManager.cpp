@@ -129,6 +129,11 @@ namespace sba
             Input::EGamepadButton::Pad_A,
             Input::EKeyboardButton::MouseLeft
         };
+        this->m_pButtonMapping[Input::EButton::EditorDeleteBrick] =
+        {
+            Input::EGamepadButton::Pad_A,
+            Input::EKeyboardButton::MouseLeft
+        };
         this->m_pButtonMapping[Input::EButton::EditorTogglePlacementSide] =
         {
             Input::EGamepadButton::Pad_B,
@@ -193,6 +198,11 @@ namespace sba
         {
             Input::EGamepadButton::DPAD_Down,
             Input::EKeyboardButton::S
+        };
+        this->m_pButtonMapping[Input::EButton::EditorFadeMenu] =
+        {
+            Input::EGamepadButton::DPAD_Right,
+            Input::EKeyboardButton::D
         };
         this->m_pButtonMapping[Input::EButton::EditorRenameShip] =
         {

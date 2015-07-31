@@ -27,6 +27,11 @@ namespace Editor
 
     class CWorker
     {
+        struct BrickToDeleteCache
+        {
+            TheBrick::CBrickInstance* BrickInstance = nullptr;
+            PuRe_Color Color;
+        };
     public:
 
     private:
@@ -45,10 +50,16 @@ namespace Editor
         bool m_DeleteMode = false;
 
         TheBrick::CGameObject* m_pCurrentBrickObject;
-        TheBrick::CBrickInstance* m_pCurrentBrick;
-        
+        TheBrick::CBrickInstance* m_pCurrentBrick = nullptr;
+
+        BrickToDeleteCache m_BrickToDelete;
+        std::vector<BrickToDeleteCache> m_AdhesiveBricksToDelete;
         CCamera* m_pCamera;
         CHistory* m_pHistory;
+
+        double m_UndoRedoScrollTimer = 0;
+        float m_ScrollingStart = 0.6f;
+        float m_ScrollingStep = 0.05f;
 
         /*PuRe_IMaterial* m_pGridMaterial;
         PuRe_Model* m_pGridBrick;*/
@@ -64,7 +75,7 @@ namespace Editor
         ~CWorker();
 
         void Initialize(PuRe_IGraphics& a_pGraphics);
-        void Update(PuRe_IGraphics& a_pGraphics, PuRe_IWindow& a_pWindow, PuRe_Timer& a_pTimer, PuRe_SoundPlayer& a_pSoundPlayer, TheBrick::CBrick* a_pCurrentBrick, PuRe_Color& a_rCurrentColor, CShipHandler& a_rShipHandler);
+        void Update(PuRe_IGraphics& a_pGraphics, PuRe_IWindow& a_pWindow, PuRe_Timer& a_pTimer, PuRe_SoundPlayer& a_pSoundPlayer, TheBrick::CBrick* a_pCurrentBrick, PuRe_Color& a_rCurrentColor, CShipHandler& a_rShipHandler, bool a_Delete);
         void Render(CShipHandler& a_rShipHandler);
         void Suspend();
         void Resume(CShipHandler& a_rShipHandler);
@@ -73,9 +84,13 @@ namespace Editor
         void UpdateTranslation(PuRe_Vector3F a_cameraLook, float a_speed);
         void UpdateRotation();
         void UpdateHeight(CShipHandler& a_rShipHandler);
+        void UpdateDeleteHeight(CShipHandler& a_rShipHandler);
         void ApplyToCurrentBrick();
         void UpdatePlacement(CShipHandler& a_rShipHandler);
+        void UpdateDelete(CShipHandler& a_rShipHandler);
         void UpdateMiscellaneous(CShipHandler& a_rShipHandler, TheBrick::CBrick* a_pCurrentBrick);
+
+        void RestoreAdhesiveBricksToDelete();
     };
 }
 

@@ -27,6 +27,7 @@ namespace TheBrick
         CBrick* m_pBrick;
         PuRe_List<ong::Collider*> m_pCollider;
         PuRe_Color m_Color;
+        void* m_UserData;
 
     private:
 
