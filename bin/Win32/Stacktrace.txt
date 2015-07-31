@@ -1,0 +1,8 @@
+c:\users\andré.braun\documents\git\pureengine\src\pure.core\signalhandlerwin.cpp (14): PuReEngine::Core::CSignalHandlerWin::SignalHandle
+c:\users\andré.braun\documents\git\pureengine\src\pure.core\signalhandlerwin.cpp (14): XcptFilter
+f:\dd\vctools\crt\crtw32\dllstuff\crtexe.c (666): __tmainCRTStartup
+f:\dd\vctools\crt\crtw32\dllstuff\crtexe.c (666): seh_longjmp_unwind4
+f:\dd\vctools\crt\crtw32\dllstuff\crtexe.c (466): mainCRTStartup
+f:\dd\vctools\crt\crtw32\dllstuff\crtexe.c (466): BaseThreadInitThunk
+f:\dd\vctools\crt\crtw32\dllstuff\crtexe.c (466): RtlInitializeExceptionChain
+f:\dd\vctools\crt\crtw32\dllstuff\crtexe.c (466): RtlInitializeExceptionChain
