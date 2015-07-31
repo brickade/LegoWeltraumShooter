@@ -13,6 +13,13 @@ int PURE_MAIN
     //Memory Leak detection
     //static unsigned int breakId = 162;
     //_CrtSetBreakAlloc(breakId);
+    
+
+    //for floating point determinism
+    _controlfp(_PC_24, _MCW_PC);
+    _controlfp(_RC_NEAR, _MCW_RC);
+
+
     PuRe_IPlatform* pplatform = PuRe_CreatePlatform();
     PuRe_ApplicationDescription description;
     description.Graphics.ResolutionWidth = std::stoi(sba_Options->GetValue("ResolutionWidth"));
