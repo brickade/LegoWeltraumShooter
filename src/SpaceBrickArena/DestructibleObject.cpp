@@ -3,8 +3,10 @@
 
 namespace sba
 {
-	CDestructibleObject::CDestructibleObject(ong::World& a_rWorld, ong::BodyDescription* a_pBodyDesc)
-		:CGameObject(a_rWorld, a_pBodyDesc)
+	CDestructibleObject::CDestructibleObject(ong::World& a_rWorld, ong::BodyDescription* a_pBodyDesc, CGameObject* a_pDestructionParent, int a_DestructionTime)
+		:CGameObject(a_rWorld, a_pBodyDesc),
+		m_pDestructionParent(a_pDestructionParent),
+		m_DestructionTime(a_DestructionTime)
 	{
 	}
 
@@ -27,6 +29,19 @@ namespace sba
 
 		TheBrick::CBrickInstance* brick = (TheBrick::CBrickInstance*)thisCollider->getUserData();
 		TheBrick::CBrickInstance* other = (TheBrick::CBrickInstance*)(thisCollider == contact->colliderA ? contact->colliderB : contact->colliderA)->getUserData();
+		
+		sba::CDestructibleObject* destrObjA = brick->GetGameObject()->GetDestructible();
+		sba::CDestructibleObject* destrObjB = other->GetGameObject()->GetDestructible();
+
+
+		//prevent mass self destruction
+		int destructionCounter = sba_Space->DestructionManager->GetDestructionCounter();
+		if ((destrObjA && destrObjB) && (!destrObjA->CheckForParent(destrObjB, destructionCounter) || !destrObjB->CheckForParent(destrObjA, destructionCounter)))
+		{
+			printf("destruction prevented! \n");
+			return;
+		}
+
 
 		int dir = contact->colliderA == thisCollider ? -1 : 1;
 
@@ -74,6 +89,12 @@ namespace sba
 		CGameObject::Deserialize(a_pSerializer, a_rBricks, a_pWorld);
 	}
 
-
-
+	bool CDestructibleObject::CheckForParent(TheBrick::CGameObject* a_pOther, int a_DestructionCounter)
+	{
+		if (a_pOther == m_pDestructionParent)
+		{
+			printf("destrTime: %d, destrCounter: %d\n", m_DestructionTime, a_DestructionCounter);
+		}
+		return !(a_pOther == m_pDestructionParent && m_DestructionTime > a_DestructionCounter - CDestructionManager::DESTRUCTION_COOLDOWN);
+	}
 }

@@ -10,6 +10,12 @@
 
 #include "Brick.h"
 
+
+namespace sba
+{
+	class CDestructibleObject;
+}
+
 namespace TheBrick
 {
     class CBrickInstance;
@@ -44,6 +50,10 @@ namespace TheBrick
 
         void AddBrickInstance(CBrickInstance* a_pBrickInstance, ong::World& a_rWorld);
         void RemoveBrickInstance(const CBrickInstance& a_BrickInstance);
+
+
+		// returns 0 if not destructible else cast to destructible
+		virtual sba::CDestructibleObject* GetDestructible() { return nullptr; };
 
         PuRe_Vector3F PosToObjectSpace(const PuRe_Vector3F& a_rWorldSpacePosition) const;
         PuRe_Vector3F DirToObjectSpace(const PuRe_Vector3F& a_rWorldSpaceDir) const;

@@ -483,8 +483,9 @@ namespace sba
 	}
 	bool CDestructionManager::AddImpulse(TheBrick::CBrickInstance* a_pBrick, const ong::vec3& a_rPoint, const ong::vec3& a_rImpulse)
 	{
-		CDestructibleObject* pObject = dynamic_cast<CDestructibleObject*>(a_pBrick->GetGameObject());
+		CDestructibleObject* pObject = a_pBrick->GetGameObject()->GetDestructible();
 		assert(pObject);
+
 
 		SBrickDestruction* destrInstance = a_pBrick->GetDestructionInstance();
 
@@ -520,7 +521,6 @@ namespace sba
 	void CDestructionManager::SetNewObject(SBrickDestruction* a_pBrick, TheBrick::CGameObject* a_pNewGameObject, int a_Tick)
 	{
 		a_pBrick->tick = a_Tick;
-		a_pBrick->lastBroken = m_LastBrocken;
 
 		a_pBrick->brick->GetGameObject()->RemoveBrickInstance(*a_pBrick->brick);
 		a_pNewGameObject->AddBrickInstance(a_pBrick->brick, *sba_Space->World);
@@ -583,7 +583,7 @@ namespace sba
 			assert(oldObject);
 
 			
-			CDestructibleObject* newObject = new CDestructibleObject(*sba_Space->World, &descr);
+			CDestructibleObject* newObject = new CDestructibleObject(*sba_Space->World, &descr, oldObject, m_DestructionCounter);
 			newObject->m_Type = TheBrick::EGameObjectType::Object;
 
 			unsigned int numDestroyed = 0;
@@ -644,6 +644,8 @@ namespace sba
 		}
 
 		m_inpulses.clear();
+
+		m_DestructionCounter++;
 	}
 
 
@@ -658,6 +660,14 @@ namespace sba
 		m_BrickDestruction = new ong::Allocator<SBrickDestruction>(64);
 
 		m_Tick = 0;
+		m_DestructionCounter = 0;
 		m_inpulses.clear();
 	}
+
+	int CDestructionManager::GetDestructionCounter() const
+	{
+		return m_DestructionCounter;
+	}
+		
+
 }
