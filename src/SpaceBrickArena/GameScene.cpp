@@ -96,11 +96,19 @@ namespace sba
                     camID++;
             }
         }
+
+        PuRe_Vector2F Move = PuRe_Vector2F(0.0f, 0.0f);
+        if (a_Input->MoveX != 0)
+            Move.X = a_Input->MoveX / 100.0f;
+        if (a_Input->MoveY != 0)
+            Move.Y = a_Input->MoveY / 100.0f;
+        ship->Move(Move);
+
         float* cd = &a_pPlayer->MGCD;
         if (*cd == 0.0f&&a_Input->MG)
         {
-            ship->Shoot(TheBrick::MG - 100, a_rBullets, a_pPlayer);
-            *cd = 0.25f;
+            ship->Shoot(TheBrick::MG - 100, a_rBullets, a_pPlayer,Move);
+            *cd = 0.1f;
         }
         else if (*cd != 0.0f)
         {
@@ -111,7 +119,7 @@ namespace sba
         cd = &a_pPlayer->RocketCD;
         if (*cd == 0.0f&&a_Input->Rocket)
         {
-            ship->Shoot(TheBrick::Rocket - 100, a_rBullets, a_pPlayer);
+            ship->Shoot(TheBrick::Rocket - 100, a_rBullets, a_pPlayer, Move);
             *cd = 2.0f;
         }
         else if (*cd != 0.0f)
@@ -123,7 +131,7 @@ namespace sba
         cd = &a_pPlayer->TorpedoCD;
         if (*cd == 0.0f&&a_Input->Torpedo)
         {
-            ship->Shoot(TheBrick::Torpedo - 100, a_rBullets, a_pPlayer);
+            ship->Shoot(TheBrick::Torpedo - 100, a_rBullets, a_pPlayer, Move);
             *cd = 1.0f;
         }
         else if (*cd != 0.0f)
@@ -135,7 +143,7 @@ namespace sba
         cd = &a_pPlayer->LaserCD;
         if (*cd == 0.0f&&a_Input->Laser)
         {
-            ship->Shoot(TheBrick::Laser - 100, a_rBullets, a_pPlayer);
+            ship->Shoot(TheBrick::Laser - 100, a_rBullets, a_pPlayer, Move);
             *cd = 0.5f;
         }
         else if (*cd != 0.0f)
@@ -147,7 +155,7 @@ namespace sba
         cd = &a_pPlayer->MineCD;
         if (*cd == 0.0f&&a_Input->Mine)
         {
-            ship->Shoot(TheBrick::Mine - 100, a_rBullets, a_pPlayer);
+            ship->Shoot(TheBrick::Mine - 100, a_rBullets, a_pPlayer, Move);
             *cd = 1.0f;
         }
         else if (*cd != 0.0f)
@@ -159,13 +167,6 @@ namespace sba
 
         if (a_Input->Thrust != 0)
             ship->Thrust(a_Input->Thrust / 100.0f);
-
-        PuRe_Vector2F Move = PuRe_Vector2F(0.0f, 0.0f);
-        if (a_Input->MoveX != 0)
-            Move.X = a_Input->MoveX / 100.0f;
-        if (a_Input->MoveY != 0)
-            Move.Y = a_Input->MoveY / 100.0f;
-            ship->Move(Move);
 
         if (a_Input->Spin != 0)
             ship->Spin(a_Input->Spin / 100.0f);
@@ -630,7 +631,7 @@ namespace sba
         /////////////////////////////////////////////////
 
         ///////////  DRAW UI  ///////////////////////
-        this->m_pUI->DisplayUI(this->m_pFont, this->m_pFontMaterial, this->m_EndTime, this->m_WonID, mapend);
+        this->m_pUI->DisplayUI(this->m_pFont, this->m_pFontMaterial, this->m_EndTime, this->m_WonID, mapend,this->m_OriginDistance);
         camID = 0;
         for (unsigned int i = 0; i < sba_Players.size(); i++)
         {

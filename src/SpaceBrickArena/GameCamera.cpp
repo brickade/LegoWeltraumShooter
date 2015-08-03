@@ -149,7 +149,7 @@ namespace sba
             Move = sba_Input->Direction(Input::EDirection::Type::GameMove_2, a_CID);
             Move.Y = -Move.Y;
         }
-        if (Move.Length() > 1.0f)
+        if (Move.Length() > 0.0f)
         {
             Move.X *= abs(Move.X);
             Move.Y *= abs(Move.Y);

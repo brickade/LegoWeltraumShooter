@@ -22,7 +22,7 @@ namespace sba
         CGUI(PuRe_IGraphics* a_pGraphics);
         ~CGUI();
     public:
-        void DisplayUI(PuRe_Font* a_pFont, PuRe_IMaterial* a_pFontMaterial, float a_EndTime, int a_WonID, bool* a_pDisplayEnd);
+        void DisplayUI(PuRe_Font* a_pFont, PuRe_IMaterial* a_pFontMaterial, float a_EndTime, int a_WonID, bool* a_pDisplayEnd,float a_OriginDistance);
     };
 }
 #endif /* _GAME_UI_H */

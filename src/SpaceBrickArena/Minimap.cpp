@@ -1,78 +1,60 @@
 #include "include/Minimap.h"
 
+#include "include/Space.h"
+
 namespace sba
 {
     CMinimap::CMinimap(PuRe_IGraphics* a_pGraphics)
     {
-        int size = 36;
-        PuReEngine::Core::SVertex* pData = new PuReEngine::Core::SVertex[size];
-        PuRe_Box::GetVertices(pData);
-        this->m_pBoxVertexBuffer = a_pGraphics->CreateVertexBuffer(size*sizeof(PuReEngine::Core::SVertex), sizeof(PuReEngine::Core::SVertex));
-        PuReEngine::Core::SVertex* vdata = (PuReEngine::Core::SVertex*)this->m_pBoxVertexBuffer->Lock();
-        memcpy(vdata, pData, size*sizeof(PuReEngine::Core::SVertex));
-        this->m_pBoxVertexBuffer->Unlock();
-        SAFE_DELETE(pData);
     }
 
     // **************************************************************************
     // **************************************************************************
     CMinimap::~CMinimap()
     {
-        SAFE_DELETE(this->m_pBoxVertexBuffer);
     }
 
     // **************************************************************************
     // **************************************************************************
-    void CMinimap::Draw(PuRe_Renderer* a_pRenderer, PuRe_IMaterial* a_pMaterial, PuRe_Vector3F a_Position, PuRe_MatrixF a_CamRotation)
+    void CMinimap::Draw(sba::CSpriteReader* a_pUI, PuRe_IMaterial* a_pMaterial, PuRe_Vector3F a_Position, int a_Player, int a_Target, float a_OriginDistance)
     {
-        
-        this->m_Position = a_Position;
-        a_pRenderer->Draw(1, true, this->m_pBoxVertexBuffer, this->m_pBoxVertexBuffer->GetSize(), PuRe_Primitive::Linestrip, a_pMaterial, a_Position, a_CamRotation, PuRe_Vector3F(), PuRe_Vector3F(128.0f, 128.0f, 128.0f));
-        //a_pMaterial->Apply();
-        //a_pCamera->Apply(a_pMaterial);
-        //a_pMaterial->SetMatrix(PuRe_MatrixF::Scale(PuRe_Vector3F(128.0f, 128.0f, 128.0f)), "Scale");
-        //a_pMaterial->SetMatrix(a_CamRotation, "Rotation");
-        //a_pMaterial->SetMatrix(PuRe_MatrixF::Translation(a_Position), "Translation");
-        //a_pGraphics->SetVertexBuffer(this->m_pBoxVertexBuffer);
-        //a_pMaterial->Apply();
-        //a_pGraphics->Draw(PuRe_Primitive::Linestrip, this->m_pBoxVertexBuffer->GetSize());
-        //this->m_pMinimapSprite->Draw(a_pCamera, a_pMaterial, a_Position, PuRe_Vector3F(128.0f, 128.0f, 1.0f), PuRe_Vector3F());
-    }
+        PuRe_Vector3F rot = PuRe_Vector3F(70.0f*PuRe_DegToRad, 0.0f, 0.0f);
 
-    // **************************************************************************
-    // **************************************************************************
-    void CMinimap::DrawPlayer(PuRe_Renderer* a_pRenderer, PuRe_IMaterial* a_pMaterial, PuRe_Vector3F a_Position, const PuRe_BoundingBox &a_Boundaries, PuRe_MatrixF a_CamRotation)
-    {
-        a_Position.X /= a_Boundaries.m_Size.X;
-        a_Position.Y /= a_Boundaries.m_Size.Y;
-        a_Position.Z /= a_Boundaries.m_Size.Z;
+        //center
+        ong::vec3 playerpos = sba_Players[a_Player]->Ship->m_pBody->getWorldCenter();
+        ong::Quaternion playerrot = sba_Players[a_Player]->Ship->m_pBody->getOrientation();
+        for (unsigned int i = 0; i < sba_Players.size(); i++)
+        {
+            if (i != a_Player)
+            {
+                ong::vec3 epos = sba_Players[i]->Ship->m_pBody->getWorldCenter();
+                ong::vec3 diff = playerpos - epos;
+                //Normalize
+                diff.x /= a_OriginDistance;
+                diff.y /= a_OriginDistance;
+                diff.z /= a_OriginDistance;
 
-        a_Position *= 256.0f;
 
-        a_Position = PuRe_Vector3F(a_Position.X, a_Position.Y, -a_Position.Z);
-        a_Position -= PuRe_Vector3F(128.0f, 128.0f, -128.0f);
-        a_Position *= a_CamRotation;
 
-        a_Position = this->m_Position + a_Position;
+                diff = ong::rotate(diff, playerrot);
 
-        a_pRenderer->Draw(1, false, this->m_pBoxVertexBuffer, this->m_pBoxVertexBuffer->GetSize(), PuRe_Primitive::Linestrip, a_pMaterial, a_Position, a_CamRotation, PuRe_Vector3F(), PuRe_Vector3F(8.0f, 8.0f, 8.0f));
+                PuRe_Vector3F pos;
+                pos.X = diff.x*64.0f;
+                pos.Y = -diff.z*64.0f;
+                pos.Z = diff.y*64.0f;
 
-        //a_pMaterial->Apply();
-        //a_pCamera->Apply(a_pMaterial);
-        //a_pMaterial->SetMatrix(PuRe_MatrixF::Scale(PuRe_Vector3F(8.0f, 8.0f, 8.0f)), "Scale");
-        //a_pMaterial->SetMatrix(a_CamRotation, "Rotation");
-        //a_pMaterial->SetMatrix(PuRe_MatrixF::Translation(a_Position), "Translation");
-        //a_pGraphics->SetVertexBuffer(this->m_pBoxVertexBuffer);
-        //a_pMaterial->Apply();
-        //a_pGraphics->Draw(PuRe_Primitive::Linestrip, this->m_pBoxVertexBuffer->GetSize());
+                pos += a_Position;
+                a_pUI->Draw(2, sba_Renderer, "minimap_enemy", a_pMaterial, pos, PuRe_Vector3F(), a_Target, PuRe_Vector2F(1.0f, 1.0f));
 
-        //a_Position.X /= a_Boundaries.m_Size.X;
-        //a_Position.Y /= a_Boundaries.m_Size.Y;
-        //a_Position.Z /= a_Boundaries.m_Size.Z;
-        //a_Position.X = this->m_Position.X - 64.0f;
-        //a_Position.Y = this->m_Position.Y - 64.0f;
-        //a_Position.Z = this->m_Position.Z - 64.0f;
-        //this->m_pMinimapPlayer->Draw(a_pCamera, a_pMaterial, a_Position, PuRe_Vector3F(8.0f, 8.0f, 1.0f), PuRe_Vector3F());
+            }
+        }
+
+        a_pUI->Draw(2, sba_Renderer, "minimap_ground", a_pMaterial, a_Position, rot, a_Target, PuRe_Vector2F(0.5f, 0.5f));
+        a_pUI->Draw(2, sba_Renderer, "minimap_player", a_pMaterial, a_Position, rot, a_Target, PuRe_Vector2F(1.0f, 1.0f));
+        a_Position.Y += 32.0f;
+        a_pUI->Draw(2, sba_Renderer, "minimap_parrow", a_pMaterial, a_Position, rot, a_Target, PuRe_Vector2F(1.0f, 1.0f));
+        a_Position.Y -= 32.0f;
+
     }
 
 }

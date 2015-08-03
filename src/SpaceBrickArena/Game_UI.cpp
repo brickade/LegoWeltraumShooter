@@ -13,7 +13,7 @@ namespace sba
 
     // **************************************************************************
     // **************************************************************************
-    void CGUI::DisplayUI(PuRe_Font* a_pFont, PuRe_IMaterial* a_pFontMaterial, float a_EndTime, int a_WonID, bool* a_pDisplayEnd)
+    void CGUI::DisplayUI(PuRe_Font* a_pFont, PuRe_IMaterial* a_pFontMaterial, float a_EndTime, int a_WonID, bool* a_pDisplayEnd, float a_OriginDistance)
     {
         PuRe_Color c = PuRe_Color(1.0f, 1.0f, 1.0f, 1.0f);
         PuRe_Vector3F size = PuRe_Vector3F(36.0f, 36.0f, 0.0f);
@@ -67,9 +67,9 @@ namespace sba
                 this->m_pUI->Draw(2, sba_Renderer, "shield_icon_tile", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.5f, 0.5f));
                 pos.Y += 175.0f;
 
-                pos.X = 1920.0f-200.0f;
+                pos.X = 1920.0f - 200.0f;
                 pos.Y = 200.0f;
-                this->m_pUI->Draw(2, sba_Renderer, "map_tile", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.5f, 0.5f));
+                this->m_pMinimap->Draw(this->m_pUI,a_pFontMaterial,pos,i,local,a_OriginDistance);
 
                 pos.X = 150.0f;
                 pos.Y = 150.0f;

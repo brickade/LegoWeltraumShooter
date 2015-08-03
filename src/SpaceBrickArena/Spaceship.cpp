@@ -316,7 +316,7 @@ namespace sba
 
     // **************************************************************************
     // **************************************************************************
-    void CSpaceship::Shoot(int a_Weapon, std::vector<CBullet*>& a_rBullets, SPlayer* a_pOwner)
+    void CSpaceship::Shoot(int a_Weapon, std::vector<CBullet*>& a_rBullets, SPlayer* a_pOwner, PuRe_Vector2F a_Direction)
     {
         if (this->m_Life > 0)
         {
@@ -326,6 +326,20 @@ namespace sba
             std::vector<TheBrick::CBrickInstance**> weapons;
             this->GetWeapons(weapons);
             unsigned int wID = 0;
+
+            a_Direction.X /= 2.0f;
+            a_Direction.Y /= 3.0f;
+
+            if (a_Direction.X > 0.0f)
+                a_Direction.X *= a_Direction.X;
+            else
+                a_Direction.X *= -a_Direction.X;
+
+            if (a_Direction.Y > 0.0f)
+                a_Direction.Y *= a_Direction.Y*4.0f;
+            else
+                a_Direction.Y *= -a_Direction.Y;
+
             for (std::vector<TheBrick::CBrickInstance**>::iterator it = weapons.begin(); it != weapons.end(); ++it)
             {
                 TheBrick::CBrickInstance* weapon = *(*it);
@@ -333,25 +347,29 @@ namespace sba
                 {
                     ong::Transform transform = weapon->GetTransform();
                     ong::Transform ship = this->m_pBody->getTransform();
+                    ong::Quaternion diff = ong::QuatFromEulerAngles(a_Direction.X,a_Direction.Y,0.0f);
                     this->m_pBody->getPosition();
                     ong::Transform wtransform = ong::transformTransform(transform, ship);
-                    PuRe_Vector3F pos = TheBrick::OngToPuRe(ong::transformTransform(transform, ship).p);
+                    PuRe_Vector3F pos = TheBrick::OngToPuRe(wtransform.p);
+
+                    PuRe_Vector3F dir = PuRe_Vector3F(a_Direction.X, -a_Direction.Y, 1.0f) * TheBrick::OngToPuRe(wtransform.q);
 
                     PuRe_Vector3F forward = PuRe_Vector3F(0.0f, 0.0f, 1.0f) * TheBrick::OngToPuRe(wtransform.q);
+
                     PuRe_Vector3F side = PuRe_Vector3F(1.0f, 0.0f, 0.0f) * TheBrick::OngToPuRe(wtransform.q);
                     PuRe_Vector3F up = PuRe_Vector3F(0.0f, 1.0f, 0.0f) * TheBrick::OngToPuRe(wtransform.q);
 
                 
 
                     float len = TheBrick::OngToPuRe(this->m_pBody->getLinearVelocity()).Length();
-                    PuRe_Vector3F speed = forward*200.0f + forward * len;
+                    PuRe_Vector3F speed = dir*200.0f + dir * len;
                     speed *= 1.0f / 50.0f;
 
                     ong::BodyDescription bdesc;
 
 
                     bdesc.angularMomentum = ong::vec3(0, 0, 0);
-                    bdesc.transform.q = ship.q*transform.q;
+                    bdesc.transform.q = ship.q*transform.q*diff;
                     bdesc.type = ong::BodyType::Dynamic;
 
                     unsigned int id=0;

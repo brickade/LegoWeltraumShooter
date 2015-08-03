@@ -79,10 +79,13 @@ namespace sba
         if (object->m_Type != TheBrick::EGameObjectType::Bullet)
         {
             bullet->m_lifeTime = 4.9f;
-            CSpaceship* ship = static_cast<CSpaceship*>(object);
-            //if it's a ship with a shield, we die
-            if (ship->m_Shield > 0.0f)
-                bullet->m_lifeTime = 10.0f;
+            if (object->m_Type == TheBrick::EGameObjectType::Ship)
+            { 
+                CSpaceship* ship = static_cast<CSpaceship*>(object);
+                //if it's a ship with a shield, we die
+                if (ship->m_Shield > 0.0f)
+                    bullet->m_lifeTime = 10.0f;
+            }
         }
     }
 
