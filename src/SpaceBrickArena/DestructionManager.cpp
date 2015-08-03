@@ -68,6 +68,9 @@ namespace sba
 			}
 		}
 
+		if (numNubsX == 0 && numNubsZ == 0)
+			return true;
+
 		CDestructionManager* manager = ((CallbackData*)a_Data)->manager;
 
 		SJointData* jointDataX0 = (*manager->m_JointData)();
@@ -132,7 +135,7 @@ namespace sba
 		connection->other = destrInstance2;
 		connection2->other = destrInstance;
 
-        return false;
+        return true;
 	}
 
 	bool setUpBlocking(ong::Collider* a_Collider, void* a_Data)
