@@ -57,6 +57,20 @@ namespace sba
         ///
         void Draw(int a_Index, PuRe_Renderer* a_pRenderer, const char* a_pName, PuRe_IMaterial* a_pMaterial, PuRe_Vector3F a_Position, PuRe_Vector3F a_Rotation, int a_RenderIndex = -1, PuRe_Vector2F Size = PuRe_Vector2F(1.0f, 1.0f), PuRe_Vector2F UVSize = PuRe_Vector2F(1.0f, 1.0f), PuRe_Vector2F UVPos = PuRe_Vector2F(0.0f, 0.0f));
 
+        /// @brief Draw a Part of the Sprite
+        ///
+        /// @param Index of the Rendertarget
+        /// @param Renderer
+        /// @param Name of the rendered Part
+        /// @param Used Material to draw
+        /// @param Position where to render
+        /// @param Rotation of the Sprite
+        /// @param Index of the drawcall, -1 for all
+        /// @param Size in Range from 0 to 1
+        /// @param UVSize in Range from 0 to 1
+        ///
+        void Draw(int a_Index, PuRe_Renderer* a_pRenderer, const char* a_pName, PuRe_IMaterial* a_pMaterial, PuRe_Vector3F a_Position, PuRe_MatrixF a_Rotation, int a_RenderIndex = -1, PuRe_Vector2F Size = PuRe_Vector2F(1.0f, 1.0f), PuRe_Vector2F UVSize = PuRe_Vector2F(1.0f, 1.0f), PuRe_Vector2F UVPos = PuRe_Vector2F(0.0f, 0.0f));
+
         /// @brief Get the Size of the Sprite
         ///
         /// @remarks this is used to avoid sprites popping up.

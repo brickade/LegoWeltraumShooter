@@ -42,7 +42,8 @@ namespace sba
         case 2: //Game Local Initialize
             this->m_pActiveScene->Exit();
             SAFE_DELETE(this->m_pActiveScene);
-            for (unsigned i = 0; i<32; i++)
+
+            for (int i = 0; i<sba_SoundPlayer->MaxChannels; i++)
                 sba_SoundPlayer->StopSound(i);
             sba_SoundPlayer->PlaySound("Ingame", true,true, std::stof(sba_Options->GetValue("MusicVolume")));
 
@@ -53,6 +54,10 @@ namespace sba
         case 3: //Game Network Initialize
             this->m_pActiveScene->Exit();
             SAFE_DELETE(this->m_pActiveScene);
+
+            for (int i = 0; i<sba_SoundPlayer->MaxChannels; i++)
+                sba_SoundPlayer->StopSound(i);
+            sba_SoundPlayer->PlaySound("Ingame", true, true, std::stof(sba_Options->GetValue("MusicVolume")));
 
             this->m_pGameScene = new sba::CGameScene(a_pApplication, this->m_PlayerIdx, true);
             this->m_pGameScene->Initialize(a_pApplication);
@@ -85,7 +90,6 @@ namespace sba
             break;
         }
         sba_SoundPlayer->Update();
-        printf("FPS: %i\n", a_pApplication->GetTimer()->GetFPS());
         return 1;
      }
 

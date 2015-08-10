@@ -107,8 +107,8 @@ namespace sba
         float* cd = &a_pPlayer->MGCD;
         if (*cd == 0.0f&&a_Input->MG)
         {
-            ship->Shoot(TheBrick::MG - 100, a_rBullets, a_pPlayer,Move);
-            *cd = 0.1f;
+            ship->Shoot(TheBrick::MG - 100, a_rBullets, a_pPlayer, Move, a_Time);
+            *cd = std::stof(sba_Balancing->GetValue("MG_CD"));
         }
         else if (*cd != 0.0f)
         {
@@ -119,8 +119,8 @@ namespace sba
         cd = &a_pPlayer->RocketCD;
         if (*cd == 0.0f&&a_Input->Rocket)
         {
-            ship->Shoot(TheBrick::Rocket - 100, a_rBullets, a_pPlayer, Move);
-            *cd = 2.0f;
+            ship->Shoot(TheBrick::Rocket - 100, a_rBullets, a_pPlayer, Move, a_Time);
+            *cd = std::stof(sba_Balancing->GetValue("Rocket_CD"));
         }
         else if (*cd != 0.0f)
         {
@@ -131,8 +131,8 @@ namespace sba
         cd = &a_pPlayer->TorpedoCD;
         if (*cd == 0.0f&&a_Input->Torpedo)
         {
-            ship->Shoot(TheBrick::Torpedo - 100, a_rBullets, a_pPlayer, Move);
-            *cd = 1.0f;
+            ship->Shoot(TheBrick::Torpedo - 100, a_rBullets, a_pPlayer, Move, a_Time);
+            *cd = std::stof(sba_Balancing->GetValue("Torpedo_CD"));
         }
         else if (*cd != 0.0f)
         {
@@ -143,8 +143,8 @@ namespace sba
         cd = &a_pPlayer->LaserCD;
         if (*cd == 0.0f&&a_Input->Laser)
         {
-            ship->Shoot(TheBrick::Laser - 100, a_rBullets, a_pPlayer, Move);
-            *cd = 0.5f;
+            ship->Shoot(TheBrick::Laser - 100, a_rBullets, a_pPlayer, Move, a_Time);
+            *cd = std::stof(sba_Balancing->GetValue("Laser_CD"));
         }
         else if (*cd != 0.0f)
         {
@@ -155,8 +155,8 @@ namespace sba
         cd = &a_pPlayer->MineCD;
         if (*cd == 0.0f&&a_Input->Mine)
         {
-            ship->Shoot(TheBrick::Mine - 100, a_rBullets, a_pPlayer, Move);
-            *cd = 1.0f;
+            ship->Shoot(TheBrick::Mine - 100, a_rBullets, a_pPlayer, Move, a_Time);
+            *cd = std::stof(sba_Balancing->GetValue("Mine_CD"));
         }
         else if (*cd != 0.0f)
         {
@@ -347,6 +347,10 @@ namespace sba
             sba_SkyBox = new PuRe_SkyBox(graphics, sba_Map->GetSkybox());
             sba_SkyBoxName = sba_Map->GetSkybox();
         }
+
+        //Load balancing
+        sba_Space->LoadCSV();
+
         this->m_pShieldMaterial = graphics->LoadMaterial("../data/effects/shield/default");
         this->m_pFontMaterial = graphics->LoadMaterial("../data/effects/font/default");
         this->m_pUIMaterial = graphics->LoadMaterial("../data/effects/UI/default");
@@ -631,7 +635,7 @@ namespace sba
         /////////////////////////////////////////////////
 
         ///////////  DRAW UI  ///////////////////////
-        this->m_pUI->DisplayUI(this->m_pFont, this->m_pFontMaterial, this->m_EndTime, this->m_WonID, mapend,this->m_OriginDistance);
+        this->m_pUI->DisplayUI(this->m_pFont, this->m_pFontMaterial, this->m_EndTime, this->m_WonID, mapend,this->m_OriginDistance,&this->m_Cameras);
         camID = 0;
         for (unsigned int i = 0; i < sba_Players.size(); i++)
         {
@@ -683,21 +687,12 @@ namespace sba
                             //if (i == 0)
                             //    printf("top\n");
                         }
-                        else if ((diff = PuRe_Vector3F::Dot(CamToPos, Near.Normal)) > Val) //behind
-                        {
-                            ScreenPos.Y = -0.4f;
-                            ScreenPos.X = -diff;
-                            inside = false;
-                            rot.Z = 180 * PuRe_DegToRad;
-                            //if (i == 0)
-                            //    printf("behind\n");
-                        }
                         else if ((diff = PuRe_Vector3F::Dot(CamToPos, Left.Normal)) > Val) //right
                         {
                             ScreenPos.X = 0.7f;
                             ScreenPos.Y = diff;
                             inside = false;
-                            rot.Z = 270*PuRe_DegToRad;
+                            rot.Z = 270 * PuRe_DegToRad;
                             //if (i == 0)
                             //    printf("right\n");
                         }
@@ -709,6 +704,24 @@ namespace sba
                             rot.Z = 90 * PuRe_DegToRad;
                             //if (i == 0)
                             //    printf("left\n");
+                        }
+                        else if ((diff = PuRe_Vector3F::Dot(CamToPos, Top.Normal)) > Val) //top
+                        {
+                            ScreenPos.Y = 0.4f;
+                            ScreenPos.X = -diff;
+                            inside = false;
+                            rot.Z = 0.0f;
+                            //if (i == 0)
+                            //    printf("top\n");
+                        }
+                        else if ((diff = PuRe_Vector3F::Dot(CamToPos, Near.Normal)) > Val) //behind
+                        {
+                            ScreenPos.Y = -0.4f;
+                            ScreenPos.X = -diff;
+                            inside = false;
+                            rot.Z = 180 * PuRe_DegToRad;
+                            //if (i == 0)
+                            //    printf("behind\n");
                         }
                         else if((diff = PuRe_Vector3F::Dot(CamToPos, Bottom.Normal)) > Val) //bottom
                         {

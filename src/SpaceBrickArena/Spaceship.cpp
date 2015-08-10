@@ -70,13 +70,6 @@ namespace sba
 
     // **************************************************************************
     // **************************************************************************
-    void CSpaceship::ShieldCollision(ong::Collider* thisCollider, ong::Contact* contact)
-    {
-        printf("Shield Collided!\n");
-    }
-
-    // **************************************************************************
-    // **************************************************************************
     void CSpaceship::Collision(ong::Collider* thisCollider, ong::Contact* contact)
     {
         CSpaceship* Ship = (CSpaceship*)thisCollider->getBody()->getUserData();
@@ -145,7 +138,10 @@ namespace sba
 
                     Ship->m_Life -= damage;
                     if (Ship->m_Life < 0)
-                        bull->m_pOwner->Points += 10;
+                    {
+                        bull->m_pOwner->Points += 100;
+                        bull->m_pOwner->KilledTimer = 1.0f;
+                    }
                     bull->m_pOwner->Marker = 1.0f;
                 }
                 bull->m_Collided = true;
@@ -169,8 +165,17 @@ namespace sba
 
         std::vector<TheBrick::CBrickInstance**> engines;
         this->GetEngines(engines);
-        engines.size();
-        this->m_MaxSpeed = (engines.size()*200.0f/mass)+1.0f;
+        for (std::vector<TheBrick::CBrickInstance**>::iterator it = engines.begin(); it != engines.end(); ++it)
+        {
+            TheBrick::CBrickInstance* engine = *(*it);
+            if (engine->m_pBrick->GetBrickId() == 700)
+                this->m_MaxSpeed += std::stof(sba_Balancing->GetValue("Engine1_Speed"));
+            else if (engine->m_pBrick->GetBrickId() == 701)
+                this->m_MaxSpeed += std::stof(sba_Balancing->GetValue("Engine2_Speed"));
+            else if (engine->m_pBrick->GetBrickId() == 702)
+                this->m_MaxSpeed += std::stof(sba_Balancing->GetValue("Engine3_Speed"));
+        }
+        this->m_MaxSpeed /= mass;
 		
 		this->m_Shield = 0;
     }
@@ -234,7 +239,7 @@ namespace sba
         Build();
 
         float mass = 1.0f / this->m_pBody->getInverseMass();
-        this->m_MaxLife = (int)(mass*10.0f);
+        this->m_MaxLife = (int)(mass*std::stof(sba_Balancing->GetValue("LifeMultiplicator")));
         this->m_OldMass = mass;
         this->m_Life = this->m_MaxLife;
     }
@@ -254,40 +259,6 @@ namespace sba
             this->m_pBrickArray[i].Color = this->m_pBricks[i]->m_Color;
         }
         //set max life here because it is set here with full Data
-
-
-        //Get Shape Data
-        //ong::ShapeDescription shape;
-        //shape.shapeType = ong::ShapeType::SPHERE;
-        //ong::vec3& sC = shape.sphere.c;
-        //float& sR = shape.sphere.r;
-
-        ////Get Length
-        //auto b = this->m_pBody;
-        //ong::BVTree* tree = b->getBVTree();
-        //float length = ong::length(tree->aabb.e)*1.2f; //some bigger
-
-        ////Set Length and Shape
-        //sC.x *= length;
-        //sC.z *= length;
-        //sC.y *= length;
-        //sR *= length;
-        //ong::ShapePtr shapeptr = sba_World->createShape(shape);
-
-        ////Set Data
-        //ong::ColliderDescription cDescr;
-        //cDescr.shape = shapeptr;
-        //cDescr.material = &TheBrick::CBrick::BRICK_MATERIAL;
-        //cDescr.transform = ong::Transform(ong::vec3(0, 0, 0), ong::Quaternion(ong::vec3(0, 0, 0), 1));
-        //cDescr.isSensor = true;
-        //ong::Collider* pCollider = sba_World->createCollider(cDescr);
-
-        //m_pBody->addCollider(pCollider);
-
-        ////Set Callback
-        //ong::ColliderCallbacks cb = pCollider->getColliderCallbacks();
-        //cb.beginContact = CSpaceship::ShieldCollision;
-        //pCollider->setCallbacks(cb);
 
         CalculateProperties();
         this->CalculateReset();
@@ -316,7 +287,7 @@ namespace sba
 
     // **************************************************************************
     // **************************************************************************
-    void CSpaceship::Shoot(int a_Weapon, std::vector<CBullet*>& a_rBullets, SPlayer* a_pOwner, PuRe_Vector2F a_Direction)
+    void CSpaceship::Shoot(int a_Weapon, std::vector<CBullet*>& a_rBullets, SPlayer* a_pOwner, PuRe_Vector2F a_Direction,int a_Time)
     {
         if (this->m_Life > 0)
         {
@@ -348,13 +319,13 @@ namespace sba
                     ong::Transform transform = weapon->GetTransform();
                     ong::Transform ship = this->m_pBody->getTransform();
                     ong::Quaternion diff = ong::QuatFromEulerAngles(a_Direction.X,a_Direction.Y,0.0f);
-                    this->m_pBody->getPosition();
                     ong::Transform wtransform = ong::transformTransform(transform, ship);
                     PuRe_Vector3F pos = TheBrick::OngToPuRe(wtransform.p);
 
                     PuRe_Vector3F dir = PuRe_Vector3F(a_Direction.X, -a_Direction.Y, 1.0f) * TheBrick::OngToPuRe(wtransform.q);
 
                     PuRe_Vector3F forward = PuRe_Vector3F(0.0f, 0.0f, 1.0f) * TheBrick::OngToPuRe(wtransform.q);
+                    PuRe_Vector3F sforward = PuRe_Vector3F(0.0f, 0.0f, 1.0f) * TheBrick::OngToPuRe(ship.q);
 
                     PuRe_Vector3F side = PuRe_Vector3F(1.0f, 0.0f, 0.0f) * TheBrick::OngToPuRe(wtransform.q);
                     PuRe_Vector3F up = PuRe_Vector3F(0.0f, 1.0f, 0.0f) * TheBrick::OngToPuRe(wtransform.q);
@@ -362,8 +333,14 @@ namespace sba
                 
 
                     float len = TheBrick::OngToPuRe(this->m_pBody->getLinearVelocity()).Length();
-                    PuRe_Vector3F speed = dir*200.0f + dir * len;
-                    speed *= 1.0f / 50.0f;
+                    PuRe_Vector3F speed;
+
+                    if (PuRe_Vector3F::Dot(forward, sforward) > 0.9f) // in front
+                        speed = dir*200.0f + dir * len;
+                    else
+                        speed = forward*200.0f+forward *len;
+
+                    speed *= 1.0f / 1000.0f;
 
                     ong::BodyDescription bdesc;
 
@@ -380,34 +357,35 @@ namespace sba
                     case TheBrick::Laser-100: //Laser
                         id = TheBrick::Laser;
                         pos += forward*10.0f;
+                        speed *= std::stof(sba_Balancing->GetValue("Laser_Speed"));
                         col = PuRe_Color(1.0f, 1.0f, 1.0f, 1.0f);
                         break;
 
                     case TheBrick::MG - 100: //MG
                         id = TheBrick::MG;
                         pos += forward*10.0f;
-                        speed *= 0.5f;
+                        speed *= std::stof(sba_Balancing->GetValue("MG_Speed"));
                         col = PuRe_Color(1.0f, 0.0f, 0.0f, 1.0f);
                         break;
 
                     case TheBrick::Mine - 100: //Mine
                         id = TheBrick::Mine;
                         pos += forward*4.0f;
-                        speed *= 0.0f;
+                        speed *= std::stof(sba_Balancing->GetValue("Mine_Speed"));
                         col = PuRe_Color(1.0f, 0.0f, 1.0f, 1.0f);
                         break;
 
                     case TheBrick::Rocket - 100: //Rocket
                         pos += forward*10.0f;
                         id = TheBrick::Rocket;
-                        speed *= 0.4f;
+                        speed *= std::stof(sba_Balancing->GetValue("Rocket_Speed"));
                         col = PuRe_Color(1.0f, 0.0f, 0.0f, 1.0f);
                         break;
 
                     case TheBrick::Torpedo - 100: //Torpedo
                         pos += forward*10.0f;
                         id = TheBrick::Torpedo;
-                        speed *= 0.2f;
+                        speed *= std::stof(sba_Balancing->GetValue("Torpedo_Speed"));
                         col = PuRe_Color(1.0f, 0.0f, 0.0f, 1.0f);
                         break;
                     }
@@ -428,6 +406,29 @@ namespace sba
                         pos -= up*2.0f;
                         bdesc.transform.p = TheBrick::PuReToOng(pos);
                         a_rBullets.push_back(new CBullet(&bdesc, *w, a_pOwner, col, id));
+                    }
+                    else if(weapon->m_pBrick->GetBrickId() == TheBrick::Mine - 100)
+                    {
+                        int mines_row = std::stoi(sba_Balancing->GetValue("Mine_Row"));
+                        int mines_column = std::stoi(sba_Balancing->GetValue("Mine_Column"));
+                        float mines_dist = std::stof(sba_Balancing->GetValue("Mine_Dist"));
+                        pos += side*(mines_column / 2.0f)*mines_dist;
+                        pos += up*(mines_row / 2.0f)*mines_dist;
+                        for (int y=0;y<mines_row;y++)
+                        {
+                            for (int x = 0; x < mines_column; x++)
+                            {
+                                pos -= side*(float)(sin(a_Time)+x)*mines_dist;
+                                pos -= up*(float)(cos(a_Time) + y)*mines_dist;
+                                pos += forward*((float)sin(a_Time + x*10.0f + y*10.0f) + 1.0f)*mines_dist;
+                                bdesc.transform.p = TheBrick::PuReToOng(pos);
+                                a_rBullets.push_back(new CBullet(&bdesc, *w, a_pOwner, col, id));
+                                pos += side*(float)(sin(a_Time) + x)*mines_dist;
+                                pos += up*(float)(cos(a_Time) + y)*mines_dist;
+                                pos -= forward*((float)sin(a_Time + x*10.0f + y*10.0f) + 1.0f)*mines_dist;
+                            }
+                        }
+
                     }
                     else
                         a_rBullets.push_back(new CBullet(&bdesc, *w, a_pOwner, col, id));

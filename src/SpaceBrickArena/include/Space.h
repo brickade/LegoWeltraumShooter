@@ -41,7 +41,6 @@ namespace sba
             }
             return Space::g_pInstance;
         }
-
         PuRe_Application* Application;
         ong::World* World;
         PuRe_Renderer* Renderer;
@@ -65,6 +64,7 @@ namespace sba
         PuRe_SkyBox* m_pSkybox;
         std::string m_pSkyBoxName;
         SControl m_Controls[4];
+        TheBrick::CCSVParser* m_pBalancing;
 
     private:
         static Space* g_pInstance;
@@ -77,6 +77,7 @@ namespace sba
     public:
         void Initialize(PuRe_IGraphics& a_pGraphics, PuRe_IInput& a_pInput, PuRe_SoundPlayer& a_pSoundPlayer, PuRe_Application& a_rpApplication);
         void UpdatePhysics(PuRe_Timer* a_pTimer);
+        void LoadCSV();
 
         void RenderFont(std::string a_Text, PuRe_Vector2F a_Position, float a_Size = 24, float a_Width = 1, unsigned int a_RendertargetIndex = 2);
 
@@ -98,6 +99,7 @@ namespace sba
 #define sba_Width 1920
 #define sba_Height 1080
 
+#define sba_Balancing sba::Space::Instance()->m_pBalancing
 #define sba_SoundPlayer sba::Space::Instance()->m_pSoundPlayer
 #define sba_Players sba::Space::Instance()->m_Players
 #define sba_FinalMaterial sba::Space::Instance()->m_pFinalMaterial

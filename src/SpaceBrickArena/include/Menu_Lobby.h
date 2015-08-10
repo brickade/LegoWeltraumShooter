@@ -23,6 +23,7 @@ namespace Menu
         bool m_GameEnd;
         bool m_Focus;
         sba::CSpriteReader* m_pMapSprites;
+        bool m_ShipSelect;
     public:
         /// @brief Constructor
         ///

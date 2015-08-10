@@ -32,6 +32,7 @@ namespace sba
 		this->DestructionManager = new sba::CDestructionManager();
 
         this->m_pSoundPlayer = new PuRe_SoundPlayer();
+        this->m_pBalancing = NULL;
     }
 
     // **************************************************************************
@@ -43,6 +44,7 @@ namespace sba
             SAFE_DELETE(this->m_Players[i]->Ship);
             SAFE_DELETE(this->m_Players[i]);
         }
+        SAFE_DELETE(this->m_pBalancing);
         SAFE_DELETE(this->m_pButtonSprite);
         SAFE_DELETE(this->m_pSkybox);
         SAFE_DELETE(this->m_pSkyBoxMaterial);
@@ -62,6 +64,12 @@ namespace sba
         SAFE_DELETE(this->BrickManager);
         SAFE_DELETE(this->InputManager);
         SAFE_DELETE(this->World);
+    }
+
+    void Space::LoadCSV()
+    {
+        SAFE_DELETE(this->m_pBalancing);
+        this->m_pBalancing = new TheBrick::CCSVParser("../data/balancing.csv");
     }
 
     // **************************************************************************

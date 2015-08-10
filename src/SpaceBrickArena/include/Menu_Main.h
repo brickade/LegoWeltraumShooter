@@ -16,6 +16,7 @@ namespace Menu
     private:
         sba::CNavigation* m_pNavigation;
         int* m_PlayerIdx;
+        bool m_HasShip;
     public:
         /// @brief Constructor
         ///
@@ -26,6 +27,11 @@ namespace Menu
         ///
         ~CMain();
     public:
+        /// @brief Checks if there are Ships
+        ///
+        /// @returns true if he has, false if not
+        ///
+        bool hasShip();
         /// @brief Update the MainMenu
         ///
         /// @param Timer for deltatime
