@@ -25,10 +25,17 @@ namespace sba
         float MineCD;
         float Marker;
         float OutTime;
+        float KilledTimer;
         CSpaceship* Ship;
 
         void Update(float a_DeltaTime,PuRe_Vector3F& a_rOrigin,float& a_rDistance)
         {
+            if (this->KilledTimer != 0.0f)
+            {
+                this->KilledTimer -= a_DeltaTime;
+                if (this->KilledTimer < 0.0f)
+                    this->KilledTimer = 0.0f;
+            }
             if (this->Ship->m_Shake != 0.0f)
             {
                 this->Ship->m_Shake -= a_DeltaTime;

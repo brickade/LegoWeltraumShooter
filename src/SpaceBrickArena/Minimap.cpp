@@ -16,44 +16,58 @@ namespace sba
 
     // **************************************************************************
     // **************************************************************************
-    void CMinimap::Draw(sba::CSpriteReader* a_pUI, PuRe_IMaterial* a_pMaterial, PuRe_Vector3F a_Position, int a_Player, int a_Target, float a_OriginDistance)
+    void CMinimap::Draw(CGameCamera* a_pCamera, sba::CSpriteReader* a_pUI, PuRe_IMaterial* a_pMaterial, PuRe_Vector3F a_Position, int a_Player, int a_Target, float a_OriginDistance)
     {
-        PuRe_Vector3F rot = PuRe_Vector3F(70.0f*PuRe_DegToRad, 0.0f, 0.0f);
-
         //center
         ong::vec3 playerpos = sba_Players[a_Player]->Ship->m_pBody->getWorldCenter();
         ong::Quaternion playerrot = sba_Players[a_Player]->Ship->m_pBody->getOrientation();
+
+        PuRe_QuaternionF rot = a_pCamera->GetQuaternion();
+        PuRe_QuaternionF urot = PuRe_QuaternionF(PuRe_Vector3F(85.0f*PuRe_DegToRad, 0.0f, 0.0f));
+        PuRe_Vector3F cforw = a_pCamera->GetForward();
+        PuRe_Vector3F cside = a_pCamera->GetSide();
+        PuRe_Vector3F cup = a_pCamera->GetUp();
+        rot *= urot;
+
+
+
+        PuRe_Vector3F pos = a_pCamera->GetPosition();
+        pos += cforw;
+        pos -= cside*0.4f;
+        pos -= cup*0.3f;
+        pos -= cforw*0.01f;
+
+        PuRe_Vector3F epos, ediff;
+        playerrot.v = -playerrot.v;
         for (unsigned int i = 0; i < sba_Players.size(); i++)
         {
             if (i != a_Player)
             {
-                ong::vec3 epos = sba_Players[i]->Ship->m_pBody->getWorldCenter();
-                ong::vec3 diff = playerpos - epos;
+                ong::vec3 diff = playerpos - sba_Players[i]->Ship->m_pBody->getWorldCenter();
                 //Normalize
                 diff.x /= a_OriginDistance;
                 diff.y /= a_OriginDistance;
                 diff.z /= a_OriginDistance;
+                diff = ong::rotate(ong::vec3(diff.x,diff.y,diff.z), playerrot);
+
+                ediff = (PuRe_Vector3F(-diff.x,-diff.z,diff.y) * rot);
+
+                epos = pos + ediff*0.1f;
 
 
 
-                diff = ong::rotate(diff, playerrot);
-
-                PuRe_Vector3F pos;
-                pos.X = diff.x*64.0f;
-                pos.Y = -diff.z*64.0f;
-                pos.Z = diff.y*64.0f;
-
-                pos += a_Position;
-                a_pUI->Draw(2, sba_Renderer, "minimap_enemy", a_pMaterial, pos, PuRe_Vector3F(), a_Target, PuRe_Vector2F(1.0f, 1.0f));
+                //a_pUI->Draw(1, sba_Renderer, "minimap_enemy", a_pMaterial, epos, rot.GetMatrix(), a_Target, PuRe_Vector2F(1.0f, diff.y*10.0f));
+                a_pUI->Draw(1, sba_Renderer, "minimap_enemy", a_pMaterial, epos, rot.GetMatrix(), a_Target, PuRe_Vector2F(0.001f, 0.001f));
 
             }
         }
-
-        a_pUI->Draw(2, sba_Renderer, "minimap_ground", a_pMaterial, a_Position, rot, a_Target, PuRe_Vector2F(0.5f, 0.5f));
-        a_pUI->Draw(2, sba_Renderer, "minimap_player", a_pMaterial, a_Position, rot, a_Target, PuRe_Vector2F(1.0f, 1.0f));
-        a_Position.Y += 32.0f;
-        a_pUI->Draw(2, sba_Renderer, "minimap_parrow", a_pMaterial, a_Position, rot, a_Target, PuRe_Vector2F(1.0f, 1.0f));
-        a_Position.Y -= 32.0f;
+        pos += cforw*0.01f;
+        a_pUI->Draw(1, sba_Renderer, "minimap_ground", a_pMaterial, pos, rot.GetMatrix(), a_Target, PuRe_Vector2F(0.0005f, 0.0005f));
+        pos -= cforw*0.01f;
+        a_pUI->Draw(1, sba_Renderer, "minimap_player", a_pMaterial, pos, rot.GetMatrix(), a_Target, PuRe_Vector2F(0.001f, 0.001f));
+        pos += (PuRe_Vector3F(0.0f, 0.0f, -0.01f) * rot);
+        a_pUI->Draw(1, sba_Renderer, "minimap_parrow", a_pMaterial, pos, rot.GetMatrix(), a_Target, PuRe_Vector2F(0.001f, 0.001f));
+        pos -= (PuRe_Vector3F(0.0f, 0.0f, -0.01f) * rot);
 
     }
 

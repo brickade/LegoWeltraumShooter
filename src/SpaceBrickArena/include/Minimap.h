@@ -6,6 +6,7 @@
 
 
 #include "SpriteReader.h"
+#include "GameCamera.h"
 
 namespace sba
 {
@@ -29,7 +30,7 @@ namespace sba
         /// @param Position to draw at
         /// @param Bounding Box
         ///
-        void Draw(sba::CSpriteReader* a_pUI, PuRe_IMaterial* a_pMaterial, PuRe_Vector3F a_Position, int a_Player, int a_Target, float a_OriginDistance);
+        void Draw(CGameCamera* a_pCamera, sba::CSpriteReader* a_pUI, PuRe_IMaterial* a_pMaterial, PuRe_Vector3F a_Position, int a_Player, int a_Target, float a_OriginDistance);
     };
 }
 #endif /* _MINIMAP_H_ */

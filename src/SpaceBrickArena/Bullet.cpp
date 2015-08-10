@@ -28,27 +28,27 @@ namespace sba
 
         case TheBrick::Laser: //Laser
             sound = "laser_v2";
-            this->m_Damage = 20;
+            this->m_Damage = std::stoi(sba_Balancing->GetValue("Laser_DMG"));
            break;
 
         case TheBrick::MG: //MG
             sound = "mg";
-            this->m_Damage = 10;
+            this->m_Damage = std::stoi(sba_Balancing->GetValue("MG_DMG"));
             break;
 
         case TheBrick::Mine: //Mine
             sound = "mine";
-            this->m_Damage = 100;
+            this->m_Damage = std::stoi(sba_Balancing->GetValue("Mine_DMG"));
             break;
 
         case TheBrick::Rocket: //Rocket
             sound = "torpedo";
-            this->m_Damage = 5;
+            this->m_Damage = std::stoi(sba_Balancing->GetValue("Rocket_DMG"));
             break;
 
         case TheBrick::Torpedo: //Torpedo
             sound = "torpedo";
-            this->m_Damage = 50;
+            this->m_Damage = std::stoi(sba_Balancing->GetValue("Torpedo_DMG"));
             break;
         }
         this->m_SoundChannel = sba_SoundPlayer->PlaySound(sound.c_str(), false, false, std::stof(sba_Options->GetValue("SoundVolume")), TheBrick::OngToPuRe(a_desc->transform.p), PuRe_Vector3F(0.0f, 0.0f, 0.0f), PuRe_Vector2F(1.0f, 10.0f));
