@@ -8,6 +8,7 @@
 #include "TheBrick/Serializer.h"
 #include "Space.h"
 #include "SpriteReader.h"
+#include "Lobby_Network.h"
 
 namespace Menu
 {
@@ -16,12 +17,11 @@ namespace Menu
     private:
         sba::CNavigation* m_pNavigation;
         int m_LocalPlayers;
-        bool m_Run;
         bool m_Start;
-        std::vector<std::thread*> m_Threads;
         PuRe_IWindow* m_pWindow;
         bool m_GameEnd;
         bool m_Focus;
+        sba::CLobbyNetwork* m_pNetwork;
         sba::CSpriteReader* m_pMapSprites;
         bool m_ShipSelect;
     public:
@@ -31,14 +31,6 @@ namespace Menu
         /// @brief Destructor
         ~CLobby();
     public:
-        /// @brief Receive Data
-        ///
-        /// @param Socket we receive from
-        ///
-        void ReceiveData(SOCKET s);
-        /// @brief Listen for incoming Users
-        ///
-        void ListenLoop();
         /// @brief Start Connections
         ///
         void Start();

@@ -63,9 +63,6 @@
     <ClCompile Include="Menu_Lobby.cpp">
       <Filter>Menu</Filter>
     </ClCompile>
-    <ClCompile Include="Menu_Network.cpp">
-      <Filter>Menu</Filter>
-    </ClCompile>
     <ClCompile Include="InputManager.cpp">
       <Filter>Manager</Filter>
     </ClCompile>
@@ -90,9 +87,6 @@
     <ClCompile Include="Game_UI.cpp">
       <Filter>Game</Filter>
     </ClCompile>
-    <ClCompile Include="Game_Network.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
     <ClCompile Include="GameMap.cpp">
       <Filter>Utilities</Filter>
     </ClCompile>
@@ -113,6 +107,15 @@
     </ClCompile>
     <ClCompile Include="Editor_ModeMenu.cpp">
       <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Game_Network.cpp">
+      <Filter>Network</Filter>
+    </ClCompile>
+    <ClCompile Include="Menu_Network.cpp">
+      <Filter>Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Lobby_Network.cpp">
+      <Filter>Network</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -178,9 +181,6 @@
       <Filter>Menu</Filter>
     </ClInclude>
     <ClInclude Include="include\Player.h" />
-    <ClInclude Include="include\Menu_Network.h">
-      <Filter>Menu</Filter>
-    </ClInclude>
     <ClInclude Include="include\Menu_Server.h">
       <Filter>Menu</Filter>
     </ClInclude>
@@ -211,9 +211,6 @@
     <ClInclude Include="include\Game_UI.h">
       <Filter>Game</Filter>
     </ClInclude>
-    <ClInclude Include="include\Game_Network.h">
-      <Filter>Game</Filter>
-    </ClInclude>
     <ClInclude Include="include\GameMap.h">
       <Filter>Utilities</Filter>
     </ClInclude>
@@ -235,6 +232,15 @@
     <ClInclude Include="include\Editor_ModeMenu.h">
       <Filter>Editor</Filter>
     </ClInclude>
+    <ClInclude Include="include\Game_Network.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Menu_Network.h">
+      <Filter>Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Lobby_Network.h">
+      <Filter>Network</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Editor">
@@ -252,14 +258,17 @@
     <Filter Include="Game">
       <UniqueIdentifier>{739204e8-ed8b-4ac1-a81d-0dfb0cdef65b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Menu">
-      <UniqueIdentifier>{87fb103d-c303-4ce4-aeca-4df476054666}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Manager">
       <UniqueIdentifier>{4a5d2d5f-175e-43d1-95e3-26a9daf0c419}</UniqueIdentifier>
     </Filter>
     <Filter Include="Objects">
       <UniqueIdentifier>{6850121a-a426-4883-8919-85ef684ff716}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network">
+      <UniqueIdentifier>{ed371f35-3ebe-4232-877d-a71293afdc0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Menu">
+      <UniqueIdentifier>{87fb103d-c303-4ce4-aeca-4df476054666}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
