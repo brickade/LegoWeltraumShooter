@@ -42,8 +42,9 @@ namespace sba
 #endif
     const int CSpaceship::MAX_BRICK_HEIGHT = CSpaceship::MAX_BRICK_WIDTH;
     const int CSpaceship::MAX_COCKPITS = 2;
-    const int CSpaceship::MAX_ENGINES = 5;
-    const int CSpaceship::MAX_WEAPONS = 5;
+    const int CSpaceship::MAX_ENGINES = 6;
+    const int CSpaceship::MAX_WEAPONS = 6;
+    const int CSpaceship::MAX_PERKS = 10;
 
     // **************************************************************************
     // **************************************************************************

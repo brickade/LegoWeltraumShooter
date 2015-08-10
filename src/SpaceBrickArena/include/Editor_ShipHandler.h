@@ -41,6 +41,10 @@ namespace Editor
             int Weapons = 0;
             int Engines = 0;
             int Cockpits = 0;
+            int Total() const
+            {
+                return Weapons + Engines + Cockpits;
+            }
         };
 
     private:

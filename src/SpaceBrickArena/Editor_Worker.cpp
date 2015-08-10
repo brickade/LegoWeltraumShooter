@@ -42,7 +42,7 @@ namespace Editor
         this->m_CurrentPosition = PuRe_Vector2I(0, 0);
         this->m_CurrentHeight = 0;
 #ifdef EDITOR_DEV
-        this->m_pCamera->Initialize(PuRe_Vector3F(20, 135, 0), PuRe_Vector3F(-1, 0, 0),10.0f,120.0f,50.0f);
+        this->m_pCamera->Initialize(PuRe_Vector3F(20, 135, 0), PuRe_Vector3F(-1, 0, 0), 10.0f, 120.0f, 50.0f);
 #else
         this->m_pCamera->Initialize(PuRe_Vector3F(20, 135, 0), PuRe_Vector3F(-1, 0, 0));
 #endif
@@ -50,7 +50,7 @@ namespace Editor
         this->m_PlaceBelow = false;
         this->m_pCurrentBrickObject = new TheBrick::CGameObject(*sba_World, nullptr);
         this->m_CurrentHeightIsInvalid = true;
-        
+
         /*this->m_pGridMaterial = a_pGraphics.LoadMaterial("../data/effects/editor/grid");
         this->m_pGridBrick = new PuRe_Model(&a_pGraphics, "../data/models/Brick1X1.obj");*/
     }
@@ -159,9 +159,10 @@ namespace Editor
         sba_Space->RenderFont(std::to_string(ship.m_pBricks.size()) + "/" + std::to_string(sba::CSpaceship::MAX_BRICK_COUNT) + " Bricks", PuRe_Vector2F(sba_Width - 300.0f, sba_Height - 50.0f), 18);
         sba_Space->RenderFont("Ship: " + ship.GetName(), PuRe_Vector2F(sba_Width / 2 - 200.0f, sba_Height - 50.0f), 18);
         const CShipHandler::ShipDataCache& shipData = a_rShipHandler.GetCurrentShipData();
-        sba_Space->RenderFont(std::to_string(shipData.Cockpits) + " Cockpits [1-" + std::to_string(sba::CSpaceship::MAX_COCKPITS) + "]", PuRe_Vector2F(sba_Width - 300.0f, sba_Height - 100.0f), 14);
-        sba_Space->RenderFont(std::to_string(shipData.Engines) + " Engines [1-" + std::to_string(sba::CSpaceship::MAX_ENGINES) + "]", PuRe_Vector2F(sba_Width - 300.0f, sba_Height - 140.0f), 14);
-        sba_Space->RenderFont(std::to_string(shipData.Weapons) + " Weapons [1-" + std::to_string(sba::CSpaceship::MAX_WEAPONS) + "]", PuRe_Vector2F(sba_Width - 300.0f, sba_Height - 180.0f), 14);
+        sba_Space->RenderFont(std::to_string(sba::CSpaceship::MAX_PERKS - shipData.Total()) + " Perks left", PuRe_Vector2F(sba_Width - 300.0f, sba_Height - 100.0f), 18);
+        sba_Space->RenderFont(std::to_string(shipData.Cockpits) + " Cockpits [1-" + std::to_string(sba::CSpaceship::MAX_COCKPITS) + "]", PuRe_Vector2F(sba_Width - 300.0f, sba_Height - 140.0f), 14);
+        sba_Space->RenderFont(std::to_string(shipData.Engines) + " Engines [1-" + std::to_string(sba::CSpaceship::MAX_ENGINES) + "]", PuRe_Vector2F(sba_Width - 300.0f, sba_Height - 180.0f), 14);
+        sba_Space->RenderFont(std::to_string(shipData.Weapons) + " Weapons [1-" + std::to_string(sba::CSpaceship::MAX_WEAPONS) + "]", PuRe_Vector2F(sba_Width - 300.0f, sba_Height - 220.0f), 14);
     }
 
     // **************************************************************************
@@ -238,7 +239,7 @@ namespace Editor
         PuRe_Vector2F forwardN = forward;
         forwardN.Normalize();
         if (sba_Input->LastInputWasGamepad() && abs(abs(forward.X) - abs(forward.Y)) < 0.1f)
-        {   
+        {
             float alpha = 45;
             if (PuRe_Vector2F::Dot(forwardN.Side(), forwardRaw) > 0) //Detect right direction
             {
@@ -422,7 +423,7 @@ namespace Editor
         { //Hit the same brick, state still valid
             return;
         }
-        
+
         //Restore old state adhesive bricks
         this->RestoreAdhesiveBricksToDelete();
         this->m_AdhesiveBricksToDelete.clear();
@@ -540,10 +541,22 @@ namespace Editor
     {
         //Check if can place and for max special bricks count
         const CShipHandler::ShipDataCache& shipData = a_rShipHandler.GetCurrentShipData();
-        if (!this->m_CanPlaceHere
-            || (this->m_pCurrentBrick->m_pBrick->GetCategoryId() == CBrickCategory::CATEGORY_COCKPITS && shipData.Cockpits >= sba::CSpaceship::MAX_COCKPITS)
-            || (this->m_pCurrentBrick->m_pBrick->GetCategoryId() == CBrickCategory::CATEGORY_WEAPONS && shipData.Weapons >= sba::CSpaceship::MAX_WEAPONS)
-            || (this->m_pCurrentBrick->m_pBrick->GetCategoryId() == CBrickCategory::CATEGORY_ENGINES && shipData.Engines >= sba::CSpaceship::MAX_ENGINES))
+        if (!this->m_CanPlaceHere) //Multiple ifs so it stays readable
+        {
+            return;
+
+        }
+        int categoryID = this->m_pCurrentBrick->m_pBrick->GetCategoryId();
+        if ((categoryID == CBrickCategory::CATEGORY_COCKPITS && shipData.Cockpits >= sba::CSpaceship::MAX_COCKPITS)
+            || (categoryID == CBrickCategory::CATEGORY_WEAPONS && shipData.Weapons >= sba::CSpaceship::MAX_WEAPONS)
+            || (categoryID == CBrickCategory::CATEGORY_ENGINES && shipData.Engines >= sba::CSpaceship::MAX_ENGINES))
+        {
+            return;
+        }
+        if ((categoryID == CBrickCategory::CATEGORY_COCKPITS
+            || categoryID == CBrickCategory::CATEGORY_WEAPONS
+            || categoryID == CBrickCategory::CATEGORY_ENGINES)
+            && shipData.Total() >= sba::CSpaceship::MAX_PERKS)
         {
             return;
         }
@@ -585,7 +598,7 @@ namespace Editor
             //Set states
             a_rShipHandler.UpdateCurrentShipData();
             this->m_CurrentHeightIsInvalid = true;
-            
+
             //Delete
             SAFE_DELETE(this->m_BrickToDelete.BrickInstance);
             this->m_BrickToDelete.BrickInstance = nullptr;
@@ -627,7 +640,7 @@ namespace Editor
             }
             /*if (sba_Input->LastInputWasGamepad())
             {
-                MoveInput *= PuRe_clamp((this->m_GamepadMovementSpeedupTimer) * 4 - 1, 0.75f, 5);
+            MoveInput *= PuRe_clamp((this->m_GamepadMovementSpeedupTimer) * 4 - 1, 0.75f, 5);
             }*/
             if (this->m_UndoRedoScrollTimer < -this->m_ScrollingStart || sba_Input->ButtonPressed(sba_Button::EditorUndo, this->m_PlayerIdx))
             { //Undo
@@ -710,10 +723,10 @@ namespace Editor
 
         /*if (sba_Input->ButtonPressed(sba_Button::EditorResetShip, this->m_playerIdx))
         {         //Reset/Delete Ship
-            a_rShipHandler.ResetCurrentShip();
-            this->m_pHistory->Clear();
-            a_rShipHandler.UpdateCurrentShipData();
-            this->m_CurrentBrickHeightIstInvalid = true;
+        a_rShipHandler.ResetCurrentShip();
+        this->m_pHistory->Clear();
+        a_rShipHandler.UpdateCurrentShipData();
+        this->m_CurrentBrickHeightIstInvalid = true;
         }*/
     }
 

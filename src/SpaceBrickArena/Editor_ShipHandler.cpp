@@ -24,6 +24,7 @@ namespace Editor
         }*/
         this->m_pNavigation = new sba::CNavigation(1, elements);
         this->m_pCurrentSpaceship = sba_ShipManager->GetShip(0);
+        this->UpdateCurrentShipData();
         this->m_pInputField = new sba::CInputField((sba::CInputField::InputTypes::Type)(sba::CInputField::InputTypes::NUMBERS | sba::CInputField::InputTypes::LETTERS_UPPERCASE | sba::CInputField::InputTypes::LETTERS_LOWERCASE | sba::CInputField::InputTypes::UNDERLINE));
         if (this->GetCurrentSpaceShip() == nullptr)
         {
@@ -201,6 +202,7 @@ namespace Editor
     void CShipHandler::ResetCurrentShip()
     {
         sba_ShipManager->ResetShip(*this->GetCurrentSpaceShip());
+        this->UpdateCurrentShipData();
     }
 
     // **************************************************************************
