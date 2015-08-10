@@ -1,0 +1,4 @@
+brick_kasten_tile = 751 0 506 634
+editor_buttons = 0 511 201 55
+editor_menue = 0 371 737 139
+farb_kasten_editor = 0 0 750 370

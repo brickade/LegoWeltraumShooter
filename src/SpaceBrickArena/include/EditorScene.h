@@ -42,6 +42,8 @@ namespace Editor
         PuRe_IMaterial* m_pDirectionalLightMaterial;
 
         PuRe_Camera* m_UICamera;
+
+        sba::CSpriteReader* m_pSpriteReader;
         
         Editor::CBrickSupervisor* m_pBrickSupervisor;
         Editor::CWorker* m_pWorker;

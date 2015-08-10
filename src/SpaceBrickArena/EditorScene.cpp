@@ -19,6 +19,8 @@ namespace Editor
         this->InitCommonRenderComponents(&this->m_pPostMaterial, &this->m_pDirectionalLight, &this->m_pDirectionalLightMaterial, &this->m_pPointLight, &this->m_pPointLightMaterial, &this->m_UICamera);
         this->m_pUIMaterial = a_pApplication->GetGraphics()->LoadMaterial("../data/effects/UI/default");
 
+        this->m_pSpriteReader = new sba::CSpriteReader(a_pApplication->GetGraphics(), "../data/textures/ui/editor.png", "../data/textures/ui/editor.txt");
+
         this->m_pBrickSupervisor = new Editor::CBrickSupervisor(this->m_PlayerIdx);
         this->m_pBrickSupervisor->Initialize(*a_pApplication->GetGraphics());
 
@@ -91,15 +93,15 @@ namespace Editor
             }
             if (!sba_Input->ButtonIsPressed(sba_Button::EditorFadeHold, this->m_PlayerIdx) && !sba_Input->ButtonIsPressed(sba_Button::EditorUndoRedoHold, this->m_PlayerIdx))
             {
-                if (this->m_pBrickSupervisorFader->IsVisible())
+                if (this->m_pBrickSupervisorFader->GetVisibility() > 1.0f - FLT_EPSILON)
                 {
                     this->m_pBrickSupervisor->Update(*a_pApplication->GetGraphics(), *a_pApplication->GetWindow(), *a_pApplication->GetTimer(), *a_pApplication->GetSoundPlayer());
                 }
-                if (this->m_pColorFieldsFader->IsVisible())
+                if (this->m_pColorFieldsFader->GetVisibility() > 1.0f - FLT_EPSILON)
                 {
                     this->m_pColorFields->Update(*a_pApplication->GetGraphics(), *a_pApplication->GetWindow(), *a_pApplication->GetTimer(), *a_pApplication->GetSoundPlayer());
                 }
-                if (this->m_pModeMenuFader->IsVisible())
+                if (this->m_pModeMenuFader->GetVisibility() > 1.0f - FLT_EPSILON)
                 {
                     this->m_pModeMenu->Update(*a_pApplication->GetGraphics(), *a_pApplication->GetWindow(), *a_pApplication->GetTimer(), *a_pApplication->GetSoundPlayer());
                 }
@@ -130,9 +132,9 @@ namespace Editor
             //----------Edit----------
             this->m_pWorker->Render(*this->m_pShipHandler);
             sba_BrickManager->Render();
-            this->m_pBrickSupervisor->Render(*a_pApplication->GetGraphics(), this->m_pBrickSupervisorFader->GetVisibility());
-            this->m_pColorFields->Render(*a_pApplication->GetGraphics(), this->m_pColorFieldsFader->GetVisibility());
-            this->m_pModeMenu->Render(*a_pApplication->GetGraphics(), this->m_pModeMenuFader->GetVisibility());
+            this->m_pBrickSupervisor->Render(*a_pApplication->GetGraphics(), *this->m_pSpriteReader, this->m_pBrickSupervisorFader->GetVisibility());
+            this->m_pColorFields->Render(*a_pApplication->GetGraphics(), *this->m_pSpriteReader, this->m_pColorFieldsFader->GetVisibility());
+            this->m_pModeMenu->Render(*a_pApplication->GetGraphics(), *this->m_pSpriteReader, this->m_pModeMenuFader->GetVisibility());
             break;
         }
         //Post
@@ -164,8 +166,8 @@ namespace Editor
         sba_Renderer->Render(0, 0, a_pSceneCamera, a_pPostMaterial, sba_FinalMaterial); //Scene
         if (a_pUICamera != nullptr)
         {
-            sba_Renderer->Render(0, 1, a_pUICamera, a_pPostMaterial, sba_FinalMaterial); //UI    
-            sba_Renderer->Render(0, 2, a_pUICamera, a_pUIMaterial, sba_FinalMaterial); //Font
+            sba_Renderer->Render(0, 1, a_pUICamera, a_pUIMaterial, sba_FinalMaterial); //UI    
+            sba_Renderer->Render(0, 2, a_pUICamera, a_pUIMaterial, sba_FinalMaterial); //Font & Bricks
         }
         sba_Renderer->End();
     }
@@ -214,6 +216,7 @@ namespace Editor
         SAFE_DELETE(this->m_pShipHandler);
         SAFE_DELETE(this->m_pWorker);
         SAFE_DELETE(this->m_pBrickSupervisor);
+        SAFE_DELETE(this->m_pSpriteReader);
         SAFE_DELETE(this->m_pUIMaterial);
         SAFE_DELETE(this->m_UICamera);
         SAFE_DELETE(this->m_pDirectionalLightMaterial);

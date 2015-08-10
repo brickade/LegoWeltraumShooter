@@ -19,7 +19,7 @@ namespace Editor
         {
             lastBrickSubId++;
         }
-        this->m_pNavigation = new sba::CNavigation(3, lastBrickSubId);
+        this->m_pNavigation = new sba::CNavigation(4, lastBrickSubId);
     }
 
     // **************************************************************************
@@ -60,9 +60,9 @@ namespace Editor
             }
             PuRe_Vector3F pos = PuRe_Vector3F(this->m_ListStart + this->m_ListStep * listPos, 0);
             pos.Y = a_pGraphics.GetDescription().ResolutionHeight - pos.Y; //Invert Y
-            pos.X -= (1.0f - a_Visibility) * (this->m_pNavigation->GetElementsCountPerLine() * this->m_ListStep.X + this->m_ListStart.X);
+            pos.X -= (1.0f - a_Visibility) * 750;
             assert(this->m_Bricks[i]->GetPivotOffset().Length() > FLT_EPSILON * 5);
-            PuRe_MatrixF rot = PuRe_MatrixF::Translation(-this->m_Bricks[i]->GetPivotOffset() * this->m_ElementSize) * PuRe_MatrixF::RotationAxis(PuRe_Vector3F(0, 1, 0), this->m_Rotation) * PuRe_MatrixF::Rotation(-this->m_Pitch, 0, 0);
+            PuRe_MatrixF rot = PuRe_MatrixF::Translation(-this->m_Bricks[i]->GetPivotOffset() * this->m_ElementSize * 0.5f) * PuRe_MatrixF::RotationAxis(PuRe_Vector3F(0, 1, 0), this->m_Rotation) * PuRe_MatrixF::Rotation(-this->m_Pitch, 0, 0);
 
             PuRe_Color color = PuRe_Color(0, 1, 0);
             if (this->m_pNavigation->GetFocusedElementId() == i)
@@ -70,7 +70,14 @@ namespace Editor
                 color = PuRe_Color(0, 0, 1);
             }
 
-            float size = this->m_ElementSize / this->m_Bricks[i]->GetPivotOffset().Length();
+            float size = this->m_Bricks[i]->GetPivotOffset().Length() * 1.5f;
+            std::vector<ong::ColliderData>& colliderData = this->m_Bricks[i]->GetColliderData();
+            float mass = 0;
+            for (auto& collider : colliderData)
+            {
+                mass += collider.massData.m * 10;
+            }
+            size = this->m_ElementSize / max(size, mass);
             size += this->m_ElementSize;
             size *= 0.5f;
             //Tmp Engine resize
@@ -78,7 +85,7 @@ namespace Editor
             {
                 size *= 0.65f;
             }
-            sba_Renderer->Draw(1, false, this->m_Bricks[i]->GetModel(), PuRe_Primitive::Triangles, sba_BrickManager->GetBrickUIMaterial(), pos, rot, PuRe_Vector3F::Zero(), PuRe_Vector3F(size, size, size), color);
+            sba_Renderer->Draw(2, false, this->m_Bricks[i]->GetModel(), PuRe_Primitive::Triangles, sba_BrickManager->GetBrickUIMaterial(), pos, rot, PuRe_Vector3F::Zero(), PuRe_Vector3F(size, size, size), color);
         }
     }
 
@@ -88,9 +95,9 @@ namespace Editor
     {
         PuRe_Vector3F pos = PuRe_Vector3F(this->m_TabStart + this->m_TabStep * (float)this->m_Id, 0);
         pos.Y = a_pGraphics.GetDescription().ResolutionHeight - pos.Y; //Invert Y
-        pos.X -= (1.0f - a_Visibility) * (this->m_pNavigation->GetElementsCountPerLine() * this->m_ListStep.X + this->m_ListStart.X);
+        pos.X -= (1.0f - a_Visibility) * 750;
 
-        PuRe_MatrixF rot = PuRe_MatrixF::Translation(-this->m_Bricks[0]->GetPivotOffset() * this->m_TabSize) * PuRe_MatrixF::RotationAxis(PuRe_Vector3F(0, 1, 0), a_TabRotation) * PuRe_MatrixF::Rotation(-this->m_Pitch, 0, 0);
+        PuRe_MatrixF rot = PuRe_MatrixF::Translation(-this->m_Bricks[0]->GetPivotOffset() * this->m_TabSize * 0.5f) * PuRe_MatrixF::RotationAxis(PuRe_Vector3F(0, 1, 0), a_TabRotation) * PuRe_MatrixF::Rotation(-this->m_Pitch * 0.5f, 0, 0);
 
         PuRe_Color color = PuRe_Color(1, 0, 0);
         if (a_IsSelected)
@@ -98,14 +105,25 @@ namespace Editor
             color = PuRe_Color(0, 1, 1);
         }
 
-        float size = this->m_TabSize / this->m_Bricks[0]->GetPivotOffset().Length();
+        float size = this->m_Bricks[0]->GetPivotOffset().Length() * 1.5f;
+        std::vector<ong::ColliderData>& colliderData = this->m_Bricks[0]->GetColliderData();
+        float mass = 0;
+        for (auto& collider : colliderData)
+        {
+            mass += collider.massData.m * 10;
+        }
+        size = this->m_TabSize / max(size, mass);
         size += this->m_TabSize;
         size *= 0.5f;
+        if (this->m_Id == CATEGORY_WEAPONS)
+        { //Hardcoded make Weapon tab brick smaller
+            size *= 0.7f;
+        }
         if (this->m_Bricks[0]->GetCategoryId() == CBrickCategory::CATEGORY_ENGINES)
         {
-            size *= 0.65f;
+            size *= 0.6f;
         }
-        sba_Renderer->Draw(1, false, this->m_Bricks[0]->GetModel(), PuRe_Primitive::Triangles, sba_BrickManager->GetBrickUIMaterial(), pos, rot, PuRe_Vector3F::Zero(), PuRe_Vector3F(size, size, size), color);
+        sba_Renderer->Draw(2, false, this->m_Bricks[0]->GetModel(), PuRe_Primitive::Triangles, sba_BrickManager->GetBrickUIMaterial(), pos, rot, PuRe_Vector3F::Zero(), PuRe_Vector3F(size, size, size), color);
     }
 
     // **************************************************************************

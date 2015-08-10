@@ -6,6 +6,7 @@
 
 namespace sba
 {
+    class CSpriteReader;
     class CNavigation;
     class CSpaceship;
 }
@@ -32,7 +33,7 @@ namespace Editor
         PuRe_Quad* m_pQuad;
 
         float m_ElementSize = 20;
-        PuRe_Vector2F m_ListStart = PuRe_Vector2F(50, 350);
+        PuRe_Vector2F m_ListStart = PuRe_Vector2F(/*80*/500, 360);
         PuRe_Vector2F m_ListStep = PuRe_Vector2F(60, -60);
 
     public:
@@ -41,7 +42,7 @@ namespace Editor
 
         void Initialize(PuRe_IGraphics& a_pGraphics);
         void Update(PuRe_IGraphics& a_pGraphics, PuRe_IWindow& a_pWindow, PuRe_Timer& a_pTimer, PuRe_SoundPlayer& a_pSoundPlayer);
-        void Render(PuRe_IGraphics& a_pGraphics, float a_Visibility);
+        void Render(PuRe_IGraphics& a_pGraphics, sba::CSpriteReader& a_rSpriteReader, float a_Visibility);
 
         PuRe_Color& GetCurrentColor();
 
