@@ -123,6 +123,7 @@ namespace sba
                 EditorCameraZoom,
                 EditorColorSlider,
                 GameShootMG,
+                GamePauseSwitch,
                 GameThrust_1,
                 GameThrust_2,
                 GameThrust_3,
@@ -167,6 +168,8 @@ namespace sba
                 GameShootTorpedo2,
                 GameThrust,
                 GameThrustB_1,
+                GamePause,
+                GameClick,
                 Exit,
                 LAST = Exit
             };

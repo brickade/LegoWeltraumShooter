@@ -57,6 +57,48 @@ namespace sba
 
     // **************************************************************************
     // **************************************************************************
+    bool CLobbyNetwork::IsShip() const
+    {
+        return this->m_ShipSelect;
+    }
+
+
+    // **************************************************************************
+    // **************************************************************************
+    void CLobbyNetwork::GoShip()
+    {
+        //send that everyone should go to ship select mode
+        if (sba_Network->IsConnected())
+        {
+            this->m_ShipSelect = true;
+            sba::SHeadPacket hp;
+            hp.Type = sba::EPacket::Ship;
+            for (unsigned int i = 0; i < sba_Players.size(); i++)
+                if (sba_Players[i]->PadID == -1)
+                    sba_Network->Send((char*)&hp, sizeof(sba::SHeadPacket), sba_Players[i]->NetworkInformation, true);
+        }
+    }
+
+
+    // **************************************************************************
+    // **************************************************************************
+    void CLobbyNetwork::GoBack()
+    {
+        //send that everyone should go to Menu mode
+        if (sba_Network->IsConnected())
+        {
+            this->m_ShipSelect = false;
+            sba::SHeadPacket hp;
+            hp.Type = sba::EPacket::Menu;
+            for (unsigned int i = 0; i < sba_Players.size(); i++)
+                if (sba_Players[i]->PadID == -1)
+                    sba_Network->Send((char*)&hp, sizeof(sba::SHeadPacket), sba_Players[i]->NetworkInformation, true);
+        }
+    }
+
+
+    // **************************************************************************
+    // **************************************************************************
     void CLobbyNetwork::Exit()
     {
         if (sba_Network->IsConnected())
@@ -596,7 +638,10 @@ namespace sba
                     }
                 }
                 else
+                {
                     this->m_Running = false;
+                    this->m_End = true;
+                }
                 break;
             }
 
@@ -648,6 +693,18 @@ namespace sba
 
                     packetSize = sizeof(sba::SHeadPacket);
                 }
+                else if (rpacket->Head.Type == sba::EPacket::Menu&&leftData >= sizeof(sba::SHeadPacket))
+                {
+                    printf("GoTo Menu\n");
+                    this->m_ShipSelect = false;
+                    packetSize = sizeof(sba::SHeadPacket);
+                }
+                else if (rpacket->Head.Type == sba::EPacket::Ship&&leftData >= sizeof(sba::SHeadPacket))
+                {
+                    printf("GoTo Ship Selection\n");
+                    this->m_ShipSelect = true;
+                    packetSize = sizeof(sba::SHeadPacket);
+                }
                 else if (rpacket->Head.Type == sba::EPacket::Start&&leftData >= sizeof(sba::SHeadPacket))
                 {
                     printf("GAME START\n");
@@ -690,6 +747,7 @@ namespace sba
                     iam.Head.Type = sba::EPacket::IAm;
                     iam.ID = ID;
                     iam.Pad = wpackets->Pad;
+                    memcpy(iam.Map, sba_Map->GetName().c_str(), sba::MaxName);
                     printf("Send Client to Clients\n");
                     sba_Network->Send((char*)&iam, sizeof(sba::SIamPacket), s, true);
                     packetSize = sizeof(sba::SWhoamIPacket);

@@ -19,11 +19,11 @@ namespace Menu
         int m_LocalPlayers;
         bool m_Start;
         PuRe_IWindow* m_pWindow;
-        bool m_GameEnd;
         bool m_Focus;
+        bool m_ShipSelect;
         sba::CLobbyNetwork* m_pNetwork;
         sba::CSpriteReader* m_pMapSprites;
-        bool m_ShipSelect;
+        PuRe_Sprite* m_pUnknownShip;
     public:
         /// @brief Constructor
         ///

@@ -19,7 +19,6 @@
 // Declare namespace Game
 namespace sba
 {
-
     /// @brief MainScene where the game functions are in, inherits from the Scene interface
     ///
     class CGameScene : public PuRe_IScene
@@ -28,6 +27,8 @@ namespace sba
         unsigned int m_Test;
         CGameNetwork* m_pNetwork;
         //Determinate who won and save him even when others are still playing
+        bool m_Pause;
+        bool m_PauseEnd;
         bool m_Won;
         int m_WonID;
         int m_WonIndex;
@@ -60,6 +61,7 @@ namespace sba
         PuRe_IMaterial* m_pPointLightMaterial;
         PuRe_IMaterial* m_pDirectionalLightMaterial;
         PuRe_IMaterial* m_pParticleMaterial;
+        PuRe_IMaterial* m_pExplosionMaterial;
         PuRe_IMaterial* m_pEngineMaterial;
         PuRe_IMaterial* m_pSpriteMaterial;
 
@@ -69,6 +71,7 @@ namespace sba
         PuRe_Sprite* m_pParticle3Sprite;
         std::vector<PuRe_ParticleEmitter*> m_SpaceEmitter;
         std::vector<CGameCamera*> m_Cameras;
+        std::vector<ExplosionEmitter> m_ExplosionEmitter;
         std::vector<sba::CBullet*> m_Bullets;
         std::vector<sba::CAsteroid*> m_Asteroids;
         std::vector<sba::CItem*> m_Items;
@@ -89,7 +92,7 @@ namespace sba
         static void ProcessInput(std::vector<CBullet*>& a_rBullets, SPlayer* a_pPlayer, sba::SInputData* a_Input, float a_DeltaTime, int a_Time);
         /// @brief Update a Game
         ///
-        static void UpdateGame(std::vector<CBullet*>& a_rBullets, std::vector<CItem*>& a_rItems, float a_Deltatime);
+        static void UpdateGame(std::vector<ExplosionEmitter>& a_rExplosions, std::vector<CBullet*>& a_rBullets, std::vector<CItem*>& a_rItems, float a_Deltatime, int a_Time);
         /// @brief Handle Local Data
         ///
         void HandleLocal();

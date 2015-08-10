@@ -16,7 +16,7 @@ namespace sba
 
     // **************************************************************************
     // **************************************************************************
-    void CMinimap::Draw(CGameCamera* a_pCamera, sba::CSpriteReader* a_pUI, PuRe_IMaterial* a_pMaterial, PuRe_Vector3F a_Position, int a_Player, int a_Target, float a_OriginDistance)
+    void CMinimap::Draw(CGameCamera* a_pCamera, sba::CSpriteReader* a_pUI, PuRe_IMaterial* a_pMaterial, int a_Player, int a_Target, float a_OriginDistance)
     {
         //center
         ong::vec3 playerpos = sba_Players[a_Player]->Ship->m_pBody->getWorldCenter();
@@ -33,7 +33,6 @@ namespace sba
 
         PuRe_Vector3F pos = a_pCamera->GetPosition();
         pos += cforw;
-        pos -= cside*0.4f;
         pos -= cup*0.3f;
         pos -= cforw*0.01f;
 

@@ -9,6 +9,12 @@
 namespace sba
 {
 
+    struct ExplosionEmitter
+    {
+        PuRe_ParticleEmitter* pEmitter;
+        float LifeTime;
+        int Bullet;
+    };
     enum { BufferSize = 32 };
     struct PlayOutBuffer
     {
@@ -23,7 +29,7 @@ namespace sba
     //typedef std::function<void(std::vector<CBullet*>&, SPlayer*, sba::SInputData*, float)> pInput;
     //typedef std::function<SInputData(int)> hInput;
 
-    typedef void(*gUpdate)(std::vector<CBullet*>&, std::vector<CItem*>&,float);
+    typedef void(*gUpdate)(std::vector<ExplosionEmitter>&, std::vector<CBullet*>&, std::vector<CItem*>&, float,int);
     typedef void(*pInput)(std::vector<CBullet*>&, SPlayer*, sba::SInputData*, float, int);
     typedef SInputData(*hInput)(int, PuRe_IInput*);
 
@@ -48,7 +54,7 @@ namespace sba
         ~CGameNetwork();
     public:
         void Initialize();
-        void UpdateNetwork(std::vector<CBullet*>& a_rBullets, std::vector<CItem*>& a_rItems, PuRe_IInput* a_pInput, float a_DeltaTime, float& a_rEndTime, hInput hInput, pInput pInput, gUpdate gUpdate);
+        void UpdateNetwork(std::vector<ExplosionEmitter>& a_rExplosions, std::vector<CBullet*>& a_rBullets, std::vector<CItem*>& a_rItems, PuRe_IInput* a_pInput, float a_DeltaTime, float& a_rEndTime, hInput hInput, pInput pInput, gUpdate gUpdate);
         void Receive(SOCKET s);
         void Update(float a_DeltaTime);
     };

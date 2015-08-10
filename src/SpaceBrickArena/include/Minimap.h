@@ -27,10 +27,8 @@ namespace sba
         /// @param Graphic Object
         /// @param Camera to use
         /// @param Material to use
-        /// @param Position to draw at
-        /// @param Bounding Box
         ///
-        void Draw(CGameCamera* a_pCamera, sba::CSpriteReader* a_pUI, PuRe_IMaterial* a_pMaterial, PuRe_Vector3F a_Position, int a_Player, int a_Target, float a_OriginDistance);
+        void Draw(CGameCamera* a_pCamera, sba::CSpriteReader* a_pUI, PuRe_IMaterial* a_pMaterial, int a_Player, int a_Target, float a_OriginDistance);
     };
 }
 #endif /* _MINIMAP_H_ */

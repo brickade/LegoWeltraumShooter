@@ -65,7 +65,7 @@ namespace sba
 
             enum read { Name, Pos, Vel, Rot };
             enum readC { One, Two };
-            enum Type { Object, Item, Light };
+            enum Type { Object, Item, Light,Static };
 
             std::string objectName;
             ong::vec3 pos, vel, rot;
@@ -84,7 +84,26 @@ namespace sba
                     {
                         if (otype == Type::Object)
                         {
-                            sba::CAsteroid* asteroid = new sba::CAsteroid(*sba_World, pos,vel,rot);
+                            ong::BodyDescription desc;
+                            desc.type = ong::BodyType::Dynamic;
+                            desc.transform = ong::Transform(pos, ong::Quaternion(ong::vec3(0, 0, 0), 1));
+                            desc.linearMomentum = vel;
+                            desc.angularMomentum = rot;
+                            sba::CAsteroid* asteroid = new sba::CAsteroid(*sba_World, &desc);
+                            TheBrick::CSerializer serializer;
+                            serializer.OpenRead(objectName.c_str());
+                            asteroid->Deserialize(serializer, sba_BrickManager->GetBrickArray(), *sba_World);
+                            a_rObjects.push_back(asteroid);
+                            serializer.Close();
+                        }
+                        else if (otype == Type::Static)
+                        {
+                            ong::BodyDescription desc;
+                            desc.type = ong::BodyType::Static;
+                            desc.transform = ong::Transform(pos, ong::Quaternion(ong::vec3(0, 0, 0), 1));
+                            desc.linearMomentum = vel;
+                            desc.angularMomentum = rot;
+                            sba::CAsteroid* asteroid = new sba::CAsteroid(*sba_World, &desc);
                             TheBrick::CSerializer serializer;
                             serializer.OpenRead(objectName.c_str());
                             asteroid->Deserialize(serializer, sba_BrickManager->GetBrickArray(), *sba_World);
@@ -129,6 +148,11 @@ namespace sba
                         if (buff.substr(0, buff.find_last_of("@")) == "object")
                         {
                             otype = Type::Object;
+                            objectName = "../data/objects/" + buff.substr(buff.find_last_of("@") + 1) + ".object";
+                        }
+                        else if (buff.substr(0, buff.find_last_of("@")) == "static")
+                        {
+                            otype = Type::Static;
                             objectName = "../data/objects/" + buff.substr(buff.find_last_of("@") + 1) + ".object";
                         }
                         else if (buff.substr(0, buff.find_last_of("@")) == "item")

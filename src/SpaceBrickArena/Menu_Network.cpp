@@ -127,7 +127,10 @@ namespace Menu
                     break;
                 case 1: //Lan
                     this->m_Server = 0;
-                    this->m_Focus = true;
+                    if (this->m_Servers.size() != 0)
+                    {
+                        this->m_Focus = true;
+                    }
                     break;
                 case 2: //Host
                     this->m_Focus = true;
@@ -146,6 +149,8 @@ namespace Menu
         }
         else
         {
+            if (this->m_pNavigation->GetFocusedElementId() == 1 && this->m_Servers.size() == 0)
+                this->m_Focus = false;
             PuRe_Vector2F dir = sba_Input->Direction(sba_Direction::Navigate, a_PlayerIdx);
             switch (this->m_pNavigation->GetFocusedElementId())
             {

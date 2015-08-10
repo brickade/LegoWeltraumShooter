@@ -15,7 +15,7 @@ namespace sba
 	class CAsteroid : public CDestructibleObject
     {
     public:
-        CAsteroid(ong::World& a_rWorld, ong::vec3 a_Position, ong::vec3 a_Velocity, ong::vec3 a_Rotation);
+        CAsteroid(ong::World& a_rWorld, ong::BodyDescription* a_desc);
         ~CAsteroid();
 
         void Update(float a_DeltaTime) override;

@@ -14,7 +14,7 @@ namespace sba
 {
     enum { MaxPlayers = 4, Delay = 10, BroadcastPort =13370, MaxName=12, MaxLength=15, MaxBricks=200};
 
-    enum EPacket { Broadcast, Join, User, IAm,WhoamI, Left,LobbyEnd,Brick,SendCommand,Start,Init,Map, STick, CTick };
+    enum EPacket { Broadcast, Join, User, IAm,WhoamI, Left,LobbyEnd,Ship,Menu,Brick,SendCommand,Start,Init,Map, STick, CTick };
 
     /// @brief Struct which handles the Input one Player does
     ///

@@ -1,0 +1,38 @@
+#version 330 core
+
+in vec2 UV;
+in vec4 Color;
+in vec3 Normal;
+in vec3 Position;
+
+uniform sampler2D Diffuse;
+
+
+void main()
+{
+
+	vec4 blend = texture2D( Diffuse, UV );
+	float alpha = blend.a;
+	
+	vec4 white = blend*vec4(1,1,1,1); //between 100-50
+	vec4 yellow = blend*vec4(1,1,0,1); //between 100-0
+	vec4 red = blend*vec4(1,0,0,1); //between 50 and 0
+
+	float weightWhite = (Color.a * 2)-1.0f; //between 1 and 0.5
+	float weightYellow = (1.0f-Color.a)*2; // between 0.5 ad 0
+	
+	if(weightYellow > 1) weightYellow = 1.0f - (weightYellow-1.0f);
+
+	float weightRed = (0.5f-Color.a)*2; //between 0.5 and 0
+	if(weightRed < 0) weightRed = 0;
+
+	blend = (white*weightWhite) + (yellow * weightYellow) + (red * weightRed);
+
+	blend.a = alpha;
+	if(blend.a < 0.1)
+		discard;
+
+	gl_FragData[0] = blend;
+	gl_FragData[1] = (vec4(-1,0,0,0)+1)/2;
+	gl_FragData[2] = blend;
+}

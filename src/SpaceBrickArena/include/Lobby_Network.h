@@ -16,11 +16,15 @@ namespace sba
         bool m_Running;
         bool m_Started;
         bool m_End;
+        bool m_ShipSelect;
         PuRe_IWindow* m_pWindow;
     public:
         CLobbyNetwork(PuRe_IWindow* a_pWindow);
         ~CLobbyNetwork();
     public:
+        void GoShip();
+        void GoBack();
+        bool IsShip() const;
         bool IsStarted() const;
         bool IsEnded() const;
         bool DeletePlayer(int a_Index);

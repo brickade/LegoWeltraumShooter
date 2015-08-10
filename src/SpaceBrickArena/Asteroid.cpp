@@ -8,13 +8,10 @@ namespace sba
 {
     // **************************************************************************
     // **************************************************************************
-    CAsteroid::CAsteroid(ong::World& a_rWorld, ong::vec3 a_Position, ong::vec3 a_Velocity, ong::vec3 a_Rotation)
-		: CDestructibleObject(a_rWorld, nullptr)
+    CAsteroid::CAsteroid(ong::World& a_rWorld, ong::BodyDescription* a_desc)
+        : CDestructibleObject(a_rWorld, a_desc)
     {
         this->m_Type = TheBrick::EGameObjectType::Object;
-        this->m_pBody->setPosition(a_Position);
-        this->m_pBody->applyImpulse(a_Velocity);
-        this->m_pBody->applyAngularImpulse(a_Rotation);
     }
 
     // **************************************************************************

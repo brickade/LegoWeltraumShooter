@@ -106,18 +106,19 @@ namespace sba
     {
 
         auto got = m_Reader.find(a_pName);
-
-        PuRe_Vector3F origin = PuRe_Vector3F(0.0f, 0.0f, 0.0f);
-        //1.0f = real size, so 128x128
-        //PuRe_Vector3F size = PuRe_Vector3F(got->second.Size.X*Size.X, got->second.Size.Y*Size.Y, 1.0f);
-        PuRe_Vector3F size = PuRe_Vector3F(0.0f, 0.0f, 1.0f);
-        PuRe_Vector2F gsize = this->GetSize();
-        size.X = (got->second.Size.X / gsize.X) * Size.X;
-        size.Y = (got->second.Size.Y / gsize.Y) * Size.Y;
-        PuRe_Vector2F uvsize = PuRe_Vector2F(got->second.Size.X*UVSize.X, got->second.Size.Y*UVSize.Y);
-        PuRe_Color color = PuRe_Color(1.0f, 1.0f, 1.0f, 1.0f);
-        a_pRenderer->Draw(a_Index, false, this->m_pSprite, a_pMaterial, a_Position, a_Rotation, origin, size, color, uvsize, got->second.Position + (UVPos*gsize), a_RenderIndex);
-
+        if (got != m_Reader.end())
+        {
+            PuRe_Vector3F origin = PuRe_Vector3F(0.0f, 0.0f, 0.0f);
+            //1.0f = real size, so 128x128
+            //PuRe_Vector3F size = PuRe_Vector3F(got->second.Size.X*Size.X, got->second.Size.Y*Size.Y, 1.0f);
+            PuRe_Vector3F size = PuRe_Vector3F(0.0f, 0.0f, 1.0f);
+            PuRe_Vector2F gsize = this->GetSize();
+            size.X = (got->second.Size.X / gsize.X) * Size.X;
+            size.Y = (got->second.Size.Y / gsize.Y) * Size.Y;
+            PuRe_Vector2F uvsize = PuRe_Vector2F(got->second.Size.X*UVSize.X, got->second.Size.Y*UVSize.Y);
+            PuRe_Color color = PuRe_Color(1.0f, 1.0f, 1.0f, 1.0f);
+            a_pRenderer->Draw(a_Index, false, this->m_pSprite, a_pMaterial, a_Position, a_Rotation, origin, size, color, uvsize, got->second.Position + (UVPos*gsize), a_RenderIndex);
+        }
         //this->m_pSprite->Draw(a_pCamera, a_pMaterial, got->second.Position, PuRe_Vector2F(got->second.Size.X*UVSize.X, got->second.Size.Y*UVSize.Y), a_Position, PuRe_Vector3F(got->second.Size.X*Size.X, got->second.Size.Y*Size.Y, 1.0f), a_Rotation, PuRe_Vector3F(0.0f, 0.0f, 0.0f));
     }
 
@@ -128,18 +129,19 @@ namespace sba
     {
 
         auto got = m_Reader.find(a_pName);
-
-        PuRe_Vector3F origin = PuRe_Vector3F(0.0f, 0.0f, 0.0f);
-        //1.0f = real size, so 128x128
-        //PuRe_Vector3F size = PuRe_Vector3F(got->second.Size.X*Size.X, got->second.Size.Y*Size.Y, 1.0f);
-        PuRe_Vector3F size = PuRe_Vector3F(0.0f, 0.0f, 1.0f);
-        PuRe_Vector2F gsize = this->GetSize();
-        size.X = (got->second.Size.X / gsize.X) * Size.X;
-        size.Y = (got->second.Size.Y / gsize.Y) * Size.Y;
-        PuRe_Vector2F uvsize = PuRe_Vector2F(got->second.Size.X*UVSize.X, got->second.Size.Y*UVSize.Y);
-        PuRe_Color color = PuRe_Color(1.0f, 1.0f, 1.0f, 1.0f);
-        a_pRenderer->Draw(a_Index, false, this->m_pSprite, a_pMaterial, a_Position, a_Rotation, origin, size, color, uvsize, got->second.Position + (UVPos*gsize), a_RenderIndex);
-      
+        if (got != m_Reader.end())
+        {
+            PuRe_Vector3F origin = PuRe_Vector3F(0.0f, 0.0f, 0.0f);
+            //1.0f = real size, so 128x128
+            //PuRe_Vector3F size = PuRe_Vector3F(got->second.Size.X*Size.X, got->second.Size.Y*Size.Y, 1.0f);
+            PuRe_Vector3F size = PuRe_Vector3F(0.0f, 0.0f, 1.0f);
+            PuRe_Vector2F gsize = this->GetSize();
+            size.X = (got->second.Size.X / gsize.X) * Size.X;
+            size.Y = (got->second.Size.Y / gsize.Y) * Size.Y;
+            PuRe_Vector2F uvsize = PuRe_Vector2F(got->second.Size.X*UVSize.X, got->second.Size.Y*UVSize.Y);
+            PuRe_Color color = PuRe_Color(1.0f, 1.0f, 1.0f, 1.0f);
+            a_pRenderer->Draw(a_Index, false, this->m_pSprite, a_pMaterial, a_Position, a_Rotation, origin, size, color, uvsize, got->second.Position + (UVPos*gsize), a_RenderIndex);
+        }
         //this->m_pSprite->Draw(a_pCamera, a_pMaterial, got->second.Position, PuRe_Vector2F(got->second.Size.X*UVSize.X, got->second.Size.Y*UVSize.Y), a_Position, PuRe_Vector3F(got->second.Size.X*Size.X, got->second.Size.Y*Size.Y, 1.0f), a_Rotation, PuRe_Vector3F(0.0f, 0.0f, 0.0f));
     }
 

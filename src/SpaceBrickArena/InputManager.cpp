@@ -95,6 +95,12 @@ namespace sba
             Input::EKeyboardAxis::MouseScroll
 
         };
+        this->m_pAxisMapping[Input::EAxis::GamePauseSwitch] =
+        {
+            Input::EGamepadAxis::DPadY,
+            Input::EKeyboardAxis::ArrowUD
+
+        };
         this->m_pAxisMapping[Input::EAxis::GameThrust_1] =
         {
             Input::EGamepadAxis::LeftTrigger,
@@ -278,6 +284,16 @@ namespace sba
         {
             Input::EGamepadButton::DPAD_Up,
             Input::EKeyboardButton::W
+        };
+        this->m_pButtonMapping[Input::EButton::GamePause] =
+        {
+            Input::EGamepadButton::Pad_Start,
+            Input::EKeyboardButton::Enter
+        };
+        this->m_pButtonMapping[Input::EButton::GameClick] =
+        {
+            Input::EGamepadButton::Pad_A,
+            Input::EKeyboardButton::Enter
         };
         this->m_pButtonMapping[Input::EButton::Exit] =
         {

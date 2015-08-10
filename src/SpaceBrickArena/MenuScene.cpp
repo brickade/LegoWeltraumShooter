@@ -156,7 +156,7 @@ namespace Menu
         PuRe_Renderer* renderer = sba::Space::Instance()->Renderer;
 
         PuRe_Vector2F resolution = PuRe_Vector2F((float)gdesc.ResolutionWidth, (float)gdesc.ResolutionHeight);
-
+        
         renderer->Begin(PuRe_Color(0.0f, 0.0f, 0.0f));
 
         sba_Renderer->Set(0, 0.0f, "greyscale");

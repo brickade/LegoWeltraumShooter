@@ -90,7 +90,7 @@ namespace sba
 
     // **************************************************************************
     // **************************************************************************
-    void CGameNetwork::UpdateNetwork(std::vector<CBullet*>& a_rBullets,std::vector<CItem*>& a_rItems, PuRe_IInput* a_pInput, float a_DeltaTime, float& a_rEndTime, hInput hInput, pInput pInput, gUpdate gUpdate)
+    void CGameNetwork::UpdateNetwork(std::vector<ExplosionEmitter>& a_rExplosions, std::vector<CBullet*>& a_rBullets, std::vector<CItem*>& a_rItems, PuRe_IInput* a_pInput, float a_DeltaTime, float& a_rEndTime, hInput hInput, pInput pInput, gUpdate gUpdate)
     {
         sba_Network->m_Mutex.lock();
         if (sba_Network->GetHost())
@@ -183,7 +183,7 @@ namespace sba
                     }
                 }
 
-                gUpdate(a_rBullets, a_rItems, 1.0f / 60.0f);
+                gUpdate(a_rExplosions, a_rBullets, a_rItems, 1.0f / 60.0f, this->m_PhysicFrame);
 
                 //Now handle input
 

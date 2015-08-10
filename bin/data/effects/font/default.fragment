@@ -1,9 +1,11 @@
 #version 330 core
 
 in vec2 UV;
+in vec2 VUV;
 in vec4 OColor;
 
 uniform sampler2D Diffuse;
+uniform float verlauf = 0.0;
 
 
 
@@ -11,10 +13,16 @@ void main()
 {
 
 	vec4 blend = texture2D( Diffuse, vec2(UV.x,UV.y) );
-	blend = blend*OColor;
+	blend = (blend*OColor);
 	if(blend.a < 0.1)
 		discard;
+	
+	float val = 0.0;
+	if((1.0f-VUV.y) < verlauf)
+		val = 1.0f;
 
+	float grey = dot(blend.rgb,vec3(0.3, 0.59, 0.11));
+	blend = mix(blend,vec4(grey,grey,grey,blend.a),val);
 	gl_FragData[0] = blend;
 	gl_FragData[1] = (vec4(-1,0,0,0)+1)/2;
 }
