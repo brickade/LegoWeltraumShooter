@@ -126,7 +126,7 @@ namespace Editor
         {
         case EEditorState::SelectShip:
             //---------Select---------
-            this->m_pShipHandler->Render();
+            this->m_pShipHandler->Render(*this->m_pSpriteReader);
             break;
         case EEditorState::EditShip:
             //----------Edit----------

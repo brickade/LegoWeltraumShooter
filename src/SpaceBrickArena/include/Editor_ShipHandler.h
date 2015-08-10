@@ -85,7 +85,7 @@ namespace Editor
         ~CShipHandler();
 
         void Update();
-        void Render();
+        void Render(sba::CSpriteReader& a_rSpriteReader);
 
         void AddShip(const char* a_pName);
         void SaveCurrentShip();

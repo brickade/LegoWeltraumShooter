@@ -123,7 +123,7 @@ namespace Editor
 
     // **************************************************************************
     // **************************************************************************
-    void CShipHandler::Render()
+    void CShipHandler::Render(sba::CSpriteReader& a_rSpriteReader)
     {
         PuRe_Vector2F center(sba_Width / 2, sba_Height / 2);
         int focus = this->m_pNavigation->GetFocusedElementId();
@@ -133,6 +133,7 @@ namespace Editor
             sba_Renderer->Draw(1, false, (*sba_ShipManager)[focus - 1], sba_Space->SpriteMaterial, PuRe_Vector3F(0 + this->m_OuterPreviewInset, center.Y + this->m_OuterPreviewYOffset, 0), PuRe_MatrixF::Identity(), PuRe_Vector3F((*sba_ShipManager)[focus]->GetSize() * 0.5f, 0), PuRe_Vector3F(this->m_OuterPreviewSize, this->m_OuterPreviewSize, this->m_OuterPreviewSize));
         }
         //Center
+        a_rSpriteReader.Draw(1, sba_Renderer, "farb_kasten_editor", sba_Space->FontMaterial, PuRe_Vector3F(1920 / 2, 1080 / 2 - 100, 0), PuRe_Vector3F::Zero(), -1, PuRe_Vector2F(0.9f, 0.9f));
         switch (this->m_State)
         {
         case ShipHandlerState::Select:
@@ -144,6 +145,7 @@ namespace Editor
             sba_Space->RenderFont(std::to_string(this->m_pCurrentShipDataCache.Weapons) + " Weapons", center + this->m_TextOffset + this->m_TextStep * 4, 14);
             break;
         case ShipHandlerState::Rename:
+            a_rSpriteReader.Draw(1, sba_Renderer, "editor_buttons", sba_Space->FontMaterial, PuRe_Vector3F(center + this->m_TextOffset + PuRe_Vector2F(150, -45), 0), PuRe_Vector3F::Zero(), -1, PuRe_Vector2F(0.9f, 0.9f));
             sba_Space->RenderFont("\"" + this->m_pCurrentSpaceship->GetName() + "\"", center + this->m_TextOffset + this->m_TextStep * 1, 24);
             sba_Space->RenderFont("Confirm [Enter]", center + this->m_TextOffset + this->m_TextStep * 3, 18);
             sba_Space->RenderFont("Cancel [Esc]", center + this->m_TextOffset + this->m_TextStep * 3.5f, 18);
