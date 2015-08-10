@@ -7,6 +7,87 @@
 namespace ong
 {
 
+	//currently only works with single sphere colliders
+	float _getTimeOfImpact(Body* a, Body* b, ContinuousState* cpS, float tmin)
+	{
+		//raycast
+		float t1 = 1.0f;
+
+
+		Transform ta = a->getTransform();
+		Transform tb = b->getTransform();
+
+		vec3 v = vec3(0, 0, 0);
+
+		if (a->getContinuousPhysics())
+		{
+			assert("continuos collision objects must only contain a single sphere collider!\n" && a->getCollider()->getShape().getType() == ShapeType::SPHERE && a->getNumCollider() == 1);
+			assert(cpS[a->getCpIndex()].t == tmin);
+			v += cpS[a->getCpIndex()].p1 - cpS[a->getCpIndex()].p0;
+		}
+		if (b->getContinuousPhysics())
+		{
+			assert("continuos collision objects must only contain a single sphere collider!\n" && b->getCollider()->getShape().getType() == ShapeType::SPHERE && b->getNumCollider() == 1);
+			assert(cpS[b->getCpIndex()].t == tmin);
+			v -= cpS[b->getCpIndex()].p1 - cpS[b->getCpIndex()].p0;
+		}
+
+
+		float absV = length(v);
+
+		// check for inital overlap
+		if (overlap(a, b, Transform(vec3(0, 0, 0), Quaternion(vec3(0, 0, 0), 1))))
+		{
+			return tmin;
+		}
+
+
+		if (a->getContinuousPhysics() && b->getContinuousPhysics())
+		{
+			//check for collision moving sphere
+			Sphere sA { a->getPosition(), a->getCollider()->getShape().toSphere()->r };
+			Sphere sB{ b->getPosition(), b->getCollider()->getShape().toSphere()->r };
+			float t = 0.0f;
+			overlapMovingSphereSphere(&sA, &sB, v, t, t1);
+			t1 = t;
+		}
+		else
+		{
+			//raycast from position continuous to standard object
+			Body* continuous = 0;
+			Body* standard = 0;
+
+			if (a->getContinuousPhysics())
+			{
+				continuous = a;
+				standard = b;
+			}
+			else if (b->getContinuousPhysics())
+			{
+				continuous = b;
+				standard = a;
+			}
+
+
+			RayQueryResult result = { 0 };
+			vec3 center = continuous->getPosition() + continuous->getCollider()->getShape().toSphere()->r * normalize(v);
+			if (standard->queryRay(center, v, &result, 1.0f))
+			{
+				t1 = result.t;
+			}
+		}
+
+		if (t1 > 1.0f)
+			return 1.0f;
+
+		//scale to timeline
+		t1 = t1 * (1.0f - tmin) + tmin;
+
+		return t1;
+	}
+
+
+
 	//todo maybe use different end condition
 	float getTimeOfImpact(Body* a, Body* b, ContinuousState* cpS, float tmin)
 	{

@@ -60,11 +60,17 @@ void Player::shoot()
 
 		if (!bulletShape)
 		{
+			//ShapeDescription descr;
+			//descr.constructionType = ShapeConstruction::HULL_FROM_BOX;
+			//descr.hullFromBox.c = vec3(0, 0, 0);
+			//descr.hullFromBox.e = vec3(0.1, 0.1, 0.1);
+
 			ShapeDescription descr;
-			descr.constructionType = ShapeConstruction::HULL_FROM_BOX;
-			descr.hullFromBox.c = vec3(0, 0, 0);
-			descr.hullFromBox.e = vec3(0.1, 0.1, 0.1);
-			
+			descr.shapeType = ShapeType::SPHERE;
+			descr.sphere.c = vec3(0, 0, 0);
+			descr.sphere.r = 0.1f;
+
+
 			bulletShape = m_body->getWorld()->createShape(descr);
 		}
 

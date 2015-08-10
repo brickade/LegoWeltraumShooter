@@ -242,7 +242,7 @@ void Entity::render(GLuint colorLocation)
 	glPopMatrix();
 	
 	//continuouslines
-#if 0
+#if 1
 	if (m_body->getContinuousPhysics())
 	{
 

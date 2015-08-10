@@ -36,7 +36,9 @@ namespace ong
 		world->m_cp[cpIdx].t = t;
 		world->m_r[idx].p = world->m_cp[cpIdx].p0;
 
-
+		//DEBUG
+		body->CP_POINTS.push_back(world->m_cp[cpIdx].p0);
+		//printf("advance body %d to %f\n", body->getIndex(), t);
 	}
 
 
@@ -45,6 +47,22 @@ namespace ong
 
 		assert(dt != 0.0f);
 
+
+		//integrate
+		ong_START_PROFILE(INTEGRATE);
+		for (int i = 0; i < m_numBodies; ++i)
+		{
+			mat3x3 q = toRotMat(m_r[i].q);
+
+			m_m[i].invI = q * m_m[i].localInvI * transpose(q);
+
+			if (m_m[i].invM != 0.0f)
+				m_p[i].l += dt * 1.0f / m_m[i].invM * m_gravity;
+
+			m_v[i].v = m_m[i].invM * m_p[i].l;
+			m_v[i].w = m_m[i].invI* m_p[i].a;
+		}
+		ong_END_PROFILE(INTEGRATE);
 
 
 		//initialize continous physics
@@ -58,6 +76,9 @@ namespace ong
 		Body* b = m_pBody;
 		while (b != nullptr)
 		{
+			//DEBUG
+			b->CP_POINTS.clear();
+
 
 			b->calculateAABB();
 			m_hGrid.updateBody(b->getProxyID());
@@ -87,22 +108,6 @@ namespace ong
 
 		ong_END_PROFILE(NARROWPHASE);
 		assert(numPairs <= m_numBodies*m_numBodies);
-
-		//integrate
-		ong_START_PROFILE(INTEGRATE);
-		for (int i = 0; i < m_numBodies; ++i)
-		{
-			mat3x3 q = toRotMat(m_r[i].q);
-
-			m_m[i].invI = q * m_m[i].localInvI * transpose(q);
-
-			if (m_m[i].invM != 0.0f)
-				m_p[i].l += dt * 1.0f / m_m[i].invM * m_gravity;
-
-			m_v[i].v = m_m[i].invM * m_p[i].l;
-			m_v[i].w = m_m[i].invI* m_p[i].a;
-		}
-		ong_END_PROFILE(INTEGRATE);
 
 
 		//resolution	  
@@ -184,14 +189,14 @@ namespace ong
 				for (int i = 0; i < numCPairs; ++i)
 				{
 					float t = getTimeOfImpact(cPairs[i].A, cPairs[i].B, m_cp.data(), t0);
-					
+
 					if (t <= t0 || t >= 1.0f)
 						continue;
 
 
 					if (t < minT)
 					{
-						// check if any of the minpairs intersects also on new time
+						//check if any of the minpairs intersects also on new time
 						if (t < minT - TIME_OF_IMPACT_EPSILON)
 						{
 							for (int i = 0; i < numMinPairs; ++i)
@@ -211,6 +216,7 @@ namespace ong
 						}
 						minT = t;
 						minPairs[numMinPairs++] = &cPairs[i];
+
 					}
 					else if (t - TIME_OF_IMPACT_EPSILON < minT)
 					{
@@ -267,6 +273,7 @@ namespace ong
 					}
 					m_contactManager.generateContact(minPairs[i]);
 				}
+
 				// solve contacts
 				//todo non vector
 				std::vector<Contact*> cpContacts;
@@ -300,12 +307,10 @@ namespace ong
 					solveContacts(&context, cpContacts.data(), cpContacts.size(), contactConstraints);
 				}
 
+				postSolveContacts(&context, cpContacts.data(), cpContacts.size(), contactConstraints);
+
 				for (size_t i = 0; i < cpContacts.size(); ++i)
 				{
-					// collsion callbacks
-					cpContacts[i]->colliderA->callbackPostSolve(cpContacts[i]);
-					cpContacts[i]->colliderB->callbackPostSolve(cpContacts[i]);
-
 					// todo check on bodies not on colliders
 					// update spatial partitioning
 					Body* ba = cpContacts[i]->colliderA->getBody();

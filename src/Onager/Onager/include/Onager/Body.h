@@ -8,6 +8,8 @@
 
 #include <float.h>
 
+//DEBUG
+#include <vector>
 
 namespace ong
 {
@@ -55,6 +57,9 @@ namespace ong
 	{
 	public:
 
+
+		//DEBUG
+		std::vector<vec3> CP_POINTS;
 
 		//	--MANIPULATORS--
 
@@ -316,7 +321,7 @@ namespace ong
 
 	inline bool Body::getContinuousPhysics() const
 	{
-		return m_flags & CP;
+		return (m_flags & CP) != 0;
 	}
 
 	inline int Body::getNumContacts()
