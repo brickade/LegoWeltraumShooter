@@ -51,13 +51,13 @@ namespace Editor
         sba::CNavigation* m_pNavigation;
         sba::CSpaceship* m_pCurrentSpaceship;
 
-        ShipDataCache m_pCurrentShipDataCache;
+        ShipDataCache m_CurrentShipDataCache;
 
         sba::CInputField* m_pInputField;
         std::string m_OldShipName;
 
         PuRe_Vector2F m_PreviewOffset = PuRe_Vector2F(0.0f, -50.0f);
-        PuRe_Vector2F m_TextOffset = PuRe_Vector2F(-50.0f, 450.0f);
+        PuRe_Vector2F m_TextOffset = PuRe_Vector2F(-100.0f, 450.0f);
         PuRe_Vector2F m_TextStep = PuRe_Vector2F(0.0f, -50.0f);
         float m_OuterPreviewInset = 100;
         float m_OuterPreviewYOffset = 50;
@@ -77,7 +77,7 @@ namespace Editor
 
         const ShipDataCache& GetCurrentShipData() const
         {
-            return this->m_pCurrentShipDataCache;
+            return this->m_CurrentShipDataCache;
         }
 
     public:

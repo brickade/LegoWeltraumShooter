@@ -79,7 +79,7 @@ namespace sba
         }
 
     public:
-        CNavigation(int a_ElementsPerLine = 1, int a_LastElement = 0, float a_ScrollingSpeed = 0.3f, float a_ScrollingThreshold = 0.5f, float a_InputThreshold = 0.3f);
+        CNavigation(int a_ElementsPerLine = 1, int a_LastElement = -1, float a_ScrollingSpeed = 0.3f, float a_ScrollingThreshold = 0.5f, float a_InputThreshold = 0.3f);
         ~CNavigation();
 
         void Update(PuRe_Timer& a_pTimer, PuRe_Vector2F a_InputVector, bool a_LinkEnds = true);

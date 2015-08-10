@@ -40,10 +40,13 @@ namespace Menu
                 weapons.clear();
 
                 ship = sba_ShipManager->GetShip(ID);
-                ship->GetEngines(engines);
-                ship->GetCockpits(cockpits);
-                ship->GetWeapons(weapons);
-                SAFE_DELETE(ship);
+                if (ship != nullptr)
+                {
+                    ship->GetEngines(engines);
+                    ship->GetCockpits(cockpits);
+                    ship->GetWeapons(weapons);
+                    SAFE_DELETE(ship);
+                }
                 ship = NULL;
                 if (engines.size() != 0 && cockpits.size() != 0 && weapons.size() != 0)
                 {

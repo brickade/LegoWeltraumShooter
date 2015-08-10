@@ -18,13 +18,17 @@ namespace Editor
         this->m_playerIdx = a_playerIdx;
         this->m_State = ShipHandlerState::Select;
         int elements = sba_ShipManager->GetShipCount() - 1;
-        if (elements < 0)
+        /*if (elements < 0)
         {
             elements = 0;
-        }
+        }*/
         this->m_pNavigation = new sba::CNavigation(1, elements);
         this->m_pCurrentSpaceship = sba_ShipManager->GetShip(0);
         this->m_pInputField = new sba::CInputField((sba::CInputField::InputTypes::Type)(sba::CInputField::InputTypes::NUMBERS | sba::CInputField::InputTypes::LETTERS_UPPERCASE | sba::CInputField::InputTypes::LETTERS_LOWERCASE | sba::CInputField::InputTypes::UNDERLINE));
+        if (this->GetCurrentSpaceShip() == nullptr)
+        {
+            this->AddShip("");
+        }
     }
 
     // **************************************************************************
@@ -76,7 +80,7 @@ namespace Editor
             {
                 this->AddShip("");
             }
-            if (sba_Input->ButtonPressed(sba_Button::EditorRenameShip, this->m_playerIdx))
+            if (sba_Input->ButtonPressed(sba_Button::EditorRenameShip, this->m_playerIdx) && this->GetCurrentSpaceShip() != nullptr)
             {
                 this->m_State = ShipHandlerState::Rename;
                 this->m_OldShipName = this->m_pCurrentSpaceship->GetName();
@@ -126,6 +130,11 @@ namespace Editor
     void CShipHandler::Render(sba::CSpriteReader& a_rSpriteReader)
     {
         PuRe_Vector2F center(sba_Width / 2, sba_Height / 2);
+        if (this->GetCurrentSpaceShip() == nullptr)
+        {
+            sba_Space->RenderFont("Add a ship", center + this->m_TextOffset + this->m_TextStep, 24);
+            return;
+        }
         int focus = this->m_pNavigation->GetFocusedElementId();
         //Left
         if (focus > 0)
@@ -137,12 +146,12 @@ namespace Editor
         switch (this->m_State)
         {
         case ShipHandlerState::Select:
-            sba_Space->RenderFont("Slot " + std::to_string(focus + 1) + "/" + std::to_string(sba_ShipManager->GetShipCount()), center + this->m_TextOffset + this->m_TextStep * 0, 18);
-            sba_Space->RenderFont("\"" + this->m_pCurrentSpaceship->GetName() + "\"", center + this->m_TextOffset + this->m_TextStep * 1, 18);
-            sba_Space->RenderFont(std::to_string(this->m_pCurrentSpaceship->m_pBricks.size()) + " Bricks", center + this->m_TextOffset + this->m_TextStep * 2, 18);
-            sba_Space->RenderFont(std::to_string(this->m_pCurrentShipDataCache.Cockpits) + " Cockpits", center + this->m_TextOffset + this->m_TextStep * 3, 14);
-            sba_Space->RenderFont(std::to_string(this->m_pCurrentShipDataCache.Engines) + " Engines", center + this->m_TextOffset + this->m_TextStep * 3.5f, 14);
-            sba_Space->RenderFont(std::to_string(this->m_pCurrentShipDataCache.Weapons) + " Weapons", center + this->m_TextOffset + this->m_TextStep * 4, 14);
+                sba_Space->RenderFont("Slot " + std::to_string(focus + 1) + "/" + std::to_string(sba_ShipManager->GetShipCount()), center + this->m_TextOffset + this->m_TextStep * 0, 18);
+                sba_Space->RenderFont("\"" + this->m_pCurrentSpaceship->GetName() + "\"", center + this->m_TextOffset + this->m_TextStep * 1, 18);
+                sba_Space->RenderFont(std::to_string(this->m_pCurrentSpaceship->m_pBricks.size()) + " Bricks", center + this->m_TextOffset + this->m_TextStep * 2, 18);
+                sba_Space->RenderFont(std::to_string(this->m_CurrentShipDataCache.Cockpits) + " Cockpits", center + this->m_TextOffset + this->m_TextStep * 3, 14);
+                sba_Space->RenderFont(std::to_string(this->m_CurrentShipDataCache.Engines) + " Engines", center + this->m_TextOffset + this->m_TextStep * 3.5f, 14);
+                sba_Space->RenderFont(std::to_string(this->m_CurrentShipDataCache.Weapons) + " Weapons", center + this->m_TextOffset + this->m_TextStep * 4, 14);
             break;
         case ShipHandlerState::Rename:
             a_rSpriteReader.Draw(1, sba_Renderer, "editor_buttons", sba_Space->FontMaterial, PuRe_Vector3F(center + this->m_TextOffset + PuRe_Vector2F(150, -45), 0), PuRe_Vector3F::Zero(), -1, PuRe_Vector2F(0.9f, 0.9f));
@@ -156,7 +165,6 @@ namespace Editor
             sba_Space->RenderFont("Cancel [Backspace][B]", center + this->m_TextOffset + this->m_TextStep * 3.5f, 18);
             break;
         }
-
         sba_Renderer->Draw(1, false, (*sba_ShipManager)[focus], sba_Space->SpriteMaterial, PuRe_Vector3F(center + this->m_PreviewOffset, 0), PuRe_MatrixF::Identity(), PuRe_Vector3F((*sba_ShipManager)[focus]->GetSize() * 0.5f, 0));
         //Right
         if (focus < this->m_pNavigation->GetLastElementId())
@@ -175,6 +183,7 @@ namespace Editor
         this->m_pNavigation->SetFocusedElementId(this->m_pNavigation->GetLastElementId());
         this->m_pCurrentSpaceship = sba_ShipManager->GetShip(this->m_pNavigation->GetFocusedElementId());
         this->m_State = ShipHandlerState::Rename;
+        assert(this->m_pCurrentSpaceship != nullptr);
         this->m_OldShipName = this->m_pCurrentSpaceship->GetName();
         this->m_pInputField->SetValue(this->m_OldShipName);
         this->UpdateCurrentShipData();
@@ -233,15 +242,20 @@ namespace Editor
     // **************************************************************************
     void CShipHandler::UpdateCurrentShipData()
     {
+        if (m_pCurrentSpaceship == nullptr)
+        {
+            memset(&m_CurrentShipDataCache, 0, sizeof(ShipDataCache));
+            return;
+        }
         std::vector<TheBrick::CBrickInstance**> brickCache;
         this->m_pCurrentSpaceship->GetCockpits(brickCache);
-        this->m_pCurrentShipDataCache.Cockpits = brickCache.size();
+        this->m_CurrentShipDataCache.Cockpits = brickCache.size();
         brickCache.clear();
         this->m_pCurrentSpaceship->GetEngines(brickCache);
-        this->m_pCurrentShipDataCache.Engines = brickCache.size();
+        this->m_CurrentShipDataCache.Engines = brickCache.size();
         brickCache.clear();
         this->m_pCurrentSpaceship->GetWeapons(brickCache);
-        this->m_pCurrentShipDataCache.Weapons = brickCache.size();
+        this->m_CurrentShipDataCache.Weapons = brickCache.size();
         //brickCache.clear();
     }
 }
