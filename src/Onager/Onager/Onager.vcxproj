@@ -94,6 +94,7 @@
     <ClCompile Include="QuickHull.cpp" />
     <ClCompile Include="SAT.cpp" />
     <ClCompile Include="Shapes.cpp" />
+    <ClCompile Include="TimeOfImpact.cpp" />
     <ClCompile Include="VolumeIntegration.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>
@@ -117,6 +118,7 @@
     <ClInclude Include="include\Onager\Settings.h" />
     <ClInclude Include="include\Onager\Shapes.h" />
     <ClInclude Include="include\Onager\States.h" />
+    <ClInclude Include="include\Onager\TimeOfImpact.h" />
     <ClInclude Include="include\Onager\VolumeIntegration.h" />
     <ClInclude Include="include\Onager\World.h" />
   </ItemGroup>

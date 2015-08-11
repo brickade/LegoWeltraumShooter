@@ -238,6 +238,7 @@ Entity* Test::addSlope(World* world, Transform t, Material* material)
 	bodyDescr.transform = t;
 	bodyDescr.linearMomentum = vec3(0.0f, 0.0f, 0.0f);
 	bodyDescr.angularMomentum = vec3(0.0f, 0.0f, 0.0f);
+	bodyDescr.continuousPhysics = false;
 
 	Body* body = world->createBody(bodyDescr);
 
@@ -274,6 +275,7 @@ Entity* Test::addFloor(World* world, Material* material, vec3 pos)
 	bodyDescr.transform.q = QuatFromAxisAngle(vec3(1.0f, 0.0f, 0.0f), 0.0f);
 	bodyDescr.linearMomentum = vec3(0.0f, 0.0f, 0.0f);
 	bodyDescr.angularMomentum = vec3(0.0f, 0.0f, 0.0f);
+	bodyDescr.continuousPhysics = false;
 
 	Body* body = world->createBody(bodyDescr);
 
@@ -339,6 +341,7 @@ Player* Test::addPlayer(World* world, const Transform& transform)
 	bodyDescr.angularMomentum = vec3(0.0f, 0.0f, 0.0f);
 	bodyDescr.transform = transform;
 	bodyDescr.type = BodyType::Dynamic;
+	bodyDescr.continuousPhysics = false;
 
 	Body* body = world->createBody(bodyDescr);
 
@@ -405,6 +408,7 @@ void Test::init()
 	descr.transform = Transform(vec3(0.0f, 5.0f, -4.0f), QuatFromAxisAngle(vec3(1.0f, 2.0f, 3.0f), 1.0f));
 	descr.linearMomentum = vec3(0.0f, 0.0f, 0.0f);
 	descr.angularMomentum = vec3(0.0f, 0.0f, 0.0f);
+	descr.continuousPhysics = false;
 
 	m_entities.push_back(addBox(m_world, descr, material));
 
@@ -741,6 +745,8 @@ void Test::run()
 			
 			e->render(m_colorLocation);
 		}
+
+
 
 		render();
 

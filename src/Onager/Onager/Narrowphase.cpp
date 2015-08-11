@@ -186,7 +186,7 @@ namespace ong
 
 			if (dist < 0.0f)
 			{
-				manifold->normal = rotate(p - c, tb->q);
+				manifold->normal = rotate(normalize(p - c), tb->q);
 				manifold->numPoints = 1;
 				manifold->points[0].position = transformVec3(p, *tb);
 				manifold->points[0].penetration = dist;
@@ -465,13 +465,13 @@ namespace ong
 		}
 		else
 		{
-			collide(tree, tree + a->left, b, t, rot);
+			collide(tree, tree + a->left, b, t, rot);	
 			collide(tree, tree + a->right, b, t, rot);
 		}
 	}
 
 
-	void ContactManager::collide(Collider* ca, Collider* cb)
+	void  ContactManager::collide(Collider* ca, Collider* cb)
 	{
 		typedef void(*CollisionFunc)(Collider* a, Transform* ta, Collider* b, Transform* tb, ContactManifold* manifold, Feature* feature);
 		static const CollisionFunc collisionFuncMatrix[ShapeType::COUNT][ShapeType::COUNT]
@@ -659,6 +659,133 @@ namespace ong
 
 	}
 	
+	void ContactManager::generateContact(Pair* pair)
+	{
+		m_tick++;
+		collide(pair->A, pair->B);
+		
+		// update contacts
+		for (size_t i = 0; i < m_contacts.size(); ++i)
+		{
+			if ((m_contacts[i]->colliderA->getBody() == pair->A && m_contacts[i]->colliderB->getBody() == pair->B) ||
+				(m_contacts[i]->colliderB->getBody() == pair->A && m_contacts[i]->colliderA->getBody() == pair->B))
+			{
+				if (m_contacts[i]->tick != m_tick)
+				{
+					removeContact(i);
+					--i;
+				}
+				else
+				{
+					m_contacts[i]->colliderA->callbackPreSolve(m_contacts[i]);
+					m_contacts[i]->colliderB->callbackPreSolve(m_contacts[i]);
+				}
+			}
+		}
+
+	}
+
+	// todo clean up more
+	void ContactManager::updateContact(Contact* contact)
+	{
+		typedef void(*CollisionFunc)(Collider* a, Transform* ta, Collider* b, Transform* tb, ContactManifold* manifold, Feature* feature);
+		static const CollisionFunc collisionFuncMatrix[ShapeType::COUNT][ShapeType::COUNT]
+		{
+			{collideSphereSphere, collideSphereCapsule, collideSphereHull},
+			{ nullptr, collideCapsuleCapsule, collideCapsuleHull },
+			{ nullptr, nullptr, collideHullHull }
+		};
+
+
+		Collider* ca = contact->colliderA;
+		Collider* cb = contact->colliderB;
+
+		//filter
+		if ((ca->getCollisionGroup() & cb->getCollisionFilter()) != 0 || (cb->getCollisionGroup() & ca->getCollisionFilter()))
+		{
+			for (size_t i = 0; i < m_contacts.size(); ++i)
+			{
+				if (m_contacts[i] == contact)
+				{
+					removeContact(i);
+					return;
+				}
+			}
+			assert(false);
+		}
+
+		if (cb->getShape().getType() < ca->getShape().getType())
+			std::swap(ca, cb);
+
+
+		Body* a = ca->getBody();
+		Body* b = cb->getBody();
+
+		Transform ta = transformTransform(ca->getTransform(), a->getTransform());
+		Transform tb = transformTransform(cb->getTransform(), b->getTransform());
+
+		ContactManifold manifold;
+		Feature feature;
+
+		// check if either collider is a sensor
+		if (ca->isSensor() || cb->isSensor())
+		{
+			if (!overlap(ca->getShape(), cb->getShape(), ta, tb))
+			{
+				for (size_t i = 0; i < m_contacts.size(); ++i)
+				{
+					if (m_contacts[i] == contact)
+					{
+						removeContact(i);
+						return;
+					}
+				}
+				assert(false);
+			}
+				
+			manifold.numPoints = 0;
+			feature.type = Feature::NONE;
+		}
+		else
+		{
+			collisionFuncMatrix[ca->getShape().getType()][cb->getShape().getType()](ca, &ta, cb, &tb, &manifold, &feature);
+
+			if (manifold.numPoints == 0)
+			{
+				for (size_t i = 0; i < m_contacts.size(); ++i)
+				{
+					if (m_contacts[i] == contact)
+					{
+						removeContact(i);
+						return;
+					}
+				}
+				assert(false);
+			}
+		}
+
+
+
+		// check if contact already exists
+
+		contact->manifold = manifold;
+
+
+		// if features are different do not warmstart
+		if (!(contact->feature == feature))
+		{
+			for (int j = 0; j < contact->manifold.numPoints; ++j)
+			{
+				contact->accImpulseN[j] = 0.0f;
+				contact->accImpulseT[j] = 0.0f;
+				contact->accImpulseBT[j] = 0.0f;
+			}
+
+			contact->feature = feature;
+			contact->colliderA = ca;
+			contact->colliderB = cb;
+		}
+	}
 	
 	void ContactManager::removeBody(Body* body)
 	{

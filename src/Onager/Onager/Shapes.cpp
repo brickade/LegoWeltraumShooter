@@ -480,10 +480,24 @@ namespace ong
 		}
 	}
 
+
+	vec3 closestPointOnShape(const vec3& p, ShapePtr shape)
+	{
+		switch (shape.getType())
+		{
+		case ShapeType::HULL:
+			return closestPointOnHull(p, shape, FLT_EPSILON);
+		case ShapeType::SPHERE:
+			return closestPointOnSphere(p, shape);
+		case ShapeType::CAPSULE:
+			return closestPointOnCapsule(p, shape);
+		default:
+			return p;
+		}
+	}
+
 	vec3 closestPointOnHull(const vec3& p, const Hull* hull, float epsilon)
 	{
-
-
 		Simplex simplex;
 
 		float hullEpsilon = hull->epsilon / FLT_EPSILON * epsilon;
@@ -539,6 +553,19 @@ namespace ong
 
 
 		return p;
+	}
+
+
+
+	vec3 closestPointOnSphere(const vec3& p, const Sphere* sphere)
+	{
+		return sphere->c + sphere->r * normalize(p - sphere->c);
+	}
+
+	vec3 closestPointOnCapsule(const vec3& p, const Capsule* capsule)
+	{
+		vec3 c = closestPtPointSegment(p, capsule->c1, capsule->c2);
+		return c + capsule->r * (p - c);
 	}
 
 
@@ -913,6 +940,44 @@ namespace ong
 		return distSq - capsuleA->r * capsuleA->r < -10.0f * epsilon;
 	}
 
+
+	bool overlapMovingSphereSphere(const Sphere* sphereA, const Sphere* sphereB, const vec3& v, float& t0, float& t1)
+	{
+		vec3 s = sphereB->c - sphereA->c;
+		float r = sphereB->r + sphereA->r;
+
+		
+		float c = dot(s, s) - r*r;
+
+		////intial overlap
+		//if (c < 0.0f)
+		//{
+		//	t0 = 0.0f;
+		//	t1 = 0.0f;
+		//	return true;
+		//}
+
+		float a = dot(v, v);
+		//no movement 
+		if (a < FLT_EPSILON) 
+			return false; 
+
+		float b = dot(-v, s);
+		// spheres not moving towards each other
+		//if (b >= 0.0f)
+		//	return false;
+
+		float d = b*b - a*c;
+		// negative root
+		//if (d < 0.0f) 
+		//	return false;
+		float root = sqrt(d);
+
+		t0 = ong_MAX((-b - root) / a, t0);
+		t1 = ong_MIN((-b + root) / a, t1);
+		return true;
+
+	}
 
 
 	void mergeAABBAABB(AABB* a, AABB* b)

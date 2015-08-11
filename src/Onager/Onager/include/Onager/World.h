@@ -23,20 +23,22 @@ namespace ong
 	typedef Allocator<Capsule> CapsuleAllocator;
 	typedef Allocator<Material> MaterialAllocator;
 
-
-
-
 	// TODO
 	//	
-	//	-sensors
+	//
 	//	-continuos collision detection
 	//	-sleeping
 	//
-	//	-hull memory leaking
+	//	- body queryRay with callback
+	//	- body setTransform
+	//	-world popback
+	
 
 	class World
 	{
 	public:
+
+
 		World(const vec3& gravity = vec3(0.0f, 0.0f, 0.0f));
 
 		//simulation step, dt should be constant
@@ -86,6 +88,8 @@ namespace ong
 		std::vector<MassState> m_m;
 		std::vector<Body*> m_b;
 
+		std::vector<ContinuousState> m_cp;
+
 
 	private:
 
@@ -93,6 +97,7 @@ namespace ong
 
 		Body* m_pBody;
 		int m_numBodies;
+		int m_numCpBodies;
 		int m_numColliders;
 		vec3 m_gravity;
 

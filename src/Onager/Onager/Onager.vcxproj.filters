@@ -61,6 +61,9 @@
     <ClCompile Include="Profiler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TimeOfImpact.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Onager\World.h">
@@ -124,6 +127,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Onager\Profiler.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Onager\TimeOfImpact.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

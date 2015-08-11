@@ -927,6 +927,7 @@ namespace Content
 			cDescr.material = &TheBrick::CBrick::BRICK_MATERIAL;
 			cDescr.transform = ong::Transform(ong::vec3(0, 0, 0), ong::Quaternion(ong::vec3(0, 0, 0), 1));
             cDescr.isSensor = false;
+
 			ong::Collider* pCollider = m_World.createCollider(cDescr);
 
 			m_pBody->addCollider(pCollider);
