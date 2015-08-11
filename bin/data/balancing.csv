@@ -8,10 +8,10 @@ MG_DMG;20
 MG_CD;0.1
 MG_Speed;20
 MG_LifeTime;5.0
-Laser_DMG;50
-Laser_CD;0.5
-Laser_Speed;50
-Laser_LifeTime;5.0
+Laser_DMG;1
+Laser_CD;2
+Laser_Speed;0
+Laser_LifeTime;0.1
 Rocket_DMG;40
 Rocket_CD;2
 Rocket_Speed;18
@@ -23,8 +23,4 @@ Mine_LifeTime;5.0
 Mine_Row;3
 Mine_Column;4
 Mine_Dist;7
-Torpedo_DMG;80
-Torpedo_CD;1
-Torpedo_Speed;8
-Torpedo_LifeTime;5.0
 LifeMultiplicator;10

@@ -145,7 +145,8 @@ namespace sba
                     }
                     bull->m_pOwner->Marker = 1.0f;
                 }
-                bull->m_Collided = true;
+                if (bull->m_ID != TheBrick::Laser)
+                    bull->m_Collided = true;
             }
         }
         else
@@ -332,11 +333,8 @@ namespace sba
                 {
                     ong::Transform transform = weapon->GetTransform();
                     ong::Transform ship = this->m_pBody->getTransform();
-                    ong::Quaternion diff = ong::QuatFromEulerAngles(a_Direction.X,a_Direction.Y,0.0f);
                     ong::Transform wtransform = ong::transformTransform(transform, ship);
                     PuRe_Vector3F pos = TheBrick::OngToPuRe(wtransform.p);
-
-                    PuRe_Vector3F dir = PuRe_Vector3F(a_Direction.X, -a_Direction.Y, 1.0f) * TheBrick::OngToPuRe(wtransform.q);
 
                     PuRe_Vector3F forward = PuRe_Vector3F(0.0f, 0.0f, 1.0f) * TheBrick::OngToPuRe(wtransform.q);
                     PuRe_Vector3F sforward = PuRe_Vector3F(0.0f, 0.0f, 1.0f) * TheBrick::OngToPuRe(ship.q);
@@ -344,19 +342,24 @@ namespace sba
                     PuRe_Vector3F side = PuRe_Vector3F(1.0f, 0.0f, 0.0f) * TheBrick::OngToPuRe(wtransform.q);
                     PuRe_Vector3F up = PuRe_Vector3F(0.0f, 1.0f, 0.0f) * TheBrick::OngToPuRe(wtransform.q);
 
-                
+
 
                     float len = TheBrick::OngToPuRe(this->m_pBody->getLinearVelocity()).Length();
                     PuRe_Vector3F speed;
-
+                    a_Direction.X -= transform.p.x / 50.0f;
+                    a_Direction.Y -= transform.p.y / 50.0f;
                     if (PuRe_Vector3F::Dot(forward, sforward) > 0.9f) // in front
+                    {
+                        PuRe_Vector3F dir = PuRe_Vector3F(a_Direction.X, -a_Direction.Y, 1.0f) * TheBrick::OngToPuRe(wtransform.q);
                         speed = dir*200.0f + dir * len;
+                    }
                     else
                         speed = forward*200.0f+forward *len;
 
                     speed *= 1.0f / 1000.0f;
 
                     ong::BodyDescription bdesc;
+                    ong::Quaternion diff = ong::QuatFromEulerAngles(a_Direction.X, a_Direction.Y, 0.0f);
 
 
                     bdesc.angularMomentum = ong::vec3(0, 0, 0);
@@ -373,8 +376,10 @@ namespace sba
                         id = TheBrick::Laser;
                         pos += forward*10.0f;
                         speed *= std::stof(sba_Balancing->GetValue("Laser_Speed"));
+                        bdesc.transform.q = ship.q*transform.q;
                         col = PuRe_Color(1.0f, 1.0f, 1.0f, 1.0f);
 						bdesc.continuousPhysics = false;
+                        bdesc.type = ong::BodyType::Static;
                         break;
 
                     case TheBrick::MG - 100: //MG
@@ -405,17 +410,17 @@ namespace sba
                     {
                         pos += side*1.0f;
                         bdesc.transform.p = TheBrick::PuReToOng(pos);
-                        a_rBullets.push_back(new CBullet(&bdesc, *w, a_pOwner, col, id));
+                        a_rBullets.push_back(new CBullet(&bdesc, *w, a_pOwner, col, id,weapon));
                         pos -= side*2.0f;
                         bdesc.transform.p = TheBrick::PuReToOng(pos);
-                        a_rBullets.push_back(new CBullet(&bdesc, *w, a_pOwner, col, id));
+                        a_rBullets.push_back(new CBullet(&bdesc, *w, a_pOwner, col, id, weapon));
                         pos += side*1.0f;
                         pos += up*1.0f;
                         bdesc.transform.p = TheBrick::PuReToOng(pos);
-                        a_rBullets.push_back(new CBullet(&bdesc, *w, a_pOwner, col, id));
+                        a_rBullets.push_back(new CBullet(&bdesc, *w, a_pOwner, col, id, weapon));
                         pos -= up*2.0f;
                         bdesc.transform.p = TheBrick::PuReToOng(pos);
-                        a_rBullets.push_back(new CBullet(&bdesc, *w, a_pOwner, col, id));
+                        a_rBullets.push_back(new CBullet(&bdesc, *w, a_pOwner, col, id, weapon));
                     }
                     else if(weapon->m_pBrick->GetBrickId() == TheBrick::Mine - 100)
                     {
@@ -432,7 +437,7 @@ namespace sba
                                 pos -= up*(float)(cos(a_Time) + y)*mines_dist;
                                 pos += forward*((float)sin(a_Time + x*10.0f + y*10.0f) + 1.0f)*mines_dist;
                                 bdesc.transform.p = TheBrick::PuReToOng(pos);
-                                a_rBullets.push_back(new CBullet(&bdesc, *w, a_pOwner, col, id));
+                                a_rBullets.push_back(new CBullet(&bdesc, *w, a_pOwner, col, id,weapon));
                                 pos += side*(float)(sin(a_Time) + x)*mines_dist;
                                 pos += up*(float)(cos(a_Time) + y)*mines_dist;
                                 pos -= forward*((float)sin(a_Time + x*10.0f + y*10.0f) + 1.0f)*mines_dist;
@@ -441,7 +446,7 @@ namespace sba
 
                     }
                     else
-                        a_rBullets.push_back(new CBullet(&bdesc, *w, a_pOwner, col, id));
+                        a_rBullets.push_back(new CBullet(&bdesc, *w, a_pOwner, col, id, weapon));
                 }
             }
         }

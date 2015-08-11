@@ -254,7 +254,7 @@ namespace sba
                 eEmitter.Bullet = a_rBullets[i]->m_ID;
                 a_rExplosions.push_back(eEmitter);
             }
-            a_rBullets[i]->Update(a_Deltatime);
+            a_rBullets[i]->Update(a_Deltatime,a_rBullets);
 
             float maxLifeTime = 0.0f;
 
@@ -277,7 +277,7 @@ namespace sba
                 maxLifeTime = std::stof(sba_Balancing->GetValue("Rocket_LifeTime"));
                 break;
             }
-            if (a_rBullets[i]->m_Collided || a_rBullets[i]->m_lifeTime > 5.0f)
+            if (a_rBullets[i]->m_Collided || a_rBullets[i]->m_lifeTime > maxLifeTime)
             {
                 SAFE_DELETE(a_rBullets[i]);
                 if (a_rBullets.begin() + i < a_rBullets.end())
@@ -761,7 +761,7 @@ namespace sba
                 float length = ong::length(tree->aabb.e)*1.2f;
                 PuRe_Vector3F pos = TheBrick::OngToPuRe(sba_Players[i]->Ship->m_pBody->getWorldCenter());
                 sba_Renderer->Set(0, 1.0f, "intensity");
-                sba_Renderer->Draw(0, true, sphereBuffer, sphereBuffer->GetSize(), PuRe_Primitive::Triangles, this->m_pShieldMaterial, pos, PuRe_MatrixF(), PuRe_Vector3F(), PuRe_Vector3F(length, length, length));
+                sba_Renderer->Draw(1, true, sphereBuffer, sphereBuffer->GetSize(), PuRe_Primitive::Triangles, this->m_pShieldMaterial, pos, PuRe_MatrixF(), PuRe_Vector3F(), PuRe_Vector3F(length, length, length));
             }
             sba_Players[i]->Ship->DrawEmitter(this->m_pParticle1Sprite, this->m_pEngineMaterial, this->m_pPointLight, this->m_pPointLightMaterial);
         }
@@ -787,98 +787,14 @@ namespace sba
                 PuReEngine::Core::Plane<float> Near = this->m_Cameras[camID]->GetFrustrumPlane(PuReEngine::Core::Planes::Near);
 
                 PuRe_Vector3F aux, normal, point,rot;
-
+                if (mapend[camID])
+                    this->DisplayArrow(Left, Right, Top, Bottom, Near, forward, campos, ppos, PuRe_Vector3F(0.0f, 0.0f, 0.0f), rotation, camID);
                 for (unsigned int j = 0; j < sba_Players.size(); j++)
                 {
                     if (sba_Players[j]->PadID != i)
                     {
                         PuRe_Vector3F pos = TheBrick::OngToPuRe(sba_Players[j]->Ship->m_pBody->getWorldCenter());
-                        pos += TheBrick::OngToPuRe(ong::rotate(ong::vec3(0.0f, 5.0f, 0.0f), sba_Players[j]->Ship->m_pBody->getOrientation()));
-                        PuRe_Vector3F diffPos = (ppos - pos);
-                        float diff = diffPos.Length() / 500.0f;
-
-                        rot = PuRe_Vector3F(0.0f, 0.0f, 180 * PuRe_DegToRad);
-
-                        if (diff > 1.0f)
-                            diff = 1.0f;
-                        if (diff < 0.1f)
-                            diff = 0.1f;
-                        float size = 0.1f*diff;
-
-
-                        PuRe_Vector3F CamToPos = PuRe_Vector3F::Normalize(campos - pos);
-                        PuRe_Vector3F ScreenPos;
-                        bool inside = true;
-                        float Val = -0.3f;
-
-                        if ((diff = PuRe_Vector3F::Dot(CamToPos, Top.Normal)) > Val) //top
-                        {
-                            ScreenPos.Y = 0.4f;
-                            ScreenPos.X = -diff;
-                            inside = false;
-                            rot.Z = 0.0f;
-                            //if (i == 0)
-                            //    printf("top\n");
-                        }
-                        else if ((diff = PuRe_Vector3F::Dot(CamToPos, Left.Normal)) > Val) //right
-                        {
-                            ScreenPos.X = 0.7f;
-                            ScreenPos.Y = diff;
-                            inside = false;
-                            rot.Z = 270 * PuRe_DegToRad;
-                            //if (i == 0)
-                            //    printf("right\n");
-                        }
-                        else if ((diff = PuRe_Vector3F::Dot(CamToPos, Right.Normal)) > Val) //left
-                        {
-                            ScreenPos.X = -0.7f;
-                            ScreenPos.Y = -diff;
-                            inside = false;
-                            rot.Z = 90 * PuRe_DegToRad;
-                            //if (i == 0)
-                            //    printf("left\n");
-                        }
-                        else if ((diff = PuRe_Vector3F::Dot(CamToPos, Top.Normal)) > Val) //top
-                        {
-                            ScreenPos.Y = 0.4f;
-                            ScreenPos.X = -diff;
-                            inside = false;
-                            rot.Z = 0.0f;
-                            //if (i == 0)
-                            //    printf("top\n");
-                        }
-                        else if ((diff = PuRe_Vector3F::Dot(CamToPos, Near.Normal)) > Val) //behind
-                        {
-                            ScreenPos.Y = -0.4f;
-                            ScreenPos.X = -diff;
-                            inside = false;
-                            rot.Z = 180 * PuRe_DegToRad;
-                            //if (i == 0)
-                            //    printf("behind\n");
-                        }
-                        else if((diff = PuRe_Vector3F::Dot(CamToPos, Bottom.Normal)) > Val) //bottom
-                        {
-                            ScreenPos.Y = -0.4f;
-                            ScreenPos.X = diff;
-                            inside = false;
-                            rot.Z = 180 * PuRe_DegToRad;
-                            //if (i == 0)
-                            //    printf("bottom\n");
-                        }
-
-                        if (!inside)
-                        {
-                            ScreenPos = (ScreenPos*rotation);
-                            pos = campos;
-                            pos += forward;
-                            pos += ScreenPos;
-                            size = 0.0005f;
-                        }
-
-                        PuRe_QuaternionF rotq = PuRe_QuaternionF(rot);
-                        rotation *= rotq;
-
-                        sba_Renderer->Draw(1, false, this->m_pLockSprite, this->m_pSpriteMaterial, pos, rotation.GetMatrix(), PuRe_Vector3F(), PuRe_Vector3F(size, size, size), PuRe_Color(), PuRe_Vector2F(), PuRe_Vector2F(), camID);
+                        this->DisplayArrow(Left, Right, Top, Bottom, Near, forward, campos, ppos, pos, rotation, camID, j);
                     }
                 }
 
@@ -886,11 +802,11 @@ namespace sba
                 float intensity = (this->m_Cameras[camID]->GetPosition() - this->m_Origin).Length() / this->m_OriginDistance;
                 if (intensity > 1.0f) intensity = 1.0f;
                 intensity *= intensity;
-                sba_Renderer->Set(0, intensity, "intensity", camID);
+                sba_Renderer->Set(1, intensity, "intensity", camID);
                 if (intensity < 1.0f)
-                    sba_Renderer->SetCulling(0, false, camID);
-                sba_Renderer->Draw(0, true, sphereBuffer, sphereBuffer->GetSize(), PuRe_Primitive::Triangles, this->m_pShieldMaterial, this->m_Origin, PuRe_MatrixF(), PuRe_Vector3F(), PuRe_Vector3F(this->m_OriginDistance, this->m_OriginDistance, this->m_OriginDistance), PuRe_Color(), camID);
-                sba_Renderer->SetCulling(0, true, camID);
+                    sba_Renderer->SetCulling(1, false, camID);
+                sba_Renderer->Draw(1, true, sphereBuffer, sphereBuffer->GetSize(), PuRe_Primitive::Triangles, this->m_pShieldMaterial, this->m_Origin, PuRe_MatrixF(), PuRe_Vector3F(), PuRe_Vector3F(this->m_OriginDistance, this->m_OriginDistance, this->m_OriginDistance), PuRe_Color(), camID);
+                sba_Renderer->SetCulling(1, true, camID);
                 /////////////////////////////////////////////////
                 camID++;
             }
@@ -958,6 +874,94 @@ namespace sba
         ////////////////////////////////////////////////////
 
 		ong_END_PROFILE(RENDER);
+    }
+
+    // **************************************************************************
+    // **************************************************************************
+    void CGameScene::DisplayArrow(PuReEngine::Core::Plane<float>& a_rLeft,
+        PuReEngine::Core::Plane<float>& a_rRight,
+        PuReEngine::Core::Plane<float>& a_rTop,
+        PuReEngine::Core::Plane<float>& a_rBottom,
+        PuReEngine::Core::Plane<float>& a_rNear,
+    PuRe_Vector3F a_Forward, PuRe_Vector3F a_CamPos, PuRe_Vector3F a_PlayerPos, PuRe_Vector3F a_Position, PuRe_QuaternionF a_Rotation, int a_CamID,int a_Player)
+    {
+        if (a_Player != -1)
+            a_Position += TheBrick::OngToPuRe(ong::rotate(ong::vec3(0.0f, 5.0f, 0.0f), sba_Players[a_Player]->Ship->m_pBody->getOrientation()));
+        PuRe_Vector3F diffPos = (a_PlayerPos - a_Position);
+        float diff = diffPos.Length() / 500.0f;
+
+        PuRe_Vector3F rot = PuRe_Vector3F(0.0f, 0.0f, 180 * PuRe_DegToRad);
+
+        if (diff > 1.0f)
+            diff = 1.0f;
+        if (diff < 0.1f)
+            diff = 0.1f;
+        float size = 0.1f*diff;
+
+
+        PuRe_Vector3F CamToPos = PuRe_Vector3F::Normalize(a_CamPos - a_Position);
+        PuRe_Vector3F ScreenPos;
+        bool inside = true;
+        float Val = -0.3f;
+
+        if ((diff = PuRe_Vector3F::Dot(CamToPos, a_rTop.Normal)) > Val) //top
+        {
+            ScreenPos.Y = 0.4f;
+            ScreenPos.X = -diff;
+            inside = false;
+            rot.Z = 0.0f;
+        }
+        else if ((diff = PuRe_Vector3F::Dot(CamToPos, a_rLeft.Normal)) > Val) //right
+        {
+            ScreenPos.X = 0.7f;
+            ScreenPos.Y = diff;
+            inside = false;
+            rot.Z = 270 * PuRe_DegToRad;
+        }
+        else if ((diff = PuRe_Vector3F::Dot(CamToPos, a_rRight.Normal)) > Val) //left
+        {
+            ScreenPos.X = -0.7f;
+            ScreenPos.Y = -diff;
+            inside = false;
+            rot.Z = 90 * PuRe_DegToRad;
+        }
+        else if ((diff = PuRe_Vector3F::Dot(CamToPos, a_rTop.Normal)) > Val) //top
+        {
+            ScreenPos.Y = 0.4f;
+            ScreenPos.X = -diff;
+            inside = false;
+            rot.Z = 0.0f;
+        }
+        else if ((diff = PuRe_Vector3F::Dot(CamToPos, a_rNear.Normal)) > Val) //behind
+        {
+            ScreenPos.Y = -0.4f;
+            ScreenPos.X = -diff;
+            inside = false;
+            rot.Z = 180 * PuRe_DegToRad;
+        }
+        else if ((diff = PuRe_Vector3F::Dot(CamToPos, a_rBottom.Normal)) > Val) //bottom
+        {
+            ScreenPos.Y = -0.4f;
+            ScreenPos.X = diff;
+            inside = false;
+            rot.Z = 180 * PuRe_DegToRad;
+        }
+
+        if (!inside)
+        {
+            ScreenPos = (ScreenPos*a_Rotation);
+            a_Position = a_CamPos;
+            a_Position += a_Forward;
+            a_Position += ScreenPos;
+            size = 0.0005f;
+        }
+
+        PuRe_QuaternionF rotq = PuRe_QuaternionF(rot);
+        a_Rotation *= rotq;
+
+        sba_Renderer->Draw(1, false, this->m_pLockSprite, this->m_pSpriteMaterial, a_Position, a_Rotation.GetMatrix(), PuRe_Vector3F(), PuRe_Vector3F(size, size, size), PuRe_Color(), PuRe_Vector2F(), PuRe_Vector2F(), a_CamID);
+
+
     }
 
     // **************************************************************************

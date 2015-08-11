@@ -128,6 +128,27 @@ namespace sba
         ///
         void Render(PuRe_Application* a_pApplication);
 
+        /// @brief Display an Arrow at the Screen
+        ///
+        /// @param Left Camera Plane
+        /// @param Right Camera Plane
+        /// @param Top Camera Plane
+        /// @param Bottom Camera Plane
+        /// @param Near Camera Plane
+        /// @param Camera's Forward
+        /// @param Camera's Position
+        /// @param Player's Position
+        /// @param Target Position
+        /// @param Player's Rotation
+        /// @param Target where to display the Arrow
+        ///
+        void DisplayArrow(PuReEngine::Core::Plane<float>& a_rLeft,
+            PuReEngine::Core::Plane<float>& a_rRight,
+            PuReEngine::Core::Plane<float>& a_rTop,
+            PuReEngine::Core::Plane<float>& a_rBottom,
+            PuReEngine::Core::Plane<float>& a_rNear,
+            PuRe_Vector3F a_Forward, PuRe_Vector3F a_CamPos, PuRe_Vector3F a_PlayerPos, PuRe_Vector3F a_Position, PuRe_QuaternionF a_Rotation, int a_CamID,int a_Player=-1);
+
         /// @brief Exists the scene.
         ///
         void Exit();

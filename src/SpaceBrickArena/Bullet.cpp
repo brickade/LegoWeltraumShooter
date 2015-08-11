@@ -10,8 +10,9 @@ namespace sba
 {
     // **************************************************************************
     // **************************************************************************
-    CBullet::CBullet(ong::BodyDescription* a_desc, ong::World& a_rWorld, SPlayer* a_pOwner,PuRe_Color a_Color,unsigned int a_ID) : CGameObject(a_rWorld, a_desc)
+    CBullet::CBullet(ong::BodyDescription* a_desc, ong::World& a_rWorld, SPlayer* a_pOwner, PuRe_Color a_Color, unsigned int a_ID, TheBrick::CBrickInstance* a_pWeapon) : CGameObject(a_rWorld, a_desc)
     {
+        this->m_pWeapon = a_pWeapon;
         this->m_Speed = ong::length(a_desc->linearMomentum);
         this->m_ID = a_ID;
         this->m_pOwner = a_pOwner;
@@ -57,6 +58,7 @@ namespace sba
             c->setCallbacks(cb);
             c = c->getNext();
         }
+
     }
 
     // **************************************************************************
@@ -71,9 +73,8 @@ namespace sba
             other = contact->colliderA;
 
         CGameObject* object = static_cast<CGameObject*>(other->getBody()->getUserData());
-        if (object->m_Type != TheBrick::EGameObjectType::Bullet)
+        if (object->m_Type != TheBrick::EGameObjectType::Bullet&&bullet->m_ID != TheBrick::Laser)
         {
-            bullet->m_lifeTime = 4.9f;
             if (object->m_Type == TheBrick::EGameObjectType::Ship)
             { 
                 CSpaceship* ship = static_cast<CSpaceship*>(object);
@@ -100,31 +101,53 @@ namespace sba
 
     // **************************************************************************
     // **************************************************************************
-    void CBullet::Update(float a_DeltaTime)
+    void CBullet::Update(float a_DeltaTime,std::vector<CBullet*>& a_rBullets)
     {
         this->m_lifeTime += a_DeltaTime;
 
-		int targetID;
-
-        if (this->m_ID == TheBrick::Rocket)
+        if (this->m_ID == TheBrick::Laser)
+        {
+            ong::Transform transform = this->m_pWeapon->GetTransform();
+            ong::Transform ship = this->m_pOwner->Ship->m_pBody->getTransform();
+            ong::Transform wtransform = ong::transformTransform(transform, ship);
+            PuRe_Vector3F pos = TheBrick::OngToPuRe(wtransform.p); //position of the Weapon
+            PuRe_Vector3F forward = PuRe_Vector3F(0.0f, 0.0f, 1.0f) * TheBrick::OngToPuRe(wtransform.q);
+            pos += forward*10.0f;
+            this->m_pBody->setPosition(TheBrick::PuReToOng(pos));
+            this->m_pBody->setOrientation(wtransform.q);
+        }
+        else if (this->m_ID == TheBrick::Rocket)
         {
             ong::vec3 pos = this->m_pBody->getWorldCenter();
             ong::vec3 gpos = this->m_pBody->getWorldCenter();
             float length = FLT_MAX;
+            //go to a ship
             for (unsigned int i = 0; i < sba_Players.size(); i++)
             {
                 if (this->m_pOwner != sba_Players[i])
                 {
-					ong::vec3 tpos = sba_Players[i]->Ship->m_pBody->getWorldCenter() + a_DeltaTime * sba_Players[i]->Ship->m_pBody->getLinearVelocity();
+                    ong::vec3 tpos = sba_Players[i]->Ship->m_pBody->getWorldCenter() + a_DeltaTime * sba_Players[i]->Ship->m_pBody->getLinearVelocity();
                     float len = ong::lengthSq(pos - tpos);
                     if (len < length)
                     {
                         length = len;
                         gpos = tpos;
-						targetID = i;
                     }
                 }
-                    
+            }
+            //or fly to mines
+            for (unsigned int i = 0; i < a_rBullets.size(); i++)
+            {
+                if (a_rBullets[i]->m_ID == TheBrick::Mine)
+                {
+                    ong::vec3 tpos = a_rBullets[i]->m_pBody->getWorldCenter() + a_DeltaTime * a_rBullets[i]->m_pBody->getLinearVelocity();
+                    float len = ong::lengthSq(pos - tpos);
+                    if (len < length)
+                    {
+                        length = len;
+                        gpos = tpos;
+                    }
+                }
             }
 
 

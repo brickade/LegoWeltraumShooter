@@ -15,6 +15,7 @@ namespace sba
     class CBullet : public TheBrick::CGameObject
     {
     public:
+        TheBrick::CBrickInstance* m_pWeapon;
         float m_lifeTime;
         int m_Damage;
         bool m_Collided;
@@ -26,9 +27,9 @@ namespace sba
         int m_SoundChannel;
 
     public:
-        CBullet(ong::BodyDescription* a_desc, ong::World& a_rWorld, SPlayer* a_pOwner, PuRe_Color a_Color, unsigned int a_ID);
+        CBullet(ong::BodyDescription* a_desc, ong::World& a_rWorld, SPlayer* a_pOwner, PuRe_Color a_Color, unsigned int a_ID,TheBrick::CBrickInstance* a_pWeapon);
         ~CBullet();
-        void Update(float a_DeltaTime) override;
+        void Update(float a_DeltaTime, std::vector<CBullet*>& a_rBullets);
         static void Collision(ong::Collider* thisCollider, ong::Contact* contact);
         void DrawEmitter(PuRe_Sprite* a_pSprite, PuRe_IMaterial* a_pMaterial, PuRe_PointLight* a_pLight, PuRe_IMaterial* a_pLightMaterial);
     };

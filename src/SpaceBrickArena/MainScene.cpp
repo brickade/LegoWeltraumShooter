@@ -42,9 +42,7 @@ namespace sba
         case 2: //Game Local Initialize
             this->m_pActiveScene->Exit();
             SAFE_DELETE(this->m_pActiveScene);
-
-            for (int i = 0; i<sba_SoundPlayer->MaxChannels; i++)
-                sba_SoundPlayer->StopSound(i);
+            sba_SoundPlayer->StopAll();
             sba_SoundPlayer->PlaySound("Ingame", true,true, std::stof(sba_Options->GetValue("MusicVolume")));
 
             this->m_pGameScene = new sba::CGameScene(a_pApplication, this->m_PlayerIdx, false);
@@ -54,9 +52,7 @@ namespace sba
         case 3: //Game Network Initialize
             this->m_pActiveScene->Exit();
             SAFE_DELETE(this->m_pActiveScene);
-
-            for (int i = 0; i<sba_SoundPlayer->MaxChannels; i++)
-                sba_SoundPlayer->StopSound(i);
+            sba_SoundPlayer->StopAll();
             sba_SoundPlayer->PlaySound("Ingame", true, true, std::stof(sba_Options->GetValue("MusicVolume")));
 
             this->m_pGameScene = new sba::CGameScene(a_pApplication, this->m_PlayerIdx, true);
@@ -66,8 +62,7 @@ namespace sba
         case 4: //Editor Initialize
             this->m_pActiveScene->Exit();
             SAFE_DELETE(this->m_pActiveScene);
-            for (int i = 0; i<sba_SoundPlayer->MaxChannels; i++)
-                sba_SoundPlayer->StopSound(i);
+            sba_SoundPlayer->StopAll();
             sba_SoundPlayer->PlaySound("Editor", true,true, std::stof(sba_Options->GetValue("MusicVolume")));
 
             this->m_pEditorScene = new Editor::CEditorScene(a_pApplication, this->m_PlayerIdx);
@@ -77,8 +72,7 @@ namespace sba
         case 5: //Menu Initialize
             this->m_pActiveScene->Exit();
             SAFE_DELETE(this->m_pActiveScene);
-            for (int i = 0; i<sba_SoundPlayer->MaxChannels; i++)
-                sba_SoundPlayer->StopSound(i);
+            sba_SoundPlayer->StopAll();
             sba_SoundPlayer->PlaySound("Theme", true,true, std::stof(sba_Options->GetValue("MusicVolume")));
 
             this->m_pMenuScene = new Menu::CMenuScene(a_pApplication, &this->m_PlayerIdx);

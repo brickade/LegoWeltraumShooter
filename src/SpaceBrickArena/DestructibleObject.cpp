@@ -55,10 +55,14 @@ namespace sba
 
 		point = 1.0f / contact->manifold.numPoints * point;
 
+        CBullet* bullet = (CBullet*)other->GetGameObject();
 		switch (other->GetGameObject()->m_Type)
 		{
 		case TheBrick::EGameObjectType::Bullet:
-			impulse = 10.0f * impulse;
+            if (bullet->m_ID != TheBrick::Laser)
+			    impulse = 10.0f * impulse;
+            else
+                impulse = 0.1f * impulse;
 			break;
 		case TheBrick::EGameObjectType::Ship:
 			impulse = 10.0f * impulse;

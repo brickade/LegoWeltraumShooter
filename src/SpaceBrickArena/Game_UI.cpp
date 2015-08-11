@@ -72,12 +72,16 @@ namespace sba
                 pos.X = 1920.0f/2.0f;
                 pos.Y = 1080.0f-100.0f;
 
-                pos.X -= 250.0f;
+                pos.X -= 300.0f;
                 sba_Renderer->Set(2, sba_Players[i]->LaserCD/std::stof(sba_Balancing->GetValue("Laser_CD")), "verlauf");
                 this->m_pUI->Draw(2, sba_Renderer, "icon_kasten", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.5f, 0.5f));
                 pos.Y += 10.0f;
                 this->m_pUI->Draw(2, sba_Renderer, "laser_icon", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.5f, 0.5f));
                 pos.Y -= 10.0f;
+                pos.X += 150.0f;
+                sba_Renderer->Set(2, sba_Players[i]->MGCD / std::stof(sba_Balancing->GetValue("MG_CD")), "verlauf");
+                this->m_pUI->Draw(2, sba_Renderer, "icon_kasten", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.5f, 0.5f));
+                this->m_pUI->Draw(2, sba_Renderer, "MG_icon", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.5f, 0.5f));
 
                 pos.X += 150.0f;
                 sba_Renderer->Set(2, sba_Players[i]->MineCD / std::stof(sba_Balancing->GetValue("Mine_CD")), "verlauf");
@@ -87,7 +91,7 @@ namespace sba
                 pos.X += 150.0f;
                 sba_Renderer->Set(2, sba_Players[i]->RocketCD / std::stof(sba_Balancing->GetValue("Rocket_CD")), "verlauf");
                 this->m_pUI->Draw(2, sba_Renderer, "icon_kasten", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.5f, 0.5f));
-                this->m_pUI->Draw(2, sba_Renderer, "rocket_icon", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.5f, 0.5f));
+                this->m_pUI->Draw(2, sba_Renderer, "missle_icon", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.5f, 0.5f));
                 sba_Renderer->Set(2, 0.0f, "verlauf");
 
                 pos.X = 1920.0f / 2.0f;
@@ -128,26 +132,26 @@ namespace sba
         if (a_Pause)
         {
             size = PuRe_Vector3F(48.0f, 48.0f, 0.0f);
-            pos = PuRe_Vector3F(300.0f, 600.0f, 0.0f);
+            pos = PuRe_Vector3F((1920.0f/2)-150.0f, 600.0f, 0.0f);
             if (a_PauseEnd)
                 c = PuRe_Color(0.5f, 0.5f, 0.5f, 0.5f);
             else
                 c = PuRe_Color(1.0f, 1.0f, 1.0f, 1.0f);
-            sba_Renderer->Draw(3, false, a_pFont, a_pFontMaterial, "Continue", pos, PuRe_MatrixF(), size, 42.0f, c,0);
+            sba_Renderer->Draw(2, false, a_pFont, a_pFontMaterial, "Continue", pos, PuRe_MatrixF(), size, 42.0f, c,0);
             pos.Y -= 150.0f;
             if (!a_PauseEnd)
                 c = PuRe_Color(0.5f, 0.5f, 0.5f, 0.5f);
             else
                 c = PuRe_Color(1.0f, 1.0f, 1.0f, 1.0f);
-            sba_Renderer->Draw(3, false, a_pFont, a_pFontMaterial, "End Game", pos, PuRe_MatrixF(), size, 42.0f, c, 0);
+            sba_Renderer->Draw(2, false, a_pFont, a_pFontMaterial, "End Game", pos, PuRe_MatrixF(), size, 42.0f, c, 0);
             c = PuRe_Color(1.0f, 1.0f, 1.0f, 1.0f);
         }
 
         if (a_EndTime < 0.0f)
         {
             size = PuRe_Vector3F(48.0f, 48.0f, 0.0f);
-            pos = PuRe_Vector3F(300.0f, 500.0f, 0.0f);
-            sba_Renderer->Draw(3, false, a_pFont, a_pFontMaterial, "Player " + std::to_string(a_WonID+1) + " won!", pos, PuRe_MatrixF(), size, 42.0f, c);
+            pos = PuRe_Vector3F((1920.0f / 2) - 150.0f, 600.0f, 0.0f);
+            sba_Renderer->Draw(2, false, a_pFont, a_pFontMaterial, "Player " + std::to_string(a_WonID+1) + " won!", pos, PuRe_MatrixF(), size, 42.0f, c);
         }
         else
         {
@@ -159,7 +163,7 @@ namespace sba
                 secString = "0" + secString;
             size = PuRe_Vector3F(36.0f, 36.0f, 0.0f);
             pos = PuRe_Vector3F(100.0f, 980.0f, 0.0f);
-            sba_Renderer->Draw(3, false, a_pFont, a_pFontMaterial, minString + ":" + secString, pos, PuRe_MatrixF(), size, 36.0f, c);
+            sba_Renderer->Draw(2, false, a_pFont, a_pFontMaterial, minString + ":" + secString, pos, PuRe_MatrixF(), size, 36.0f, c);
         }
     }
 
