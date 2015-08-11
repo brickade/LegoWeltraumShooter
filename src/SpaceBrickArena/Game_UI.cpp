@@ -80,11 +80,6 @@ namespace sba
                 pos.Y -= 10.0f;
 
                 pos.X += 150.0f;
-                sba_Renderer->Set(2, sba_Players[i]->TorpedoCD / std::stof(sba_Balancing->GetValue("Torpedo_CD")), "verlauf");
-                this->m_pUI->Draw(2, sba_Renderer, "icon_kasten", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.5f, 0.5f));
-                this->m_pUI->Draw(2, sba_Renderer, "missle_icon", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.5f, 0.5f));
-
-                pos.X += 150.0f;
                 sba_Renderer->Set(2, sba_Players[i]->MineCD / std::stof(sba_Balancing->GetValue("Mine_CD")), "verlauf");
                 this->m_pUI->Draw(2, sba_Renderer, "icon_kasten", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.5f, 0.5f));
                 this->m_pUI->Draw(2, sba_Renderer, "mines_icon", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.5f, 0.5f));

@@ -42,9 +42,9 @@ namespace sba
 #endif
     const int CSpaceship::MAX_BRICK_HEIGHT = CSpaceship::MAX_BRICK_WIDTH;
     const int CSpaceship::MAX_COCKPITS = 2;
-    const int CSpaceship::MAX_ENGINES = 6;
-    const int CSpaceship::MAX_WEAPONS = 6;
-    const int CSpaceship::MAX_PERKS = 10;
+    const int CSpaceship::MAX_ENGINES = 4;
+    const int CSpaceship::MAX_WEAPONS = 4;
+    const int CSpaceship::MAX_PERKS = 6;
 
     // **************************************************************************
     // **************************************************************************
@@ -160,21 +160,34 @@ namespace sba
     {
 
 		float mass = 1.0f / this->m_pBody->getInverseMass();
-		this->m_RotationAcceleration = PuRe_Vector3F(mass*100.0f, mass*200.0f, mass*200.0f);
 		this->m_SpeedAcceleration = mass*30.0f;
-        this->m_MaxRotationSpeed = PuRe_Vector3F(1.0f, 1.0f, 1.0f);
-
+        this->m_MaxRotationSpeed = PuRe_Vector3F(0.0f, 0.0f, 0.0f);
+        this->m_RotationAcceleration = PuRe_Vector3F(mass*100.0f, mass*200.0f, mass*200.0f);
+        this->m_MaxSpeed = 0.0f;
+        float rot = 0.0f;
         std::vector<TheBrick::CBrickInstance**> engines;
         this->GetEngines(engines);
         for (std::vector<TheBrick::CBrickInstance**>::iterator it = engines.begin(); it != engines.end(); ++it)
         {
             TheBrick::CBrickInstance* engine = *(*it);
             if (engine->m_pBrick->GetBrickId() == 700)
+            {
                 this->m_MaxSpeed += std::stof(sba_Balancing->GetValue("Engine1_Speed"));
+                rot = std::stof(sba_Balancing->GetValue("Engine1_Rot"))/100.0f;
+                this->m_MaxRotationSpeed += PuRe_Vector3F(rot, rot, rot);
+            }
             else if (engine->m_pBrick->GetBrickId() == 701)
+            {
                 this->m_MaxSpeed += std::stof(sba_Balancing->GetValue("Engine2_Speed"));
+                rot = std::stof(sba_Balancing->GetValue("Engine2_Rot")) / 100.0f;
+                this->m_MaxRotationSpeed += PuRe_Vector3F(rot, rot, rot);
+            }
             else if (engine->m_pBrick->GetBrickId() == 702)
+            {
                 this->m_MaxSpeed += std::stof(sba_Balancing->GetValue("Engine3_Speed"));
+                rot = std::stof(sba_Balancing->GetValue("Engine3_Rot")) / 100.0f;
+                this->m_MaxRotationSpeed += PuRe_Vector3F(rot, rot, rot);
+            }
         }
         this->m_MaxSpeed /= mass;
 		
@@ -383,13 +396,6 @@ namespace sba
                         pos += forward*10.0f;
                         id = TheBrick::Rocket;
                         speed *= std::stof(sba_Balancing->GetValue("Rocket_Speed"));
-                        col = PuRe_Color(1.0f, 0.0f, 0.0f, 1.0f);
-                        break;
-
-                    case TheBrick::Torpedo - 100: //Torpedo
-                        pos += forward*10.0f;
-                        id = TheBrick::Torpedo;
-                        speed *= std::stof(sba_Balancing->GetValue("Torpedo_Speed"));
                         col = PuRe_Color(1.0f, 0.0f, 0.0f, 1.0f);
                         break;
                     }

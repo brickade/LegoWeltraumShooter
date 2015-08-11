@@ -49,7 +49,6 @@ namespace sba
         input.MG = sba_Input->Axis(Input::EAxis::Type::GameShootMG, a_PlayerIdx) > 0.0f;
         input.Laser = sba_Input->ButtonIsPressed(Input::EButton::Type::GameShootLaser1, a_PlayerIdx) || sba_Input->ButtonIsPressed(Input::EButton::Type::GameShootLaser2, a_PlayerIdx);
         input.Rocket = sba_Input->ButtonIsPressed(Input::EButton::Type::GameShootRocket1, a_PlayerIdx) || sba_Input->ButtonIsPressed(Input::EButton::Type::GameShootRocket2, a_PlayerIdx);
-        input.Torpedo = sba_Input->ButtonIsPressed(Input::EButton::Type::GameShootTorpedo1, a_PlayerIdx) || sba_Input->ButtonIsPressed(Input::EButton::Type::GameShootTorpedo2, a_PlayerIdx);
         input.Mine = sba_Input->ButtonIsPressed(Input::EButton::Type::GameShootMine1, a_PlayerIdx) || sba_Input->ButtonIsPressed(Input::EButton::Type::GameShootMine2, a_PlayerIdx);
 
         PuRe_Vector2F Move;
@@ -152,18 +151,6 @@ namespace sba
             if (*cd < 0.0f)
                 *cd = 0.0f;
         }
-        cd = &a_pPlayer->TorpedoCD;
-        if (*cd == 0.0f&&a_Input->Torpedo)
-        {
-            ship->Shoot(TheBrick::Torpedo - 100, a_rBullets, a_pPlayer, Move, a_Time);
-            *cd = std::stof(sba_Balancing->GetValue("Torpedo_CD"));
-        }
-        else if (*cd != 0.0f)
-        {
-            *cd -= a_DeltaTime;
-            if (*cd < 0.0f)
-                *cd = 0.0f;
-        }
         cd = &a_pPlayer->LaserCD;
         if (*cd == 0.0f&&a_Input->Laser)
         {
@@ -238,11 +225,6 @@ namespace sba
                     amount = 40;
                     speed = 4000.0f;
                     break;
-
-                case TheBrick::Torpedo: //Torpedo
-                    amount = 50;
-                    speed = 3000.0f;
-                    break;
                 }
                 if (a_rExplosions[i].LifeTime > 0.0f)
                 {
@@ -274,6 +256,27 @@ namespace sba
             }
             a_rBullets[i]->Update(a_Deltatime);
 
+            float maxLifeTime = 0.0f;
+
+            switch (a_rBullets[i]->m_ID)
+            {
+
+            case TheBrick::Laser: //Laser
+                maxLifeTime = std::stof(sba_Balancing->GetValue("Laser_LifeTime"));
+                break;
+
+            case TheBrick::MG: //MG
+                maxLifeTime = std::stof(sba_Balancing->GetValue("MG_LifeTime"));
+                break;
+
+            case TheBrick::Mine: //Mine
+                maxLifeTime = std::stof(sba_Balancing->GetValue("Mine_LifeTime"));
+                break;
+
+            case TheBrick::Rocket: //Rocket
+                maxLifeTime = std::stof(sba_Balancing->GetValue("Rocket_LifeTime"));
+                break;
+            }
             if (a_rBullets[i]->m_Collided || a_rBullets[i]->m_lifeTime > 5.0f)
             {
                 SAFE_DELETE(a_rBullets[i]);

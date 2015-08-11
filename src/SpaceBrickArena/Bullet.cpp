@@ -45,11 +45,6 @@ namespace sba
             sound = "torpedo";
             this->m_Damage = std::stoi(sba_Balancing->GetValue("Rocket_DMG"));
             break;
-
-        case TheBrick::Torpedo: //Torpedo
-            sound = "torpedo";
-            this->m_Damage = std::stoi(sba_Balancing->GetValue("Torpedo_DMG"));
-            break;
         }
         this->m_SoundChannel = sba_SoundPlayer->PlaySound(sound.c_str(), false, false, std::stof(sba_Options->GetValue("SoundVolume")), TheBrick::OngToPuRe(a_desc->transform.p), PuRe_Vector3F(0.0f, 0.0f, 0.0f), PuRe_Vector2F(1.0f, 10.0f));
 

@@ -23,7 +23,6 @@ namespace sba
         unsigned char Player;
         bool MG;
         bool Rocket;
-        bool Torpedo;
         bool Laser;
         bool Mine;
         char Thrust;

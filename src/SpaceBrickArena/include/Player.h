@@ -20,7 +20,6 @@ namespace sba
         int Points;
         float MGCD;
         float RocketCD;
-        float TorpedoCD;
         float LaserCD;
         float MineCD;
         float Marker;

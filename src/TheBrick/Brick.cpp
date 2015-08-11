@@ -117,9 +117,7 @@ namespace TheBrick
         case Rocket:
             a_rRenderer.Set(0, PuRe_Color(0.5f, 0.0f, 0.0f, 0.5f), "glow");
             break;
-        case Torpedo:
-            a_rRenderer.Set(0, PuRe_Color(0.5f, 0.0f, 0.0f, 0.5f), "glow");
-            break;
+
         default:
             a_rRenderer.Set(0, PuRe_Color(0.0f, 0.0f, 0.0f, 0.0f), "glow");
         break;
