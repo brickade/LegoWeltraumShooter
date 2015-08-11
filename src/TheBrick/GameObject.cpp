@@ -18,6 +18,7 @@ namespace TheBrick
             body.type = ong::BodyType::Dynamic;
             body.angularMomentum = ong::vec3(0, 0, 0);
             body.linearMomentum = ong::vec3(0, 0, 0);
+			body.continuousPhysics = false;
             a_pBodyDesc = &body;
         }
         ong::Body* body = a_rWorld.createBody(*a_pBodyDesc);

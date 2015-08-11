@@ -136,6 +136,12 @@ namespace ong
 			return tmin;
 		}
 
+		//zero velocity
+		if (v == vec3(0, 0, 0))
+		{
+			return 1.0f;
+		}
+
 		//broad		
 		{
 			Sphere a = { ca, ra };

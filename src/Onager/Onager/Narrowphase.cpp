@@ -750,6 +750,9 @@ namespace ong
 		{
 			collisionFuncMatrix[ca->getShape().getType()][cb->getShape().getType()](ca, &ta, cb, &tb, &manifold, &feature);
 
+			//DEBUG
+			assert(lengthSq(manifold.normal) != 0.0f);
+
 			if (manifold.numPoints == 0)
 			{
 				for (size_t i = 0; i < m_contacts.size(); ++i)

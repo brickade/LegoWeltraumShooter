@@ -89,6 +89,7 @@ namespace sba
                             desc.transform = ong::Transform(pos, ong::Quaternion(ong::vec3(0, 0, 0), 1));
                             desc.linearMomentum = vel;
                             desc.angularMomentum = rot;
+							desc.continuousPhysics = false;
                             sba::CAsteroid* asteroid = new sba::CAsteroid(*sba_World, &desc);
                             TheBrick::CSerializer serializer;
                             serializer.OpenRead(objectName.c_str());
@@ -103,6 +104,7 @@ namespace sba
                             desc.transform = ong::Transform(pos, ong::Quaternion(ong::vec3(0, 0, 0), 1));
                             desc.linearMomentum = vel;
                             desc.angularMomentum = rot;
+							desc.continuousPhysics = false;
                             sba::CAsteroid* asteroid = new sba::CAsteroid(*sba_World, &desc);
                             TheBrick::CSerializer serializer;
                             serializer.OpenRead(objectName.c_str());

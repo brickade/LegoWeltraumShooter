@@ -80,7 +80,7 @@ namespace Menu
                 sba_Space->CreatePlayer(0, window);
 
 				//bot
-				//sba_Space->CreatePlayer(1, window);
+				sba_Space->CreatePlayer(1, window);
 
                 break;
             case 3: //Multiplayer

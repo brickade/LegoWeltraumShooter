@@ -83,7 +83,7 @@ namespace ong
 	inline vec3 operator*(float lhs, const vec3& rhs)
 	{
 		////TODO remove after finding bug
-		//assert(lhs != INFINITY && lhs != -INFINITY && lhs != NAN);
+		assert(lhs != INFINITY && lhs != -INFINITY && lhs != NAN);
 		return vec3(rhs.x * lhs, rhs.y * lhs, rhs.z * lhs);
 	}
 

@@ -349,6 +349,7 @@ namespace sba
                     bdesc.angularMomentum = ong::vec3(0, 0, 0);
                     bdesc.transform.q = ship.q*transform.q*diff;
                     bdesc.type = ong::BodyType::Dynamic;
+					bdesc.continuousPhysics = false;
 
                     unsigned int id=0;
                     PuRe_Color col = PuRe_Color(1.0f,0.0f,0.0f,1.0f);
@@ -360,6 +361,7 @@ namespace sba
                         pos += forward*10.0f;
                         speed *= std::stof(sba_Balancing->GetValue("Laser_Speed"));
                         col = PuRe_Color(1.0f, 1.0f, 1.0f, 1.0f);
+						bdesc.continuousPhysics = false;
                         break;
 
                     case TheBrick::MG - 100: //MG
@@ -367,6 +369,7 @@ namespace sba
                         pos += forward*10.0f;
                         speed *= std::stof(sba_Balancing->GetValue("MG_Speed"));
                         col = PuRe_Color(1.0f, 0.0f, 0.0f, 1.0f);
+						bdesc.continuousPhysics = false;
                         break;
 
                     case TheBrick::Mine - 100: //Mine

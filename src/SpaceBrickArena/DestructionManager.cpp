@@ -578,6 +578,7 @@ namespace sba
 			descr.linearMomentum = brick->GetGameObject()->m_pBody->getLinearMomentum();
 			descr.angularMomentum = brick->GetGameObject()->m_pBody->getAngularMomentum();
 			descr.type = ong::BodyType::Dynamic;
+			descr.continuousPhysics = false;
 
 			descr.linearMomentum = ong::vec3(0, 0, 0);
 			descr.angularMomentum = ong::vec3(0,0,0);
@@ -633,8 +634,11 @@ namespace sba
 			}
 			else
 			{
-				oldObject->m_pBody->applyImpulse(1.0f / oldObject->m_pBody->getInverseMass() * newObject->m_pBody->getLinearVelocity());
-				oldObject->m_pBody->applyAngularImpulse(ong::inverse(oldObject->m_pBody->getInverseInertia()) * newObject->m_pBody->getAngularVelocity());
+				if (oldObject->m_pBody->getType() != ong::BodyType::Static)
+				{
+					oldObject->m_pBody->applyImpulse(1.0f / oldObject->m_pBody->getInverseMass() * newObject->m_pBody->getLinearVelocity());
+					oldObject->m_pBody->applyAngularImpulse(ong::inverse(oldObject->m_pBody->getInverseInertia()) * newObject->m_pBody->getAngularVelocity());
+				}
 			}
 
 			if (newObject->m_Type == TheBrick::EGameObjectType::Ship)

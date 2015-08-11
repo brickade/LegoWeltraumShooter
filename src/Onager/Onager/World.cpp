@@ -459,6 +459,7 @@ namespace ong
 		m_p.pop_back();
 		m_m.pop_back();
 		m_b.pop_back();
+
 		if (pBody->getContinuousPhysics())
 			m_cp.pop_back();
 
