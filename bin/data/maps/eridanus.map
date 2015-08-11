@@ -1,4 +1,3 @@
-object@spacestation;50,50,50;0,0,0;0,5,0
 object@asteroid;10,50,80;0,0,1;0,0,0
 object@asteroid;50,150,50;0,0,1;0,0,0
 object@asteroid;50,-150,50;0,0,1;0,0,0
@@ -6,5 +5,6 @@ object@asteroid;100,-150,50;0,0,1;0,0,0
 object@asteroid;100,150,50;0,0,1;0,0,0
 static@asteroid3;0,0,0;0,0,0;0,0,0
 object@asteroid4;50,0,0;0,0,0;0,0,0
-object@satellit;100,0,0;0,0,0;0,0,0
+object@raumstation;200,0,0;0,0,0;0,0,0
+object@wrack;300,0,0;0,0,0;0,0,0
 light@directional;1.0,0.0,0.0;1.0,1.0,1.0;0,0,0
