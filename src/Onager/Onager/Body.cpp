@@ -377,9 +377,12 @@ namespace ong
 			}
 		}
 
-		result->t = tmin;
-		result->point = origin + tmin*dir;
-		result->normal = normalize(rotate(result->normal, t.q));
+		if (result->collider != nullptr)
+		{
+			result->t = tmin;
+			result->point = origin + tmin*dir;
+			result->normal = normalize(rotate(result->normal, t.q));
+		}
 
 		return (result->collider != nullptr);
 	}
