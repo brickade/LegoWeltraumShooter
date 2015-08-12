@@ -378,7 +378,6 @@ namespace sba
                         speed *= std::stof(sba_Balancing->GetValue("Laser_Speed"));
                         bdesc.transform.q = ship.q*transform.q;
                         col = PuRe_Color(1.0f, 1.0f, 1.0f, 1.0f);
-						bdesc.continuousPhysics = true;
                         bdesc.type = ong::BodyType::Static;
                         break;
 
@@ -386,7 +385,6 @@ namespace sba
                         id = TheBrick::MG;
                         pos += forward*10.0f;
                         speed *= std::stof(sba_Balancing->GetValue("MG_Speed"));
-                        speed *= 0;
                         col = PuRe_Color(1.0f, 0.0f, 0.0f, 1.0f);
 						bdesc.continuousPhysics = true;
                         break;
