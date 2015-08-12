@@ -3,14 +3,14 @@
 namespace Menu
 {
 
-    CLobby::CLobby(PuRe_IWindow* a_pWindow, PuRe_IGraphics* a_pGraphics) : m_pWindow(a_pWindow)
+    CLobby::CLobby(PuRe_IWindow* a_pWindow, PuRe_IGraphics* a_pGraphics, PuRe_Timer* a_pTimer) : m_pWindow(a_pWindow)
     {
         this->m_pNavigation = new sba::CNavigation(1, 2);
         this->m_Start = false;
         this->m_Focus = false;
         this->m_pMapSprites = new sba::CSpriteReader(a_pGraphics, "../data/textures/ui/lobby_maps.png", "../data/textures/ui/lobby_maps.txt");
         this->m_ShipSelect = false;
-        this->m_pNetwork = new sba::CLobbyNetwork(a_pWindow);
+        this->m_pNetwork = new sba::CLobbyNetwork(a_pWindow, a_pTimer);
         this->m_ShipSelect = false;
         this->m_pUnknownShip = new PuRe_Sprite(a_pGraphics, "../data/textures/unknownship.png");
     }
@@ -31,7 +31,7 @@ namespace Menu
 
     int CLobby::Update(PuRe_Timer* a_pTimer, PuRe_IWindow* a_pWindow, PuRe_IInput* a_pInput, int a_PlayerIdx)
     {
-        this->m_pNetwork->Broadcast(a_pTimer);
+        this->m_pNetwork->Broadcast();
 
         if (sba_Network->IsConnected())
             if (!sba_Network->GetHost())
@@ -40,6 +40,7 @@ namespace Menu
                 this->m_ShipSelect = this->m_pNetwork->IsShip();
                 if (!this->m_Start&&this->m_pNetwork->IsEnded())
                 {
+                    this->m_ShipSelect = false;
                     this->m_pNetwork->Exit();
                     return 0;
                 }

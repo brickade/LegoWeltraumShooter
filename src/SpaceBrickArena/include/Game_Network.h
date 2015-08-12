@@ -46,7 +46,6 @@ namespace sba
         bool m_send[BufferSize];
         //All players
         PlayOutBuffer m_buffer[BufferSize];
-        sba::SInputPacket m_inputs[sba::Delay];
     public:
         bool m_Run;
     public:

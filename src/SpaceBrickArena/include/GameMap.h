@@ -3,6 +3,7 @@
 
 #include <string>
 #include "Asteroid.h"
+#include "Static.h"
 #include "Item.h"
 
 #include "TheBrick/Conversion.h"
@@ -27,7 +28,7 @@ namespace sba
         CGameMap();
         ~CGameMap();
     public:
-        bool GetMapData(std::vector<CAsteroid*>& a_rObjects, std::vector<CItem*>& a_rItems, std::vector<SLightData*>& a_rLights);
+        bool GetMapData(std::vector<CStatic*>& a_rStatics, std::vector<CAsteroid*>& a_rObjects, std::vector<CItem*>& a_rItems, std::vector<SLightData*>& a_rLights);
         std::string GetSkybox();
         std::string GetName();
     };

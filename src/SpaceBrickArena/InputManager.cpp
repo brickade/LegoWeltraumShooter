@@ -89,7 +89,7 @@ namespace sba
             Input::EKeyboardAxis::MouseScroll
 
         };
-        this->m_pAxisMapping[Input::EAxis::GameShootMG] =
+        this->m_pAxisMapping[Input::EAxis::GameShoot] =
         {
             Input::EGamepadAxis::RightTrigger,
             Input::EKeyboardAxis::MouseScroll
@@ -235,34 +235,44 @@ namespace sba
             Input::EGamepadButton::Pad_B,
             Input::EKeyboardButton::Backspace
         };
-        this->m_pButtonMapping[Input::EButton::GameShootLaser1] =
+        this->m_pButtonMapping[Input::EButton::GameUseLaser1] =
         {
             Input::EGamepadButton::Pad_Y,
             Input::EKeyboardButton::I
         };
-        this->m_pButtonMapping[Input::EButton::GameShootLaser2] =
+        this->m_pButtonMapping[Input::EButton::GameUseLaser2] =
         {
             Input::EGamepadButton::DPAD_Up,
             Input::EKeyboardButton::I
         };
-        this->m_pButtonMapping[Input::EButton::GameShootMine1] =
+        this->m_pButtonMapping[Input::EButton::GameUseMine1] =
         {
             Input::EGamepadButton::Pad_X,
             Input::EKeyboardButton::J
         };
-        this->m_pButtonMapping[Input::EButton::GameShootMine2] =
+        this->m_pButtonMapping[Input::EButton::GameUseMine2] =
         {
             Input::EGamepadButton::DPAD_Left,
             Input::EKeyboardButton::J
         };
-        this->m_pButtonMapping[Input::EButton::GameShootRocket1] =
+        this->m_pButtonMapping[Input::EButton::GameUseRocket1] =
         {
             Input::EGamepadButton::Pad_B,
             Input::EKeyboardButton::L
         };
-        this->m_pButtonMapping[Input::EButton::GameShootRocket2] =
+        this->m_pButtonMapping[Input::EButton::GameUseRocket2] =
         {
             Input::EGamepadButton::DPAD_Right,
+            Input::EKeyboardButton::L
+        };
+        this->m_pButtonMapping[Input::EButton::GameUseMG1] =
+        {
+            Input::EGamepadButton::Pad_A,
+            Input::EKeyboardButton::L
+        };
+        this->m_pButtonMapping[Input::EButton::GameUseMG2] =
+        {
+            Input::EGamepadButton::DPAD_Down,
             Input::EKeyboardButton::L
         };
         this->m_pButtonMapping[Input::EButton::GameThrustB_1] =

@@ -107,14 +107,15 @@ namespace sba
 
         if (this->m_ID == TheBrick::Laser)
         {
-            ong::Transform transform = this->m_pWeapon->GetTransform();
-            ong::Transform ship = this->m_pOwner->Ship->m_pBody->getTransform();
-            ong::Transform wtransform = ong::transformTransform(transform, ship);
-            PuRe_Vector3F pos = TheBrick::OngToPuRe(wtransform.p); //position of the Weapon
-            PuRe_Vector3F forward = PuRe_Vector3F(0.0f, 0.0f, 1.0f) * TheBrick::OngToPuRe(wtransform.q);
-            pos += forward*10.0f;
-            this->m_pBody->setPosition(TheBrick::PuReToOng(pos));
-            this->m_pBody->setOrientation(wtransform.q);
+                ong::Transform transform = this->m_pWeapon->GetTransform();
+                ong::Transform ship = this->m_pOwner->Ship->m_pBody->getTransform();
+                ong::Transform wtransform = ong::transformTransform(transform, ship);
+                PuRe_Vector3F pos = TheBrick::OngToPuRe(wtransform.p);
+                PuRe_Vector3F forward = PuRe_Vector3F(0.0f, 0.0f, 1.0f) * TheBrick::OngToPuRe(wtransform.q);
+                pos += forward*10.0f;
+                this->m_pBody->setOrientation(ship.q*transform.q);
+                this->m_pBody->setPosition(TheBrick::PuReToOng(pos));
+
         }
         else if (this->m_ID == TheBrick::Rocket)
         {

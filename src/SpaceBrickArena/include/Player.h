@@ -18,6 +18,7 @@ namespace sba
         SOCKET NetworkInformation;
         bool Timeout;
         int Points;
+        char Weapon;
         float MGCD;
         float RocketCD;
         float LaserCD;

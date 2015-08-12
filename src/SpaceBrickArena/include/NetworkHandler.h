@@ -12,7 +12,7 @@
 // Declare namespace Game
 namespace sba
 {
-    enum { MaxPlayers = 4, Delay = 10, BroadcastPort =13370, MaxName=12, MaxLength=15, MaxBricks=200};
+    enum { MaxPlayers = 4, BroadcastPort =13370, MaxName=12, MaxLength=15, MaxBricks=200};
 
     enum EPacket { Broadcast, Join, User, IAm,WhoamI, Left,LobbyEnd,Ship,Menu,Brick,SendCommand,Start,Init,Map, STick, CTick };
 
@@ -21,10 +21,8 @@ namespace sba
     struct SInputData
     {
         unsigned char Player;
-        bool MG;
-        bool Rocket;
-        bool Laser;
-        bool Mine;
+        bool Shoot;
+        char Weapon;
         char Thrust;
         char Spin;
         char MoveX;
@@ -36,6 +34,20 @@ namespace sba
     struct SHeadPacket
     {
         EPacket Type;
+    };
+    /// @brief PingPacket used for pinging
+    ///
+    struct SPingPacket
+    {
+        EPacket Type;
+        int64_t PTime;
+    };
+    /// @brief StartPacket to send Delay with
+    ///
+    struct SStartPacket
+    {
+        EPacket Type;
+        int Delay;
     };
 
     /// @brief Packet used when Data is received, this checks the Header
@@ -94,6 +106,7 @@ namespace sba
         SHeadPacket Head;
         int ID;
         int BrickNum;
+        int64_t PTime;
         TheBrick::SBrickData Bricks[MaxBricks];
     };
 

@@ -62,7 +62,7 @@ namespace sba
             if (bullet->m_ID != TheBrick::Laser)
 			    impulse = 10.0f * impulse;
             else
-                impulse = 0.1f * impulse;
+                impulse = 0.001f * impulse;
 			break;
 		case TheBrick::EGameObjectType::Ship:
 			impulse = 10.0f * impulse;

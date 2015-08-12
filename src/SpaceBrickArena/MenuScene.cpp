@@ -12,6 +12,7 @@ namespace Menu
     // **************************************************************************
     void CMenuScene::Initialize(PuRe_Application* a_pApplication)
     {
+        PuRe_Timer* timer = a_pApplication->GetTimer();
         PuRe_IGraphics* graphics = a_pApplication->GetGraphics();
         PuRe_IWindow* window = a_pApplication->GetWindow();
         PuRe_GraphicsDescription gdesc = graphics->GetDescription();
@@ -42,8 +43,8 @@ namespace Menu
         this->m_Displayed = Main;
         this->m_pMainMenu = new CMain(graphics);
         this->m_pOptions = new COptions();
-        this->m_pLobby = new CLobby(window,graphics);
-        this->m_pNetwork = new CNetwork(a_pApplication->GetTimer());
+        this->m_pLobby = new CLobby(window, graphics, timer);
+        this->m_pNetwork = new CNetwork(timer);
 
     }
 
@@ -80,6 +81,9 @@ namespace Menu
                 sba_Space->CreatePlayer(0, window);
 
 				//bot
+                //TODO: REMOVE THIS
+                //DON'T FORGET
+                printf("Creating extra Player\n");
 				sba_Space->CreatePlayer(1, window);
 
                 break;

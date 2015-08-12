@@ -18,8 +18,9 @@ namespace sba
         bool m_End;
         bool m_ShipSelect;
         PuRe_IWindow* m_pWindow;
+        PuRe_Timer* m_pTimer;
     public:
-        CLobbyNetwork(PuRe_IWindow* a_pWindow);
+        CLobbyNetwork(PuRe_IWindow* a_pWindow, PuRe_Timer* a_pTimer);
         ~CLobbyNetwork();
     public:
         void GoShip();
@@ -37,7 +38,7 @@ namespace sba
         void SendCommand();
         void Receive(SOCKET s);
         void Listen();
-        void Broadcast(PuRe_Timer* a_pTimer);
+        void Broadcast();
     };
 }
 #endif /* _LOBBY_NETWORK_H_ */

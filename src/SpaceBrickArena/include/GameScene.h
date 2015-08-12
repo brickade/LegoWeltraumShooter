@@ -12,6 +12,7 @@
 #include "GameCamera.h"
 #include "NetworkHandler.h"
 #include "Asteroid.h"
+#include "Static.h"
 #include "Item.h"
 #include "Game_UI.h"
 #include "Game_Network.h"
@@ -24,7 +25,7 @@ namespace sba
     class CGameScene : public PuRe_IScene
     {
     private:
-        unsigned int m_Test;
+        int m_Test;
         CGameNetwork* m_pNetwork;
         //Determinate who won and save him even when others are still playing
         bool m_Pause;
@@ -74,6 +75,7 @@ namespace sba
         std::vector<ExplosionEmitter> m_ExplosionEmitter;
         std::vector<sba::CBullet*> m_Bullets;
         std::vector<sba::CAsteroid*> m_Asteroids;
+        std::vector<sba::CStatic*> m_Statics;
         std::vector<sba::CItem*> m_Items;
         std::vector<sba::SLightData*> m_Lights;
         /// @brief Engine's Application

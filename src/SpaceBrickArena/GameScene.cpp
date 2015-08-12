@@ -46,10 +46,16 @@ namespace sba
         sba::SInputData input;
         memset(&input, 0, sizeof(sba::SInputData));
 
-        input.MG = sba_Input->Axis(Input::EAxis::Type::GameShootMG, a_PlayerIdx) > 0.0f;
-        input.Laser = sba_Input->ButtonIsPressed(Input::EButton::Type::GameShootLaser1, a_PlayerIdx) || sba_Input->ButtonIsPressed(Input::EButton::Type::GameShootLaser2, a_PlayerIdx);
-        input.Rocket = sba_Input->ButtonIsPressed(Input::EButton::Type::GameShootRocket1, a_PlayerIdx) || sba_Input->ButtonIsPressed(Input::EButton::Type::GameShootRocket2, a_PlayerIdx);
-        input.Mine = sba_Input->ButtonIsPressed(Input::EButton::Type::GameShootMine1, a_PlayerIdx) || sba_Input->ButtonIsPressed(Input::EButton::Type::GameShootMine2, a_PlayerIdx);
+        input.Shoot = sba_Input->Axis(Input::EAxis::Type::GameShoot, a_PlayerIdx) > 0.0f;
+        input.Weapon = -1;
+        if (sba_Input->ButtonIsPressed(Input::EButton::Type::GameUseMG1, a_PlayerIdx) || sba_Input->ButtonIsPressed(Input::EButton::Type::GameUseMG2, a_PlayerIdx))
+            input.Weapon = 0;
+        if (sba_Input->ButtonIsPressed(Input::EButton::Type::GameUseLaser1, a_PlayerIdx) || sba_Input->ButtonIsPressed(Input::EButton::Type::GameUseLaser2, a_PlayerIdx))
+            input.Weapon = 1;
+        if (sba_Input->ButtonIsPressed(Input::EButton::Type::GameUseRocket1, a_PlayerIdx) || sba_Input->ButtonIsPressed(Input::EButton::Type::GameUseRocket2, a_PlayerIdx))
+            input.Weapon = 2;
+        if (sba_Input->ButtonIsPressed(Input::EButton::Type::GameUseMine1, a_PlayerIdx) || sba_Input->ButtonIsPressed(Input::EButton::Type::GameUseMine2, a_PlayerIdx))
+            input.Weapon = 3;
 
         PuRe_Vector2F Move;
         if (sba_Controls[a_PlayerIdx].Move == 1)
@@ -127,8 +133,11 @@ namespace sba
             Move.Y = a_Input->MoveY / 100.0f;
         ship->Move(Move);
 
+        if (a_Input->Weapon != -1)
+            a_pPlayer->Weapon = a_Input->Weapon;
+
         float* cd = &a_pPlayer->MGCD;
-        if (*cd == 0.0f&&a_Input->MG)
+        if (a_Input->Shoot&&*cd == 0.0f&&a_pPlayer->Weapon == 0)
         {
             ship->Shoot(TheBrick::MG - 100, a_rBullets, a_pPlayer, Move, a_Time);
             *cd = std::stof(sba_Balancing->GetValue("MG_CD"));
@@ -139,20 +148,8 @@ namespace sba
             if (*cd < 0.0f)
                 *cd = 0.0f;
         }
-        cd = &a_pPlayer->RocketCD;
-        if (*cd == 0.0f&&a_Input->Rocket)
-        {
-            ship->Shoot(TheBrick::Rocket - 100, a_rBullets, a_pPlayer, Move, a_Time);
-            *cd = std::stof(sba_Balancing->GetValue("Rocket_CD"));
-        }
-        else if (*cd != 0.0f)
-        {
-            *cd -= a_DeltaTime;
-            if (*cd < 0.0f)
-                *cd = 0.0f;
-        }
         cd = &a_pPlayer->LaserCD;
-        if (*cd == 0.0f&&a_Input->Laser)
+        if (a_Input->Shoot&&*cd == 0.0f&&a_pPlayer->Weapon == 1)
         {
             ship->Shoot(TheBrick::Laser - 100, a_rBullets, a_pPlayer, Move, a_Time);
             *cd = std::stof(sba_Balancing->GetValue("Laser_CD"));
@@ -163,8 +160,20 @@ namespace sba
             if (*cd < 0.0f)
                 *cd = 0.0f;
         }
+        cd = &a_pPlayer->RocketCD;
+        if (a_Input->Shoot&&*cd == 0.0f&&a_pPlayer->Weapon == 2)
+        {
+            ship->Shoot(TheBrick::Rocket - 100, a_rBullets, a_pPlayer, Move, a_Time);
+            *cd = std::stof(sba_Balancing->GetValue("Rocket_CD"));
+        }
+        else if (*cd != 0.0f)
+        {
+            *cd -= a_DeltaTime;
+            if (*cd < 0.0f)
+                *cd = 0.0f;
+        }
         cd = &a_pPlayer->MineCD;
-        if (*cd == 0.0f&&a_Input->Mine)
+        if (a_Input->Shoot&&*cd == 0.0f&&a_pPlayer->Weapon == 3)
         {
             ship->Shoot(TheBrick::Mine - 100, a_rBullets, a_pPlayer, Move, a_Time);
             *cd = std::stof(sba_Balancing->GetValue("Mine_CD"));
@@ -341,9 +350,6 @@ namespace sba
             //Lagg avoid
             if (this->m_StartTimer > 0.2f)
             {
-			    ong_START_PROFILE(UPDATE_GAME);
-                this->UpdateGame(this->m_ExplosionEmitter,this->m_Bullets, this->m_Items, seconds,tseconds);
-			    ong_END_PROFILE(UPDATE_GAME);
 
                 for (unsigned int i = 0; i < sba_Players.size(); i++)
                 {
@@ -351,9 +357,15 @@ namespace sba
                     this->ProcessInput(this->m_Bullets, sba_Players[i], &input, seconds, tseconds);
                 }
 
+
+                ong_START_PROFILE(UPDATE_GAME);
+                this->UpdateGame(this->m_ExplosionEmitter, this->m_Bullets, this->m_Items, seconds, tseconds);
+                ong_END_PROFILE(UPDATE_GAME);
+
 			    ong_START_PROFILE(UPDATE_PHYSICS);
                 sba::Space::Instance()->UpdatePhysics(aTimer);
 			    ong_END_PROFILE(UPDATE_PHYSICS);
+
                 this->m_EndTime -= seconds;
             }
             else
@@ -384,6 +396,43 @@ namespace sba
             ong::vec3 pos = ong::vec3(-125.0f, 0.0f, -300.0f);
             pos.x += sba_Players[i]->ID*50.0f;
             sba_Players[i]->Ship->m_pBody->setPosition(pos);
+            //Set default Weapon
+            std::vector<TheBrick::CBrickInstance**> weapons;
+            sba_Players[i]->Ship->GetWeapons(weapons);
+            //For a Priority
+            bool hasMG = false;
+            bool hasLaser = false;
+            bool hasRocket = false;
+
+            //Go through weapons
+            for (std::vector<TheBrick::CBrickInstance**>::iterator it = weapons.begin(); it != weapons.end(); ++it)
+            {
+                TheBrick::CBrickInstance* weapon = *(*it);
+                switch (weapon->m_pBrick->GetBrickId())
+                {
+                case TheBrick::MG - 100: //MG
+                    hasMG = true;
+                    break;
+
+                case TheBrick::Laser - 100: //Laser
+                    hasLaser = true;
+                    break;
+
+                case TheBrick::Rocket - 100: //Rocket
+                    hasRocket = true;
+                    break;
+                }
+
+            }
+            //Priority Order
+            if (hasMG)
+                sba_Players[i]->Weapon = 0;
+            else if (hasLaser)
+                sba_Players[i]->Weapon = 1;
+            else if (hasRocket)
+                sba_Players[i]->Weapon = 2;
+            else
+                sba_Players[i]->Weapon = 3;
 
             if (sba_Players[i]->PadID != -1)
                 listeners++;
@@ -393,13 +442,12 @@ namespace sba
         sba_SoundPlayer->SetListeners(listeners);
         sba_SoundPlayer->SetListenPosition(0, PuRe_Vector3F(), PuRe_Vector3F(), PuRe_Vector3F(0.0f, 0.0f, 1.0f), PuRe_Vector3F(0.0f, 1.0f, 0.0f));
 
-        if (!sba_Map->GetMapData(this->m_Asteroids, this->m_Items,this->m_Lights)) //Map doesn't exist!! we end here
+        if (!sba_Map->GetMapData(this->m_Statics,this->m_Asteroids, this->m_Items,this->m_Lights)) //Map doesn't exist!! we end here
             this->m_EndTime = -1000;
 
         this->m_TimeLimit = 5.0f;
         this->m_EndTime = 60.0f*this->m_TimeLimit; //seconds * Minutes
         this->m_StartTimer = 0.0f;
-        sba_BrickManager->RebuildRenderInstances(); //Update RenderInstances
 
     }
 
@@ -535,7 +583,7 @@ namespace sba
             //if (this->m_TextureID > 4)
             //    this->m_TextureID = 0;
             this->m_Test++;
-            if (this->m_Test > sba_Players.size() - 1)
+            if (this->m_Test > (int)sba_Players.size() - 1)
                 this->m_Test = 0;
         }
 
@@ -666,6 +714,8 @@ namespace sba
                     this->m_Pause = false;
             }
         }
+
+        sba_BrickManager->RebuildRenderInstances(); //Update RenderInstances
 
 	ong_END_PROFILE(UPDATE);
 
@@ -1003,6 +1053,8 @@ namespace sba
             SAFE_DELETE(this->m_Bullets[i]);
         for (unsigned int i = 0; i < this->m_Asteroids.size(); i++)
             SAFE_DELETE(this->m_Asteroids[i]);
+        for (unsigned int i = 0; i < this->m_Statics.size(); i++)
+            SAFE_DELETE(this->m_Statics[i]);
         for (unsigned int i = 0; i < this->m_Lights.size(); i++)
             SAFE_DELETE(this->m_Lights[i]);
         for (unsigned int i = 0; i < sba_Players.size(); i++)

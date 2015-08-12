@@ -27,7 +27,7 @@ namespace Menu
     public:
         /// @brief Constructor
         ///
-        CLobby(PuRe_IWindow* a_pWindow, PuRe_IGraphics* a_pGraphics);
+        CLobby(PuRe_IWindow* a_pWindow, PuRe_IGraphics* a_pGraphics, PuRe_Timer* a_pTimer);
         /// @brief Destructor
         ~CLobby();
     public:

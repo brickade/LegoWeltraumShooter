@@ -41,7 +41,7 @@ namespace sba
 
     // **************************************************************************
     // **************************************************************************
-    bool CGameMap::GetMapData(std::vector<CAsteroid*>& a_rObjects, std::vector<CItem*>& a_rItems, std::vector<SLightData*>& a_rLights)
+    bool CGameMap::GetMapData(std::vector<CStatic*>& a_rStatics,std::vector<CAsteroid*>& a_rObjects, std::vector<CItem*>& a_rItems, std::vector<SLightData*>& a_rLights)
     {
         FILE* pFile;
         std::string mapPath = "../data/maps/" + this->m_Name + ".map";
@@ -105,11 +105,11 @@ namespace sba
                             desc.linearMomentum = vel;
                             desc.angularMomentum = rot;
 							desc.continuousPhysics = false;
-                            sba::CAsteroid* asteroid = new sba::CAsteroid(*sba_World, &desc);
+                            sba::CStatic* sobject = new sba::CStatic(*sba_World, &desc);
                             TheBrick::CSerializer serializer;
                             serializer.OpenRead(objectName.c_str());
-                            asteroid->Deserialize(serializer, sba_BrickManager->GetBrickArray(), *sba_World);
-                            a_rObjects.push_back(asteroid);
+                            sobject->Deserialize(serializer, sba_BrickManager->GetBrickArray(), *sba_World);
+                            a_rStatics.push_back(sobject);
                             serializer.Close();
                         }
                         else if (otype == Type::Item)

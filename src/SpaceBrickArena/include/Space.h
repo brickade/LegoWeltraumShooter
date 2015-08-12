@@ -65,6 +65,7 @@ namespace sba
         std::string m_pSkyBoxName;
         SControl m_Controls[4];
         TheBrick::CCSVParser* m_pBalancing;
+        int m_Delay;
 
     private:
         static Space* g_pInstance;
@@ -99,6 +100,7 @@ namespace sba
 #define sba_Width 1920
 #define sba_Height 1080
 
+#define sba_Delay sba::Space::Instance()->m_Delay
 #define sba_Balancing sba::Space::Instance()->m_pBalancing
 #define sba_SoundPlayer sba::Space::Instance()->m_pSoundPlayer
 #define sba_Players sba::Space::Instance()->m_Players

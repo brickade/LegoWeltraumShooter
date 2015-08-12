@@ -39,7 +39,7 @@ namespace sba
             {
                 if (sba_Players[i]->PadID != -1)
                 {
-                    for (int j = 0; j < sba::Delay; j++)
+                    for (int j = 0; j < sba_Delay; j++)
                     {
                         memset(&m_buffer[j - m_PhysicFrame].Inputs[sba_Players[i]->ID], 0, sizeof(sba::SInputData));
                         m_numReceived[j - m_PhysicFrame]++;
@@ -164,7 +164,7 @@ namespace sba
                     {
                         memset(&ipacket, 0, sizeof(sba::SInputPacket));
                         ipacket.Head.Type = sba::EPacket::STick;
-                        ipacket.Frame = this->m_PhysicFrame + sba::Delay;
+                        ipacket.Frame = this->m_PhysicFrame + sba_Delay;
                         ipacket.Input = hInput(sba_Players[i]->PadID,a_pInput);
                         ipacket.Input.Player = sba_Players[i]->ID;
 
@@ -182,8 +182,6 @@ namespace sba
                         }
                     }
                 }
-
-                gUpdate(a_rExplosions, a_rBullets, a_rItems, 1.0f / 60.0f, this->m_PhysicFrame);
 
                 //Now handle input
 
@@ -223,7 +221,11 @@ namespace sba
                 a_rEndTime -= 1.0f / 60.0f;
                 assert(this->m_PhysicFrame != 2147483647);
 
+
+                gUpdate(a_rExplosions, a_rBullets, a_rItems, 1.0f / 60.0f, this->m_PhysicFrame);
+
                 sba_BrickManager->RebuildRenderInstances(); //Update RenderInstances
+
             } //if input exists
 
         } //while physic run
@@ -282,7 +284,7 @@ namespace sba
                             //send first 6 frames
                             package.Input.Player = sba_Players[i]->ID;
                             printf("Send initial Data!\n");
-                            for (int j = 0; j < sba::Delay; ++j)
+                            for (int j = 0; j < sba_Delay; ++j)
                             {
                                 package.Frame = j;
                                 sba_Network->SendHost((char*)&package, sizeof(sba::SInputPacket), false);

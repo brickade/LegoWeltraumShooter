@@ -3,7 +3,7 @@
 namespace sba
 {
 
-    CLobbyNetwork::CLobbyNetwork(PuRe_IWindow* a_pWindow) : m_pWindow(a_pWindow)
+    CLobbyNetwork::CLobbyNetwork(PuRe_IWindow* a_pWindow, PuRe_Timer* a_pTimer) : m_pWindow(a_pWindow), m_pTimer(a_pTimer)
     {
 
     }
@@ -341,8 +341,13 @@ namespace sba
             sba_Network->m_Mutex.lock();
             if (sba_Network->GetHost())
             {
+
+                sba_Delay = 10;
+
                 printf("Send the Bricks!!!\n");
-                sba::SHeadPacket hp;
+                sba::SPingPacket hp;
+                hp.PTime = this->m_pTimer->GetTotalElapsedMilliseconds();
+                printf("Send Delay Time %i\n",hp.PTime);
                 hp.Type = sba::EPacket::SendCommand;
                 std::vector<SOCKET> sendSockets; //to who we already send it
                 for (unsigned int m = 0; m < sba_Players.size(); m++)
@@ -360,12 +365,13 @@ namespace sba
                         }
                         if (!send)
                         {
-                            sba_Network->Send((char*)&hp, sizeof(sba::SHeadPacket), sba_Players[m]->NetworkInformation, true);
+                            sba_Network->Send((char*)&hp, sizeof(sba::SPingPacket), sba_Players[m]->NetworkInformation, true);
                             sendSockets.push_back(sba_Players[m]->NetworkInformation);
 
                             printf("Also send local Ships to him\n");
                             sba::SBrickPacket bp;
                             bp.Head.Type = sba::EPacket::Brick;
+                            bp.PTime = 0;
                             //Go through all local players and send the ship
                             for (unsigned int k = 0; k < sba_Players.size(); k++)
                             {
@@ -426,7 +432,7 @@ namespace sba
 
     // **************************************************************************
     // **************************************************************************
-    void CLobbyNetwork::Broadcast(PuRe_Timer* a_pTimer)
+    void CLobbyNetwork::Broadcast()
     {
         if (sba_Network->IsConnected())
         {
@@ -438,7 +444,7 @@ namespace sba
                 memcpy(bp.IP, sba_Network->m_IP.c_str(), sba::MaxLength);
                 memcpy(bp.Port, sba_Network->m_Port.c_str(), sba::MaxLength);
                 memcpy(bp.Name, sba_Network->m_Name.c_str(), sba::MaxName);
-                if ((int)a_pTimer->GetTotalElapsedMilliseconds() % 2 == 0)
+                if ((int)this->m_pTimer->GetTotalElapsedMilliseconds() % 2 == 0)
                     sba_Network->Broadcast((char*)&bp, sizeof(sba::SBroadcastPacket)); //Now Spam it!
             }
         }
@@ -472,7 +478,8 @@ namespace sba
                 if (sba_Network->GetHost())
                 {
                     printf("Game Start!\n");
-                    sba::SHeadPacket hp;
+                    sba::SStartPacket hp;
+                    hp.Delay = sba_Delay;
                     hp.Type = sba::EPacket::Start;
                     std::vector<SOCKET> sendSockets; //to who we already send it
                     for (unsigned int m = 0; m < sba_Players.size(); m++)
@@ -490,7 +497,7 @@ namespace sba
                             }
                             if (!send)
                             {
-                                sba_Network->Send((char*)&hp, sizeof(sba::SHeadPacket), sba_Players[m]->NetworkInformation, true);
+                                sba_Network->Send((char*)&hp, sizeof(sba::SStartPacket), sba_Players[m]->NetworkInformation, true);
                                 sendSockets.push_back(sba_Players[m]->NetworkInformation);
                             }
                         }
@@ -673,11 +680,14 @@ namespace sba
                     }
                     packetSize = sizeof(sba::SLeftPacket);
                 }
-                else if (rpacket->Head.Type == sba::EPacket::SendCommand&&leftData >= sizeof(sba::SHeadPacket))
+                else if (rpacket->Head.Type == sba::EPacket::SendCommand&&leftData >= sizeof(sba::SPingPacket))
                 {
                     printf("Received a Command that we should send our Ship\n");
+                    sba::SPingPacket* rpacket = (sba::SPingPacket*)buffer2;
                     sba::SBrickPacket bp;
                     bp.Head.Type = sba::EPacket::Brick;
+                    bp.PTime = rpacket->PTime;
+                    printf("Got Delay Time %i\n", bp.PTime);
                     //Go through all local players and send the ship
                     for (unsigned int m = 0; m < sba_Players.size(); m++)
                     {
@@ -691,7 +701,7 @@ namespace sba
                         }
                     }
 
-                    packetSize = sizeof(sba::SHeadPacket);
+                    packetSize = sizeof(sba::SPingPacket);
                 }
                 else if (rpacket->Head.Type == sba::EPacket::Menu&&leftData >= sizeof(sba::SHeadPacket))
                 {
@@ -705,12 +715,15 @@ namespace sba
                     this->m_ShipSelect = true;
                     packetSize = sizeof(sba::SHeadPacket);
                 }
-                else if (rpacket->Head.Type == sba::EPacket::Start&&leftData >= sizeof(sba::SHeadPacket))
+                else if (rpacket->Head.Type == sba::EPacket::Start&&leftData >= sizeof(sba::SStartPacket))
                 {
+                    sba::SStartPacket* spackets = (sba::SStartPacket*)rpacket;
                     printf("GAME START\n");
+                    sba_Delay = spackets->Delay;
+                    printf("Delay: %i\n",sba_Delay);
                     this->m_Running = false;
                     this->m_Started = true;
-                    packetSize = sizeof(sba::SHeadPacket);
+                    packetSize = sizeof(sba::SStartPacket);
                 }
                 else if (rpacket->Head.Type == sba::EPacket::LobbyEnd&&leftData >= sizeof(sba::SHeadPacket))
                 {
@@ -756,6 +769,19 @@ namespace sba
                 {
                     printf("Got Bricks\n");
                     sba::SBrickPacket* bp = (sba::SBrickPacket*)rpacket;
+
+                    if (sba_Network->GetHost())
+                    {
+                        printf("Timer: %i\n", this->m_pTimer->GetTotalElapsedMilliseconds());
+                        printf("GotTimer: %i\n", bp->PTime);
+                        int diff = (int)(this->m_pTimer->GetTotalElapsedMilliseconds() - bp->PTime);
+                        printf("Diff: %i\n", diff);
+                        if (diff > sba_Delay)
+                            sba_Delay = diff;
+                        printf("Delay: %i\n",sba_Delay);
+                    }
+
+
                     std::vector<SOCKET> sendSockets; //to who we already send it
                     sendSockets.push_back(s);
                     for (unsigned int i = 0; i < sba_Players.size(); i++)

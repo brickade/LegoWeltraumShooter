@@ -11,7 +11,7 @@ MG_LifeTime;5.0
 Laser_DMG;1
 Laser_CD;2
 Laser_Speed;0
-Laser_LifeTime;0.1
+Laser_LifeTime;1
 Rocket_DMG;40
 Rocket_CD;2
 Rocket_Speed;18
