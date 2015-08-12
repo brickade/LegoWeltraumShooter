@@ -418,13 +418,19 @@ namespace ong
 
 	void World::destroyBody(Body* pBody)
 	{
-
+		//DEBUG
+		for (int i = 0; i < m_numCpBodies; ++i)
+		{
+			assert(m_b[m_cp[i].bodyIdx]->getCpIndex() == i);
+		}
 
 		if (pBody->getContinuousPhysics())
 		{
 			int cpIdx = pBody->getCpIndex();
 			m_cp[cpIdx] = m_cp[--m_numCpBodies];
-			m_b[m_cp[cpIdx].bodyIdx]->setCpIndex(cpIdx);
+			int bodyIdx = m_cp[cpIdx].bodyIdx;
+			m_b[bodyIdx]->setCpIndex(cpIdx);
+			pBody->setCpIndex(m_numCpBodies);
 		}
 
 		int idx = pBody->getIndex();
@@ -452,6 +458,12 @@ namespace ong
 		if (m_b[idx]->getContinuousPhysics())
 		{
 			m_cp[m_b[idx]->getCpIndex()].bodyIdx = idx;
+		}
+		
+
+		for (int i = 0; i < m_numCpBodies; ++i)
+		{
+			assert(m_cp[i].bodyIdx < m_numBodies);
 		}
 
 		m_r.pop_back();
