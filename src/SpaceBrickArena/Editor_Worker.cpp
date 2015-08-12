@@ -132,6 +132,30 @@ namespace Editor
                 else
                 {
                     this->UpdateHeight(a_rShipHandler);
+                    if (this->m_CanPlaceHere)
+                    { //Check for max special bricks count
+                        const CShipHandler::ShipDataCache& shipData = a_rShipHandler.GetCurrentShipData();
+                        int categoryID = this->m_pCurrentBrick->m_pBrick->GetCategoryId();
+                        if ((categoryID == CBrickCategory::CATEGORY_COCKPITS && shipData.Cockpits >= sba::CSpaceship::MAX_COCKPITS)
+                            || (categoryID == CBrickCategory::CATEGORY_WEAPONS && shipData.Weapons >= sba::CSpaceship::MAX_WEAPONS)
+                            || (categoryID == CBrickCategory::CATEGORY_ENGINES && shipData.Engines >= sba::CSpaceship::MAX_ENGINES))
+                        {
+                            this->m_CanPlaceHere = false;
+#ifdef EDITOR_DEBUG
+                            printf("MaxSpecialRequirements NOT passed\n");
+#endif
+                        }
+                        if ((categoryID == CBrickCategory::CATEGORY_COCKPITS
+                            || categoryID == CBrickCategory::CATEGORY_WEAPONS
+                            || categoryID == CBrickCategory::CATEGORY_ENGINES)
+                            && shipData.Total() >= sba::CSpaceship::MAX_PERKS)
+                        {
+                            this->m_CanPlaceHere = false;
+#ifdef EDITOR_DEBUG
+                            printf("MaxPerksRequirements NOT passed\n");
+#endif
+                        }
+                    }
                 }
                 this->m_CurrentHeightIsInvalid = false;
             }
@@ -517,7 +541,7 @@ namespace Editor
         this->m_pCurrentBrick->SetTransform(transform);
         this->m_pCurrentBrick->RotateAroundPivotOffset(PuRe_QuaternionF(0.0f, this->m_CurrentRotation * 90.0f * 0.0174532925f, 0.0f));
         //#define ALPHAREADY
-        if (this->m_CanPlaceHere || this->m_BrickToDelete.BrickInstance != nullptr)
+        if (this->m_CanPlaceHere || this->m_BrickToDelete.BrickInstance != nullptr) //Can place or can delete
         {
 #ifdef ALPHAREADY
             this->m_pCurrentBrick->m_Color = PuRe_Color(this->m_currentBrickColor.R, this->m_currentBrickColor.G, this->m_currentBrickColor.B, this->m_currentBrickColor.A * 0.6f);
@@ -539,26 +563,11 @@ namespace Editor
     // **************************************************************************
     void CWorker::UpdatePlacement(CShipHandler& a_rShipHandler)
     {
-        //Check if can place and for max special bricks count
-        const CShipHandler::ShipDataCache& shipData = a_rShipHandler.GetCurrentShipData();
-        if (!this->m_CanPlaceHere) //Multiple ifs so it stays readable
+        //Check if can place
+        if (!this->m_CanPlaceHere)
         {
             return;
 
-        }
-        int categoryID = this->m_pCurrentBrick->m_pBrick->GetCategoryId();
-        if ((categoryID == CBrickCategory::CATEGORY_COCKPITS && shipData.Cockpits >= sba::CSpaceship::MAX_COCKPITS)
-            || (categoryID == CBrickCategory::CATEGORY_WEAPONS && shipData.Weapons >= sba::CSpaceship::MAX_WEAPONS)
-            || (categoryID == CBrickCategory::CATEGORY_ENGINES && shipData.Engines >= sba::CSpaceship::MAX_ENGINES))
-        {
-            return;
-        }
-        if ((categoryID == CBrickCategory::CATEGORY_COCKPITS
-            || categoryID == CBrickCategory::CATEGORY_WEAPONS
-            || categoryID == CBrickCategory::CATEGORY_ENGINES)
-            && shipData.Total() >= sba::CSpaceship::MAX_PERKS)
-        {
-            return;
         }
 
         if (sba_Input->ButtonPressed(sba_Button::EditorPlaceBrick, this->m_PlayerIdx) && a_rShipHandler.GetCurrentSpaceShip()->m_pBricks.size() < (size_t)sba::CSpaceship::MAX_BRICK_COUNT)
