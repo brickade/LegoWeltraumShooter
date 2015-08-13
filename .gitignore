@@ -15,9 +15,10 @@ TheBrick/bin/
 # User-specific files
 *.suo
 *.user
-!src/SpacebrickArena/*.user #Needed for OutDir
 *.userosscache
 *.sln.docstates
+#Needed for OutDir
+!SpacebrickArena.vcxproj.user
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
