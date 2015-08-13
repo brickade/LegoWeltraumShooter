@@ -15,6 +15,7 @@ TheBrick/bin/
 # User-specific files
 *.suo
 *.user
+!src/SpacebrickArena/*.user #Needed for OutDir
 *.userosscache
 *.sln.docstates
 
