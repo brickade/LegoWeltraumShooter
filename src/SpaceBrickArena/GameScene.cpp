@@ -772,7 +772,7 @@ namespace sba
                 sba_Renderer->Draw(0, true, this->m_pDirectionalLight, this->m_pDirectionalLightMaterial, light->Position, light->Color);
                 break;
             case ELightType::Point:
-                sba_Renderer->Draw(0, true, this->m_pPointLight, this->m_pPointLightMaterial, light->Position, light->Color);
+                sba_Renderer->Draw(0, true, this->m_pPointLight, this->m_pPointLightMaterial, light->Position, light->Color,light->Radius,light->Intensity);
                 break;
                 default:
                 break;

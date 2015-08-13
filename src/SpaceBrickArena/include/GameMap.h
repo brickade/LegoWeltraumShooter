@@ -16,6 +16,8 @@ namespace sba
         ELightType Type;
         PuRe_Vector3F Position;
         PuRe_Color Color;
+        float Radius;
+        float Intensity;
     };
 
     class CGameMap

@@ -132,7 +132,9 @@ namespace sba
                             else if (objectName == "point")
                                 light->Type = ELightType::Point;
                             light->Position = TheBrick::OngToPuRe(pos);
-                            light->Color = PuRe_Color(vel.x,vel.y,vel.z,1.0f);
+                            light->Color = PuRe_Color(vel.x, vel.y, vel.z, 1.0f);
+                            light->Radius = rot.x;
+                            light->Intensity = rot.y;
                             a_rLights.push_back(light);
                         }
                     }
