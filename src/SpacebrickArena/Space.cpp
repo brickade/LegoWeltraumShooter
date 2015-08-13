@@ -80,14 +80,7 @@ namespace sba
         this->Renderer = new PuRe_Renderer(&a_pGraphics);
         this->m_SSAOMaterial = a_pGraphics.LoadMaterial("../data/effects/SSAO/default");
         this->m_pNoiseTexture = new PuRe_Sprite(&a_pGraphics, "../data/textures/ssao.jpg");
-        for (int i = 0; i < 3; i++)
-        {
-            this->Renderer->AddTarget(PuRe_Vector2I(a_pGraphics.GetDescription().ResolutionWidth, a_pGraphics.GetDescription().ResolutionHeight));
-        }
-        if (this->m_pIniReader->GetValue("SSAO") == "On")
-        {
-            this->Renderer->SetSSAO(0, this->m_SSAOMaterial, this->m_pNoiseTexture);
-        }
+        this->ChangeRenderResolution();
         this->BrickManager->Initialize();
         this->InputManager->Initialize();
         this->Font = new PuRe_Font(&a_pGraphics, "../data/textures/font.png");
@@ -250,6 +243,18 @@ namespace sba
 		m_MiscObjects.clear();
 	}
 		
-		
+    void Space::ChangeRenderResolution(int a_Width, int a_Height, bool a_SSAO, bool a_DeleteTargets)
+    {
+        PuRe_Vector2I size = PuRe_Vector2I(a_Width, a_Height);
+        this->Renderer->DeleteTargets();
+        for (int i = 0; i < 4; i++)
+        {
+            this->Renderer->AddTarget(size);
+        }
+        if (a_SSAO)
+        {
+            this->Renderer->SetSSAO(0, this->m_SSAOMaterial, this->m_pNoiseTexture);
+        }
+    }
 
 }

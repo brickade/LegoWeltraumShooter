@@ -25,7 +25,7 @@ namespace Menu
         char m_Head;
     public:
         int m_Resolution;
-        int m_Resolutions[7][2];
+        int m_Resolutions[9][2];
     public:
         /// @brief Constructor
         ///

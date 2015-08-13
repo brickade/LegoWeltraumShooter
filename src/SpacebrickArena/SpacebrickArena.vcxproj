@@ -154,6 +154,7 @@
     <ClInclude Include="include\Editor_BrickSupervisor.h" />
     <ClInclude Include="include\Editor_Assistant.h" />
     <ClInclude Include="include\Editor_ColorFields.h" />
+    <ClInclude Include="include\Editor_Grid.h" />
     <ClInclude Include="include\Editor_ModeMenu.h" />
     <ClInclude Include="include\GameMap.h" />
     <ClInclude Include="include\Game_Network.h" />
@@ -198,6 +199,7 @@
     <ClCompile Include="Editor_BrickCategory.cpp" />
     <ClCompile Include="Editor_BrickSupervisor.cpp" />
     <ClCompile Include="Editor_Assistant.cpp" />
+    <ClCompile Include="Editor_Grid.cpp" />
     <ClCompile Include="Editor_ModeMenu.cpp" />
     <ClCompile Include="GameMap.cpp" />
     <ClCompile Include="Game_Network.cpp" />

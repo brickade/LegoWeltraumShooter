@@ -90,6 +90,8 @@ namespace sba
         void DelMiscOutside(ong::vec3& a_rOrigin, float& a_rDistance);
 		void ClearMiscObjects();
 
+        void ChangeRenderResolution(int a_Width = std::stoi(Instance()->m_pIniReader->GetValue("ResolutionWidth")), int a_Height = std::stoi(Instance()->m_pIniReader->GetValue("ResolutionHeight")), bool a_SSAO = (Instance()->m_pIniReader->GetValue("SSAO") == "On"), bool a_DeleteTargets = true);
+
     private:
         Space();
         ~Space();

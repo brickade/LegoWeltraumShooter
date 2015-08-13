@@ -153,6 +153,7 @@ namespace sba
                 EditorFadeSupervisor,
                 EditorFadeColors,
                 EditorFadeMenu,
+                EditorFadeDummy,
                 EditorRenameShip,
                 EditorAddNewShip,
                 EditorDeleteShip,

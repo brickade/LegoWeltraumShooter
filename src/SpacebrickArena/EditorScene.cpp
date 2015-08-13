@@ -76,6 +76,12 @@ namespace Editor
             //------------------------------
             // Edit
             //------------------------------
+            if (sba_Input->ButtonIsPressed(sba_Button::EditorFadeHold, this->m_PlayerIdx) && sba_Input->ButtonPressed(sba_Button::EditorFadeDummy, this->m_PlayerIdx))
+            {
+                this->m_pBrickSupervisorFader->Hide();
+                this->m_pColorFieldsFader->Hide();
+                this->m_pModeMenuFader->Hide();
+            }
             if (this->m_pBrickSupervisorFader->Update(*a_pApplication->GetTimer()))
             {
                 this->m_pColorFieldsFader->Hide();
@@ -130,8 +136,8 @@ namespace Editor
             break;
         case EEditorState::EditShip:
             //----------Edit----------
-            this->m_pWorker->Render(*this->m_pShipHandler);
             sba_BrickManager->Render();
+            this->m_pWorker->Render(*this->m_pShipHandler, *this->m_pSpriteReader);
             this->m_pBrickSupervisor->Render(*a_pApplication->GetGraphics(), *this->m_pSpriteReader, this->m_pBrickSupervisorFader->GetVisibility());
             this->m_pColorFields->Render(*a_pApplication->GetGraphics(), *this->m_pSpriteReader, this->m_pColorFieldsFader->GetVisibility());
             this->m_pModeMenu->Render(*a_pApplication->GetGraphics(), *this->m_pSpriteReader, this->m_pModeMenuFader->GetVisibility());
@@ -152,7 +158,9 @@ namespace Editor
 
         //Skybox
         if (a_Skybox)
+        {
             sba_Renderer->Draw(0, true, sba_SkyBox, sba_SkyBoxMaterial);
+        }
     }
 
     // **************************************************************************
@@ -160,7 +168,7 @@ namespace Editor
     void CEditorScene::PostRender(Editor::CCamera* a_pSceneCamera, PuRe_Camera* a_pUICamera, PuRe_IMaterial* a_pUIMaterial, PuRe_IMaterial* a_pPostMaterial)
     {
         //Post
-        sba_Renderer->Set(0, PuRe_Vector3F(0.4f, 0.4f, 0.4f), "ambient");
+        sba_Renderer->Set(0, PuRe_Vector3F(0.6f, 0.6f, 0.6f), "ambient");
         sba_Renderer->Set(1, PuRe_Vector3F(1, 1, 1), "ambient");
         sba_Renderer->Set(2, PuRe_Vector3F(1, 1, 1), "ambient");
         sba_Renderer->Render(0, 0, a_pSceneCamera, a_pPostMaterial, sba_FinalMaterial); //Scene

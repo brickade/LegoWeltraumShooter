@@ -120,6 +120,9 @@
     <ClCompile Include="GameMap.cpp">
       <Filter>Game</Filter>
     </ClCompile>
+    <ClCompile Include="Editor_Grid.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Space.h" />
@@ -246,6 +249,9 @@
     </ClInclude>
     <ClInclude Include="include\GameMap.h">
       <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Editor_Grid.h">
+      <Filter>Editor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

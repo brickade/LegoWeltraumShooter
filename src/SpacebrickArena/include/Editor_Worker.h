@@ -12,6 +12,7 @@
 #include "Editor_Camera.h"
 
 #include "TheBrick/Brick.h"
+#include "SpriteReader.h"
 
 namespace TheBrick
 {
@@ -24,6 +25,7 @@ namespace Editor
     class CEditorScene;
     class CHistory;
     class CShipHandler;
+    class CGrid;
 
     class CWorker
     {
@@ -61,8 +63,7 @@ namespace Editor
         float m_ScrollingStart = 0.6f;
         float m_ScrollingStep = 0.05f;
 
-        /*PuRe_IMaterial* m_pGridMaterial;
-        PuRe_Model* m_pGridBrick;*/
+        CGrid* m_pGrid;
 
     public:
         CCamera* GetCamera() const
@@ -76,7 +77,7 @@ namespace Editor
 
         void Initialize(PuRe_IGraphics& a_pGraphics);
         void Update(PuRe_IGraphics& a_pGraphics, PuRe_IWindow& a_pWindow, PuRe_Timer& a_pTimer, PuRe_SoundPlayer& a_pSoundPlayer, TheBrick::CBrick* a_pCurrentBrick, PuRe_Color& a_rCurrentColor, CShipHandler& a_rShipHandler, bool a_Delete);
-        void Render(CShipHandler& a_rShipHandler);
+        void Render(CShipHandler& a_rShipHandler, sba::CSpriteReader& a_rSpriteReader);
         void Suspend();
         void Resume(CShipHandler& a_rShipHandler);
 

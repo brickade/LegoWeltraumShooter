@@ -11,9 +11,11 @@
 #include "include/Editor_Assistant.h"
 #include "include/Editor_BrickCategory.h"
 #include "include/DestructionManager.h"
+#include "include/Editor_Grid.h"
 
 namespace Editor
 {
+#define EDITOR_DEBUG
     // **************************************************************************
     // **************************************************************************
     CWorker::CWorker(int a_playerIdx)
@@ -26,6 +28,7 @@ namespace Editor
     // **************************************************************************
     CWorker::~CWorker()
     {
+        SAFE_DELETE(this->m_pGrid);
         SAFE_DELETE(this->m_pCurrentBrickObject);
         SAFE_DELETE(this->m_pHistory);
         SAFE_DELETE(this->m_pCamera);
@@ -33,9 +36,9 @@ namespace Editor
 
     // **************************************************************************
     // **************************************************************************
-    void CWorker::Initialize(PuRe_IGraphics& a_pGraphics)
+    void CWorker::Initialize(PuRe_IGraphics& a_rGraphics)
     {
-        PuRe_GraphicsDescription gdesc = a_pGraphics.GetDescription();
+        PuRe_GraphicsDescription gdesc = a_rGraphics.GetDescription();
         this->m_pCamera = new CCamera(PuRe_Vector2F((float)gdesc.ResolutionWidth, (float)gdesc.ResolutionHeight), PuRe_Camera_Perspective, this->m_PlayerIdx);
 
         this->m_CurrentPositionCache = PuRe_Vector2F(0, 0);
@@ -51,8 +54,7 @@ namespace Editor
         this->m_pCurrentBrickObject = new TheBrick::CGameObject(*sba_World, nullptr);
         this->m_CurrentHeightIsInvalid = true;
 
-        /*this->m_pGridMaterial = a_pGraphics.LoadMaterial("../data/effects/editor/grid");
-        this->m_pGridBrick = new PuRe_Model(&a_pGraphics, "../data/models/Brick1X1.obj");*/
+        this->m_pGrid = new CGrid(a_rGraphics);
     }
 
     // **************************************************************************
@@ -177,8 +179,10 @@ namespace Editor
 
     // **************************************************************************
     // **************************************************************************
-    void CWorker::Render(CShipHandler& a_rShipHandler)
+    void CWorker::Render(CShipHandler& a_rShipHandler, sba::CSpriteReader& a_rSpriteReader)
     {
+        this->m_pGrid->Draw();
+
         sba::CSpaceship& ship = *a_rShipHandler.GetCurrentSpaceShip();
         sba_Space->RenderFont(std::to_string(ship.m_pBricks.size()) + "/" + std::to_string(sba::CSpaceship::MAX_BRICK_COUNT) + " Bricks", PuRe_Vector2F(sba_Width - 300.0f, sba_Height - 50.0f), 18);
         sba_Space->RenderFont("Ship: " + ship.GetName(), PuRe_Vector2F(sba_Width / 2 - 200.0f, sba_Height - 50.0f), 18);
@@ -726,6 +730,7 @@ namespace Editor
 #ifdef EDITOR_DEV
         if (sba_Application->GetInput()->KeyPressed(PuRe_IInput::F6))
         { //Safe Ship to file as object
+            SAFE_DELETE(this->m_pCurrentBrick);
             sba_ShipManager->SaveShipToFileAsObject(*a_rShipHandler.GetCurrentSpaceShip());
         }
 #endif

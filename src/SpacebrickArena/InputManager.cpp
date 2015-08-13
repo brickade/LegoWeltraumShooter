@@ -210,6 +210,11 @@ namespace sba
             Input::EGamepadButton::DPAD_Right,
             Input::EKeyboardButton::D
         };
+        this->m_pButtonMapping[Input::EButton::EditorFadeDummy] =
+        {
+            Input::EGamepadButton::DPAD_Up,
+            Input::EKeyboardButton::W
+        };
         this->m_pButtonMapping[Input::EButton::EditorRenameShip] =
         {
             Input::EGamepadButton::Pad_Y,

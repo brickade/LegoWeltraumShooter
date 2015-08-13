@@ -6,7 +6,7 @@
 
 #include "Spaceship.h"
 
-#define EDITOR_DEV
+//#define EDITOR_DEV
 
 namespace Editor
 {
