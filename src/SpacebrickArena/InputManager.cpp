@@ -242,7 +242,7 @@ namespace sba
         };
         this->m_pButtonMapping[Input::EButton::GameUseLaser1] =
         {
-            Input::EGamepadButton::Pad_Y,
+            Input::EGamepadButton::Pad_A,
             Input::EKeyboardButton::I
         };
         this->m_pButtonMapping[Input::EButton::GameUseLaser2] =
@@ -262,7 +262,7 @@ namespace sba
         };
         this->m_pButtonMapping[Input::EButton::GameUseRocket1] =
         {
-            Input::EGamepadButton::Pad_B,
+            Input::EGamepadButton::Pad_Y,
             Input::EKeyboardButton::L
         };
         this->m_pButtonMapping[Input::EButton::GameUseRocket2] =
@@ -272,7 +272,7 @@ namespace sba
         };
         this->m_pButtonMapping[Input::EButton::GameUseMG1] =
         {
-            Input::EGamepadButton::Pad_A,
+            Input::EGamepadButton::Pad_B,
             Input::EKeyboardButton::L
         };
         this->m_pButtonMapping[Input::EButton::GameUseMG2] =
