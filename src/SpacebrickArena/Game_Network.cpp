@@ -18,6 +18,7 @@ namespace sba
     {
         this->m_PhysicTime = 0.0f;
         this->m_PhysicFrame = 0;
+        this->m_Run = true;
         memset(m_buffer, -1, sizeof(PlayOutBuffer) * BufferSize);
         printf("set block mode true\n");
         if (sba_Network->GetHost())
@@ -234,8 +235,8 @@ namespace sba
 
         if (sba_Network->GetHost())
         {
-            //Kein Physic Frame seit 4 Sekunden
-            if (this->m_Timeout > 4.0f)
+            //Kein Physic Frame seit 5 Sekunden
+            if (this->m_Timeout > 5.0f)
             {
                 for (unsigned int i = 0; i < sba_Players.size(); i++)
                 {

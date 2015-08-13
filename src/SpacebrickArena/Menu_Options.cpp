@@ -25,10 +25,14 @@ namespace Menu
         this->m_Resolutions[5][1] = 1050;
         this->m_Resolutions[6][0] = 1920;
         this->m_Resolutions[6][1] = 1080;
+        this->m_Resolutions[7][0] = 2560;
+        this->m_Resolutions[7][1] = 1440;
+        this->m_Resolutions[8][0] = 3840;
+        this->m_Resolutions[8][1] = 2160;
         int RWidth = std::stoi(sba_Options->GetValue("ResolutionWidth"));
         int RHeight = std::stoi(sba_Options->GetValue("ResolutionHeight"));
         this->m_Resolution = 0;
-        for (int i = 0; i < 7; i++)
+        for (int i = 0; i < 9; i++)
         {
             if (this->m_Resolutions[i][0] == RWidth&&this->m_Resolutions[i][1] == RHeight)
                 this->m_Resolution = i;
@@ -169,10 +173,10 @@ namespace Menu
                         this->m_Resolution--;
                         this->m_Switched = true;
                     }
-                    if (this->m_Resolution > 6)
+                    if (this->m_Resolution > 8)
                         this->m_Resolution = 0;
                     else if (this->m_Resolution < 0)
-                        this->m_Resolution = 6;
+                        this->m_Resolution = 8;
                     break;
                 case 1: //DisplayMode
                     if (nav.X > 0.0f)

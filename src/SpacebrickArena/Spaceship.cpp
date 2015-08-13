@@ -393,14 +393,14 @@ namespace sba
                         id = TheBrick::Mine;
                         pos += forward*4.0f;
                         speed *= std::stof(sba_Balancing->GetValue("Mine_Speed"));
-                        col = PuRe_Color(1.0f, 0.0f, 1.0f, 1.0f);
+                        col = PuRe_Color(0.2f, 0.2f, 1.0f, 1.0f);
                         break;
 
                     case TheBrick::Rocket - 100: //Rocket
                         pos += forward*10.0f;
                         id = TheBrick::Rocket;
                         speed *= std::stof(sba_Balancing->GetValue("Rocket_Speed"));
-                        col = PuRe_Color(1.0f, 0.0f, 0.0f, 1.0f);
+                        col = PuRe_Color(1.0f, 0.8f, 0.0f, 1.0f);
                         break;
                     }
                     bdesc.linearMomentum = TheBrick::PuReToOng(speed);
