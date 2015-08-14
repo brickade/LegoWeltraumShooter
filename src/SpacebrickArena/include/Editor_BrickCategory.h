@@ -45,7 +45,7 @@ namespace Editor
         ~CBrickCategory();
 
         void Update(PuRe_IGraphics& a_pGraphics, PuRe_IWindow& a_pWindow, PuRe_Timer& a_pTimer, PuRe_SoundPlayer& a_pSoundPlayer, int a_PlayerIdx, float a_RotationSpeed);
-        void Render(PuRe_IGraphics& a_pGraphics, float a_Visibility);
+        void Render(PuRe_IGraphics& a_pGraphics, float a_Visibility, const PuRe_Color& a_rCurrentColor);
         void RenderTab(PuRe_IGraphics& a_pGraphics, float a_TabRotation, bool a_IsSelected, float a_Visibility);
 
         TheBrick::CBrick* GetFocusedBrick() const;

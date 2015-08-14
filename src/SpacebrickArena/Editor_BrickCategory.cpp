@@ -40,7 +40,7 @@ namespace Editor
 
     // **************************************************************************
     // **************************************************************************
-    void CBrickCategory::Render(PuRe_IGraphics& a_pGraphics, float a_Visibility)
+    void CBrickCategory::Render(PuRe_IGraphics& a_pGraphics, float a_Visibility, const PuRe_Color& a_rCurrentColor)
     {
         for (int i = 0; i <= this->m_pNavigation->GetLastElementId(); i++)
         {
@@ -64,10 +64,10 @@ namespace Editor
             assert(this->m_Bricks[i]->GetPivotOffset().Length() > FLT_EPSILON * 5);
             PuRe_MatrixF rot = PuRe_MatrixF::Translation(-this->m_Bricks[i]->GetPivotOffset() * this->m_ElementSize * 0.5f) * PuRe_MatrixF::RotationAxis(PuRe_Vector3F(0, 1, 0), this->m_Rotation) * PuRe_MatrixF::Rotation(-this->m_Pitch, 0, 0);
 
-            PuRe_Color color = PuRe_Color(0, 1, 0);
+            PuRe_Color color = a_rCurrentColor;
             if (this->m_pNavigation->GetFocusedElementId() == i)
             {
-                color = PuRe_Color(0, 0, 1);
+                color = PuRe_Color(0.2f, 0.2f, 0.2f);
             }
 
             float size = this->m_Bricks[i]->GetPivotOffset().Length() * 1.5f;
@@ -99,7 +99,7 @@ namespace Editor
 
         PuRe_MatrixF rot = PuRe_MatrixF::Translation(-this->m_Bricks[0]->GetPivotOffset() * this->m_TabSize * 0.5f) * PuRe_MatrixF::RotationAxis(PuRe_Vector3F(0, 1, 0), a_TabRotation) * PuRe_MatrixF::Rotation(-this->m_Pitch * 0.5f, 0, 0);
 
-        PuRe_Color color = PuRe_Color(1, 0, 0);
+        PuRe_Color color = PuRe_Color(1, 1, 1);
         if (a_IsSelected)
         {
             color = PuRe_Color(0, 1, 1);

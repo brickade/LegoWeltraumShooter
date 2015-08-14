@@ -17,16 +17,33 @@ namespace Editor
         int m_PlayerIdx;
         sba::CNavigation* m_pNavigation;
 
-        PuRe_Vector2F m_ListStart = PuRe_Vector2F(1920 - 280, 1080 - 400);
+        PuRe_Vector2F m_ListStart = PuRe_Vector2F(1920 - 280, 1080 - 350);
         PuRe_Vector2F m_ListStep = PuRe_Vector2F(0, -60);
 
-        PuRe_Vector2F m_InfoStart = PuRe_Vector2F(1920 - 300, 1080 - 600);
-        PuRe_Vector2F m_InfoStep = PuRe_Vector2F(0, -60);
+        PuRe_Vector2F m_InfoStart = PuRe_Vector2F(1920 - 730, 1080 - 520);
+        PuRe_Vector2F m_InfoStep = PuRe_Vector2F(0, -40);
+
+        std::vector<std::string> m_InfoText;
+        std::vector<std::string> m_InfoControlGamepad;
+        std::vector<std::string> m_InfoControlKeyboard;
 
     public:
         int SelectedMode() const
         {
             return this->m_pNavigation->GetFocusedElementId();
+        }
+    protected:
+        void AddInfo(const std::string& a_rText, std::string a_rControlGamepad, std::string a_rControlKeyboard)
+        {
+            this->m_InfoText.push_back(a_rText);
+            this->m_InfoControlGamepad.push_back(a_rControlGamepad);
+            this->m_InfoControlKeyboard.push_back(a_rControlKeyboard);
+        }
+        void AddInfoSpace()
+        {
+            this->m_InfoText.push_back("");
+            this->m_InfoControlGamepad.push_back("");
+            this->m_InfoControlKeyboard.push_back("");
         }
 
     public:
