@@ -1,0 +1,31 @@
+#version 330 core
+
+// Input vertex data, different for all executions of this shader.
+ layout(location = 0) in vec3 vertexPosition;
+ layout(location = 1) in vec2 vertexUV;
+ layout(location = 2) in vec3 vertexColor;
+ layout(location = 3) in vec3 vertexNormal;
+
+uniform mat4 Projection;
+uniform mat4 View;
+
+uniform mat4 Scale;
+uniform mat4 Rotation;
+uniform mat4 Translation;
+
+out vec3 Normal;
+out vec4 Position;
+
+void main()
+{
+        
+	mat4 Model = Translation * Rotation * Scale;
+	mat4 MVP = Projection * View * Model;
+
+	vec4 Pos = MVP * vec4(vertexPosition,1);
+
+	gl_Position = Pos;
+
+	Normal = normalize(mat3(Model) * vertexNormal);
+	Position = vec4(vertexPosition,1);
+}

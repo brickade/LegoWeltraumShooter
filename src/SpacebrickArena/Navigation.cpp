@@ -42,7 +42,7 @@ namespace sba
         }
         else if (a_NewDirection != EDirection::None && this->m_pTimer->GetTotalElapsedSeconds() > this->m_ScrollingThreshold) //Scrolling
         {
-            this->Scroll(a_InputVector, a_pTimer.GetTotalElapsedSeconds());
+            this->Scroll(a_InputVector, a_pTimer.GetElapsedSeconds());
         }
         this->m_PreviousState = a_NewDirection;
     }
@@ -78,7 +78,7 @@ namespace sba
     // **************************************************************************
     void CNavigation::Scroll(PuRe_Vector2F a_Input, float a_DeltaSec)
     {
-        this->m_FocusPosition += a_Input * a_DeltaSec * this->m_ScrollingSpeed;
+        this->m_FocusPosition += a_Input * a_DeltaSec * this->m_ScrollingSpeed * 100.0f;
         if (this->m_FocusPosition.X > 100)
         {
             this->Navigate(EDirection::Right);

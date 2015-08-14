@@ -154,7 +154,7 @@ namespace Editor
         sba_Renderer->Begin(PuRe_Color(0.1f, 0.5f, 0.1f));
         //Lights
         sba_Renderer->Draw(0, true, a_pDirectionalLight, a_pDirectionalLightMaterial, PuRe_Vector3F(1.0f, -0.5f, 0.0f), PuRe_Color(1.0f, 1.0f, 1.0f));
-        sba_Renderer->Draw(1, false, a_pDirectionalLight, a_pDirectionalLightMaterial, PuRe_Vector3F(1.0f, 0.0f, 1.0f), PuRe_Color(0.3f, 0.3f, 0.3f));
+        sba_Renderer->Draw(2, false, a_pDirectionalLight, a_pDirectionalLightMaterial, PuRe_Vector3F(1.0f, 0.0f, 1.0f), PuRe_Color(0.3f, 0.3f, 0.3f));
 
         //Skybox
         if (a_Skybox)
@@ -174,8 +174,8 @@ namespace Editor
         sba_Renderer->Render(0, 0, a_pSceneCamera, a_pPostMaterial, sba_FinalMaterial); //Scene
         if (a_pUICamera != nullptr)
         {
-            sba_Renderer->Render(0, 1, a_pUICamera, a_pUIMaterial, sba_FinalMaterial); //UI    
-            sba_Renderer->Render(0, 2, a_pUICamera, a_pUIMaterial, sba_FinalMaterial); //Font & Bricks
+            sba_Renderer->Render(0, 1, a_pUICamera, a_pUIMaterial, sba_FinalMaterial); //UI   
+            sba_Renderer->Render(0, 2, a_pUICamera, a_pUIMaterial, sba_FinalMaterial); //Font & Bricks & Colors
         }
         sba_Renderer->End();
     }

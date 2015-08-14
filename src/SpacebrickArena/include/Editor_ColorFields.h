@@ -35,6 +35,8 @@ namespace Editor
         float m_ElementSize = 20;
         PuRe_Vector2F m_ListStart = PuRe_Vector2F(/*80*/500, 360);
         PuRe_Vector2F m_ListStep = PuRe_Vector2F(60, -60);
+        
+        PuRe_IMaterial* m_pMaterial;
 
     public:
         CColorFields(int a_PlayerIdx);

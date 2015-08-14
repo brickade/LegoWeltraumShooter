@@ -1,6 +1,8 @@
-brick_kasten_tile = 688 0 506 634
-editor_buttons = 395 332 201 55
-editor_buttons_breit = 395 635 312 63
-editor_info_kasten_gross = 0 332 394 496
-editor_info_kasten_klein = 1195 0 392 393
-farb_kasten_editor = 0 0 687 331
+editor_brickselect = 763 0 506 634
+editor_button = 449 749 201 55
+editor_colorselect = 0 421 656 263
+editor_info_big = 1270 0 394 496
+editor_info_small = 1270 497 392 393
+editor_rename = 449 685 312 63
+editor_shipselect_big = 0 0 762 420
+editor_shipselect_small = 0 685 448 222

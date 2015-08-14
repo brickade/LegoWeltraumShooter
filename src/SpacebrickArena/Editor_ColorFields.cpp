@@ -17,6 +17,7 @@ namespace Editor
     // **************************************************************************
     CColorFields::~CColorFields()
     {
+        SAFE_DELETE(this->m_pMaterial);
         SAFE_DELETE(this->m_pNavigation);
         SAFE_DELETE(this->m_pQuad);
     }
@@ -123,6 +124,7 @@ namespace Editor
         this->Add(0.4196078431f, 0.1960784314f, 0.4823529412f);
         this->Add(0.5843137255f, 0.4745098039f, 0.462745098f);
         this->m_pNavigation = new sba::CNavigation(15, this->m_Colors.size() - 1);
+        this->m_pMaterial = a_pGraphics.LoadMaterial("../data/effects/editor/color");
     }
 
     // **************************************************************************
@@ -136,7 +138,7 @@ namespace Editor
     // **************************************************************************
     void CColorFields::Render(PuRe_IGraphics& a_pGraphics, sba::CSpriteReader& a_rSpriteReader, float a_Visibility)
     {
-        a_rSpriteReader.Draw(1, sba_Renderer, "farb_kasten_editor", sba_Space->FontMaterial, PuRe_Vector3F(420 + this->m_ListStart.X, 225 - (1.0f - a_Visibility) * (this->m_ListStart.Y - this->m_ListStep.Y + 50), 0), PuRe_Vector3F::Zero(), -1, PuRe_Vector2F(0.65f, 0.65f)); //I need to render the UI with the font material? WHAT THE F%*$&!?!? And the position is defined form the center? Double WTF
+        a_rSpriteReader.Draw(1, sba_Renderer, "editor_colorselect", sba_Space->FontMaterial, PuRe_Vector3F(420 + this->m_ListStart.X, 210 - (1.0f - a_Visibility) * (this->m_ListStart.Y - this->m_ListStep.Y + 50), 0), PuRe_Vector3F::Zero(), -1, PuRe_Vector2F(0.715f, 0.715f));
         for (int i = 0; i <= this->m_pNavigation->GetLastElementId(); i++)
         {
             PuRe_Vector2F listPos = PuRe_Vector2F((float)(i % this->m_pNavigation->GetElementsCountPerLine()), floorf((float)i / (float)this->m_pNavigation->GetElementsCountPerLine()));
@@ -148,7 +150,7 @@ namespace Editor
             {
                 size *= 1.4f;
             }
-            sba_Renderer->Draw(2, false, this->m_pQuad->GetBuffer(), this->m_pQuad->GetBuffer()->GetSize(), PuRe_Primitive::Trianglestrip, sba_BrickManager->GetBrickUIMaterial(), pos, PuRe_MatrixF::Identity(), PuRe_Vector3F::Zero(), PuRe_Vector3F(size, size, size), this->m_Colors[i]);
+            sba_Renderer->Draw(2, false, this->m_pQuad->GetBuffer(), this->m_pQuad->GetBuffer()->GetSize(), PuRe_Primitive::Trianglestrip, this->m_pMaterial, pos, PuRe_MatrixF::Identity(), PuRe_Vector3F::Zero(), PuRe_Vector3F(size, size, size), this->m_Colors[i]);
         }
     }
 

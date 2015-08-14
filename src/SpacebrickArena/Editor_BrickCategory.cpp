@@ -59,7 +59,7 @@ namespace Editor
                 }
             }
             PuRe_Vector3F pos = PuRe_Vector3F(this->m_ListStart + this->m_ListStep * listPos, 0);
-            pos.Y = a_pGraphics.GetDescription().ResolutionHeight - pos.Y; //Invert Y
+            pos.Y = 1080 - pos.Y; //Invert Y
             pos.X -= (1.0f - a_Visibility) * 750;
             assert(this->m_Bricks[i]->GetPivotOffset().Length() > FLT_EPSILON * 5);
             PuRe_MatrixF rot = PuRe_MatrixF::Translation(-this->m_Bricks[i]->GetPivotOffset() * this->m_ElementSize * 0.5f) * PuRe_MatrixF::RotationAxis(PuRe_Vector3F(0, 1, 0), this->m_Rotation) * PuRe_MatrixF::Rotation(-this->m_Pitch, 0, 0);
@@ -94,7 +94,7 @@ namespace Editor
     void CBrickCategory::RenderTab(PuRe_IGraphics& a_pGraphics, float a_TabRotation, bool a_IsSelected, float a_Visibility)
     {
         PuRe_Vector3F pos = PuRe_Vector3F(this->m_TabStart + this->m_TabStep * (float)this->m_Id, 0);
-        pos.Y = a_pGraphics.GetDescription().ResolutionHeight - pos.Y; //Invert Y
+        pos.Y = 1080 - pos.Y; //Invert Y
         pos.X -= (1.0f - a_Visibility) * 750;
 
         PuRe_MatrixF rot = PuRe_MatrixF::Translation(-this->m_Bricks[0]->GetPivotOffset() * this->m_TabSize * 0.5f) * PuRe_MatrixF::RotationAxis(PuRe_Vector3F(0, 1, 0), a_TabRotation) * PuRe_MatrixF::Rotation(-this->m_Pitch * 0.5f, 0, 0);

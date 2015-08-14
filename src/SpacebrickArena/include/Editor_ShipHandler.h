@@ -60,7 +60,7 @@ namespace Editor
         sba::CInputField* m_pInputField;
         std::string m_OldShipName;
 
-        PuRe_Vector2F m_PreviewOffset = PuRe_Vector2F(0.0f, -50.0f);
+        PuRe_Vector2F m_PreviewOffset = PuRe_Vector2F(0.0f, -150.0f);
         PuRe_Vector2F m_TextOffset = PuRe_Vector2F(-100.0f, 450.0f);
         PuRe_Vector2F m_TextStep = PuRe_Vector2F(0.0f, -50.0f);
         float m_OuterPreviewInset = 100;

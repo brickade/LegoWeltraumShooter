@@ -550,7 +550,8 @@ namespace Editor
 #ifdef ALPHAREADY
             this->m_pCurrentBrick->m_Color = PuRe_Color(this->m_currentBrickColor.R, this->m_currentBrickColor.G, this->m_currentBrickColor.B, this->m_currentBrickColor.A * 0.6f);
 #else
-            this->m_pCurrentBrick->m_Color = PuRe_Color(this->m_CurrentColor.R * 1.5f, this->m_CurrentColor.G * 1.5f, this->m_CurrentColor.B * 1.5f, 1);
+            //this->m_pCurrentBrick->m_Color = PuRe_Color(this->m_CurrentColor.R * 1.5f, this->m_CurrentColor.G * 1.5f, this->m_CurrentColor.B * 1.5f, 1);
+            this->m_pCurrentBrick->m_Color = this->m_CurrentColor;
 #endif
         }
         else
@@ -558,7 +559,7 @@ namespace Editor
 #ifdef ALPHAREADY
             this->m_pCurrentBrick->m_Color = PuRe_Color(1, 0, 0, 0.6f);
 #else
-            this->m_pCurrentBrick->m_Color = PuRe_Color(1, 0, 0, 1);
+            this->m_pCurrentBrick->m_Color = PuRe_Color(0, 0, 0, 1);
 #endif
         }
     }

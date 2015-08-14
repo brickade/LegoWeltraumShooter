@@ -79,13 +79,15 @@ namespace ong
 
 
 	// -- vec3 --
-
+#pragma warning(push) ////TODO remove after finding bug
+#pragma warning(disable : 56 756) ////TODO remove after finding bug
 	inline vec3 operator*(float lhs, const vec3& rhs)
 	{
 		////TODO remove after finding bug
-		assert(lhs != INFINITY && lhs != -INFINITY && lhs != NAN);
+        assert(lhs != INFINITY && lhs != -INFINITY && lhs != NAN);
 		return vec3(rhs.x * lhs, rhs.y * lhs, rhs.z * lhs);
 	}
+#pragma warning(pop) ////TODO remove after finding bug
 
 	inline vec3 operator+(const vec3& lhs, const vec3& rhs)
 	{
