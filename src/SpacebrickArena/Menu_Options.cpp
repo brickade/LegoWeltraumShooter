@@ -99,22 +99,37 @@ namespace Menu
                 if (pads > 4) pads = 4;
                 for (int i = 0; i < pads; i++)
                 {
-                    cnav = sba_Input->Direction(sba_Direction::Navigate, i);
                     bool left = sba_Input->ButtonPressed(sba::Input::EButton::MenuLeft, i);
                     bool right = sba_Input->ButtonPressed(sba::Input::EButton::MenuRight, i);
+                    bool up = sba_Input->ButtonPressed(sba::Input::EButton::MenuUp, i);
+                    bool down = sba_Input->ButtonPressed(sba::Input::EButton::MenuDown, i);
                     if (!this->m_CFocus[i])
                     {
                         cnav.X = 0.0f;
-                        if (i != 0)
+                        int element = this->m_pControls[i]->GetFocusedElementId();
+                        if (up)
+                            element--;
+                        else if (down)
+                            element++;
+                        if (i == 0)
                         {
-                            if (cnav.Y < 0.0f&&this->m_pControls[i]->GetFocusedElementId() == 2)
-                                this->m_pControls[i]->SetFocusedElementId(3);
-                            else if (cnav.Y > 0.0f&&this->m_pControls[i]->GetFocusedElementId() == 0)
-                                this->m_pControls[i]->SetFocusedElementId(3);
+                            if (element > 2)
+                                this->m_pNavigation->SetFocusedElementId(5);
+                            else if (element < 0)
+                                this->m_pNavigation->SetFocusedElementId(0);
+                            else
+                                this->m_pNavigation->SetFocusedElementId(3);
                         }
-                        this->m_pControls[i]->Update(*a_pTimer, cnav);
+                        else
+                        {
+                            if (element > 2)
+                                element = 0;
+                            else if (element < 0)
+                                element = 2;
+                        }
+                        this->m_pControls[i]->SetFocusedElementId(element);
                     }
-                    else if (cnav.X != 0.0f)
+                    else if (left||right)
                     {
                         switch (this->m_pControls[i]->GetFocusedElementId())
                         {
@@ -148,10 +163,6 @@ namespace Menu
                         }
                     }
                 }
-                if (this->m_pControls[0]->GetFocusedElementId() == 3)
-                    this->m_pNavigation->SetFocusedElementId(5);
-                else
-                    this->m_pNavigation->SetFocusedElementId(1);
             }
             else
             {
@@ -160,7 +171,9 @@ namespace Menu
         }
         else
         {
-            if (nav.X == 0.0f)
+            bool left = sba_Input->ButtonPressed(sba::Input::EButton::MenuLeft, a_PlayerIdx);
+            bool right = sba_Input->ButtonPressed(sba::Input::EButton::MenuRight, a_PlayerIdx);
+            if (nav.X == 0.0f&&!left&&!right)
                 this->m_Switched = false;
             if (!this->m_Switched)
             {
@@ -227,16 +240,22 @@ namespace Menu
                     }
                     break;
                 case 3: //Music
-                    this->m_Switched = true;
-                    this->m_Music += nav.X/100.0f;
+                    if (right)
+                        this->m_Music += 0.01f;
+                    else if (left)
+                        this->m_Music += 0.01f;
+
                     if (this->m_Music > 1.0f)
                         this->m_Music = 1.0f;
                     else if (this->m_Music < 0.0f)
                         this->m_Music = 0.0f;
                     break;
                 case 4: //Sound
-                    this->m_Switched = true;
-                    this->m_Sound += nav.X / 100.0f;
+                    if (right)
+                        this->m_Sound += 0.01f;
+                    else if (left)
+                        this->m_Sound += 0.01f;
+
                     if (this->m_Sound > 1.0f)
                         this->m_Sound = 1.0f;
                     else if (this->m_Sound < 0.0f)

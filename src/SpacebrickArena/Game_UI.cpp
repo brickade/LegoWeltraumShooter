@@ -79,22 +79,34 @@ namespace sba
                 pos.Y = 1080.0f-100.0f;
 
                 pos.X -= 350.0f;
+                sba_Renderer->Set(2, 0.0f, "verlauf");
+                if (sba_Players[i]->Weapon == 1)
+                    this->m_pUI->Draw(2, sba_Renderer, "icon_active", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.75f, 0.75f));
                 sba_Renderer->Set(2, sba_Players[i]->LaserCD/std::stof(sba_Balancing->GetValue("Laser_CD")), "verlauf");
                 this->m_pUI->Draw(2, sba_Renderer, "icon_kasten_gruen", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.75f, 0.75f));
                 pos.Y += 10.0f;
                 this->m_pUI->Draw(2, sba_Renderer, "laser_icon", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.75f, 0.75f));
                 pos.Y -= 10.0f;
                 pos.X += 200.0f;
+                sba_Renderer->Set(2, 0.0f, "verlauf");
+                if (sba_Players[i]->Weapon == 0)
+                    this->m_pUI->Draw(2, sba_Renderer, "icon_active", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.75f, 0.75f));
                 sba_Renderer->Set(2, sba_Players[i]->MGCD / std::stof(sba_Balancing->GetValue("MG_CD")), "verlauf");
                 this->m_pUI->Draw(2, sba_Renderer, "icon_kasten_rot", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.75f, 0.75f));
                 this->m_pUI->Draw(2, sba_Renderer, "MG_icon", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.75f, 0.75f));
 
                 pos.X += 200.0f;
+                sba_Renderer->Set(2, 0.0f, "verlauf");
+                if (sba_Players[i]->Weapon == 3)
+                    this->m_pUI->Draw(2, sba_Renderer, "icon_active", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.75f, 0.75f));
                 sba_Renderer->Set(2, sba_Players[i]->MineCD / std::stof(sba_Balancing->GetValue("Mine_CD")), "verlauf");
                 this->m_pUI->Draw(2, sba_Renderer, "icon_kasten", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.75f, 0.75f));
                 this->m_pUI->Draw(2, sba_Renderer, "mines_icon", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.75f, 0.75f));
 
                 pos.X += 200.0f;
+                sba_Renderer->Set(2, 0.0f, "verlauf");
+                if (sba_Players[i]->Weapon == 2)
+                    this->m_pUI->Draw(2, sba_Renderer, "icon_active", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.75f, 0.75f));
                 sba_Renderer->Set(2, sba_Players[i]->RocketCD / std::stof(sba_Balancing->GetValue("Rocket_CD")), "verlauf");
                 this->m_pUI->Draw(2, sba_Renderer, "icon_kasten_gelb", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.75f, 0.75f));
                 this->m_pUI->Draw(2, sba_Renderer, "missle_icon", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.75f, 0.75f));
