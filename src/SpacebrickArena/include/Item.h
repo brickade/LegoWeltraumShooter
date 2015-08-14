@@ -12,14 +12,23 @@
 namespace sba
 {
     enum EItemType { Shield, Repair, Speed };
+
+    struct SItemData
+    {
+        EItemType Type;
+        ong::vec3 Pos;
+        ong::vec3 Vel;
+        ong::vec3 Rot;
+        float Respawn;
+    };
+
     class CItem : public TheBrick::CGameObject
     {
-    private:
-        EItemType m_ItemType;
     public:
         bool m_Collided;
+        EItemType m_ItemType;
     public:
-        CItem(ong::World& a_rWorld, EItemType a_Type, ong::vec3 a_Position, ong::vec3 a_Velocity, ong::vec3 a_Rotation);
+        CItem(ong::World& a_rWorld, EItemType a_Type, ong::BodyDescription* a_pdesc);
         ~CItem();
     public:
         EItemType GetType();

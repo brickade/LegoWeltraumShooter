@@ -27,6 +27,10 @@ const float g_Rand[] = { -56.0f, -250.0f, 45.0f, -360.0f, 106.0f,
 -380.0f, -298.0f, 299.0f, 298.0f, -137.0f,
 367.0f, 107.0f, 254.0f, 1.0f, 300.0f };
 
+
+PuRe_Vector3F g_Origin = PuRe_Vector3F(0.0f, 0.0f, 0.0f);
+float g_OriginDistance = 750.0f;
+
 namespace sba
 {
     // **************************************************************************
@@ -34,7 +38,6 @@ namespace sba
     CGameScene::CGameScene(PuRe_Application* a_pApplication, int a_playerIdx, bool a_Network)
     {
         this->m_pApplication = a_pApplication;
-        this->m_Test = -1;
         this->m_Pause = false;
         this->m_PauseEnd = false;
     }
@@ -46,16 +49,37 @@ namespace sba
         sba::SInputData input;
         memset(&input, 0, sizeof(sba::SInputData));
 
-        input.Shoot = sba_Input->Axis(Input::EAxis::Type::GameShoot, a_PlayerIdx) > 0.0f;
+        input.Shoot = sba_Input->Axis(Input::EAxis::Type::GameShoot, a_PlayerIdx) > 0.0f || sba_Input->ButtonIsPressed(Input::EButton::Type::GameShoot,a_PlayerIdx);
         input.Weapon = -1;
-        if (sba_Input->ButtonIsPressed(Input::EButton::Type::GameUseMG1, a_PlayerIdx) || sba_Input->ButtonIsPressed(Input::EButton::Type::GameUseMG2, a_PlayerIdx))
+        if (sba_Input->ButtonIsPressed(Input::EButton::Type::GameUseMG, a_PlayerIdx))
             input.Weapon = 0;
-        if (sba_Input->ButtonIsPressed(Input::EButton::Type::GameUseLaser1, a_PlayerIdx) || sba_Input->ButtonIsPressed(Input::EButton::Type::GameUseLaser2, a_PlayerIdx))
+        if (sba_Input->ButtonIsPressed(Input::EButton::Type::GameUseLaser, a_PlayerIdx))
             input.Weapon = 1;
-        if (sba_Input->ButtonIsPressed(Input::EButton::Type::GameUseRocket1, a_PlayerIdx) || sba_Input->ButtonIsPressed(Input::EButton::Type::GameUseRocket2, a_PlayerIdx))
+        if (sba_Input->ButtonIsPressed(Input::EButton::Type::GameUseRocket, a_PlayerIdx))
             input.Weapon = 2;
-        if (sba_Input->ButtonIsPressed(Input::EButton::Type::GameUseMine1, a_PlayerIdx) || sba_Input->ButtonIsPressed(Input::EButton::Type::GameUseMine2, a_PlayerIdx))
+        if (sba_Input->ButtonIsPressed(Input::EButton::Type::GameUseMine, a_PlayerIdx))
             input.Weapon = 3;
+
+        if (sba_Input->ButtonIsPressed(Input::EButton::Type::GameShootMG, a_PlayerIdx))
+        {
+            input.Weapon = 0;
+            input.Shoot = true;
+        }
+        if (sba_Input->ButtonIsPressed(Input::EButton::Type::GameShootLaser, a_PlayerIdx))
+        {
+            input.Weapon = 1;
+            input.Shoot = true;
+        }
+        if (sba_Input->ButtonIsPressed(Input::EButton::Type::GameShootRocket, a_PlayerIdx))
+        {
+            input.Weapon = 2;
+            input.Shoot = true;
+        }
+        if (sba_Input->ButtonIsPressed(Input::EButton::Type::GameShootMine, a_PlayerIdx))
+        {
+            input.Weapon = 3;
+            input.Shoot = true;
+        }
 
         PuRe_Vector2F Move;
         if (sba_Controls[a_PlayerIdx].Move == 1)
@@ -194,7 +218,7 @@ namespace sba
         ship->Update(a_pPlayer->ID, a_DeltaTime, a_Time);
     }
 
-    void CGameScene::UpdateGame(std::vector<ExplosionEmitter>& a_rExplosions, std::vector<CBullet*>& a_rBullets, std::vector<CItem*>& a_rItems, float a_Deltatime,int a_Time)
+    void CGameScene::UpdateGame(std::vector<SItemData>& a_rRespawnItems, std::vector<CAsteroid*>& a_rAsteroids, std::vector<ExplosionEmitter>& a_rExplosions, std::vector<CBullet*>& a_rBullets, std::vector<CItem*>& a_rItems, float a_Deltatime, int a_Time)
     {
         //Update Emitter
         for (unsigned int i = 0; i < a_rExplosions.size(); i++)
@@ -221,18 +245,18 @@ namespace sba
                     break;
 
                 case TheBrick::MG: //MG
-                    amount = 30;
-                    speed = 5000.0f;
+                    amount = 50;
+                    speed = 6000.0f;
                     break;
 
                 case TheBrick::Mine: //Mine
-                    amount = 30;
-                    speed = 5000.0f;
+                    amount = 80;
+                    speed = 9000.0f;
                     break;
 
                 case TheBrick::Rocket: //Rocket
-                    amount = 40;
-                    speed = 4000.0f;
+                    amount = 70;
+                    speed = 8000.0f;
                     break;
                 }
                 if (a_rExplosions[i].LifeTime > 0.0f)
@@ -294,17 +318,62 @@ namespace sba
                 i--;
             }
         }
+        //update respawn items
+        for (unsigned int i = 0; i < a_rRespawnItems.size(); i++)
+        {
+            a_rRespawnItems[i].Respawn -= a_Deltatime;
+            if (a_rRespawnItems[i].Respawn < 0.0f)
+            {
+                ong::BodyDescription a_desc;
+                printf("Respawn\n");
+                a_desc.transform = ong::Transform(a_rRespawnItems[i].Pos, ong::Quaternion(ong::vec3(0, 0, 0), 1));
+                printf("Pos %f %f %f\n", a_rRespawnItems[i].Pos.x, a_rRespawnItems[i].Pos.y, a_rRespawnItems[i].Pos.z);
+                a_desc.type = ong::BodyType::Static;
+                a_desc.continuousPhysics = false;
+                a_desc.angularMomentum = a_rRespawnItems[i].Rot;
+                a_desc.linearMomentum = a_rRespawnItems[i].Vel;
+                printf("Vel %f %f %f\n", a_rRespawnItems[i].Vel.x, a_rRespawnItems[i].Vel.y, a_rRespawnItems[i].Vel.z);
+                printf("Respawn end\n");
+                CItem* item = new CItem(*sba_World, a_rRespawnItems[i].Type, &a_desc);
+                a_rItems.push_back(item);
+                if (a_rRespawnItems.begin() + i < a_rRespawnItems.end())
+                    a_rRespawnItems.erase(a_rRespawnItems.begin() + i);
+                i--;
+            }
+        }
         //Update Items
         for (unsigned int i = 0; i < a_rItems.size(); i++)
         {
-            a_rItems[i]->Update(a_Deltatime);
-
+            printf("Pos: %f %f %f\n", a_rItems[i]->m_pBody->getWorldCenter().x, a_rItems[i]->m_pBody->getWorldCenter().y, a_rItems[i]->m_pBody->getWorldCenter().z);
+            printf("Vel: %f %f %f\n", a_rItems[i]->m_pBody->getLinearMomentum().x, a_rItems[i]->m_pBody->getLinearMomentum().y, a_rItems[i]->m_pBody->getLinearMomentum().z);
             if (a_rItems[i]->m_Collided)
             {
+                SItemData item;
+                item.Pos = a_rItems[i]->m_pBody->getWorldCenter();
+                item.Vel = a_rItems[i]->m_pBody->getLinearMomentum();
+                item.Rot = a_rItems[i]->m_pBody->getAngularMomentum();
+                item.Type = a_rItems[i]->m_ItemType;
+                item.Respawn = 10.0f;
+                a_rRespawnItems.push_back(item);
                 SAFE_DELETE(a_rItems[i]);
                 if (a_rItems.begin() + i < a_rItems.end())
                     a_rItems.erase(a_rItems.begin() + i);
                 i--;
+            }
+        }
+
+
+
+        //Delete objects outside
+        ong::vec3 origin = TheBrick::PuReToOng(g_Origin);
+        sba_Space->DelMiscOutside(origin, g_OriginDistance);
+        for (unsigned int i = 0; i < a_rAsteroids.size(); i++)
+        {
+            if (ong::length(a_rAsteroids[i]->m_pBody->getWorldCenter() - origin) > g_OriginDistance)
+            {
+                delete a_rAsteroids[i];
+                a_rAsteroids.erase(a_rAsteroids.begin() + i);
+                --i;
             }
         }
 
@@ -319,6 +388,7 @@ namespace sba
 
             if (sba_Players[i]->PadID != -1)
             {
+                sba_Players[i]->Update(a_Deltatime, g_Origin,g_OriginDistance);
                 pos = sba_Players[i]->Ship->m_pBody->getWorldCenter();
                 q = sba_Players[i]->Ship->m_pBody->getOrientation();
                 forw = ong::vec3(0.0f, 0.0f, 1.0f);
@@ -359,7 +429,7 @@ namespace sba
 
 
                 ong_START_PROFILE(UPDATE_GAME);
-                this->UpdateGame(this->m_ExplosionEmitter, this->m_Bullets, this->m_Items, seconds, tseconds);
+                this->UpdateGame(this->m_RespawnItems,this->m_Asteroids,this->m_ExplosionEmitter, this->m_Bullets, this->m_Items, seconds, tseconds);
                 ong_END_PROFILE(UPDATE_GAME);
 
 			    ong_START_PROFILE(UPDATE_PHYSICS);
@@ -377,7 +447,7 @@ namespace sba
     // **************************************************************************
     void CGameScene::HandleNetwork()
     {
-        this->m_pNetwork->UpdateNetwork(this->m_ExplosionEmitter,this->m_Bullets, this->m_Items, this->m_pApplication->GetInput(), this->m_pApplication->GetTimer()->GetElapsedSeconds(), this->m_EndTime, &CGameScene::HandleInput, &CGameScene::ProcessInput, &CGameScene::UpdateGame);
+        this->m_pNetwork->UpdateNetwork(this->m_RespawnItems, this->m_Asteroids, this->m_ExplosionEmitter, this->m_Bullets, this->m_Items, this->m_pApplication->GetInput(), this->m_pApplication->GetTimer()->GetElapsedSeconds(), this->m_EndTime, &CGameScene::HandleInput, &CGameScene::ProcessInput, &CGameScene::UpdateGame);
 
     }
 
@@ -567,44 +637,20 @@ namespace sba
         }
 
 
-        if (a_pApplication->GetInput()->KeyPressed(a_pApplication->GetInput()->Left))
-        {
-            //this->m_TextureID--;
-            //if (this->m_TextureID < 0)
-            //    this->m_TextureID = 4;
-            this->m_Test--;
-            if (this->m_Test < 0)
-                this->m_Test = sba_Players.size() - 1;
-        }
-
-        else if (a_pApplication->GetInput()->KeyPressed(a_pApplication->GetInput()->Right))
-        {
-            //this->m_TextureID++;
-            //if (this->m_TextureID > 4)
-            //    this->m_TextureID = 0;
-            this->m_Test++;
-            if (this->m_Test > (int)sba_Players.size() - 1)
-                this->m_Test = 0;
-        }
 
 
         if (sba_Network->IsConnected())
             this->HandleNetwork();
         else
             this->HandleLocal();
-
+        //Only Update Graphics! For GamePlay, Use UpdateGame!! UpdateGame is Network-Safe
         int camID = 0;
         for (unsigned int i = 0; i < sba_Players.size(); i++)
         {
             if (sba_Players[i]->PadID != -1)
             {
-
-                sba_Players[i]->Update(timer->GetElapsedSeconds(), this->m_Origin, this->m_OriginDistance);
                 sba::CSpaceship* playerShip;
-                if (camID == 0 && this->m_Test != -1)
-                    playerShip = sba_Players[this->m_Test]->Ship;
-                else
-                    playerShip = sba_Players[i]->Ship;
+                playerShip = sba_Players[i]->Ship;
                 if (playerShip->m_Life > 0.0f)
                     this->m_Cameras[camID]->UpdateData(sba_Players[i]->PadID, sba_Players[i], a_pApplication->GetInput(), a_pApplication->GetTimer());
                 PuRe_QuaternionF rotation = this->m_Cameras[camID]->GetQuaternion();
@@ -635,6 +681,7 @@ namespace sba
                 camID++;
             }
         }
+        //just update camera
         if (this->m_LocalPlayers == 3)
         {
             float p = ((sin(timer->GetTotalElapsedSeconds() / 15.0f) + 1.0f) / 2.0f)*(sba_Players.size() - 1);
@@ -650,7 +697,7 @@ namespace sba
         }
 
 
-
+        //set winner
         if (!this->m_Won&&this->m_EndTime < 0.0f)
         {
             int points = 0;
@@ -668,20 +715,7 @@ namespace sba
             }
             this->m_Won = true;
         }
-
-        //Delete objects outside
-        ong::vec3 origin = TheBrick::PuReToOng(this->m_Origin);
-        sba_Space->DelMiscOutside(origin, this->m_OriginDistance);
-        for (unsigned int i = 0; i < this->m_Asteroids.size(); i++)
-        {
-            if (ong::length(this->m_Asteroids[i]->m_pBody->getWorldCenter() - origin) > this->m_OriginDistance)
-            {
-                delete this->m_Asteroids[i];
-                this->m_Asteroids.erase(this->m_Asteroids.begin() + i);
-                --i;
-            }
-        }
-
+        //pause/end
         bool Pause = sba_Input->ButtonPressed(Input::EButton::Type::GamePause, 0);
         bool Click = sba_Input->ButtonPressed(Input::EButton::Type::GameClick, 0);
         if (!this->m_Pause)
@@ -717,7 +751,7 @@ namespace sba
 
         sba_BrickManager->RebuildRenderInstances(); //Update RenderInstances
 
-	ong_END_PROFILE(UPDATE);
+	    ong_END_PROFILE(UPDATE);
 
         return 1;
     }
@@ -750,8 +784,8 @@ namespace sba
                     greyscale[camID] = 1.0f;
                 else
                 {
-                    float dist = (TheBrick::OngToPuRe(sba_Players[j]->Ship->m_pBody->getWorldCenter()) - this->m_Origin).Length();
-                    if (dist > this->m_OriginDistance)
+                    float dist = (TheBrick::OngToPuRe(sba_Players[j]->Ship->m_pBody->getWorldCenter()) - g_Origin).Length();
+                    if (dist > g_OriginDistance)
                     {
                         mapend[camID] = true;
                         greyscale[camID] = 0.5f;
@@ -818,7 +852,7 @@ namespace sba
         /////////////////////////////////////////////////
 
         ///////////  DRAW UI  ///////////////////////
-        this->m_pUI->DisplayUI(this->m_pFont, this->m_pFontMaterial, this->m_EndTime, this->m_WonID, mapend,this->m_OriginDistance,&this->m_Cameras,this->m_Pause,this->m_PauseEnd);
+        this->m_pUI->DisplayUI(this->m_pFont, this->m_pFontMaterial, this->m_EndTime, this->m_WonID, mapend,g_OriginDistance,&this->m_Cameras,this->m_Pause,this->m_PauseEnd);
         camID = 0;
         for (unsigned int i = 0; i < sba_Players.size(); i++)
         {
@@ -849,13 +883,13 @@ namespace sba
                 }
 
                 ///////////  DRAW SPHERE  ///////////////////////
-                float intensity = (this->m_Cameras[camID]->GetPosition() - this->m_Origin).Length() / this->m_OriginDistance;
+                float intensity = (this->m_Cameras[camID]->GetPosition() - g_Origin).Length() / g_OriginDistance;
                 if (intensity > 1.0f) intensity = 1.0f;
                 intensity *= intensity;
                 sba_Renderer->Set(1, intensity, "intensity", camID);
                 if (intensity < 1.0f)
                     sba_Renderer->SetCulling(1, false, camID);
-                sba_Renderer->Draw(1, true, sphereBuffer, sphereBuffer->GetSize(), PuRe_Primitive::Triangles, this->m_pShieldMaterial, this->m_Origin, PuRe_MatrixF(), PuRe_Vector3F(), PuRe_Vector3F(this->m_OriginDistance, this->m_OriginDistance, this->m_OriginDistance), PuRe_Color(), camID);
+                sba_Renderer->Draw(1, true, sphereBuffer, sphereBuffer->GetSize(), PuRe_Primitive::Triangles, this->m_pShieldMaterial, g_Origin, PuRe_MatrixF(), PuRe_Vector3F(), PuRe_Vector3F(g_OriginDistance, g_OriginDistance, g_OriginDistance), PuRe_Color(), camID);
                 sba_Renderer->SetCulling(1, true, camID);
                 /////////////////////////////////////////////////
                 camID++;

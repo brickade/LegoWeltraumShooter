@@ -25,7 +25,6 @@ namespace sba
     class CGameScene : public PuRe_IScene
     {
     private:
-        int m_Test;
         CGameNetwork* m_pNetwork;
         //Determinate who won and save him even when others are still playing
         bool m_Pause;
@@ -43,10 +42,6 @@ namespace sba
         PuRe_Camera* m_pUICam;
         //whether we are still in menu or not
         int m_TextureID;
-
-
-        PuRe_Vector3F m_Origin = PuRe_Vector3F(0.0f, 0.0f, 0.0f);
-        float m_OriginDistance = 750.0f;
 
         //Game UI
         CGUI* m_pUI;
@@ -77,6 +72,7 @@ namespace sba
         std::vector<sba::CAsteroid*> m_Asteroids;
         std::vector<sba::CStatic*> m_Statics;
         std::vector<sba::CItem*> m_Items;
+        std::vector<SItemData> m_RespawnItems;
         std::vector<sba::SLightData*> m_Lights;
         /// @brief Engine's Application
         ///
@@ -94,7 +90,7 @@ namespace sba
         static void ProcessInput(std::vector<CBullet*>& a_rBullets, SPlayer* a_pPlayer, sba::SInputData* a_Input, float a_DeltaTime, int a_Time);
         /// @brief Update a Game
         ///
-        static void UpdateGame(std::vector<ExplosionEmitter>& a_rExplosions, std::vector<CBullet*>& a_rBullets, std::vector<CItem*>& a_rItems, float a_Deltatime, int a_Time);
+        static void UpdateGame(std::vector<SItemData>& a_rRespawnItems, std::vector<CAsteroid*>& a_rAsteroids, std::vector<ExplosionEmitter>& a_rExplosions, std::vector<CBullet*>& a_rBullets, std::vector<CItem*>& a_rItems, float a_Deltatime, int a_Time);
         /// @brief Handle Local Data
         ///
         void HandleLocal();

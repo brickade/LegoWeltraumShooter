@@ -8,7 +8,7 @@
 
 namespace sba
 {
-	const float CDestructionManager::NUB_STRENGTH = 5.0f;
+	const float CDestructionManager::NUB_STRENGTH = 2.0f;
       
 	struct CallbackData
 	{

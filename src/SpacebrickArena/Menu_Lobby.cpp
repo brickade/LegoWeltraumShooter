@@ -76,12 +76,8 @@ namespace Menu
                     canchange = false;
             if (canchange)
             {
-                bool leftPress = false;
-                bool rightPress = false;
-                if (Navigate.X > 0.5f)
-                    rightPress = true;
-                else if (Navigate.X < -0.5f)
-                    leftPress = true;
+                bool leftPress = sba_Input->ButtonPressed(sba::Input::EButton::MenuLeft,a_PlayerIdx);
+                bool rightPress = sba_Input->ButtonPressed(sba::Input::EButton::MenuRight, a_PlayerIdx);
                 if (leftPress || rightPress)
                 {
                     std::string file = a_pWindow->GetFileAtIndex(0, "../data/maps/");
@@ -182,9 +178,11 @@ namespace Menu
         }
         if (!this->m_ShipSelect)
         {
-            for (int i = 1; i < 4; i++)
+            int pads = a_pInput->GetGamepads()+1;
+            if (pads > 4) pads = 4;
+            for (int i = 1; i < pads; i++)
             {
-                if (a_pInput->GamepadPressed(a_pInput->Pad_A, i))
+                if (sba_Input->ButtonPressed(sba_Button::NavigationSelect, i))
                 {
                     if (sba_Players.size() < sba::MaxPlayers)
                     {
@@ -204,7 +202,7 @@ namespace Menu
                         }
                     }
                 }
-                else if (a_pInput->GamepadPressed(a_pInput->Pad_B, i))
+                else if (sba_Input->ButtonPressed(sba_Button::NavigationBack, i))
                 {
                     //delete player on network
                     if (!this->m_pNetwork->DeletePlayer(i))
@@ -226,9 +224,8 @@ namespace Menu
         {
             for (int i = 0; i < 4; i++)
             {
-                PuRe_Vector2F Navigate = sba_Input->Direction(sba_Direction::Navigate, i);
-                bool leftPress = Navigate.X > 0.0f;
-                bool rightPress = Navigate.X < 0.0f;
+                bool leftPress = sba_Input->ButtonPressed(sba::Input::EButton::MenuLeft, i);
+                bool rightPress = sba_Input->ButtonPressed(sba::Input::EButton::MenuRight, i);
                 if (i == 0 && this->m_Focus)
                 {
                     leftPress = 0.0f;

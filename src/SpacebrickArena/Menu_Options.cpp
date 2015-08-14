@@ -62,7 +62,7 @@ namespace Menu
         SAFE_DELETE(this->m_pControls[3]);
     }
 
-    int COptions::Update(PuRe_Renderer* a_pRenderer, PuRe_Timer* a_pTimer, PuRe_IWindow* a_pWindow, PuRe_IGraphics* a_pGraphics, int a_PlayerIdx)
+    int COptions::Update(PuRe_IInput* a_pInput,PuRe_Renderer* a_pRenderer, PuRe_Timer* a_pTimer, PuRe_IWindow* a_pWindow, PuRe_IGraphics* a_pGraphics, int a_PlayerIdx)
     {
         PuRe_Vector2F nav = sba_Input->Direction(sba_Direction::Navigate, a_PlayerIdx);
 
@@ -95,9 +95,13 @@ namespace Menu
             {
                 nav.Y = 0.0f;
                 PuRe_Vector2F cnav;
-                for (int i = 0; i < 4; i++)
+                int pads = a_pInput->GetGamepads() + 1;
+                if (pads > 4) pads = 4;
+                for (int i = 0; i < pads; i++)
                 {
                     cnav = sba_Input->Direction(sba_Direction::Navigate, i);
+                    bool left = sba_Input->ButtonPressed(sba::Input::EButton::MenuLeft, i);
+                    bool right = sba_Input->ButtonPressed(sba::Input::EButton::MenuRight, i);
                     if (!this->m_CFocus[i])
                     {
                         cnav.X = 0.0f;
@@ -115,27 +119,27 @@ namespace Menu
                         switch (this->m_pControls[i]->GetFocusedElementId())
                         {
                         case 0: //Thrust
-                            if (cnav.X > 0.0f)
+                            if (right)
                                 sba_Controls[i].Thrust++;
-                            else if (cnav.X < 0.0f)
+                            else if (left)
                                 sba_Controls[i].Thrust--;
                             if (sba_Controls[i].Thrust < 1) sba_Controls[i].Thrust = 1; else if (sba_Controls[i].Thrust > 3) sba_Controls[i].Thrust = 3;
                             sba_Options->SetValue("Thrust" + std::to_string(i + 1), std::to_string(sba_Controls[i].Thrust));
                             sba_Options->Save();
                             break;
                         case 1: //Move
-                            if (cnav.X > 0.0f)
+                            if (right)
                                 sba_Controls[i].Move++;
-                            else if (cnav.X < 0.0f)
+                            else if (left)
                                 sba_Controls[i].Move--;
                             if (sba_Controls[i].Move < 1) sba_Controls[i].Move = 1; else if (sba_Controls[i].Move > 4) sba_Controls[i].Move = 4;
                             sba_Options->SetValue("Move" + std::to_string(i + 1), std::to_string(sba_Controls[i].Move));
                             sba_Options->Save();
                             break;
                         case 2: //Spin
-                            if (cnav.X > 0.0f)
+                            if (right)
                                 sba_Controls[i].Spin++;
-                            else if (cnav.X < 0.0f)
+                            else if (left)
                                 sba_Controls[i].Spin--;
                             if (sba_Controls[i].Spin < 1) sba_Controls[i].Spin = 1; else if (sba_Controls[i].Spin > 2) sba_Controls[i].Spin = 2;
                             sba_Options->SetValue("Spin" + std::to_string(i + 1), std::to_string(sba_Controls[i].Spin));
@@ -223,14 +227,15 @@ namespace Menu
                     }
                     break;
                 case 3: //Music
+                    this->m_Switched = true;
                     this->m_Music += nav.X/100.0f;
                     if (this->m_Music > 1.0f)
                         this->m_Music = 1.0f;
                     else if (this->m_Music < 0.0f)
                         this->m_Music = 0.0f;
-                    this->m_Switched = false;
                     break;
                 case 4: //Sound
+                    this->m_Switched = true;
                     this->m_Sound += nav.X / 100.0f;
                     if (this->m_Sound > 1.0f)
                         this->m_Sound = 1.0f;

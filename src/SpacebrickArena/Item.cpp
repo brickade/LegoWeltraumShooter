@@ -9,7 +9,7 @@ namespace sba
 {
     // **************************************************************************
     // **************************************************************************
-    CItem::CItem(ong::World& a_rWorld, EItemType a_Type, ong::vec3 a_Position, ong::vec3 a_Velocity, ong::vec3 a_Rotation) : CGameObject(a_rWorld, nullptr), m_ItemType(a_Type)
+    CItem::CItem(ong::World& a_rWorld, EItemType a_Type, ong::BodyDescription* a_pdesc) : CGameObject(a_rWorld, a_pdesc), m_ItemType(a_Type)
     {
         this->m_Type = TheBrick::EGameObjectType::Item;
         PuRe_Color color;
@@ -30,10 +30,6 @@ namespace sba
             break;
         }
         TheBrick::CBrickInstance* brick = new TheBrick::CBrickInstance(*sba_BrickManager->GetBrickArray()[brickID], *this, *sba_World, color, true);
-
-        this->m_pBody->setPosition(a_Position);
-        this->m_pBody->applyImpulse(a_Velocity);
-        this->m_pBody->applyAngularImpulse(a_Rotation);
         this->m_Collided = false;
     }
 
