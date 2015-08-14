@@ -67,7 +67,7 @@ namespace Editor
             PuRe_Color color = a_rCurrentColor;
             if (this->m_pNavigation->GetFocusedElementId() == i)
             {
-                color = PuRe_Color(0.2f, 0.2f, 0.2f);
+                color = PuRe_Color(0.1f, 0.1f, 0.1f);
             }
 
             float size = this->m_Bricks[i]->GetPivotOffset().Length() * 1.5f;
@@ -102,7 +102,7 @@ namespace Editor
         PuRe_Color color = PuRe_Color(1, 1, 1);
         if (a_IsSelected)
         {
-            color = PuRe_Color(0, 1, 1);
+            color = PuRe_Color(0.1f, 0.1f, 0.1f);
         }
 
         float size = this->m_Bricks[0]->GetPivotOffset().Length() * 1.5f;
