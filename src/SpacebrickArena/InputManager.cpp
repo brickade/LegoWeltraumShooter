@@ -250,6 +250,16 @@ namespace sba
             Input::EGamepadButton::DPAD_Right,
             Input::EKeyboardButton::Right
         };
+        this->m_pButtonMapping[Input::EButton::MenuUp] =
+        {
+            Input::EGamepadButton::DPAD_Up,
+            Input::EKeyboardButton::Up
+        };
+        this->m_pButtonMapping[Input::EButton::MenuDown] =
+        {
+            Input::EGamepadButton::DPAD_Down,
+            Input::EKeyboardButton::Down
+        };
         this->m_pButtonMapping[Input::EButton::GameShoot] =
         {
             Input::EGamepadButton::DPAD_Up,

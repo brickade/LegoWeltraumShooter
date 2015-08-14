@@ -11,6 +11,8 @@
 
 #include "Onager/BVH.h"
 
+#define EDITOR_DEV
+
 namespace sba
 {
     const float g_Rand[] = { -56.0f, -250.0f, 45.0f, -360.0f, 106.0f,
@@ -34,7 +36,7 @@ namespace sba
         -380.0f, -298.0f, 299.0f, 298.0f, -137.0f,
         367.0f, 107.0f, 254.0f, 1.0f, 300.0f };
 #ifdef EDITOR_DEV
-    const int CSpaceship::MAX_BRICK_COUNT = 500;
+    const int CSpaceship::MAX_BRICK_COUNT = 750;
     const int CSpaceship::MAX_BRICK_WIDTH = 40;
 #else
     const int CSpaceship::MAX_BRICK_COUNT = 200;

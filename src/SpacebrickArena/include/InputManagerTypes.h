@@ -161,6 +161,8 @@ namespace sba
                 NavigationBack,
                 MenuRight,
                 MenuLeft,
+                MenuUp,
+                MenuDown,
                 GameUseLaser,
                 GameUseRocket,
                 GameUseMine,
