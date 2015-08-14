@@ -102,7 +102,7 @@ namespace Menu
             }
             break;
         case Options:
-            result = this->m_pOptions->Update(sba_Renderer, timer, window, graphics, *this->m_pPlayerIdx);
+            result = this->m_pOptions->Update(input,sba_Renderer, timer, window, graphics, *this->m_pPlayerIdx);
             if (result == 0)
                 this->m_Displayed = Main;
             break;

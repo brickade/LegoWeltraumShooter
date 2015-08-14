@@ -240,45 +240,60 @@ namespace sba
             Input::EGamepadButton::Pad_B,
             Input::EKeyboardButton::Backspace
         };
-        this->m_pButtonMapping[Input::EButton::GameUseLaser1] =
+        this->m_pButtonMapping[Input::EButton::MenuLeft] =
         {
-            Input::EGamepadButton::Pad_A,
-            Input::EKeyboardButton::I
+            Input::EGamepadButton::DPAD_Left,
+            Input::EKeyboardButton::Left
         };
-        this->m_pButtonMapping[Input::EButton::GameUseLaser2] =
+        this->m_pButtonMapping[Input::EButton::MenuRight] =
+        {
+            Input::EGamepadButton::DPAD_Right,
+            Input::EKeyboardButton::Right
+        };
+        this->m_pButtonMapping[Input::EButton::GameShoot] =
         {
             Input::EGamepadButton::DPAD_Up,
-            Input::EKeyboardButton::I
+            Input::EKeyboardButton::MouseLeft
         };
-        this->m_pButtonMapping[Input::EButton::GameUseMine1] =
+        this->m_pButtonMapping[Input::EButton::GameUseLaser] =
+        {
+            Input::EGamepadButton::Pad_A,
+            Input::EKeyboardButton::Down
+        };
+        this->m_pButtonMapping[Input::EButton::GameShootLaser] =
+        {
+            Input::EGamepadButton::DPAD_Down,
+            Input::EKeyboardButton::One
+        };
+        this->m_pButtonMapping[Input::EButton::GameUseMine] =
         {
             Input::EGamepadButton::Pad_X,
-            Input::EKeyboardButton::J
+            Input::EKeyboardButton::Three
         };
-        this->m_pButtonMapping[Input::EButton::GameUseMine2] =
+        this->m_pButtonMapping[Input::EButton::GameShootMine] =
         {
             Input::EGamepadButton::DPAD_Left,
             Input::EKeyboardButton::J
         };
-        this->m_pButtonMapping[Input::EButton::GameUseRocket1] =
+        this->m_pButtonMapping[Input::EButton::GameUseRocket] =
         {
             Input::EGamepadButton::Pad_Y,
-            Input::EKeyboardButton::L
+            Input::EKeyboardButton::Up
         };
-        this->m_pButtonMapping[Input::EButton::GameUseRocket2] =
+        this->m_pButtonMapping[Input::EButton::GameShootRocket] =
         {
-            Input::EGamepadButton::DPAD_Right,
-            Input::EKeyboardButton::L
+            Input::EGamepadButton::DPAD_Up,
+            Input::EKeyboardButton::Four
         };
-        this->m_pButtonMapping[Input::EButton::GameUseMG1] =
+        this->m_pButtonMapping[Input::EButton::GameUseMG] =
         {
             Input::EGamepadButton::Pad_B,
-            Input::EKeyboardButton::L
+            Input::EKeyboardButton::Right
         };
-        this->m_pButtonMapping[Input::EButton::GameUseMG2] =
+        this->m_pButtonMapping[Input::EButton::GameShootMG] =
         {
-            Input::EGamepadButton::DPAD_Down,
-            Input::EKeyboardButton::L
+            Input::EGamepadButton::DPAD_Right,
+            Input::EKeyboardButton::Two
         };
         this->m_pButtonMapping[Input::EButton::GameThrustB_1] =
         {
@@ -287,7 +302,7 @@ namespace sba
         };
         this->m_pButtonMapping[Input::EButton::GameThrust] =
         {
-            Input::EGamepadButton::DPAD_Up,
+            Input::EGamepadButton::Right_Shoulder,
             Input::EKeyboardButton::W
         };
         this->m_pButtonMapping[Input::EButton::GamePause] =

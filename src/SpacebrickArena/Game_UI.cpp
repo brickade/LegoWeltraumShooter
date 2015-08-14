@@ -26,7 +26,8 @@ namespace sba
             if (sba_Players[i]->PadID != -1)
             {
                 pos.X = (1920.0f/2.0f)-400.0f;
-                pos.Y =  1080.0f/2.0f;
+                pos.Y = 1080.0f / 2.0f;
+                sba_Renderer->Set(2, 0.0f, "verlauf");
                 this->m_pUI->Draw(2, sba_Renderer, "life_shield_tile", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.5f, 0.5f));
 
                 float value = sba_Players[i]->Ship->m_Life / (float)sba_Players[i]->Ship->m_MaxLife;
@@ -36,6 +37,7 @@ namespace sba
                 pos.X += 5.0f*(1.0f-value);
 
                 pos.Y -= balken_size*(1.0f - value)*0.45f;
+                sba_Renderer->Set(2, 0.0f, "verlauf");
                 this->m_pUI->Draw(2, sba_Renderer, "life_balken_tile", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.5f, 0.5f*value), PuRe_Vector2F(1.0f, value), PuRe_Vector2F(0.0f, (1.0f - value)*0.225f));
                 pos.Y += balken_size*(1.0f - value)*0.45f;
 
@@ -43,10 +45,12 @@ namespace sba
                 pos.Y -= 20.0f;
 
                 pos.Y -= 175.0f;
+                sba_Renderer->Set(2, 0.0f, "verlauf");
                 this->m_pUI->Draw(2, sba_Renderer, "life_icon_tile", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.5f, 0.5f));
                 pos.Y += 175.0f;
 
                 pos.X += 800.0f;
+                sba_Renderer->Set(2, 0.0f, "verlauf");
                 this->m_pUI->Draw(2, sba_Renderer, "shield_tile", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.5f, 0.5f));
 
                 value = (sba_Players[i]->Ship->m_Shield / 100.0f);
@@ -57,6 +61,7 @@ namespace sba
                 pos.X += 45.0f - 5.0f*(1.0f - value);
 
                 pos.Y -= balken_size*(1.0f - value)*0.45f;
+                sba_Renderer->Set(2, 0.0f, "verlauf");
                 this->m_pUI->Draw(2, sba_Renderer, "shield_balken_tile", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.5f, 0.5f*value), PuRe_Vector2F(1.0f, value), PuRe_Vector2F(0.0f, (1.0f - value)*0.225f));
                 pos.Y += balken_size*(1.0f - value)*0.45f;
 
@@ -64,6 +69,7 @@ namespace sba
                 pos.Y -= 20.0f;
 
                 pos.Y -= 175.0f;
+                sba_Renderer->Set(2, 0.0f, "verlauf");
                 this->m_pUI->Draw(2, sba_Renderer, "shield_icon_tile", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.5f, 0.5f));
                 pos.Y += 175.0f;
 
@@ -72,15 +78,15 @@ namespace sba
                 pos.X = 1920.0f/2.0f;
                 pos.Y = 1080.0f-100.0f;
 
-                pos.X -= 400.0f;
+                pos.X -= 350.0f;
                 sba_Renderer->Set(2, sba_Players[i]->LaserCD/std::stof(sba_Balancing->GetValue("Laser_CD")), "verlauf");
-                this->m_pUI->Draw(2, sba_Renderer, "icon_kasten", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.75f, 0.75f));
+                this->m_pUI->Draw(2, sba_Renderer, "icon_kasten_gruen", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.75f, 0.75f));
                 pos.Y += 10.0f;
                 this->m_pUI->Draw(2, sba_Renderer, "laser_icon", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.75f, 0.75f));
                 pos.Y -= 10.0f;
                 pos.X += 200.0f;
                 sba_Renderer->Set(2, sba_Players[i]->MGCD / std::stof(sba_Balancing->GetValue("MG_CD")), "verlauf");
-                this->m_pUI->Draw(2, sba_Renderer, "icon_kasten", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.75f, 0.75f));
+                this->m_pUI->Draw(2, sba_Renderer, "icon_kasten_rot", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.75f, 0.75f));
                 this->m_pUI->Draw(2, sba_Renderer, "MG_icon", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.75f, 0.75f));
 
                 pos.X += 200.0f;
@@ -90,9 +96,8 @@ namespace sba
 
                 pos.X += 200.0f;
                 sba_Renderer->Set(2, sba_Players[i]->RocketCD / std::stof(sba_Balancing->GetValue("Rocket_CD")), "verlauf");
-                this->m_pUI->Draw(2, sba_Renderer, "icon_kasten", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.75f, 0.75f));
+                this->m_pUI->Draw(2, sba_Renderer, "icon_kasten_gelb", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.75f, 0.75f));
                 this->m_pUI->Draw(2, sba_Renderer, "missle_icon", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.75f, 0.75f));
-                sba_Renderer->Set(2, 0.0f, "verlauf");
 
                 pos.X = 1920.0f / 2.0f;
                 pos.Y = 1080.0f / 2.0f;

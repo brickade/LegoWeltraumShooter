@@ -82,14 +82,14 @@ namespace sba
                     changed->z = std::stof(buff);
                     if (objectName != "")
                     {
+                        ong::BodyDescription desc;
+                        desc.linearMomentum = vel;
+                        desc.angularMomentum = rot;
+                        desc.continuousPhysics = false;
+                        desc.transform = ong::Transform(pos, ong::Quaternion(ong::vec3(0, 0, 0), 1));
                         if (otype == Type::Object)
                         {
-                            ong::BodyDescription desc;
                             desc.type = ong::BodyType::Dynamic;
-                            desc.transform = ong::Transform(pos, ong::Quaternion(ong::vec3(0, 0, 0), 1));
-                            desc.linearMomentum = vel;
-                            desc.angularMomentum = rot;
-							desc.continuousPhysics = false;
                             sba::CAsteroid* asteroid = new sba::CAsteroid(*sba_World, &desc);
                             TheBrick::CSerializer serializer;
                             serializer.OpenRead(objectName.c_str());
@@ -99,12 +99,7 @@ namespace sba
                         }
                         else if (otype == Type::Static)
                         {
-                            ong::BodyDescription desc;
                             desc.type = ong::BodyType::Static;
-                            desc.transform = ong::Transform(pos, ong::Quaternion(ong::vec3(0, 0, 0), 1));
-                            desc.linearMomentum = vel;
-                            desc.angularMomentum = rot;
-							desc.continuousPhysics = false;
                             sba::CStatic* sobject = new sba::CStatic(*sba_World, &desc);
                             TheBrick::CSerializer serializer;
                             serializer.OpenRead(objectName.c_str());
@@ -114,6 +109,9 @@ namespace sba
                         }
                         else if (otype == Type::Item)
                         {
+                            desc.type = ong::BodyType::Static;
+                            desc.linearMomentum = ong::vec3(0.0f,0.0f,0.0f);
+                            desc.angularMomentum = ong::vec3(0.0f, 0.0f, 0.0f);
                             EItemType itype;
                             if (objectName == "repair")
                                 itype = EItemType::Repair;
@@ -121,7 +119,7 @@ namespace sba
                                 itype = EItemType::Shield;
                             else if (objectName == "speed")
                                 itype = EItemType::Speed;
-                            sba::CItem* item = new sba::CItem(*sba_World, itype, pos, vel, rot);
+                            sba::CItem* item = new sba::CItem(*sba_World, itype, &desc);
                             a_rItems.push_back(item);
                         }
                         else if (otype == Type::Light)

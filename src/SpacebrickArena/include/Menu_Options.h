@@ -35,12 +35,13 @@ namespace Menu
     public:
         /// @brief Update theCOptions
         ///
+        /// @param Input Handler
         /// @param Timer for deltatime
         /// @param Window to change DisplayMode
         /// @param Graphics to Change Resolution
         /// @param Index of the player who handles the menu
         ///
-        int Update(PuRe_Renderer* a_pRenderer, PuRe_Timer* a_pTimer, PuRe_IWindow* a_pWindow, PuRe_IGraphics* a_pGraphics, int a_PlayerIdx);
+        int Update(PuRe_IInput* a_pInput, PuRe_Renderer* a_pRenderer, PuRe_Timer* a_pTimer, PuRe_IWindow* a_pWindow, PuRe_IGraphics* a_pGraphics, int a_PlayerIdx);
         /// @brief Display the Options
         ///
         /// @param Renderer to use
