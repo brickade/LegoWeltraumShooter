@@ -53,7 +53,7 @@ namespace sba
         ~CGameNetwork();
     public:
         void Initialize();
-        void UpdateNetwork(std::vector<SItemData>& a_rRespawnItems, std::vector<CAsteroid*>& a_rAsteroids, std::vector<ExplosionEmitter>& a_rExplosions, std::vector<CBullet*>& a_rBullets, std::vector<CItem*>& a_rItems, PuRe_IInput* a_pInput, float a_DeltaTime, float& a_rEndTime, hInput hInput, pInput pInput, gUpdate gUpdate);
+        bool UpdateNetwork(std::vector<SItemData>& a_rRespawnItems, std::vector<CAsteroid*>& a_rAsteroids, std::vector<ExplosionEmitter>& a_rExplosions, std::vector<CBullet*>& a_rBullets, std::vector<CItem*>& a_rItems, PuRe_IInput* a_pInput, float a_DeltaTime, float& a_rEndTime, hInput hInput, pInput pInput, gUpdate gUpdate);
         void Receive(SOCKET s);
         void Update(float a_DeltaTime);
     };

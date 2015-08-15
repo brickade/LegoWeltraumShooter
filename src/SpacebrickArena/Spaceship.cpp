@@ -504,7 +504,6 @@ namespace sba
                 pos.x = g_Rand[index];
                 pos.y = g_Rand[index2];
                 pos.z = g_Rand[index3];
-                printf("Pos: %f %f %f \n",pos.x,pos.y,pos.z);
                 this->Respawn(pos);
             }
         }

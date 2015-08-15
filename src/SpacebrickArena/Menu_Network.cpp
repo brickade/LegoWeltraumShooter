@@ -186,7 +186,7 @@ namespace Menu
                         }
                     }
                 }
-                if (sba_Input->ButtonPressed(sba_Button::NavigationBack, a_PlayerIdx))
+                if (sba_Input->ButtonPressed(sba_Button::Exit, a_PlayerIdx))
                 {
                     sba_SoundPlayer->PlaySound("menu_back", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
                     if (this->m_Focus2)
@@ -224,7 +224,7 @@ namespace Menu
                         }
                     }
                 }
-                if (sba_Input->ButtonPressed(sba_Button::NavigationBack, a_PlayerIdx))
+                if (sba_Input->ButtonPressed(sba_Button::Exit, a_PlayerIdx))
                 {
                     sba_SoundPlayer->PlaySound("menu_back", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
                     if (this->m_Focus2)
@@ -267,7 +267,7 @@ namespace Menu
                         }
                     }
                 }
-                if (sba_Input->ButtonPressed(sba_Button::NavigationBack, a_PlayerIdx))
+                if (sba_Input->ButtonPressed(sba_Button::Exit, a_PlayerIdx))
                 {
                     sba_SoundPlayer->PlaySound("menu_back", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
                     if (this->m_Focus2)
@@ -277,7 +277,7 @@ namespace Menu
                 }
             break;
             default:
-                if (sba_Input->ButtonPressed(sba_Button::NavigationBack, a_PlayerIdx))
+                if (sba_Input->ButtonPressed(sba_Button::Exit, a_PlayerIdx))
                 {
                     sba_SoundPlayer->PlaySound("menu_back", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
                     this->m_Focus = false;

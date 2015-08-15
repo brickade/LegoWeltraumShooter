@@ -96,6 +96,8 @@ namespace sba
             Move = sba_Input->Direction(Input::EDirection::Type::GameMove_2, a_PlayerIdx);
             Move.Y = -Move.Y;
         }
+        if (Move.X > 1.0f) Move.X = 1.0f; else if (Move.X < -1.0f) Move.X = -1.0f;
+        if (Move.Y > 1.0f) Move.Y = 1.0f; else if (Move.Y < -1.0f) Move.Y = -1.0f;
 
         input.MoveX = (char)(Move.X*100.0f);
         input.MoveY = -(char)(Move.Y*100.0f);
@@ -155,6 +157,7 @@ namespace sba
             Move.X = a_Input->MoveX / 100.0f;
         if (a_Input->MoveY != 0)
             Move.Y = a_Input->MoveY / 100.0f;
+        printf("Move: %f %f\n",Move.X,Move.Y);
         ship->Move(Move);
 
         if (a_Input->Weapon != -1)
@@ -325,15 +328,11 @@ namespace sba
             if (a_rRespawnItems[i].Respawn < 0.0f)
             {
                 ong::BodyDescription a_desc;
-                printf("Respawn\n");
                 a_desc.transform = ong::Transform(a_rRespawnItems[i].Pos, ong::Quaternion(ong::vec3(0, 0, 0), 1));
-                printf("Pos %f %f %f\n", a_rRespawnItems[i].Pos.x, a_rRespawnItems[i].Pos.y, a_rRespawnItems[i].Pos.z);
                 a_desc.type = ong::BodyType::Static;
                 a_desc.continuousPhysics = false;
                 a_desc.angularMomentum = a_rRespawnItems[i].Rot;
                 a_desc.linearMomentum = a_rRespawnItems[i].Vel;
-                printf("Vel %f %f %f\n", a_rRespawnItems[i].Vel.x, a_rRespawnItems[i].Vel.y, a_rRespawnItems[i].Vel.z);
-                printf("Respawn end\n");
                 CItem* item = new CItem(*sba_World, a_rRespawnItems[i].Type, &a_desc);
                 a_rItems.push_back(item);
                 if (a_rRespawnItems.begin() + i < a_rRespawnItems.end())
@@ -344,8 +343,6 @@ namespace sba
         //Update Items
         for (unsigned int i = 0; i < a_rItems.size(); i++)
         {
-            printf("Pos: %f %f %f\n", a_rItems[i]->m_pBody->getWorldCenter().x, a_rItems[i]->m_pBody->getWorldCenter().y, a_rItems[i]->m_pBody->getWorldCenter().z);
-            printf("Vel: %f %f %f\n", a_rItems[i]->m_pBody->getLinearMomentum().x, a_rItems[i]->m_pBody->getLinearMomentum().y, a_rItems[i]->m_pBody->getLinearMomentum().z);
             if (a_rItems[i]->m_Collided)
             {
                 SItemData item;
@@ -447,7 +444,8 @@ namespace sba
     // **************************************************************************
     void CGameScene::HandleNetwork()
     {
-        this->m_pNetwork->UpdateNetwork(this->m_RespawnItems, this->m_Asteroids, this->m_ExplosionEmitter, this->m_Bullets, this->m_Items, this->m_pApplication->GetInput(), this->m_pApplication->GetTimer()->GetElapsedSeconds(), this->m_EndTime, &CGameScene::HandleInput, &CGameScene::ProcessInput, &CGameScene::UpdateGame);
+        if (!this->m_pNetwork->UpdateNetwork(this->m_RespawnItems, this->m_Asteroids, this->m_ExplosionEmitter, this->m_Bullets, this->m_Items, this->m_pApplication->GetInput(), this->m_pApplication->GetTimer()->GetElapsedSeconds(), this->m_EndTime, &CGameScene::HandleInput, &CGameScene::ProcessInput, &CGameScene::UpdateGame))
+            this->m_EndTime = -100.0f;
 
     }
 
@@ -873,7 +871,7 @@ namespace sba
                     this->DisplayArrow(Left, Right, Top, Bottom, Near, forward, campos, ppos, PuRe_Vector3F(0.0f, 0.0f, 0.0f), rotation, camID);
                 for (unsigned int j = 0; j < sba_Players.size(); j++)
                 {
-                    if (sba_Players[j]->PadID != i)
+                    if (i != j)
                     {
                         PuRe_Vector3F pos = TheBrick::OngToPuRe(sba_Players[j]->Ship->m_pBody->getWorldCenter());
                         this->DisplayArrow(Left, Right, Top, Bottom, Near, forward, campos, ppos, pos, rotation, camID, j);

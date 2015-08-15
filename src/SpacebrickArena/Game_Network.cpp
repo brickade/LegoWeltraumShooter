@@ -91,7 +91,7 @@ namespace sba
 
     // **************************************************************************
     // **************************************************************************
-    void CGameNetwork::UpdateNetwork(std::vector<SItemData>& a_rRespawnItems, std::vector<CAsteroid*>& a_rAsteroids, std::vector<ExplosionEmitter>& a_rExplosions, std::vector<CBullet*>& a_rBullets, std::vector<CItem*>& a_rItems, PuRe_IInput* a_pInput, float a_DeltaTime, float& a_rEndTime, hInput hInput, pInput pInput, gUpdate gUpdate)
+    bool CGameNetwork::UpdateNetwork(std::vector<SItemData>& a_rRespawnItems, std::vector<CAsteroid*>& a_rAsteroids, std::vector<ExplosionEmitter>& a_rExplosions, std::vector<CBullet*>& a_rBullets, std::vector<CItem*>& a_rItems, PuRe_IInput* a_pInput, float a_DeltaTime, float& a_rEndTime, hInput hInput, pInput pInput, gUpdate gUpdate)
     {
         sba_Network->m_Mutex.lock();
         if (sba_Network->GetHost())
@@ -247,6 +247,7 @@ namespace sba
         }
 
         sba_Network->m_Mutex.unlock();
+        return this->m_Run;
     }
 
     // **************************************************************************
@@ -264,6 +265,7 @@ namespace sba
             if (dataLeft == -1)
             {
                 printf("Connection lost\n");
+                this->m_Run = false;
                 break;
             }
             sba_Network->m_Mutex.lock();

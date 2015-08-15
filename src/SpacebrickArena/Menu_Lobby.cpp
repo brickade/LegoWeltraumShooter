@@ -125,6 +125,8 @@ namespace Menu
             sba_SoundPlayer->PlaySound("menu_confirm", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
             if (this->m_ShipSelect)
             {
+                /*if (sba_Players.size() > 1 && this->m_pNavigation->GetFocusedElementId() == 0)
+                {*/
                 if (this->m_pNavigation->GetFocusedElementId() == 0)
                 {
                     this->m_pNetwork->SendCommand();
@@ -147,7 +149,10 @@ namespace Menu
                     if (sba_Network->IsConnected())
                     {
                         if (sba_Network->GetHost())
+                        {
+                            this->m_ShipSelect = true;
                             this->m_pNetwork->GoShip();
+                        }
                     }
                     else
                         this->m_ShipSelect = true;
@@ -508,7 +513,12 @@ namespace Menu
             for (int i = 0; i < players; i++)
             {
                 color.A = ((sin(a_pTimer->GetTotalElapsedSeconds()*2.0f)) + 0.8f) / 2.0f;
-                a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "PRESS A TO JOIN", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(22.0f, 22.0f, 0.0f), 26.0f, color);
+                a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "PRESS", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(20.0f, 20.0f, 0.0f), 24.0f, color);
+                Position.X += 170.0f;
+                sba_Buttons->Draw(1, sba_Renderer, "A", a_pFontMaterial,Position,PuRe_MatrixF::Identity(),-1,PuRe_Vector2F(0.25f,0.25f),PuRe_Vector2F(1.0f,1.0f),PuRe_Vector2F(0.0f,0.0f),color);
+                Position.X += 20.0f;
+                a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "TO JOIN", Position, PuRe_MatrixF::Identity(), PuRe_Vector3F(20.0f, 20.0f, 0.0f), 24.0f, color);
+                Position.X -= 190.0f;
                 Position.Y -= 64.0f;
             }
         }
