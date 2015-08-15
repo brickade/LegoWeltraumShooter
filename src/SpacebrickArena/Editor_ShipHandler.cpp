@@ -100,7 +100,7 @@ namespace Editor
                 this->m_State = ShipHandlerState::Select;
                 if (this->m_pInputField->GetValue().size() == 0)
                 {
-                    this->m_pInputField->SetValue("GiveMeAName_Idiot");
+                    this->m_pInputField->SetValue("GiveMeAName");
                 }
                 this->m_pCurrentSpaceship->SetName(this->m_pInputField->GetValue()); //Update Name
                 if (this->m_pCurrentSpaceship->GetName() != this->m_OldShipName)
@@ -157,10 +157,22 @@ namespace Editor
             sba_Space->RenderFont(std::to_string(this->m_CurrentShipDataCache.Weapons) + " Weapons", center + this->m_TextOffset + this->m_TextStep * 4, 14);
             break;
         case ShipHandlerState::Rename:
+            sba_Space->RenderFont("Shipname", center + this->m_TextOffset + this->m_TextStep * -1 + PuRe_Vector2F(180, -30), 24);
             a_rSpriteReader.Draw(1, sba_Renderer, "editor_rename", sba_Space->FontMaterial, PuRe_Vector3F(center + this->m_TextOffset + PuRe_Vector2F(180, -45), 0), PuRe_Vector3F::Zero(), -1, PuRe_Vector2F(0.7f, 0.7f));
             sba_Space->RenderFont(this->m_pCurrentSpaceship->GetName(), center + this->m_TextOffset + this->m_TextStep * 1, 24);
-            sba_Space->RenderFont("Confirm [Enter]", center + this->m_TextOffset + this->m_TextStep * 3, 18);
-            sba_Space->RenderFont("Cancel [Esc]", center + this->m_TextOffset + this->m_TextStep * 3.5f, 18);
+            
+            sba_Space->RenderFont("Confirm", center + this->m_TextOffset + this->m_TextStep * 2.5f, 20);
+            sba_Space->RenderFont("Cancel", center + this->m_TextOffset + this->m_TextStep * 3.5f, 20);
+            if (sba_Input->FirstPlayerHasGamepad())
+            {
+                sba_ButtonsDraw("A", center + this->m_TextOffset + this->m_TextStep * 2.5f + PuRe_Vector2F(210, 5), 0.2f);
+                sba_ButtonsDraw("back", center + this->m_TextOffset + this->m_TextStep * 3.5f + PuRe_Vector2F(210, 5), 0.2f);
+            }
+            else
+            {
+                sba_Space->RenderFont("Enter", center + this->m_TextOffset + this->m_TextStep * 2.5f + PuRe_Vector2F(200, 0), 20);
+                sba_Space->RenderFont("Esc", center + this->m_TextOffset + this->m_TextStep * 3.5f + PuRe_Vector2F(200, 0), 20);
+            }
             break;
         case ShipHandlerState::Delete:
             sba_Space->RenderFont("Kill me?", center + this->m_TextOffset + this->m_TextStep * 1, 24);

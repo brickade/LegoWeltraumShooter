@@ -113,6 +113,7 @@ namespace sba
 #define sba_Network sba::Space::Instance()->m_pNetworkhandler
 #define sba_Options sba::Space::Instance()->m_pIniReader
 #define sba_Buttons sba::Space::Instance()->m_pButtonSprite
+#define sba_ButtonsDraw(btn, pos, size) sba::Space::Instance()->m_pButtonSprite->Draw(2, sba::Space::Instance()->Renderer, btn, sba::Space::Instance()->FontMaterial, PuRe_Vector3F(pos, 0), PuRe_Vector3F(), -1, PuRe_Vector2F(size, size))
 #define sba_Map sba::Space::Instance()->m_pMap
 #define sba_Controls sba::Space::Instance()->m_Controls
 

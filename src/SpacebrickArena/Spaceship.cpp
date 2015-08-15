@@ -11,7 +11,7 @@
 
 #include "Onager/BVH.h"
 
-#define EDITOR_DEV
+//#define EDITOR_DEV
 
 namespace sba
 {

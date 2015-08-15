@@ -44,6 +44,7 @@ namespace Editor
     // **************************************************************************
     int CEditorScene::Update(PuRe_Application* a_pApplication)
     {
+        sba_Input->TryDetectGamepads(*a_pApplication->GetTimer());
         //Handle ESC Button
         if (sba_Input->ButtonPressed(sba_Button::Exit, this->m_PlayerIdx))
         {
