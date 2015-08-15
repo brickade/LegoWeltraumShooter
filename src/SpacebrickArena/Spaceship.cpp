@@ -11,8 +11,6 @@
 
 #include "Onager/BVH.h"
 
-#define EDITOR_DEV
-
 namespace sba
 {
     const float g_Rand[] = { -56.0f, -250.0f, 45.0f, -360.0f, 106.0f,
@@ -76,6 +74,7 @@ namespace sba
     void CSpaceship::Collision(ong::Collider* thisCollider, ong::Contact* contact)
     {
         CSpaceship* Ship = (CSpaceship*)thisCollider->getBody()->getUserData();
+        PuRe_Vector3F pos = TheBrick::OngToPuRe(Ship->m_pBody->getWorldCenter());
         ong::Collider* other;
         if (thisCollider == contact->colliderA)
             other = contact->colliderB;
@@ -98,6 +97,7 @@ namespace sba
             CItem* item = static_cast<CItem*>(object);
             if (!item->m_Collided)
             {
+                sba_SoundPlayer->PlaySound("collect", false, true, std::stof(sba_Options->GetValue("SoundVolume")), pos, PuRe_Vector3F(0.0f, 0.0f, 0.0f), PuRe_Vector2F(1.0f, 10.0f));
                 switch (item->GetType())
                 {
                     case sba::EItemType::Repair:
@@ -106,6 +106,7 @@ namespace sba
                             Ship->m_Life = Ship->m_MaxLife;
                         break;
                     case sba::EItemType::Shield:
+                        sba_SoundPlayer->PlaySound("shield_refresh_charge", false, true, std::stof(sba_Options->GetValue("SoundVolume")), pos, PuRe_Vector3F(0.0f, 0.0f, 0.0f), PuRe_Vector2F(1.0f, 10.0f));
                         Ship->m_Shield += 100;
                         if (Ship->m_Shield  > 100)
                             Ship->m_Shield = 100;
@@ -132,6 +133,7 @@ namespace sba
                         Ship->m_Shield -= damage;
                         if (Ship->m_Shield < 0)
                         {
+                             sba_SoundPlayer->PlaySound("shield_refresh_kabudd", false, true, std::stof(sba_Options->GetValue("SoundVolume")), pos, PuRe_Vector3F(0.0f, 0.0f, 0.0f), PuRe_Vector2F(1.0f, 10.0f));
                             damage = -Ship->m_Shield;
                             Ship->m_Shield = 0;
                         }
@@ -145,10 +147,15 @@ namespace sba
                         bull->m_pOwner->Points += 100;
                         bull->m_pOwner->KilledTimer = 1.0f;
                     }
+                    sba_SoundPlayer->PlaySound("hitmarker", false, true, std::stof(sba_Options->GetValue("SoundVolume")), pos, PuRe_Vector3F(0.0f, 0.0f, 0.0f), PuRe_Vector2F(1.0f, 10.0f));
                     bull->m_pOwner->Marker = 1.0f;
                 }
                 if (bull->m_ID != TheBrick::Laser)
+                {
+                    sba_SoundPlayer->PlaySound("explosion_4", false, false, std::stof(sba_Options->GetValue("SoundVolume")), pos, PuRe_Vector3F(0.0f, 0.0f, 0.0f), PuRe_Vector2F(1.0f, 10.0f));
                     bull->m_Collided = true;
+                }
+
             }
         }
         else
