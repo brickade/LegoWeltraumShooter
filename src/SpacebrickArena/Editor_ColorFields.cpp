@@ -138,7 +138,8 @@ namespace Editor
     // **************************************************************************
     void CColorFields::Render(PuRe_IGraphics& a_pGraphics, sba::CSpriteReader& a_rSpriteReader, float a_Visibility)
     {
-        a_rSpriteReader.Draw(1, sba_Renderer, "editor_colorselect", sba_Space->FontMaterial, PuRe_Vector3F(420 + this->m_ListStart.X, 210 - (1.0f - a_Visibility) * (this->m_ListStart.Y - this->m_ListStep.Y + 50), 0), PuRe_Vector3F::Zero(), -1, PuRe_Vector2F(0.715f, 0.715f));
+        float size = 0.18f;
+        a_rSpriteReader.Draw(1, sba_Renderer, "editor_colorselect", sba_Space->FontMaterial, PuRe_Vector3F(420 + this->m_ListStart.X, 210 - (1.0f - a_Visibility) * (this->m_ListStart.Y - this->m_ListStep.Y + 50), 0), PuRe_Vector3F::Zero(), -1, PuRe_Vector2F(size, size));
         for (int i = 0; i <= this->m_pNavigation->GetLastElementId(); i++)
         {
             PuRe_Vector2F listPos = PuRe_Vector2F((float)(i % this->m_pNavigation->GetElementsCountPerLine()), floorf((float)i / (float)this->m_pNavigation->GetElementsCountPerLine()));

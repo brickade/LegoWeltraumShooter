@@ -1,8 +1,8 @@
-editor_brickselect = 2734 1750 506 634
+editor_brickselect = 2597 1750 506 634
 editor_button = 3176 0 201 55
-editor_colorselect = 0 1750 2733 1096
+editor_colorselect = 0 1750 2596 1096
 editor_info_big = 1867 2847 394 496
-editor_info_small = 2262 2847 392 393
-editor_rename = 2734 2385 312 63
+editor_info_small = 2597 2385 392 393
+editor_rename = 3104 1750 312 63
 editor_shipselect_big = 0 0 3175 1749
 editor_shipselect_small = 0 2847 1866 925

@@ -26,7 +26,7 @@ namespace sba
     bool CInputField::Update(PuRe_IInput& a_rInput, int a_PlayerIndex)
     {
         //Delete character
-        if (sba_Input->ButtonPressed(sba_Button::NavigationBack, a_PlayerIndex) && this->m_Value.length() > 0)
+        if ((sba_Input->ButtonPressed(sba_Button::NavigationBack, a_PlayerIndex) || a_rInput.KeyPressed(PuRe_IInput::Backspace)) && this->m_Value.length() > 0)
         {
             this->m_Value.erase(this->m_Value.length() - 1);
         }

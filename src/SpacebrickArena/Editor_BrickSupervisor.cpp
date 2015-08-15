@@ -82,7 +82,15 @@ namespace Editor
             this->m_Categories[i]->RenderTab(a_pGraphics, this->m_TabRotation, selected, a_Visibility);
         }
         this->m_pActiveCategory->Render(a_pGraphics, a_Visibility, a_rCurrentColor);
-        sba_Space->RenderFont("Hold Right Thumb / X to change category", PuRe_Vector2F(50 - (1.0f - a_Visibility) * 750, 150), 12.0f);
+        sba_Space->RenderFont("Hold   to change category", PuRe_Vector2F(50 - (1.0f - a_Visibility) * 750, 140), 14.0f);
+        if (sba_Input->FirstPlayerHasGamepad())
+        {
+            sba_ButtonsDraw("right_stick", PuRe_Vector2F(134 - (1.0f - a_Visibility) * 750, 143), 0.12f);
+        }
+        else
+        {
+            sba_Space->RenderFont("X", PuRe_Vector2F(122 - (1.0f - a_Visibility) * 750, 140), 14.0f);
+        }
     }
 
     // **************************************************************************
