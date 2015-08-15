@@ -2,6 +2,8 @@
 #include "include/Space.h"
 #include "TheBrick/Conversion.h"
 
+#include <vector>
+
 namespace sba
 {
     CGameCamera::CGameCamera(PuRe_Vector3F a_Position, PuRe_Vector3F a_Direction, PuRe_Vector3F a_Up, float a_FOV, float a_AspectRatio,
@@ -135,9 +137,7 @@ namespace sba
                     this->m_CamMove.Y = y;
             }
         }
-/*
-        this->m_CamRotation.X = -Move.Y*leng*0.5f;
-        this->m_CamRotation.Y = -Move.X*leng*0.5f;*/
+
 
         if (ong::length(a_pPlayer->Ship->m_pBody->getAngularVelocity()) < 10.0f)
         {
@@ -155,6 +155,13 @@ namespace sba
         }
         x = xshake + this->m_CamMove.X;
         y = yshake + this->m_CamMove.Y;
+        std::vector<TheBrick::CBrickInstance**> engines;
+        a_pPlayer->Ship->GetEngines(engines);
+        if (engines.size() == 0)
+        {
+            x = 0.0f;
+            y = 0.0f;
+        }
         this->Move(PuRe_Vector3F(x, y, -this->m_ZOffset));
     }
 

@@ -603,8 +603,6 @@ namespace sba
             this->m_Cameras.push_back(Cam);
         }
 
-        this->m_TextureID = 0;
-
         if (sba_Network->IsConnected())
             this->m_pNetwork = new CGameNetwork();
 
@@ -899,8 +897,6 @@ namespace sba
 
         ////////////////// POST SCREEN ////////////////////////////////
 		ong_START_PROFILE(POST_SCREEN)
-
-        sba_Renderer->Set(0, (float)this->m_TextureID, "textureID");
         PuRe_Vector3F size = PuRe_Vector3F(0.0f, 0.0f, 0.0f);
 
         for (int i = 0; i < this->m_LocalPlayers; i++)

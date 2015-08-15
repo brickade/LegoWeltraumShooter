@@ -144,13 +144,13 @@ namespace Menu
                 switch (this->m_pNavigation->GetFocusedElementId())
                 {
                 case 0: //Start
-                    //change this to 1 for min 2 players
-                    //this->m_pNetwork->SendCommand();
-                    //this->m_Start = true;
                     if (sba_Network->IsConnected())
+                    {
                         if (sba_Network->GetHost())
                             this->m_pNetwork->GoShip();
-                    this->m_ShipSelect = true;
+                    }
+                    else
+                        this->m_ShipSelect = true;
                     break;
                 case 1: //Map
                     if (sba_Network->IsConnected())

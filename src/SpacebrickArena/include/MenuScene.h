@@ -15,6 +15,7 @@
 #include "Menu_Options.h"
 #include "Menu_Lobby.h"
 #include "Menu_Network.h"
+#include "Menu_Credits.h"
 
 
 // Declare namespace Game
@@ -25,7 +26,8 @@ namespace Menu
         Main,
         Options,
         Lobby,
-        Network
+        Network,
+        Credits
     };
     /// @brief MainScene where the game functions are in, inherits from the Scene interface
     ///
@@ -41,9 +43,8 @@ namespace Menu
         COptions* m_pOptions;
 
         CMain* m_pMainMenu;
-        /// @brief to display different targets
-        ///
-        int textureID;
+
+        CCredits* m_pCredits;
         /// @brief PlayerIndex of the Player who first pressed sth
         ///
         int* m_pPlayerIdx;

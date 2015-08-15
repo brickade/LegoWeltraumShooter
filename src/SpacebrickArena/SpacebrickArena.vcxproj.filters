@@ -123,6 +123,12 @@
     <ClCompile Include="Editor_Grid.cpp">
       <Filter>Editor</Filter>
     </ClCompile>
+    <ClCompile Include="StartScene.cpp">
+      <Filter>Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Menu_Credits.cpp">
+      <Filter>Menu</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Space.h" />
@@ -252,6 +258,12 @@
     </ClInclude>
     <ClInclude Include="include\Editor_Grid.h">
       <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="include\StartScene.h">
+      <Filter>Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Menu_Credits.h">
+      <Filter>Menu</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -38,7 +38,7 @@ int PURE_MAIN
     else
         description.Window.DisplaySetting = PuRe_DisplaySetting::Fullscreen;
     description.Window.ShowCursor = false;
-    description.Window.CursorInWindow = false;
+    description.Window.CursorInWindow = true;
     description.Window.LockCursor = true; //Breaks Editor Mouse Functionality if changed
     PuRe_Application* papplication = new PuRe_Application(pplatform, description);
     sba::CMainScene scene(papplication);
