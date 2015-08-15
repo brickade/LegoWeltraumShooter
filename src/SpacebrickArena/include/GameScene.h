@@ -40,8 +40,6 @@ namespace sba
         int m_LocalPlayers;
         //multiple players
         PuRe_Camera* m_pUICam;
-        //whether we are still in menu or not
-        int m_TextureID;
 
         //Game UI
         CGUI* m_pUI;

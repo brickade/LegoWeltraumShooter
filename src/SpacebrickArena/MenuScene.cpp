@@ -45,6 +45,7 @@ namespace Menu
         this->m_pOptions = new COptions();
         this->m_pLobby = new CLobby(window, graphics, timer);
         this->m_pNetwork = new CNetwork(timer);
+        this->m_pCredits = new CCredits();
 
     }
 
@@ -94,8 +95,11 @@ namespace Menu
             case 4: //Editor
                 return 4;
                 break;
-            case 5: //Editor
+            case 5: //Options
                 this->m_Displayed = Options;
+                break;
+            case 6: //Credits
+                this->m_Displayed = Credits;
                 break;
             default:
                 break;
@@ -131,21 +135,13 @@ namespace Menu
             if (result == 0)
                 this->m_Displayed = Main;
             break;
+        case Credits:
+            result = this->m_pCredits->Update(input, sba_Renderer, timer, window, graphics, *this->m_pPlayerIdx);
+            if (result == 0)
+                this->m_Displayed = Main;
+            break;
         default:
             break;
-        }
-
-        if (input->KeyPressed(a_pApplication->GetInput()->Comma))
-        {
-            this->textureID--;
-            if (this->textureID < 0)
-                this->textureID = 4;
-        }
-        else if (input->KeyPressed(a_pApplication->GetInput()->Period))
-        {
-            this->textureID++;
-            if (this->textureID > 4)
-                this->textureID = 0;
         }
         return 1;
     }
@@ -181,6 +177,9 @@ namespace Menu
         case Network:
             this->m_pNetwork->Render(renderer, this->m_pSpriteReader, timer, this->m_pFont, this->m_pFontMaterial, resolution);
             break;
+        case Credits:
+            this->m_pCredits->Render(renderer, this->m_pSpriteReader, this->m_pFont, this->m_pFontMaterial, resolution);
+            break;
         default:
             break;
         }
@@ -196,6 +195,7 @@ namespace Menu
     {
         SAFE_DELETE(this->m_pSpriteReader);
         SAFE_DELETE(this->m_pLobby);
+        SAFE_DELETE(this->m_pCredits);
         SAFE_DELETE(this->m_pOptions);
         SAFE_DELETE(this->m_pNetwork);
         SAFE_DELETE(this->m_pMainMenu);

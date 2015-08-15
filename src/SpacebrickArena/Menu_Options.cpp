@@ -243,7 +243,7 @@ namespace Menu
                     if (right)
                         this->m_Music += 0.01f;
                     else if (left)
-                        this->m_Music += 0.01f;
+                        this->m_Music -= 0.01f;
 
                     if (this->m_Music > 1.0f)
                         this->m_Music = 1.0f;
@@ -254,7 +254,7 @@ namespace Menu
                     if (right)
                         this->m_Sound += 0.01f;
                     else if (left)
-                        this->m_Sound += 0.01f;
+                        this->m_Sound -= 0.01f;
 
                     if (this->m_Sound > 1.0f)
                         this->m_Sound = 1.0f;

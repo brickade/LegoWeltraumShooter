@@ -6,7 +6,7 @@ namespace Menu
 
     CMain::CMain(PuRe_IGraphics* a_pGraphics)
     {
-        this->m_pNavigation = new sba::CNavigation(1, 4);
+        this->m_pNavigation = new sba::CNavigation(1, 5);
         this->m_HasShip = this->hasShip();
     }
 
@@ -98,6 +98,9 @@ namespace Menu
             case 3: //Options
                 return 5;
                 break;
+            case 4: //Credits
+                return 6;
+                break;
             default:
                 return 0;
                 break;
@@ -128,14 +131,14 @@ namespace Menu
         if (this->m_pNavigation->GetFocusedElementId() == 0)
             a_pSpriteReader->Draw(1, a_pRenderer, "auswahl_highlight_menue", a_pFontMaterial, highlight, PuRe_Vector3F(), -1, PuRe_Vector2F(0.5f, 0.5f));
         a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "LOCAL", Position, PuRe_MatrixF::Identity(), size, 40.0f, color);
-        Position.Y -= 96.0f;
+        Position.Y -= 80.0f;
         Position.X -= 100.0f;
         highlight.Y = Position.Y;
         if (this->m_pNavigation->GetFocusedElementId() == 1)
             a_pSpriteReader->Draw(1, a_pRenderer, "auswahl_highlight_menue", a_pFontMaterial, highlight, PuRe_Vector3F(), -1, PuRe_Vector2F(0.5f, 0.5f));
         a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "MULTIPLAYER", Position, PuRe_MatrixF::Identity(), size, 40.0f, color);
         Position.X += 75.0f;
-        Position.Y -= 96.0f;
+        Position.Y -= 80.0f;
         highlight.Y = Position.Y;
         color = PuRe_Color(1.0f, 1.0f, 1.0f);
         if (!this->m_HasShip)
@@ -146,16 +149,23 @@ namespace Menu
         if (this->m_pNavigation->GetFocusedElementId() == 2)
             a_pSpriteReader->Draw(1, a_pRenderer, "auswahl_highlight_menue", a_pFontMaterial, highlight, PuRe_Vector3F(), -1, PuRe_Vector2F(0.5f, 0.5f));
         a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "EDITOR", Position, PuRe_MatrixF::Identity(), size, 40.0f, color);
-        Position.Y -= 96.0f;
+        Position.Y -= 80.0f;
         highlight.Y = Position.Y;
         size = PuRe_Vector3F(36.0f, 36.0f, 0.0f);
         color = PuRe_Color(1.0f, 1.0f, 1.0f);
         if (this->m_pNavigation->GetFocusedElementId() == 3)
             a_pSpriteReader->Draw(1, a_pRenderer, "auswahl_highlight_menue", a_pFontMaterial, highlight, PuRe_Vector3F(), -1, PuRe_Vector2F(0.5f, 0.5f));
         a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "OPTIONS", Position, PuRe_MatrixF::Identity(), size, 40.0f, color);
-        Position.Y -= 96.0f;
+        Position.Y -= 80.0f;
         highlight.Y = Position.Y;
+        size = PuRe_Vector3F(36.0f, 36.0f, 0.0f);
+        color = PuRe_Color(1.0f, 1.0f, 1.0f);
         if (this->m_pNavigation->GetFocusedElementId() == 4)
+            a_pSpriteReader->Draw(1, a_pRenderer, "auswahl_highlight_menue", a_pFontMaterial, highlight, PuRe_Vector3F(), -1, PuRe_Vector2F(0.5f, 0.5f));
+        a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "Credits", Position, PuRe_MatrixF::Identity(), size, 40.0f, color);
+        Position.Y -= 80.0f;
+        highlight.Y = Position.Y;
+        if (this->m_pNavigation->GetFocusedElementId() == 5)
             a_pSpriteReader->Draw(1, a_pRenderer, "auswahl_highlight_menue", a_pFontMaterial, highlight, PuRe_Vector3F(), -1, PuRe_Vector2F(0.5f, 0.5f));
         a_pRenderer->Draw(1, false, a_pFont, a_pFontMaterial, "QUIT", Position, PuRe_MatrixF::Identity(), size, 40.0f, color);
 

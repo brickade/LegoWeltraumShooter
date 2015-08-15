@@ -6,6 +6,7 @@
 
 #include "Space.h"
 
+#include "StartScene.h"
 #include "EditorScene.h"
 #include "GameScene.h"
 #include "MenuScene.h"
@@ -22,6 +23,7 @@ namespace sba
         Editor::CEditorScene* m_pEditorScene;
         Menu::CMenuScene* m_pMenuScene;
         sba::CGameScene* m_pGameScene;
+        sba::CStartScene* m_pStartScene;
         PuRe_IScene* m_pActiveScene;
         /// @brief Engine's Application
         ///

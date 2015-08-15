@@ -166,6 +166,7 @@
     <ClInclude Include="include\Item.h" />
     <ClInclude Include="include\Lobby_Network.h" />
     <ClInclude Include="include\MenuScene.h" />
+    <ClInclude Include="include\Menu_Credits.h" />
     <ClInclude Include="include\Menu_Lobby.h" />
     <ClInclude Include="include\Menu_Main.h" />
     <ClInclude Include="include\Menu_Network.h" />
@@ -187,6 +188,7 @@
     <ClInclude Include="include\Editor_ShipHandler.h" />
     <ClInclude Include="include\Spaceship.h" />
     <ClInclude Include="include\SpriteReader.h" />
+    <ClInclude Include="include\StartScene.h" />
     <ClInclude Include="include\Static.h" />
     <ClInclude Include="include\UIElementFader.h" />
   </ItemGroup>
@@ -211,6 +213,7 @@
     <ClCompile Include="Lobby_Network.cpp" />
     <ClCompile Include="MenuScene.cpp" />
     <ClCompile Include="Editor_ColorFields.cpp" />
+    <ClCompile Include="Menu_Credits.cpp" />
     <ClCompile Include="Menu_Lobby.cpp" />
     <ClCompile Include="Menu_Main.cpp" />
     <ClCompile Include="Menu_Network.cpp" />
@@ -231,6 +234,7 @@
     <ClCompile Include="Editor_ShipHandler.cpp" />
     <ClCompile Include="Spaceship.cpp" />
     <ClCompile Include="SpriteReader.cpp" />
+    <ClCompile Include="StartScene.cpp" />
     <ClCompile Include="Static.cpp" />
     <ClCompile Include="UIElementFader.cpp" />
   </ItemGroup>
