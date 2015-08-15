@@ -131,62 +131,97 @@ namespace Editor
     void CShipHandler::Render(sba::CSpriteReader& a_rSpriteReader)
     {
         PuRe_Vector2F center(sba_Width / 2, sba_Height / 2);
+        PuRe_Vector2F centerInfoSelect(sba_Width - 350, 200);
+        float centerSize = 0.18f;
+        float sideSize = 0.2f;
         if (this->GetCurrentSpaceShip() == nullptr)
         {
             sba_Space->RenderFont("Add a ship", center + this->m_TextOffset + this->m_TextStep, 24);
             return;
         }
         int focus = this->m_pNavigation->GetFocusedElementId();
-        //Left
-        if (focus > 0)
-        {
-            a_rSpriteReader.Draw(1, sba_Renderer, "editor_shipselect_small", sba_Space->FontMaterial, PuRe_Vector3F(0, 1080 / 2, 0), PuRe_Vector3F::Zero(), -1, PuRe_Vector2F(0.6f, 0.6f));
-            sba_Renderer->Draw(1, false, (*sba_ShipManager)[focus - 1], sba_Space->SpriteMaterial, PuRe_Vector3F(0 + this->m_OuterPreviewInset, center.Y + this->m_OuterPreviewYOffset, 0), PuRe_MatrixF::Identity(), PuRe_Vector3F((*sba_ShipManager)[focus]->GetSize() * 0.5f, 0), PuRe_Vector3F(this->m_OuterPreviewSize, this->m_OuterPreviewSize, this->m_OuterPreviewSize));
-        }
         //Center
-        a_rSpriteReader.Draw(1, sba_Renderer, "editor_shipselect_big", sba_Space->FontMaterial, PuRe_Vector3F(1920 / 2, 1080 / 2 - 150, 0), PuRe_Vector3F::Zero(), -1, PuRe_Vector2F(0.8f, 0.8f));
+        a_rSpriteReader.Draw(1, sba_Renderer, "editor_shipselect_big", sba_Space->FontMaterial, PuRe_Vector3F(1920 / 2, 1080 / 2 - 135, 0), PuRe_Vector3F::Zero(), -1, PuRe_Vector2F(centerSize, centerSize));
         switch (this->m_State)
         {
         case ShipHandlerState::Select:
+            //Left
+            if (focus > 0)
+            {
+                a_rSpriteReader.Draw(1, sba_Renderer, "editor_shipselect_small", sba_Space->FontMaterial, PuRe_Vector3F(0, 1080 / 2, 0), PuRe_Vector3F::Zero(), -1, PuRe_Vector2F(sideSize, sideSize));
+                sba_Renderer->Draw(1, false, (*sba_ShipManager)[focus - 1], sba_Space->SpriteMaterial, PuRe_Vector3F(0 + this->m_OuterPreviewInset, center.Y + this->m_OuterPreviewYOffset, 0), PuRe_MatrixF::Identity(), PuRe_Vector3F((*sba_ShipManager)[focus]->GetSize() * 0.5f, 0), PuRe_Vector3F(this->m_OuterPreviewSize, this->m_OuterPreviewSize, this->m_OuterPreviewSize));
+            }
+
             a_rSpriteReader.Draw(1, sba_Renderer, "editor_info_small", sba_Space->FontMaterial, PuRe_Vector3F(1920 / 2, 1080 - 190, 0), PuRe_Vector3F::Zero(), -1, PuRe_Vector2F(0.38f, 0.38f));
-            sba_Space->RenderFont("Slot " + std::to_string(focus + 1) + "/" + std::to_string(sba_ShipManager->GetShipCount()), center + this->m_TextOffset + this->m_TextStep * 0, 18);
-            sba_Space->RenderFont(this->m_pCurrentSpaceship->GetName(), center + this->m_TextOffset + this->m_TextStep * 1, 18);
-            sba_Space->RenderFont(std::to_string(this->m_pCurrentSpaceship->m_pBricks.size()) + " Bricks", center + this->m_TextOffset + this->m_TextStep * 2, 18);
+            sba_Space->RenderFont(std::to_string(focus + 1) + "/" + std::to_string(sba_ShipManager->GetShipCount()), center + this->m_TextOffset + this->m_TextStep * 0 + PuRe_Vector2F(130, 0), 18);
+            sba_Space->RenderFont(this->m_pCurrentSpaceship->GetName(), center + this->m_TextOffset + this->m_TextStep * 1, this->m_pCurrentSpaceship->GetName().size() > 12 ? 16 : 18);
+            sba_Space->RenderFont(std::to_string(this->m_pCurrentSpaceship->m_pBricks.size()) + " Bricks", center + this->m_TextOffset + this->m_TextStep * 2 + PuRe_Vector2F(-5, 0), 18);
             sba_Space->RenderFont(std::to_string(this->m_CurrentShipDataCache.Cockpits) + " Cockpits", center + this->m_TextOffset + this->m_TextStep * 3, 14);
             sba_Space->RenderFont(std::to_string(this->m_CurrentShipDataCache.Engines) + " Engines", center + this->m_TextOffset + this->m_TextStep * 3.5f, 14);
             sba_Space->RenderFont(std::to_string(this->m_CurrentShipDataCache.Weapons) + " Weapons", center + this->m_TextOffset + this->m_TextStep * 4, 14);
+            
+            sba_Space->RenderFont("Create", centerInfoSelect + this->m_TextStep * 1, 20);
+            sba_Space->RenderFont("Rename", centerInfoSelect + this->m_TextStep * 2, 20);
+            sba_Space->RenderFont("Delete", centerInfoSelect + this->m_TextStep * 3, 20);
+            if (sba_Input->FirstPlayerHasGamepad())
+            {
+                sba_ButtonsDraw("start", centerInfoSelect  + this->m_TextStep * 1 + PuRe_Vector2F(210, 5), 0.2f);
+                sba_ButtonsDraw("Y", centerInfoSelect + this->m_TextStep * 2 + PuRe_Vector2F(210, 5), 0.2f);
+                sba_ButtonsDraw("X", centerInfoSelect + this->m_TextStep * 3 + PuRe_Vector2F(210, 5), 0.2f);
+            }
+            else
+            {
+                sba_Space->RenderFont("Insert", centerInfoSelect + this->m_TextStep * 1 + PuRe_Vector2F(200, 0), 20);
+                sba_Space->RenderFont("F2", centerInfoSelect + this->m_TextStep * 2 + PuRe_Vector2F(200, 0), 20);
+                sba_Space->RenderFont("Delete", centerInfoSelect + this->m_TextStep * 3 + PuRe_Vector2F(200, 0), 20);
+            }
+
+            //Right
+            if (focus < this->m_pNavigation->GetLastElementId())
+            {
+                a_rSpriteReader.Draw(1, sba_Renderer, "editor_shipselect_small", sba_Space->FontMaterial, PuRe_Vector3F(1920, 1080 / 2, 0), PuRe_Vector3F::Zero(), -1, PuRe_Vector2F(sideSize, sideSize));
+                sba_Renderer->Draw(1, false, (*sba_ShipManager)[focus + 1], sba_Space->SpriteMaterial, PuRe_Vector3F(sba_Width - this->m_OuterPreviewInset, center.Y + this->m_OuterPreviewYOffset, 0), PuRe_MatrixF::Identity(), PuRe_Vector3F((*sba_ShipManager)[focus]->GetSize() * 0.5f, 0), PuRe_Vector3F(this->m_OuterPreviewSize, this->m_OuterPreviewSize, this->m_OuterPreviewSize));
+            }
             break;
         case ShipHandlerState::Rename:
             sba_Space->RenderFont("Shipname", center + this->m_TextOffset + this->m_TextStep * -1 + PuRe_Vector2F(180, -30), 24);
             a_rSpriteReader.Draw(1, sba_Renderer, "editor_rename", sba_Space->FontMaterial, PuRe_Vector3F(center + this->m_TextOffset + PuRe_Vector2F(180, -45), 0), PuRe_Vector3F::Zero(), -1, PuRe_Vector2F(0.7f, 0.7f));
             sba_Space->RenderFont(this->m_pCurrentSpaceship->GetName(), center + this->m_TextOffset + this->m_TextStep * 1, 24);
             
-            sba_Space->RenderFont("Confirm", center + this->m_TextOffset + this->m_TextStep * 2.5f, 20);
-            sba_Space->RenderFont("Cancel", center + this->m_TextOffset + this->m_TextStep * 3.5f, 20);
+            sba_Space->RenderFont("Remove", center + this->m_TextOffset + this->m_TextStep * 2.5f, 20);
+            sba_Space->RenderFont("Confirm", center + this->m_TextOffset + this->m_TextStep * 3.5f, 20);
+            sba_Space->RenderFont("Cancel", center + this->m_TextOffset + this->m_TextStep * 4.5f, 20);
             if (sba_Input->FirstPlayerHasGamepad())
             {
-                sba_ButtonsDraw("A", center + this->m_TextOffset + this->m_TextStep * 2.5f + PuRe_Vector2F(210, 5), 0.2f);
-                sba_ButtonsDraw("back", center + this->m_TextOffset + this->m_TextStep * 3.5f + PuRe_Vector2F(210, 5), 0.2f);
+                sba_ButtonsDraw("B", center + this->m_TextOffset + this->m_TextStep * 2.5f + PuRe_Vector2F(210, 5), 0.2f);
+                sba_ButtonsDraw("A", center + this->m_TextOffset + this->m_TextStep * 3.5f + PuRe_Vector2F(210, 5), 0.2f);
+                sba_ButtonsDraw("back", center + this->m_TextOffset + this->m_TextStep * 4.5f + PuRe_Vector2F(210, 5), 0.2f);
             }
             else
             {
-                sba_Space->RenderFont("Enter", center + this->m_TextOffset + this->m_TextStep * 2.5f + PuRe_Vector2F(200, 0), 20);
-                sba_Space->RenderFont("Esc", center + this->m_TextOffset + this->m_TextStep * 3.5f + PuRe_Vector2F(200, 0), 20);
+                sba_Space->RenderFont("Backspace", center + this->m_TextOffset + this->m_TextStep * 2.5f + PuRe_Vector2F(200, 0), 20);
+                sba_Space->RenderFont("Enter", center + this->m_TextOffset + this->m_TextStep * 3.5f + PuRe_Vector2F(200, 0), 20);
+                sba_Space->RenderFont("Esc", center + this->m_TextOffset + this->m_TextStep * 4.5f + PuRe_Vector2F(200, 0), 20);
             }
             break;
         case ShipHandlerState::Delete:
             sba_Space->RenderFont("Kill me?", center + this->m_TextOffset + this->m_TextStep * 1, 24);
-            sba_Space->RenderFont("Confirm [Enter][A]", center + this->m_TextOffset + this->m_TextStep * 3, 18);
-            sba_Space->RenderFont("Cancel [Backspace][B]", center + this->m_TextOffset + this->m_TextStep * 3.5f, 18);
+            
+            sba_Space->RenderFont("Confirm", center + this->m_TextOffset + this->m_TextStep * 3, 20);
+            sba_Space->RenderFont("Cancel", center + this->m_TextOffset + this->m_TextStep * 4, 20);
+            if (sba_Input->FirstPlayerHasGamepad())
+            {
+                sba_ButtonsDraw("A", center + this->m_TextOffset + this->m_TextStep * 3 + PuRe_Vector2F(210, 5), 0.2f);
+                sba_ButtonsDraw("B", center + this->m_TextOffset + this->m_TextStep * 4 + PuRe_Vector2F(210, 5), 0.2f);
+            }
+            else
+            {
+                sba_Space->RenderFont("Enter", center + this->m_TextOffset + this->m_TextStep * 3 + PuRe_Vector2F(200, 0), 20);
+                sba_Space->RenderFont("Backspace", center + this->m_TextOffset + this->m_TextStep * 4 + PuRe_Vector2F(200, 0), 20);
+            }
             break;
         }
         sba_Renderer->Draw(1, false, (*sba_ShipManager)[focus], sba_Space->SpriteMaterial, PuRe_Vector3F(center + this->m_PreviewOffset, 0), PuRe_MatrixF::Identity(), PuRe_Vector3F((*sba_ShipManager)[focus]->GetSize() * 0.5f, 0));
-        //Right
-        if (focus < this->m_pNavigation->GetLastElementId())
-        {
-            a_rSpriteReader.Draw(1, sba_Renderer, "editor_shipselect_small", sba_Space->FontMaterial, PuRe_Vector3F(1920, 1080 / 2, 0), PuRe_Vector3F::Zero(), -1, PuRe_Vector2F(0.6f, 0.6f));
-            sba_Renderer->Draw(1, false, (*sba_ShipManager)[focus + 1], sba_Space->SpriteMaterial, PuRe_Vector3F(sba_Width - this->m_OuterPreviewInset, center.Y + this->m_OuterPreviewYOffset, 0), PuRe_MatrixF::Identity(), PuRe_Vector3F((*sba_ShipManager)[focus]->GetSize() * 0.5f, 0), PuRe_Vector3F(this->m_OuterPreviewSize, this->m_OuterPreviewSize, this->m_OuterPreviewSize));
-        }
     }
 
     // **************************************************************************
