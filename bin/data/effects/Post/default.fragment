@@ -64,7 +64,7 @@ void main()
    	}
    	ssao = ssao / float(BlurSize * BlurSize);
  	
-	vec3 color = (blend.xyz * (ambient+light.xyz)*(1.0+light.a)) * ssao;//(blend.xyz * (ambient+light.xyz)+light.a) * ssao
+	vec3 color = blend.xyz * (ambient + light.xyz * (1.0 + light.a)) * ssao;
 
 	blend = clamp(vec4(color,blend.a) + glowed,0,1);
 	

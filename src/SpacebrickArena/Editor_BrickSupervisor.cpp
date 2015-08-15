@@ -68,7 +68,7 @@ namespace Editor
 
     // **************************************************************************
     // **************************************************************************
-    void CBrickSupervisor::Render(PuRe_IGraphics& a_pGraphics, sba::CSpriteReader& a_rSpriteReader ,float a_Visibility)
+    void CBrickSupervisor::Render(PuRe_IGraphics& a_pGraphics, sba::CSpriteReader& a_rSpriteReader, float a_Visibility, const PuRe_Color& a_rCurrentColor)
     {
         float inset = 380;
         a_rSpriteReader.Draw(1, sba_Renderer, "editor_brickselect", sba_Space->FontMaterial, PuRe_Vector3F(inset - (1.0f - a_Visibility) * 750, 1080/2 + 50, 0), PuRe_Vector3F::Zero(), -1, PuRe_Vector2F(0.7f, 0.7f)); //I need to render the UI with the font material? WHAT THE F%*$&!?!? And the position is defined form the center? Double WTF
@@ -81,7 +81,8 @@ namespace Editor
             }
             this->m_Categories[i]->RenderTab(a_pGraphics, this->m_TabRotation, selected, a_Visibility);
         }
-        this->m_pActiveCategory->Render(a_pGraphics, a_Visibility);
+        this->m_pActiveCategory->Render(a_pGraphics, a_Visibility, a_rCurrentColor);
+        sba_Space->RenderFont("Hold Right Thumb / X to change category", PuRe_Vector2F(50 - (1.0f - a_Visibility) * 750, 150), 12.0f);
     }
 
     // **************************************************************************

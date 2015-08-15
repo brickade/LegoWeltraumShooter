@@ -44,6 +44,7 @@ namespace Editor
     // **************************************************************************
     int CEditorScene::Update(PuRe_Application* a_pApplication)
     {
+        sba_Input->TryDetectGamepads(*a_pApplication->GetTimer());
         //Handle ESC Button
         if (sba_Input->ButtonPressed(sba_Button::Exit, this->m_PlayerIdx))
         {
@@ -138,7 +139,7 @@ namespace Editor
             //----------Edit----------
             sba_BrickManager->Render();
             this->m_pWorker->Render(*this->m_pShipHandler, *this->m_pSpriteReader);
-            this->m_pBrickSupervisor->Render(*a_pApplication->GetGraphics(), *this->m_pSpriteReader, this->m_pBrickSupervisorFader->GetVisibility());
+            this->m_pBrickSupervisor->Render(*a_pApplication->GetGraphics(), *this->m_pSpriteReader, this->m_pBrickSupervisorFader->GetVisibility(), this->m_pColorFields->GetCurrentColor());
             this->m_pColorFields->Render(*a_pApplication->GetGraphics(), *this->m_pSpriteReader, this->m_pColorFieldsFader->GetVisibility());
             this->m_pModeMenu->Render(*a_pApplication->GetGraphics(), *this->m_pSpriteReader, this->m_pModeMenuFader->GetVisibility());
             break;

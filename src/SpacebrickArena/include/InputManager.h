@@ -52,6 +52,11 @@ namespace sba
             return this->m_LastInputWasGamepad;
         }
 
+        bool FirstPlayerHasGamepad() const
+        {
+            return this->m_ConnectedGamepadsCount > 0;
+        }
+
     public:
         CInputManager();
         ~CInputManager();
