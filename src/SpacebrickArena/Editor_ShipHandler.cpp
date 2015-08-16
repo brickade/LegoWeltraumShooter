@@ -160,20 +160,23 @@ namespace Editor
             sba_Space->RenderFont(std::to_string(this->m_CurrentShipDataCache.Engines) + " Engines", center + this->m_TextOffset + this->m_TextStep * 3.5f, 14);
             sba_Space->RenderFont(std::to_string(this->m_CurrentShipDataCache.Weapons) + " Weapons", center + this->m_TextOffset + this->m_TextStep * 4, 14);
             
-            sba_Space->RenderFont("Create", centerInfoSelect + this->m_TextStep * 1, 20);
-            sba_Space->RenderFont("Rename", centerInfoSelect + this->m_TextStep * 2, 20);
-            sba_Space->RenderFont("Delete", centerInfoSelect + this->m_TextStep * 3, 20);
+            sba_Space->RenderFont("Create", centerInfoSelect + this->m_TextStep * 0, 20);
+            sba_Space->RenderFont("Rename", centerInfoSelect + this->m_TextStep * 1, 20);
+            sba_Space->RenderFont("Delete", centerInfoSelect + this->m_TextStep * 2, 20);
+            sba_Space->RenderFont("Edit", centerInfoSelect + this->m_TextStep * 3, 20);
             if (sba_Input->FirstPlayerHasGamepad())
             {
-                sba_ButtonsDraw("start", centerInfoSelect  + this->m_TextStep * 1 + PuRe_Vector2F(210, 5), 0.2f);
-                sba_ButtonsDraw("Y", centerInfoSelect + this->m_TextStep * 2 + PuRe_Vector2F(210, 5), 0.2f);
-                sba_ButtonsDraw("X", centerInfoSelect + this->m_TextStep * 3 + PuRe_Vector2F(210, 5), 0.2f);
+                sba_ButtonsDraw("start", centerInfoSelect  + this->m_TextStep * 0 + PuRe_Vector2F(210, 5), 0.2f);
+                sba_ButtonsDraw("Y", centerInfoSelect + this->m_TextStep * 1 + PuRe_Vector2F(210, 5), 0.2f);
+                sba_ButtonsDraw("X", centerInfoSelect + this->m_TextStep * 2 + PuRe_Vector2F(210, 5), 0.2f);
+                sba_ButtonsDraw("A", centerInfoSelect + this->m_TextStep * 3 + PuRe_Vector2F(210, 5), 0.2f);
             }
             else
             {
-                sba_ButtonsDraw("key_insert", centerInfoSelect + this->m_TextStep * 1 + PuRe_Vector2F(210, 5), 0.15f);
-                sba_ButtonsDraw("key_f2", centerInfoSelect + this->m_TextStep * 2 + PuRe_Vector2F(210, 5), 0.15f);
-                sba_ButtonsDraw("key_delete", centerInfoSelect + this->m_TextStep * 3 + PuRe_Vector2F(210, 5), 0.15f);
+                sba_ButtonsDraw("key_insert", centerInfoSelect + this->m_TextStep * 0 + PuRe_Vector2F(210, 5), 0.15f);
+                sba_ButtonsDraw("key_f2", centerInfoSelect + this->m_TextStep * 1 + PuRe_Vector2F(210, 5), 0.15f);
+                sba_ButtonsDraw("key_delete", centerInfoSelect + this->m_TextStep * 2 + PuRe_Vector2F(210, 5), 0.15f);
+                sba_ButtonsDraw("key_enter", centerInfoSelect + this->m_TextStep * 3 + PuRe_Vector2F(210, 5), 0.15f);
             }
 
             //Right

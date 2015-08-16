@@ -54,14 +54,9 @@ namespace Editor
         PuRe_Vector2F fadeIn = PuRe_Vector2F(750 * (1.0f - a_Visibility), 0);
         PuRe_Vector2F menuStartPos = this->m_ListStart + fadeIn;
         int focus = this->m_pNavigation->GetFocusedElementId();
-        for (int i = 0; i < 2; i++)
-        {
-            PuRe_Vector2F tmpPos = menuStartPos + this->m_ListStep * static_cast<float>(i);
-            tmpPos.X += 80;
-            a_rSpriteReader.Draw(1, sba_Renderer, "editor_button", sba_Space->FontMaterial, PuRe_Vector3F(tmpPos, 0), PuRe_Vector3F::Zero(), -1, PuRe_Vector2F(0.5f, 0.5f));
-        }
-        sba_Space->RenderFont("Build", menuStartPos + this->m_ListStep * 0, focus == 0 ? 24.0f : 14.0f);
-        sba_Space->RenderFont("Delete", menuStartPos + this->m_ListStep * 1, focus == 1 ? 24.0f : 14.0f);
+        a_rSpriteReader.Draw(1, sba_Renderer, "editor_button", sba_Space->FontMaterial, PuRe_Vector3F(menuStartPos + this->m_ListStep * (focus == 0 ? 0 : 1) + PuRe_Vector2F(80, 0), 0), PuRe_Vector3F::Zero(), -1, PuRe_Vector2F(0.5f, 0.5f));
+        sba_Space->RenderFont("Build", menuStartPos + this->m_ListStep * 0, 22.0f);
+        sba_Space->RenderFont("Delete", menuStartPos + this->m_ListStep * 1, 22.0f);
 
         PuRe_Vector2F infoStartPos = this->m_InfoStart + fadeIn;
         float size = 0.12f;

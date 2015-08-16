@@ -37,7 +37,7 @@ namespace Editor
 
         this->m_pBrickSupervisorFader = new sba::CUIElementFader(sba_Button::EditorFadeSupervisor, this->m_PlayerIdx);
         this->m_pColorFieldsFader = new sba::CUIElementFader(sba_Button::EditorFadeColors, this->m_PlayerIdx);
-        this->m_pModeMenuFader = new sba::CUIElementFader(sba_Button::EditorFadeMenu, this->m_PlayerIdx);
+        this->m_pModeMenuFader = new sba::CUIElementFader(sba_Button::EditorFadeMenu, this->m_PlayerIdx, true);
     }
 
     // **************************************************************************
