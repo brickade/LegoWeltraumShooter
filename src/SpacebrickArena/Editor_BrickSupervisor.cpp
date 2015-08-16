@@ -89,7 +89,7 @@ namespace Editor
         }
         else
         {
-            sba_Space->RenderFont("X", PuRe_Vector2F(122 - (1.0f - a_Visibility) * 750, 140), 14.0f);
+            sba_ButtonsDraw("key_X", PuRe_Vector2F(135 - (1.0f - a_Visibility) * 750, 143), 0.1f);
         }
     }
 

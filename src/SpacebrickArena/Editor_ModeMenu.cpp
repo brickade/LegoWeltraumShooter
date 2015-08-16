@@ -22,21 +22,22 @@ namespace Editor
     // **************************************************************************
     void CModeMenu::Initialize(PuRe_IGraphics& a_pGraphics)
     {
+        SControlInfo space = { std::string(), std::string(), std::string(), std::string(), std::string() };
         this->m_pNavigation = new sba::CNavigation(1, 1);
-        this->AddInfo("Rotate Camera", "Right Thumbstick", "Right Mouse");
-        this->AddInfo("Zoom Camera", "Trigger", "Mouse Wheel");
-        this->AddInfoSpace();
-        this->AddInfo("Move Brick", "Left Thumbstick", "Mouse");
-        this->AddInfo("Rotate Brick", "Shoulders", "Q/E");
-        this->AddInfo("Switch Side", "B", "V");
-        this->AddInfo("Place Brick", "A", "Left Mouse");
-        this->AddInfoSpace();
-        this->AddInfo("Show Menus", "Y+DPAD", "Shift+WSAD");
-        this->AddInfo("Navigate Menu", "DPAD", "WSAD");
-        this->AddInfoSpace();
-        this->AddInfo("Undo/Redo", "X+DPAD", "Ctrl+Z/Y");
-        this->AddInfo("Save Ship", "Start", "Ctrl+S");
-        this->AddInfo("Exit", "Back", "Escape");
+        this->m_ControlInfo.push_back({ "Rotate Camera", "right_stick", "", "mouse_right", "" });
+        this->m_ControlInfo.push_back({ "Zoom Camera", "LT", "RT", "mouse_wheel", "" });
+        this->m_ControlInfo.push_back({ space });
+        this->m_ControlInfo.push_back({ "Move Brick", "left_stick", "", "mouse", "" });
+        this->m_ControlInfo.push_back({ "Rotate Brick", "left_shoulder", "right_shoulder", "key_QE", "" });
+        this->m_ControlInfo.push_back({ "Switch Side", "B", "", "key_V", "" });
+        this->m_ControlInfo.push_back({ "Place Brick", "A", "", "mouse_left", "" });
+        this->m_ControlInfo.push_back({ space });
+        this->m_ControlInfo.push_back({ "Show Menus", "Y", "dpad", "key_shift", "key_WSAD" });
+        this->m_ControlInfo.push_back({ "Navigate Menu", "dpad", "", "key_WSAD", "" });
+        this->m_ControlInfo.push_back({ space });
+        this->m_ControlInfo.push_back({ "Undo/Redo", "X", "dpad", "key_ctrl", "key_ZY" });
+        this->m_ControlInfo.push_back({ "Save Ship", "start", "", "key_ctrl", "key_S" });
+        this->m_ControlInfo.push_back({ "Exit", "back", "", "key_escape", "" });
     }
 
     // **************************************************************************
@@ -50,7 +51,7 @@ namespace Editor
     // **************************************************************************
     void CModeMenu::Render(PuRe_IGraphics& a_pGraphics, sba::CSpriteReader& a_rSpriteReader, float a_Visibility)
     {
-        PuRe_Vector2F fadeIn = PuRe_Vector2F((this->m_InfoStart.X + 50) * (1.0f - a_Visibility), 0);
+        PuRe_Vector2F fadeIn = PuRe_Vector2F(750 * (1.0f - a_Visibility), 0);
         PuRe_Vector2F menuStartPos = this->m_ListStart + fadeIn;
         int focus = this->m_pNavigation->GetFocusedElementId();
         for (int i = 0; i < 2; i++)
@@ -63,11 +64,37 @@ namespace Editor
         sba_Space->RenderFont("Delete", menuStartPos + this->m_ListStep * 1, focus == 1 ? 24.0f : 14.0f);
 
         PuRe_Vector2F infoStartPos = this->m_InfoStart + fadeIn;
-        for (size_t i = 0; i < this->m_InfoText.size(); i++)
+        float size = 0.12f;
+        for (size_t i = 0; i < this->m_ControlInfo.size(); i++)
         {
-            sba_Space->RenderFont(this->m_InfoText[i], infoStartPos + this->m_InfoStep * i, 12.0f);
-            sba_Space->RenderFont(this->m_InfoControlGamepad[i], infoStartPos + PuRe_Vector2F(250, 0) + this->m_InfoStep * i, 12.0f);
-            sba_Space->RenderFont(this->m_InfoControlKeyboard[i], infoStartPos + PuRe_Vector2F(520, 0) + this->m_InfoStep * i, 12.0f);
+            if (this->m_ControlInfo[i].InfoText != "")
+            {
+                sba_Space->RenderFont(this->m_ControlInfo[i].InfoText, infoStartPos + this->m_InfoStep * i, 14.0f);
+                if (sba_Input->FirstPlayerHasGamepad())
+                {
+                    if (this->m_ControlInfo[i].Gamepad2 == "")
+                    {
+                        sba_ButtonsDraw(this->m_ControlInfo[i].Gamepad1.c_str(), infoStartPos + PuRe_Vector2F(275, 0) + this->m_InfoStep * i, size * 1.5f);
+                    }
+                    else
+                    {
+                        sba_ButtonsDraw(this->m_ControlInfo[i].Gamepad1.c_str(), infoStartPos + PuRe_Vector2F(250, 0) + this->m_InfoStep * i, size * 1.5f);
+                        sba_ButtonsDraw(this->m_ControlInfo[i].Gamepad2.c_str(), infoStartPos + PuRe_Vector2F(300, 0) + this->m_InfoStep * i, size * 1.5f);
+                    }
+                }
+                else
+                {
+                    if (this->m_ControlInfo[i].Keyboard2 == "")
+                    {
+                        sba_ButtonsDraw(this->m_ControlInfo[i].Keyboard1.c_str(), infoStartPos + PuRe_Vector2F(275, 0) + this->m_InfoStep * i, size);
+                    }
+                    else
+                    {
+                        sba_ButtonsDraw(this->m_ControlInfo[i].Keyboard1.c_str(), infoStartPos + PuRe_Vector2F(245, 0) + this->m_InfoStep * i, size);
+                        sba_ButtonsDraw(this->m_ControlInfo[i].Keyboard2.c_str(), infoStartPos + PuRe_Vector2F(310, 0) + this->m_InfoStep * i, size);
+                    }
+                }
+            }
         }
     }
 }

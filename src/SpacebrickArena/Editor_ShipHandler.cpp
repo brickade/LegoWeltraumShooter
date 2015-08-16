@@ -117,7 +117,7 @@ namespace Editor
                 this->DeleteCurrentShip();
                 this->m_State = ShipHandlerState::Select;
             }
-            else if (sba_Input->ButtonPressed(sba_Button::NavigationBack, this->m_playerIdx))
+            else if (sba_Input->ButtonPressed(sba_Button::NavigationBack, this->m_playerIdx) || sba_Input->ButtonPressed(sba_Button::Exit, this->m_playerIdx))
             {
                 this->m_State = ShipHandlerState::Select;
             }
@@ -131,7 +131,7 @@ namespace Editor
     void CShipHandler::Render(sba::CSpriteReader& a_rSpriteReader)
     {
         PuRe_Vector2F center(sba_Width / 2, sba_Height / 2);
-        PuRe_Vector2F centerInfoSelect(sba_Width - 350, 200);
+        PuRe_Vector2F centerInfoSelect(sba_Width - 300, 200);
         float centerSize = 0.18f;
         float sideSize = 0.2f;
         if (this->GetCurrentSpaceShip() == nullptr)
@@ -171,9 +171,9 @@ namespace Editor
             }
             else
             {
-                sba_Space->RenderFont("Insert", centerInfoSelect + this->m_TextStep * 1 + PuRe_Vector2F(200, 0), 20);
-                sba_Space->RenderFont("F2", centerInfoSelect + this->m_TextStep * 2 + PuRe_Vector2F(200, 0), 20);
-                sba_Space->RenderFont("Delete", centerInfoSelect + this->m_TextStep * 3 + PuRe_Vector2F(200, 0), 20);
+                sba_ButtonsDraw("key_insert", centerInfoSelect + this->m_TextStep * 1 + PuRe_Vector2F(210, 5), 0.15f);
+                sba_ButtonsDraw("key_f2", centerInfoSelect + this->m_TextStep * 2 + PuRe_Vector2F(210, 5), 0.15f);
+                sba_ButtonsDraw("key_delete", centerInfoSelect + this->m_TextStep * 3 + PuRe_Vector2F(210, 5), 0.15f);
             }
 
             //Right
@@ -199,9 +199,9 @@ namespace Editor
             }
             else
             {
-                sba_Space->RenderFont("Backspace", center + this->m_TextOffset + this->m_TextStep * 2.5f + PuRe_Vector2F(200, 0), 20);
-                sba_Space->RenderFont("Enter", center + this->m_TextOffset + this->m_TextStep * 3.5f + PuRe_Vector2F(200, 0), 20);
-                sba_Space->RenderFont("Esc", center + this->m_TextOffset + this->m_TextStep * 4.5f + PuRe_Vector2F(200, 0), 20);
+                sba_ButtonsDraw("key_backspace", center + this->m_TextOffset + this->m_TextStep * 2.5f + PuRe_Vector2F(210, 5), 0.15f);
+                sba_ButtonsDraw("key_enter", center + this->m_TextOffset + this->m_TextStep * 3.5f + PuRe_Vector2F(210, 5), 0.15f);
+                sba_ButtonsDraw("key_escape", center + this->m_TextOffset + this->m_TextStep * 4.5f + PuRe_Vector2F(210, 5), 0.15f);
             }
             break;
         case ShipHandlerState::Delete:
@@ -216,8 +216,8 @@ namespace Editor
             }
             else
             {
-                sba_Space->RenderFont("Enter", center + this->m_TextOffset + this->m_TextStep * 3 + PuRe_Vector2F(200, 0), 20);
-                sba_Space->RenderFont("Backspace", center + this->m_TextOffset + this->m_TextStep * 4 + PuRe_Vector2F(200, 0), 20);
+                sba_ButtonsDraw("key_enter", center + this->m_TextOffset + this->m_TextStep * 3 + PuRe_Vector2F(210, 5), 0.15f);
+                sba_ButtonsDraw("key_escape", center + this->m_TextOffset + this->m_TextStep * 4 + PuRe_Vector2F(210, 5), 0.15f);
             }
             break;
         }

@@ -11,6 +11,14 @@ namespace Editor
 {
     class CModeMenu
     {
+        struct SControlInfo
+        {
+            std::string InfoText;
+            std::string Gamepad1;
+            std::string Gamepad2;
+            std::string Keyboard1;
+            std::string Keyboard2;
+        };
     public:
 
     private:
@@ -20,30 +28,15 @@ namespace Editor
         PuRe_Vector2F m_ListStart = PuRe_Vector2F(1920 - 280, 1080 - 350);
         PuRe_Vector2F m_ListStep = PuRe_Vector2F(0, -60);
 
-        PuRe_Vector2F m_InfoStart = PuRe_Vector2F(1920 - 730, 1080 - 520);
+        PuRe_Vector2F m_InfoStart = PuRe_Vector2F(1920 - 400, 1080 - 520);
         PuRe_Vector2F m_InfoStep = PuRe_Vector2F(0, -40);
 
-        std::vector<std::string> m_InfoText;
-        std::vector<std::string> m_InfoControlGamepad;
-        std::vector<std::string> m_InfoControlKeyboard;
+        std::vector<SControlInfo> m_ControlInfo;
 
     public:
         int SelectedMode() const
         {
             return this->m_pNavigation->GetFocusedElementId();
-        }
-    protected:
-        void AddInfo(const std::string& a_rText, std::string a_rControlGamepad, std::string a_rControlKeyboard)
-        {
-            this->m_InfoText.push_back(a_rText);
-            this->m_InfoControlGamepad.push_back(a_rControlGamepad);
-            this->m_InfoControlKeyboard.push_back(a_rControlKeyboard);
-        }
-        void AddInfoSpace()
-        {
-            this->m_InfoText.push_back("");
-            this->m_InfoControlGamepad.push_back("");
-            this->m_InfoControlKeyboard.push_back("");
         }
 
     public:
