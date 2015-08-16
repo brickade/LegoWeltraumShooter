@@ -240,7 +240,7 @@ namespace sba
             return a_KeyboardInput;
         }
 
-#define INPUTMANAGER_VALIDIDX(idx) (idx < this->m_ConnectedGamepadsCount + 2)
+#define INPUTMANAGER_VALIDIDX(idx) (idx < this->m_ConnectedGamepadsCount + 1)
 #define INPUTMANAGER_PASSTOGAMEPAD(idx) (idx < this->m_ConnectedGamepadsCount)
     };
 }
