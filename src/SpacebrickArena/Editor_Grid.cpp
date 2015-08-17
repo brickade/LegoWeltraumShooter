@@ -57,6 +57,7 @@ namespace Editor
                 instanceBottom.Rotation = rotBottom;
             }
         }
+        this->m_pArrow = new PuRe_Sprite(&a_rGraphics, "../data/textures/grid_arrow.png");
     }
 
 
@@ -64,6 +65,7 @@ namespace Editor
     // **************************************************************************
     CGrid::~CGrid()
     {
+        SAFE_DELETE(this->m_pArrow);
         SAFE_DELETE_ARRAY(this->m_pGridRenderInstancesBottom);
         SAFE_DELETE_ARRAY(this->m_pGridRenderInstancesTop);
         SAFE_DELETE(this->m_pGridMaterial);
@@ -74,7 +76,7 @@ namespace Editor
 
     // **************************************************************************
     // **************************************************************************
-    void CGrid::Draw()
+    void CGrid::Draw(bool a_DrawArrow)
     {
         //Grid
         sba_Renderer->SetTexture(0, this->m_GridTextureTop, "tex");
@@ -82,6 +84,13 @@ namespace Editor
 
         sba_Renderer->SetTexture(0, this->m_GridTextureBottom, "tex");
         sba_Renderer->Draw(0, true, this->m_pGridQuad->GetBuffer(), 4, PuRe_Primitive::Trianglestrip, this->m_pGridMaterial, this->m_pGridRenderInstancesBottom, this->m_GridRenderInstanceCount);
+
+        //Arrow
+        if (a_DrawArrow)
+        {
+            sba_Renderer->Draw(0, false, this->m_pArrow, sba_Space->SpriteMaterial, PuRe_Vector3F(), PuRe_MatrixF::Rotation(1.57079633f, 0, 0), PuRe_Vector3F(), PuRe_Vector3F(this->m_ArrowSize, this->m_ArrowSize, this->m_ArrowSize));
+            sba_Renderer->Draw(0, false, this->m_pArrow, sba_Space->SpriteMaterial, PuRe_Vector3F(), PuRe_MatrixF::Rotation(-1.57079633f, 3.14159265f, 0), PuRe_Vector3F(), PuRe_Vector3F(this->m_ArrowSize, this->m_ArrowSize, this->m_ArrowSize));
+        }
     }
   
 }

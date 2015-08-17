@@ -18,11 +18,14 @@ namespace Editor
         PuRe_RenderInstance* m_pGridRenderInstancesBottom;
         int m_GridRenderInstanceCount;
 
+        PuRe_Sprite* m_pArrow;
+        float m_ArrowSize = 0.01f;
+
     public:
         CGrid(PuRe_IGraphics& a_rGraphics);
         ~CGrid();
 
-        void Draw();
+        void Draw(bool a_DrawArrow);
     };
 }
 

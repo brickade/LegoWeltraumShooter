@@ -181,7 +181,10 @@ namespace Editor
     // **************************************************************************
     void CWorker::Render(CShipHandler& a_rShipHandler, sba::CSpriteReader& a_rSpriteReader)
     {
-        this->m_pGrid->Draw();
+        //Draw Grid Arrow when no engines placed
+        std::vector<TheBrick::CBrickInstance**> engines;
+        a_rShipHandler.GetCurrentSpaceShip()->GetEngines(engines);
+        this->m_pGrid->Draw(engines.size() == 0);
 
         sba::CSpaceship& ship = *a_rShipHandler.GetCurrentSpaceShip();
         sba_Space->RenderFont(std::to_string(ship.m_pBricks.size()) + "/" + std::to_string(sba::CSpaceship::MAX_BRICK_COUNT) + " Bricks", PuRe_Vector2F(sba_Width - 300.0f, sba_Height - 50.0f), 18);
