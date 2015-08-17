@@ -107,10 +107,10 @@ namespace sba
         PuRe_Vector2F CalcGamepadDirectionFromButtons(PuRe_IInput::EGamepad a_ButtonUp, PuRe_IInput::EGamepad a_ButtonDown, PuRe_IInput::EGamepad a_ButtonRight, PuRe_IInput::EGamepad a_ButtonLeft, int a_Index)
         {
             PuRe_Vector2F result = PuRe_Vector2F::Zero();
-            if (this->m_pInput->GamepadPressed(a_ButtonUp, a_Index)) result.Y++;
-            if (this->m_pInput->GamepadPressed(a_ButtonDown, a_Index)) result.Y--;
-            if (this->m_pInput->GamepadPressed(a_ButtonRight, a_Index)) result.X++;
-            if (this->m_pInput->GamepadPressed(a_ButtonLeft, a_Index)) result.X--;
+            if (this->m_pInput->GamepadIsPressed(a_ButtonUp, a_Index)) result.Y++;
+            if (this->m_pInput->GamepadIsPressed(a_ButtonDown, a_Index)) result.Y--;
+            if (this->m_pInput->GamepadIsPressed(a_ButtonRight, a_Index)) result.X++;
+            if (this->m_pInput->GamepadIsPressed(a_ButtonLeft, a_Index)) result.X--;
             return result;
         }
 
@@ -126,8 +126,8 @@ namespace sba
         float CalcGamepadAxisFromButtons(PuRe_IInput::EGamepad a_ButtonPositive, PuRe_IInput::EGamepad a_ButtonNegative, int a_Index)
         {
             float result = 0;
-            if (this->m_pInput->GamepadPressed(a_ButtonPositive, a_Index)) result++;
-            if (this->m_pInput->GamepadPressed(a_ButtonNegative, a_Index)) result--;
+            if (this->m_pInput->GamepadIsPressed(a_ButtonPositive, a_Index)) result++;
+            if (this->m_pInput->GamepadIsPressed(a_ButtonNegative, a_Index)) result--;
             return result;
         }
 
