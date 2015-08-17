@@ -35,17 +35,14 @@ namespace Editor
     public:
 
     private:
-        SHistoryStep* m_Storage;
+        std::vector<SHistoryStep*> m_Storage;
         int m_CurrentPos;
-        int m_RedoEndPos;
-        int m_StorageEnd;
-        int m_PerformanceBuffer;
 
     public:
-        CHistory(int a_size, int a_performanceBuffer);
+        CHistory();
         ~CHistory();
 
-        void AddStep(SHistoryStep& step);
+        void AddStep(SHistoryStep* step);
         void AddStep(TheBrick::CBrickInstance* a_pBrickInstance, std::vector<TheBrick::CBrickInstance*>* a_AdhesiveBricks = nullptr, bool a_Delete = false);
         void CutRedos();
         void Clear();

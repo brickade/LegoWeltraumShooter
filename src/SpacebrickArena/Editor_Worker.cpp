@@ -49,7 +49,7 @@ namespace Editor
 #else
         this->m_pCamera->Initialize(PuRe_Vector3F(20, 135, 0), PuRe_Vector3F(-1, 0, 0));
 #endif
-        this->m_pHistory = new CHistory(300, 100);
+        this->m_pHistory = new CHistory();
         this->m_PlaceBelow = false;
         this->m_pCurrentBrickObject = new TheBrick::CGameObject(*sba_World, nullptr);
         this->m_CurrentHeightIsInvalid = true;

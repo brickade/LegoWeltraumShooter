@@ -6,14 +6,9 @@ namespace Editor
 {
     // **************************************************************************
     // **************************************************************************
-    CHistory::CHistory(int a_size, int a_performanceBuffer)
+    CHistory::CHistory()
     {
-        this->m_PerformanceBuffer = a_performanceBuffer;
-        this->m_StorageEnd = a_size + a_performanceBuffer;
-        this->m_Storage = new SHistoryStep[this->m_StorageEnd - 1];
-        //memset(this->m_Storage, 0, sizeof(SHistoryStep) * (this->m_StorageEnd - 1));
         this->m_CurrentPos = -1;
-        this->m_RedoEndPos = -1;
     }
 
 
@@ -21,29 +16,23 @@ namespace Editor
     // **************************************************************************
     CHistory::~CHistory()
     {
-        SAFE_DELETE_ARRAY(this->m_Storage);
+        while(!this->m_Storage.empty())
+        {
+            SAFE_DELETE(this->m_Storage.back());
+            this->m_Storage.pop_back();
+        }
     }
 
     // **************************************************************************
     // **************************************************************************
-    void CHistory::AddStep(SHistoryStep& step)
+    void CHistory::AddStep(SHistoryStep* step)
     {
         //Add to History
         this->m_CurrentPos++;
-        this->m_RedoEndPos++;
-        if (this->m_CurrentPos == this->m_StorageEnd - this->m_PerformanceBuffer)
+        this->m_Storage.push_back(step);
+        if (!step->Delete)
         {
-            for (int i = 0; i <= this->m_StorageEnd - this->m_PerformanceBuffer; i++)
-            {
-                this->m_Storage[i] = this->m_Storage[i + this->m_PerformanceBuffer];
-            }
-            this->m_CurrentPos -= this->m_PerformanceBuffer;
-            this->m_RedoEndPos -= this->m_PerformanceBuffer;
-        }
-        this->m_Storage[this->m_CurrentPos] = step;
-        if (!step.Delete)
-        {
-            step.Brick.BrickInstance->m_UserData = &this->m_Storage[this->m_CurrentPos];
+            step->Brick.BrickInstance->m_UserData = this->m_Storage[this->m_CurrentPos];
         }
     }
 
@@ -51,27 +40,27 @@ namespace Editor
     // **************************************************************************
     void CHistory::AddStep(TheBrick::CBrickInstance* a_pBrickInstance, std::vector<TheBrick::CBrickInstance*>* a_AdhesiveBricks, bool a_Delete)
     {
-        SHistoryStep step;
-        memset(&step, 0, sizeof(SHistoryStep) - sizeof(std::vector<SHistoryStep*>));
+        SHistoryStep* step = new SHistoryStep();
+        memset(step, 0, sizeof(SHistoryStep) - sizeof(std::vector<SHistoryStep*>));
         //step.DeleteAdhesiveBricks_Steps = std::vector<SHistoryStep*>();
-        if (!(step.Delete = a_Delete))
+        if (!(step->Delete = a_Delete))
         {
             SHistoryBrick brick;
             brick.BrickInstance = a_pBrickInstance;
             brick.Brick = a_pBrickInstance->m_pBrick;
             brick.Transform = a_pBrickInstance->GetTransform();
             brick.Color = a_pBrickInstance->m_Color;
-            step.Brick = brick;
+            step->Brick = brick;
         }
         else
         {
-            step.DeleteBrick_Step = reinterpret_cast<SHistoryStep*>(a_pBrickInstance->m_UserData);
+            step->DeleteBrick_Step = reinterpret_cast<SHistoryStep*>(a_pBrickInstance->m_UserData);
             if (a_AdhesiveBricks != nullptr)
             {
-                step.DeleteAdhesiveBricks_Steps.reserve(a_AdhesiveBricks->size()); //Allocate at once not each time
+                step->DeleteAdhesiveBricks_Steps.reserve(a_AdhesiveBricks->size()); //Allocate at once not each time
                 for (size_t i = 0; i < a_AdhesiveBricks->size(); i++)
                 {
-                    step.DeleteAdhesiveBricks_Steps.push_back(reinterpret_cast<SHistoryStep*>((*a_AdhesiveBricks)[i]->m_UserData));
+                    step->DeleteAdhesiveBricks_Steps.push_back(reinterpret_cast<SHistoryStep*>((*a_AdhesiveBricks)[i]->m_UserData));
                 }
             }
         }
@@ -82,17 +71,24 @@ namespace Editor
     // **************************************************************************
     void CHistory::CutRedos()
     {
-        this->m_RedoEndPos = this->m_CurrentPos;
+        while (this->m_Storage.size() > this->m_CurrentPos + 1)
+        {
+            SAFE_DELETE(this->m_Storage.back());
+            this->m_Storage.pop_back();
+        }
     }
 
     // **************************************************************************
     // **************************************************************************
     void CHistory::Clear()
     {
-        this->m_Storage = new SHistoryStep[this->m_StorageEnd - 1];
-        memset(this->m_Storage, 0, sizeof(SHistoryStep) * (this->m_StorageEnd - 1));
+        while (!this->m_Storage.empty())
+        {
+            SAFE_DELETE(this->m_Storage.back());
+            this->m_Storage.pop_back();
+        }
+        this->m_Storage.clear();
         this->m_CurrentPos = -1;
-        this->m_RedoEndPos = -1;
     }
 
     // **************************************************************************
@@ -105,7 +101,7 @@ namespace Editor
             this->m_CurrentPos = -1;
             return nullptr;
         }
-        return &this->m_Storage[this->m_CurrentPos+1];
+        return this->m_Storage[this->m_CurrentPos+1];
     }
 
     // **************************************************************************
@@ -113,12 +109,12 @@ namespace Editor
     SHistoryStep* CHistory::Redo()
     {
         this->m_CurrentPos++;
-        if (this->m_CurrentPos > this->m_RedoEndPos)
+        if (this->m_CurrentPos > this->m_Storage.size() - 1)
         {
-            this->m_CurrentPos = this->m_RedoEndPos;
+            this->m_CurrentPos = this->m_Storage.size() - 1;
             return nullptr;
         }
-        return &this->m_Storage[this->m_CurrentPos];
+        return this->m_Storage[this->m_CurrentPos];
     }
 
     // **************************************************************************
