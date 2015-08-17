@@ -123,7 +123,7 @@ namespace Editor
         }
         else if (category == CBrickCategory::CATEGORY_ENGINES)
         {
-            //brickSpaceOrigin -= PuRe_Vector3F(0, TheBrick::CBrick::SEGMENT_HEIGHT * 0.5f, 0);
+            brickSpaceOrigin += PuRe_Vector3F(0, 0, -TheBrick::CBrick::SEGMENT_WIDTH * 2.1f);
         }
 
         ong::vec3 rayOrigin = TheBrick::PuReToOng(a_rBrickInstanceToTest.PosToWorldSpace(brickSpaceOrigin));
