@@ -1,5 +1,7 @@
 #include "include/Menu_Main.h"
 #include "include/Spaceship.h"
+#include "include/ShipManager.h"
+#include "include/InputManager.h"
 
 namespace Menu
 {

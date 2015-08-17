@@ -1,4 +1,6 @@
 #include "include/Menu_Network.h"
+#include "include/NetworkHandler.h"
+#include "include/InputManager.h"
 
 namespace Menu
 {

@@ -1,4 +1,5 @@
 #include "include/Menu_Options.h"
+#include "include/InputManager.h"
 
 namespace Menu
 {

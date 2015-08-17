@@ -5,6 +5,11 @@
 #include <PuReEngine/Defines.h>
 
 #include "Space.h"
+#include "NetworkHandler.h"
+#include "Item.h"
+#include "Asteroid.h"
+#include "Bullet.h"
+#include "Player.h"
 
 namespace sba
 {

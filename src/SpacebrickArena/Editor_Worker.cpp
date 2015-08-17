@@ -12,6 +12,8 @@
 #include "include/Editor_BrickCategory.h"
 #include "include/DestructionManager.h"
 #include "include/Editor_Grid.h"
+#include "include/BrickManager.h"
+#include "include/InputManager.h"
 
 namespace Editor
 {

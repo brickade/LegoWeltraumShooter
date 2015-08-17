@@ -1,4 +1,5 @@
 #include "include/UIElementFader.h"
+#include "include/InputManager.h"
 
 namespace sba
 {

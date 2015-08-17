@@ -1,6 +1,10 @@
 #include "include/GameScene.h"
 
 #include "TheBrick/Conversion.h"
+#include "include/InputManager.h"
+#include "include/GameMap.h"
+#include "include/BrickManager.h"
+#include "include/DestructionManager.h"
 
 
 #include "Onager\Profiler.h"
@@ -840,7 +844,7 @@ namespace sba
                 auto tree = b->getBVTree();
                 float length = ong::length(tree->aabb.e)*1.2f;
                 PuRe_Vector3F pos = TheBrick::OngToPuRe(sba_Players[i]->Ship->m_pBody->getWorldCenter());
-                sba_Renderer->Set(0, 1.0f, "intensity");
+                sba_Renderer->Set(1, 1.0f, "intensity");
                 sba_Renderer->Draw(1, true, sphereBuffer, sphereBuffer->GetSize(), PuRe_Primitive::Triangles, this->m_pShieldMaterial, pos, PuRe_MatrixF(), PuRe_Vector3F(), PuRe_Vector3F(length, length, length));
             }
             sba_Players[i]->Ship->DrawEmitter(this->m_pParticle1Sprite, this->m_pEngineMaterial, this->m_pPointLight, this->m_pPointLightMaterial);

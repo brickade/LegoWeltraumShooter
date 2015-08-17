@@ -1,5 +1,6 @@
 #include "include\Editor_Camera.h"
 #include "include/Space.h"
+#include "include/InputManager.h"
 
 namespace Editor
 {

@@ -1,4 +1,8 @@
 #include "include/Lobby_Network.h"
+#include "include/NetworkHandler.h"
+#include "include/Player.h"
+#include "include/GameMap.h"
+#include "include/BrickManager.h"
 
 namespace sba
 {
@@ -153,10 +157,10 @@ namespace sba
             sba::SUserPacket up;
             up.Head.Type = sba::EPacket::User;
             up.ID = a_Player->ID;
-            memset(up.Name, 0, sba::MaxLength + 1);
+            memset(up.Name, 0, sba::MaxName + 1);
             strncpy(up.Name, a_Player->Ship->GetName().c_str(), a_Player->Ship->GetName().size());
             up.Name[a_Player->Ship->GetName().length()] = '\0';
-            int nameSize = (sizeof(char)*sba::MaxLength);
+            int nameSize = (sizeof(char)*sba::MaxName);
             //set data dynamic because we set our data self
             int size = sizeof(up.Head.Type) + sizeof(up.ID) + nameSize;
             //now send the packet to the host
@@ -283,8 +287,8 @@ namespace sba
                     sba::SUserPacket up;
                     up.Head.Type = sba::EPacket::User;
                     up.ID = p->ID;
-                    int nameSize = (sizeof(char)*sba::MaxLength);
-                    memset(up.Name, 0, sba::MaxLength + 1);
+                    int nameSize = (sizeof(char)*sba::MaxName);
+                    memset(up.Name, 0, sba::MaxName + 1);
                     strncpy(up.Name, p->Ship->GetName().c_str(), p->Ship->GetName().size());
                     up.Name[p->Ship->GetName().length()] = '\0';
                     //set data dynamic because we set our data self
@@ -827,9 +831,9 @@ namespace sba
                     //For Client: Client joined or changed ship
                     bool exist = false;
                     printf("Receiving Client Data %i!\n", up->ID);
-                    int nameSize = (sizeof(char)*sba::MaxLength);
+                    int nameSize = (sizeof(char)*sba::MaxName);
                     int size = sizeof(up->Head.Type) + sizeof(up->ID) + nameSize;
-                    up->Name[sba::MaxLength + 1] = '\0';
+                    up->Name[sba::MaxName + 1] = '\0';
                     //existing clients
                     std::vector<SOCKET> sendSockets; //to who we already send it
                     sendSockets.push_back(s);
@@ -899,10 +903,10 @@ namespace sba
                     sba::SUserPacket up;
                     up.Head.Type = sba::EPacket::User;
                     up.ID = iam->ID;
-                    memset(up.Name, 0, sba::MaxLength + 1);
+                    memset(up.Name, 0, sba::MaxName + 1);
                     strncpy(up.Name, p->Ship->GetName().c_str(), p->Ship->GetName().size());
                     up.Name[p->Ship->GetName().length()] = '\0';
-                    int nameSize = (sizeof(char)*sba::MaxLength);
+                    int nameSize = (sizeof(char)*sba::MaxName);
                     //set data dynamic because we set our data self
                     int size = sizeof(up.Head.Type) + sizeof(up.ID) + nameSize;
                     //now send the packet to the host

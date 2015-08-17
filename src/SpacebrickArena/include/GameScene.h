@@ -20,6 +20,7 @@
 // Declare namespace Game
 namespace sba
 {
+    struct SLightData;
     /// @brief MainScene where the game functions are in, inherits from the Scene interface
     ///
     class CGameScene : public PuRe_IScene

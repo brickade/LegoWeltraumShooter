@@ -1,6 +1,7 @@
 #include "include/Editor_ModeMenu.h"
 
 #include "include/Space.h"
+#include "include/InputManager.h"
 
 namespace Editor
 {

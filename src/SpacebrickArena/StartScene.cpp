@@ -37,14 +37,16 @@ namespace sba
         this->m_Timer += 0.01f;
 
         //We should have drawn something, so now initialize
-        float time = PuRe_PI*1.2f;
+        //float time = PuRe_PI*1.3f;
+        float time = 0.0f;
         if (!this->m_Loading&&this->m_Timer > time)
         {
             this->m_Loading = true;
             return 6;
         }
 
-        time = PuRe_PI*1.7f;
+        //time = PuRe_PI*1.7f;
+        time = 0.0f;
         if (this->m_Timer > time)
             return 7;
         return 1;

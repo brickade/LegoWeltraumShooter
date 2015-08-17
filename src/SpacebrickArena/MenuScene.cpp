@@ -1,4 +1,7 @@
 #include "include/MenuScene.h"
+#include "include/InputManager.h"
+#include "include/NetworkHandler.h"
+#include "include/BrickManager.h"
 
 namespace Menu
 {

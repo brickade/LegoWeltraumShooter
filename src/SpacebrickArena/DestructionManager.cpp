@@ -4,11 +4,12 @@
 #include "TheBrick\BrickInstance.h"
 #include "TheBrick\Conversion.h"
 #include "include\Space.h"
+#include "include/SpaceShip.h"
 
 
 namespace sba
 {
-	const float CDestructionManager::NUB_STRENGTH = 2.0f;
+	const float CDestructionManager::NUB_STRENGTH = 5.0f;
       
 	struct CallbackData
 	{

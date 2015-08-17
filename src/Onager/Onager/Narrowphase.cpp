@@ -514,6 +514,13 @@ namespace ong
 			if (manifold.numPoints == 0)
 				return;
 		}
+
+        if (lengthSq(manifold.normal) == 0)
+        {
+            printf("test\n");
+            return;
+        }
+
 		
 
 		Contact* contact = nullptr;
@@ -653,7 +660,7 @@ namespace ong
 			else
 			{
 				m_contacts[i]->colliderA->callbackPreSolve(m_contacts[i]);
-				m_contacts[i]->colliderB->callbackPreSolve(m_contacts[i]);
+                m_contacts[i]->colliderB->callbackPreSolve(m_contacts[i]);
 			}
 		}
 

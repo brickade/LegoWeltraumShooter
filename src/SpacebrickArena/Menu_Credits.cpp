@@ -1,4 +1,5 @@
 #include "include/Menu_Credits.h"
+#include "include/InputManager.h"
 
 namespace Menu
 {

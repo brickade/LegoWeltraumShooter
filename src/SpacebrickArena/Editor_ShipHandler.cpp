@@ -5,6 +5,8 @@
 #include "TheBrick\BrickInstance.h"
 #include "TheBrick\Brick.h"
 #include "TheBrick/GameObject.h"
+#include "include/ShipManager.h"
+#include "include/InputManager.h"
 #ifdef EDITOR_DEV
 #include "include/ShipManager.h"
 #endif

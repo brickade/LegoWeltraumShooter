@@ -3,6 +3,7 @@
 #include "include/Navigation.h"
 #include "include/Space.h"
 #include "include/SpriteReader.h"
+#include "include/InputManager.h"
 
 namespace Editor
 {

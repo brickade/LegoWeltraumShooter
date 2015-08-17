@@ -1,4 +1,5 @@
 #include "include/Game_Network.h"
+#include "include/BrickManager.h"
 
 namespace sba
 {
@@ -276,7 +277,7 @@ namespace sba
                 long packetSize = 4;
                 if (Packet->Head.Type == sba::EPacket::Init)
                 {
-                    printf("Received INIT!\n", dataLeft);
+                    printf("Received INIT %l!\n", dataLeft);
                     sba::SInputPacket package;
                     memset(&package, 0, sizeof(sba::SInputPacket));
                     package.Head.Type = sba::EPacket::STick;

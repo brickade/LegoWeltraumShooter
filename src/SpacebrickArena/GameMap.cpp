@@ -1,6 +1,7 @@
 #include "include/GameMap.h"
 
 #include "include/Space.h"
+#include "include/BrickManager.h"
 
 namespace sba
 {
@@ -68,7 +69,7 @@ namespace sba
             enum Type { Object, Item, Light,Static };
 
             std::string objectName;
-            ong::vec3 pos, vel, rot;
+            ong::vec3 pos = ong::vec3(), vel = ong::vec3(), rot = ong::vec3();
             Type otype;
 
             std::string buff = "";

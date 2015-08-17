@@ -4,6 +4,7 @@
 #include <PuReEngine/Defines.h>
 
 #include "Space.h"
+#include "InputManagerTypes.h"
 
 namespace sba
 {

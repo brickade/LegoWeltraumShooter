@@ -2,6 +2,7 @@
 
 #include "TheBrick/Conversion.h"
 #include "TheBrick/BrickInstance.h"
+#include "include/BrickManager.h"
 
 #include "include/Space.h"
 

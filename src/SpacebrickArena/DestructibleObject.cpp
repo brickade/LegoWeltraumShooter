@@ -1,5 +1,7 @@
 #include "include\DestructibleObject.h"
 #include "include\Space.h"
+#include "include/DestructionManager.h"
+#include "include/Bullet.h"
 
 namespace sba
 {

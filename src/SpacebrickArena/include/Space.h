@@ -10,18 +10,24 @@
 
 #include <Onager/World.h>
 #include <TheBrick/Serializer.h>
-#include "InputManager.h"
-#include "BrickManager.h"
-#include "ShipManager.h"
-#include "INIReader.h"
-#include "Player.h"
-#include "NetworkHandler.h"
-#include "SpriteReader.h"
-#include "GameMap.h"
-#include "DestructionManager.h"
+#include "include/SpriteReader.h"
+#include "include/IniReader.h"
+
+namespace TheBrick
+{
+    class CCSVParser;
+    class CGameObject;
+}
 
 namespace sba
 {
+    class CInputManager;
+    class CBrickManager;
+    class CShipManager;
+    class CDestructionManager;
+    class CNetworkHandler;
+    class CGameMap;
+    struct SPlayer;
 
     struct SControl
     {

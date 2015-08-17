@@ -1,6 +1,8 @@
 #include "include/Editor_BrickCategory.h"
 
 #include "include/Space.h"
+#include "include/InputManager.h"
+#include "include/BrickManager.h"
 
 namespace Editor
 {

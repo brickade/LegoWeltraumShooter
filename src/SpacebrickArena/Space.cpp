@@ -1,6 +1,13 @@
 #include "include/Space.h"
 
 #include "Onager\Profiler.h"
+#include "include/BrickManager.h"
+#include "include/ShipManager.h"
+#include "include/Player.h"
+#include "include/NetworkHandler.h"
+#include "include/GameMap.h"
+#include "include/DestructionManager.h"
+#include "include/InputManager.h"
 
 namespace sba
 {

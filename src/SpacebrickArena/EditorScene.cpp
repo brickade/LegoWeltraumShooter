@@ -1,6 +1,8 @@
 #include "include/EditorScene.h"
 
 #include <random>
+#include "include/InputManager.h"
+#include "include/BrickManager.h"
 
 namespace Editor
 {

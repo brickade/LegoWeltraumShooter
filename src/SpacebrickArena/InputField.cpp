@@ -1,6 +1,7 @@
 #include "include/InputField.h"
 
 #include "include/Space.h"
+#include "include/InputManager.h"
 
 namespace sba
 {

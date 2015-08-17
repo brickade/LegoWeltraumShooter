@@ -1,6 +1,7 @@
 #include "include\GameCamera.h"
 #include "include/Space.h"
 #include "TheBrick/Conversion.h"
+#include "include/InputManager.h"
 
 #include <vector>
 

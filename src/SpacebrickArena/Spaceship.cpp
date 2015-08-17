@@ -8,6 +8,7 @@
 #include "include/Editor_BrickCategory.h"
 
 #include "include/Space.h"
+#include "include/BrickManager.h"
 
 #include "Onager/BVH.h"
 
@@ -303,6 +304,22 @@ namespace sba
         this->m_Life -= damage;
         //mass difference
         this->m_OldMass = mass;
+
+        std::vector<TheBrick::CBrickInstance**> cockpits;
+        this->GetCockpits(cockpits);
+        if (cockpits.size() == 0)
+            this->m_Life = 0;
+        else
+        {
+
+            std::vector<TheBrick::CBrickInstance**> engines;
+            std::vector<TheBrick::CBrickInstance**> weapons;
+            this->GetEngines(engines);
+            this->GetWeapons(weapons);
+            if (engines.size() == 0&&weapons.size() == 0)
+                this->m_Life = 0;
+        }
+
         if (this->m_Life < 0) this->m_Life = 0;
 
 		printf("damage: %i\n", damage);
@@ -387,7 +404,7 @@ namespace sba
                         speed *= std::stof(sba_Balancing->GetValue("Laser_Speed"));
                         bdesc.transform.q = ship.q*transform.q;
                         col = PuRe_Color(1.0f, 1.0f, 1.0f, 1.0f);
-                        bdesc.type = ong::BodyType::Static;
+                        //bdesc.type = ong::BodyType::Static;
                         break;
 
                     case TheBrick::MG - 100: //MG

@@ -5,6 +5,7 @@
 
 #include "include/Player.h"
 #include "include/Space.h"
+#include "include/BrickManager.h"
 
 namespace sba
 {
@@ -17,8 +18,9 @@ namespace sba
         this->m_ID = a_ID;
         this->m_pOwner = a_pOwner;
         this->m_Type = TheBrick::EGameObjectType::Bullet;
-        TheBrick::CBrickInstance* brick = new TheBrick::CBrickInstance(*sba_BrickManager->GetBrickArray()[a_ID], *this, *sba_World);
-        brick->m_Color = a_Color;
+        bool sensor = false;
+        if (this->m_ID == TheBrick::Laser) sensor = true;
+        TheBrick::CBrickInstance* brick = new TheBrick::CBrickInstance(*sba_BrickManager->GetBrickArray()[a_ID], *this, *sba_World,a_Color,sensor);
         this->m_Color = a_Color;
         this->m_lifeTime = 0.0f;
         this->m_Collided = false;

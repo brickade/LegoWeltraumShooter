@@ -1,4 +1,9 @@
 #include "include/Menu_Lobby.h"
+#include "include/NetworkHandler.h"
+#include "include/InputManager.h"
+#include "include/GameMap.h"
+#include "include/Player.h"
+#include "include/ShipManager.h"
 
 namespace Menu
 {

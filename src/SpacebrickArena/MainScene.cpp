@@ -1,4 +1,7 @@
 #include "include/MainScene.h"
+#include "include/BrickManager.h"
+#include "include/ShipManager.h"
+
 namespace sba
 {   
     CMainScene::CMainScene(PuRe_Application* a_pApplication)
