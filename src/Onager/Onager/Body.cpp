@@ -327,6 +327,9 @@ namespace ong
 
 	bool Body::queryRay(const vec3& origin, const vec3& dir, RayQueryResult* result,  float tmax)
 	{
+
+		memset(result, 0, sizeof(RayQueryResult));
+
 		Transform t = getTransform();
 
 		vec3 o = invTransformVec3(origin, t);
