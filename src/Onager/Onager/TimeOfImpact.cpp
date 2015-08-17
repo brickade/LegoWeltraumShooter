@@ -67,6 +67,10 @@ namespace ong
 				continuous = b;
 				standard = a;
 			}
+			else
+			{
+				return 0.0f;
+			}
 
 
 			RayQueryResult result = { 0 };

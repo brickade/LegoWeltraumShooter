@@ -83,7 +83,7 @@ namespace ong
 			ms = ticks * 1000.0f;
 			ms /= freq;
 
-			fprintf(file, "%*s %-*s: avrg ms: %7.3f ( %7d ticks )\n", 2 * entry->level, "", 30 - 2 * entry->level, entry->name, ms, ticks);
+			fprintf(file, "%*s %-*s: avrg ms: %7.3f ( %7l ticks )\n", 2 * entry->level, "", 30 - 2 * entry->level, entry->name, ms, ticks);
 
 
 			for (int i = 0; i < g_numEntries; ++i)
