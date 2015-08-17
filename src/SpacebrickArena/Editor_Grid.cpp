@@ -27,7 +27,7 @@ namespace Editor
         delete dummySprite;
 
         this->m_pGridMaterial = a_rGraphics.LoadMaterial("../data/effects/editor/grid");
-        this->m_GridRenderInstanceCount = (sba::CSpaceship::MAX_BRICK_WIDTH * 2) * (sba::CSpaceship::MAX_BRICK_WIDTH * 2);
+        this->m_GridRenderInstanceCount = (sba::CSpaceship::MAX_BRICK_WIDTH * 2 + 1) * (sba::CSpaceship::MAX_BRICK_WIDTH * 2 + 1);
         this->m_pGridRenderInstancesTop = new PuRe_RenderInstance[this->m_GridRenderInstanceCount];
         this->m_pGridRenderInstancesBottom = new PuRe_RenderInstance[this->m_GridRenderInstanceCount];
 
@@ -37,12 +37,12 @@ namespace Editor
         PuRe_Color color = PuRe_Color(1, 1, 1, 1);
         PuRe_MatrixF rotTop = PuRe_MatrixF::Rotation(1.57079633f, 0, 0); //90 deg
         PuRe_MatrixF rotBottom = PuRe_MatrixF::Rotation(-1.57079633f, 0, 0); //-90 deg
-        for (int x = 0; x < sba::CSpaceship::MAX_BRICK_WIDTH * 2; x++)
+        for (int x = 0; x < sba::CSpaceship::MAX_BRICK_WIDTH * 2 + 1; x++)
         {
-            for (int y = 0; y < sba::CSpaceship::MAX_BRICK_WIDTH * 2; y++)
+            for (int y = 0; y < sba::CSpaceship::MAX_BRICK_WIDTH * 2 + 1; y++)
             {
-                PuRe_RenderInstance& instanceTop = this->m_pGridRenderInstancesTop[y * (sba::CSpaceship::MAX_BRICK_WIDTH * 2) + x];
-                PuRe_RenderInstance& instanceBottom = this->m_pGridRenderInstancesBottom[y * (sba::CSpaceship::MAX_BRICK_WIDTH * 2) + x];
+                PuRe_RenderInstance& instanceTop = this->m_pGridRenderInstancesTop[y * (sba::CSpaceship::MAX_BRICK_WIDTH * 2 + 1) + x];
+                PuRe_RenderInstance& instanceBottom = this->m_pGridRenderInstancesBottom[y * (sba::CSpaceship::MAX_BRICK_WIDTH * 2 + 1) + x];
 
                 instanceTop.Position = PuRe_Vector3F((x - sba::CSpaceship::MAX_BRICK_WIDTH) * TheBrick::CBrick::SEGMENT_WIDTH, -FLT_EPSILON * 4, (y - sba::CSpaceship::MAX_BRICK_WIDTH) * TheBrick::CBrick::SEGMENT_WIDTH);
                 instanceTop.Size = size;
