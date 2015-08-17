@@ -8,6 +8,7 @@
 
 namespace Editor
 {
+#define SPECIALBRICK_DEBUG
     // **************************************************************************
     // **************************************************************************
     /*CAssistant::CAssistant()
@@ -107,11 +108,25 @@ namespace Editor
     // **************************************************************************
     bool CAssistant::SpecialCategoryRequirementsPassed(TheBrick::CBrickInstance& a_rBrickInstanceToTest, TheBrick::CGameObject& a_rGameObjectToTestAgainst, bool a_TestForOccludingOtherBricks)
     {
-#ifdef SPECIALBRICK_DEBUG
-        printf("SpecialCategoryRequirementsTest entered\n");
-#endif
         int category = a_rBrickInstanceToTest.m_pBrick->GetCategoryId();
-        ong::vec3 rayOrigin = TheBrick::PuReToOng(a_rBrickInstanceToTest.PosToWorldSpace(a_rBrickInstanceToTest.m_pBrick->GetPivotOffset() + PuRe_Vector3F(0, TheBrick::CBrick::SEGMENT_HEIGHT / 2.0f, 0)));
+#ifdef SPECIALBRICK_DEBUG
+        printf("SpecialCategoryRequirementsTest entered %s cat: %i\n", a_TestForOccludingOtherBricks ? "" : "sub", category);
+#endif
+        PuRe_Vector3F brickSpaceOrigin = a_rBrickInstanceToTest.m_pBrick->GetPivotOffset();
+        if (category == CBrickCategory::CATEGORY_COCKPITS)
+        {
+            brickSpaceOrigin += PuRe_Vector3F(0, TheBrick::CBrick::SEGMENT_HEIGHT * 1.5f, 0);
+        }
+        else if (category == CBrickCategory::CATEGORY_WEAPONS)
+        {
+            brickSpaceOrigin += PuRe_Vector3F(0, TheBrick::CBrick::SEGMENT_HEIGHT * 1.5f, 0);
+        }
+        else if (category == CBrickCategory::CATEGORY_ENGINES)
+        {
+            brickSpaceOrigin -= PuRe_Vector3F(0, TheBrick::CBrick::SEGMENT_HEIGHT * 0.5f, 0);
+        }
+
+        ong::vec3 rayOrigin = TheBrick::PuReToOng(a_rBrickInstanceToTest.PosToWorldSpace(brickSpaceOrigin));
         ong::RayQueryResult hs = { 0 };
         ong::vec3 rayDir;
         //Front
@@ -119,12 +134,12 @@ namespace Editor
         if (a_rGameObjectToTestAgainst.m_pBody->queryRay(rayOrigin, rayDir, &hs)) //Cast Ray
         {
 #ifdef SPECIALBRICK_DEBUG
-            printf("SpecialCategoryRequirementsPassed: Front cast hit\n");
+            printf("SpecialCategoryRequirementsPassed %s: Front cast hit\n", a_TestForOccludingOtherBricks ? "" : "sub");
 #endif
             if (category == CBrickCategory::CATEGORY_WEAPONS)
             {
 #ifdef SPECIALBRICK_DEBUG
-                printf("SpecialCategoryRequirementsPassed: Weapon check failed\n");
+                printf("SpecialCategoryRequirementsPassed %s: Weapon check failed on cat %i\n", a_TestForOccludingOtherBricks ? "" : "sub", reinterpret_cast<TheBrick::CBrickInstance*>(hs.collider->getUserData())->m_pBrick->GetCategoryId());
 #endif
                 return false;
             }
@@ -138,12 +153,12 @@ namespace Editor
         if (a_rGameObjectToTestAgainst.m_pBody->queryRay(rayOrigin, rayDir, &hs)) //Cast Ray
         {
 #ifdef SPECIALBRICK_DEBUG
-            printf("SpecialCategoryRequirementsPassed: Back cast hit\n");
+            printf("SpecialCategoryRequirementsPassed %s: Back cast hit\n", a_TestForOccludingOtherBricks ? "" : "sub");
 #endif
             if (category == CBrickCategory::CATEGORY_ENGINES)
             {
 #ifdef SPECIALBRICK_DEBUG
-                printf("SpecialCategoryRequirementsPassed: Engine check failed\n");
+                printf("SpecialCategoryRequirementsPassed %s: Engine check failed on cat %i\n", a_TestForOccludingOtherBricks ? "" : "sub", reinterpret_cast<TheBrick::CBrickInstance*>(hs.collider->getUserData())->m_pBrick->GetCategoryId());
 #endif
                 return false;
             }
@@ -157,12 +172,12 @@ namespace Editor
         if (a_rGameObjectToTestAgainst.m_pBody->queryRay(rayOrigin, rayDir, &hs)) //Cast Ray
         {
 #ifdef SPECIALBRICK_DEBUG
-            printf("SpecialCategoryRequirementsPassed: Left cast hit\n");
+            printf("SpecialCategoryRequirementsPassed %s: Left cast hit\n", a_TestForOccludingOtherBricks ? "" : "sub");
 #endif
             if (category == CBrickCategory::CATEGORY_COCKPITS)
             {
 #ifdef SPECIALBRICK_DEBUG
-                printf("SpecialCategoryRequirementsPassed: Cockpit check failed\n");
+                printf("SpecialCategoryRequirementsPassed %s: Cockpit check failed on cat %i\n", a_TestForOccludingOtherBricks ? "" : "sub", reinterpret_cast<TheBrick::CBrickInstance*>(hs.collider->getUserData())->m_pBrick->GetCategoryId());
 #endif
                 return false;
             }
@@ -176,7 +191,7 @@ namespace Editor
         if (a_rGameObjectToTestAgainst.m_pBody->queryRay(rayOrigin, rayDir, &hs)) //Cast Ray
         {
 #ifdef SPECIALBRICK_DEBUG
-            printf("SpecialCategoryRequirementsPassed: Right cast hit\n");
+            printf("SpecialCategoryRequirementsPassed %s: Right cast hit\n", a_TestForOccludingOtherBricks ? "" : "sub");
 #endif
             if (a_TestForOccludingOtherBricks && !SpecialCategoryRequirementsPassed(*reinterpret_cast<TheBrick::CBrickInstance*>(hs.collider->getUserData()), *a_rBrickInstanceToTest.GetGameObject(), false))
             { //Test if this brick occludes another brick
