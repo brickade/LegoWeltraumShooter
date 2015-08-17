@@ -496,7 +496,7 @@ namespace ong
 		Transform ta = transformTransform(ca->getTransform(), a->getTransform());
 		Transform tb = transformTransform(cb->getTransform(), b->getTransform());
 
-		ContactManifold manifold;
+		ContactManifold manifold = { 0 };
 		Feature feature;
 		
 		// check if either collider is a sensor

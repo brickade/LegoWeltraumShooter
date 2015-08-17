@@ -128,7 +128,7 @@ namespace ong
 
 		if (tdenom <= 0.0f && udenom <= 0.0f)
 		{
-			if (_v) *_w = 1.0f;
+			if (_w) *_w = 1.0f;
 			return c;
 		}
 
