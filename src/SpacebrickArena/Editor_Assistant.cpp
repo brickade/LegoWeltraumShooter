@@ -78,7 +78,11 @@ namespace Editor
     bool CAssistant::MovementDeltaIsCollisionFree(TheBrick::CBrickInstance& a_rBrickInstanceToTest, TheBrick::CGameObject& a_rGameObjectToTestAgainst, const ong::vec3& a_rBrickInstanceMoveDeltaToTest, float a_MoveTestingSteps, ong::vec3* a_pMaxCollisionFreeMovementDelta)
     {
         ong::vec3 start = TheBrick::PuReToOng(a_rBrickInstanceToTest.GetGameObject()->PosToWorldSpace(TheBrick::OngToPuRe(a_rBrickInstanceToTest.GetTransform().p)));
-        ong::vec3 direction = ong::normalize(a_rBrickInstanceMoveDeltaToTest);
+        ong::vec3 direction = a_rBrickInstanceMoveDeltaToTest;
+        if (ong::lengthSq(a_rBrickInstanceMoveDeltaToTest) > TheBrick::CBrick::SEGMENT_HEIGHT * TheBrick::CBrick::SEGMENT_HEIGHT * 0.25f)
+        {
+            direction = ong::normalize(a_rBrickInstanceMoveDeltaToTest);
+        }
         int maxSteps = (int)round((ong::length(a_rBrickInstanceMoveDeltaToTest) / a_MoveTestingSteps));
         for (int i = 0; i <= maxSteps; i++)
         {
