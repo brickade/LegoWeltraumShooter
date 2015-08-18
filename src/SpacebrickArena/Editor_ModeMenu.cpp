@@ -60,7 +60,7 @@ namespace Editor
         sba_Space->RenderFont("Delete", menuStartPos + this->m_ListStep * 1, 22.0f);
 
         PuRe_Vector2F infoStartPos = this->m_InfoStart + fadeIn;
-        float size = 0.12f;
+        float size = 0.135f;
         for (size_t i = 0; i < this->m_ControlInfo.size(); i++)
         {
             if (this->m_ControlInfo[i].InfoText != "")
@@ -70,12 +70,12 @@ namespace Editor
                 {
                     if (this->m_ControlInfo[i].Gamepad2 == "")
                     {
-                        sba_ButtonsDraw(this->m_ControlInfo[i].Gamepad1.c_str(), infoStartPos + PuRe_Vector2F(275, 0) + this->m_InfoStep * i, size * 1.5f);
+                        sba_ButtonsDraw(this->m_ControlInfo[i].Gamepad1.c_str(), infoStartPos + PuRe_Vector2F(275, 0) + this->m_InfoStep * i, size * 1.3f);
                     }
                     else
                     {
-                        sba_ButtonsDraw(this->m_ControlInfo[i].Gamepad1.c_str(), infoStartPos + PuRe_Vector2F(250, 0) + this->m_InfoStep * i, size * 1.5f);
-                        sba_ButtonsDraw(this->m_ControlInfo[i].Gamepad2.c_str(), infoStartPos + PuRe_Vector2F(300, 0) + this->m_InfoStep * i, size * 1.5f);
+                        sba_ButtonsDraw(this->m_ControlInfo[i].Gamepad1.c_str(), infoStartPos + PuRe_Vector2F(250, 0) + this->m_InfoStep * i, size * 1.3f);
+                        sba_ButtonsDraw(this->m_ControlInfo[i].Gamepad2.c_str(), infoStartPos + PuRe_Vector2F(300, 0) + this->m_InfoStep * i, size * 1.3f);
                     }
                 }
                 else
@@ -86,8 +86,8 @@ namespace Editor
                     }
                     else
                     {
-                        sba_ButtonsDraw(this->m_ControlInfo[i].Keyboard1.c_str(), infoStartPos + PuRe_Vector2F(245, 0) + this->m_InfoStep * i, size);
-                        sba_ButtonsDraw(this->m_ControlInfo[i].Keyboard2.c_str(), infoStartPos + PuRe_Vector2F(310, 0) + this->m_InfoStep * i, size);
+                        sba_ButtonsDraw(this->m_ControlInfo[i].Keyboard1.c_str(), infoStartPos + PuRe_Vector2F(240, 0) + this->m_InfoStep * i, size);
+                        sba_ButtonsDraw(this->m_ControlInfo[i].Keyboard2.c_str(), infoStartPos + PuRe_Vector2F(315, 0) + this->m_InfoStep * i, size);
                     }
                 }
             }

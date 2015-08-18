@@ -25,11 +25,11 @@ namespace Editor
         int m_PlayerIdx;
         sba::CNavigation* m_pNavigation;
 
-        PuRe_Vector2F m_ListStart = PuRe_Vector2F(1920 - 280, 1080 - 350);
+        PuRe_Vector2F m_ListStart = PuRe_Vector2F(1920 - 260, 1080 - 320);
         PuRe_Vector2F m_ListStep = PuRe_Vector2F(0, -60);
 
-        PuRe_Vector2F m_InfoStart = PuRe_Vector2F(1920 - 400, 1080 - 520);
-        PuRe_Vector2F m_InfoStep = PuRe_Vector2F(0, -40);
+        PuRe_Vector2F m_InfoStart = PuRe_Vector2F(1920 - 400, 1080 - 480);
+        PuRe_Vector2F m_InfoStep = PuRe_Vector2F(0, -42);
 
         std::vector<SControlInfo> m_ControlInfo;
 
