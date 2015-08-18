@@ -294,7 +294,7 @@ namespace Editor
         this->m_CurrentPosition = PuRe_Vector2I((int)round(this->m_CurrentPositionCache.X), (int)round(this->m_CurrentPositionCache.Y)); //Snap to grid
         if (this->m_CurrentPosition.X != posCache.X || this->m_CurrentPosition.Y != posCache.Y)
         { //Position changed
-            sba_SoundPlayer->PlaySound("editor_change", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
+            sba_SoundPlayer->PlaySound("editor_move", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
             this->m_CurrentHeightIsInvalid = true;
         }
     }
