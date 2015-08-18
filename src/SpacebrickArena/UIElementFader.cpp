@@ -30,6 +30,10 @@ namespace sba
         {
             this->Toggle();
             stateChanged = true;
+            if (this->m_Visible)
+            {
+                sba_SoundPlayer->PlaySound("collect", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
+            }
         }
 
         float speed = a_rTimer.GetElapsedSeconds() * this->m_FadingSpeed;

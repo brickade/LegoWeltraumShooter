@@ -29,7 +29,7 @@ namespace sba
         //Delete character
         if ((sba_Input->ButtonPressed(sba_Button::NavigationBack, a_PlayerIndex) || a_rInput.KeyPressed(PuRe_IInput::Backspace)) && this->m_Value.length() > 0)
         {
-            sba_SoundPlayer->PlaySound("menu_back", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
+            //sba_SoundPlayer->PlaySound("menu_back", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
             this->m_Value.erase(this->m_Value.length() - 1);
         }
 
