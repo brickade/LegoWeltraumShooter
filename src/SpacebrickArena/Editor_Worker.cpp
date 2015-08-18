@@ -123,6 +123,7 @@ namespace Editor
             //-----Placement Direction-----
             if (sba_Input->ButtonPressed(sba_Button::EditorTogglePlacementSide, this->m_PlayerIdx))
             {
+                sba_SoundPlayer->PlaySound("editor_change", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
                 this->m_PlaceBelow = !this->m_PlaceBelow;
                 this->m_CurrentHeightIsInvalid = true;
             }
@@ -293,6 +294,7 @@ namespace Editor
         this->m_CurrentPosition = PuRe_Vector2I((int)round(this->m_CurrentPositionCache.X), (int)round(this->m_CurrentPositionCache.Y)); //Snap to grid
         if (this->m_CurrentPosition.X != posCache.X || this->m_CurrentPosition.Y != posCache.Y)
         { //Position changed
+            sba_SoundPlayer->PlaySound("editor_change", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
             this->m_CurrentHeightIsInvalid = true;
         }
     }
@@ -308,11 +310,13 @@ namespace Editor
         }
         if (sba_Input->ButtonPressed(sba_Button::EditorRotateBrickRight, this->m_PlayerIdx))
         {
+            sba_SoundPlayer->PlaySound("editor_change", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
             this->m_CurrentRotation++;
             this->m_CurrentHeightIsInvalid = true;
         }
         if (sba_Input->ButtonPressed(sba_Button::EditorRotateBrickLeft, this->m_PlayerIdx))
         {
+            sba_SoundPlayer->PlaySound("editor_change", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
             this->m_CurrentRotation--;
             this->m_CurrentHeightIsInvalid = true;
         }
@@ -576,12 +580,16 @@ namespace Editor
         //Check if can place
         if (!this->m_CanPlaceHere)
         {
+            if (sba_Input->ButtonPressed(sba_Button::EditorPlaceBrick, this->m_PlayerIdx))
+            {
+                sba_SoundPlayer->PlaySound("editor_set_brick_fail", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
+            }
             return;
-
         }
 
         if (sba_Input->ButtonPressed(sba_Button::EditorPlaceBrick, this->m_PlayerIdx) && a_rShipHandler.GetCurrentSpaceShip()->m_pBricks.size() < (size_t)sba::CSpaceship::MAX_BRICK_COUNT)
         { //Place BrickInstance
+            sba_SoundPlayer->PlaySound("editor_set_brick", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
             this->m_pCurrentBrick->m_Color = this->m_CurrentColor; //Apply right color
             this->m_pHistory->CutRedos();
             this->m_pHistory->AddStep(a_rShipHandler.AddBrickInstanceToCurrentShip(*this->m_pCurrentBrick)); //Add History step and add new instance to ship
@@ -596,10 +604,15 @@ namespace Editor
     {
         if (this->m_BrickToDelete.BrickInstance == nullptr)
         {
+            if (sba_Input->ButtonPressed(sba_Button::EditorDeleteBrick, this->m_PlayerIdx))
+            {
+                sba_SoundPlayer->PlaySound("editor_set_brick_fail", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
+            }
             return;
         }
         if (sba_Input->ButtonPressed(sba_Button::EditorDeleteBrick, this->m_PlayerIdx))
         { //Delete BrickInstances
+            sba_SoundPlayer->PlaySound("editor_remove_block", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
             //Restore Color
             this->RestoreAdhesiveBricksToDelete();
             this->m_BrickToDelete.BrickInstance->m_Color = this->m_BrickToDelete.Color;
@@ -672,6 +685,7 @@ namespace Editor
                 {
                     if (step->Delete)
                     { //Undo Brick Delete
+                        sba_SoundPlayer->PlaySound("editor_set_brick", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
                         CHistory::RecreateBrick(step->DeleteBrick_Step, *a_rShipHandler.GetCurrentSpaceShip(), *sba_World);
                         for (size_t i = 0; i < step->DeleteAdhesiveBricks_Steps.size(); i++)
                         {
@@ -682,6 +696,7 @@ namespace Editor
                     }
                     else
                     { //Undo Brick Placement
+                        sba_SoundPlayer->PlaySound("editor_remove_block", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
                         SAFE_DELETE(step->Brick.BrickInstance);
                         step->Brick.BrickInstance = nullptr;
                         a_rShipHandler.UpdateCurrentShipData();
@@ -700,6 +715,7 @@ namespace Editor
                 {
                     if (step->Delete)
                     { //Redo Brick Delete
+                        sba_SoundPlayer->PlaySound("editor_remove_block", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
                         SAFE_DELETE(step->DeleteBrick_Step->Brick.BrickInstance);
                         step->DeleteBrick_Step->Brick.BrickInstance = nullptr;
                         for (size_t i = 0; i < step->DeleteAdhesiveBricks_Steps.size(); i++)
@@ -712,6 +728,7 @@ namespace Editor
                     }
                     else
                     { //Redo Brick Placement
+                        sba_SoundPlayer->PlaySound("editor_set_brick", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
                         CHistory::RecreateBrick(step, *a_rShipHandler.GetCurrentSpaceShip(), *sba_World);
                         a_rShipHandler.UpdateCurrentShipData();
                         this->m_CurrentHeightIsInvalid = true;
@@ -722,6 +739,7 @@ namespace Editor
 
         if (sba_Input->ButtonPressed(sba_Button::EditorSaveShip, this->m_PlayerIdx))
         { //Safe Ship to file
+            sba_SoundPlayer->PlaySound("menu_confirm", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
             if (this->m_pCurrentBrick != nullptr) //Delete CurrentBrick
             {
                 SAFE_DELETE(this->m_pCurrentBrick);
@@ -736,6 +754,7 @@ namespace Editor
 #ifdef EDITOR_DEV
         if (sba_Application->GetInput()->KeyPressed(PuRe_IInput::F6))
         { //Safe Ship to file as object
+            sba_SoundPlayer->PlaySound("menu_confirm", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
             SAFE_DELETE(this->m_pCurrentBrick);
             sba_ShipManager->SaveShipToFileAsObject(*a_rShipHandler.GetCurrentSpaceShip());
         }

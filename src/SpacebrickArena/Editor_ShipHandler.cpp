@@ -81,16 +81,19 @@ namespace Editor
 #endif
             if (sba_Input->ButtonPressed(sba_Button::EditorAddNewShip, this->m_playerIdx))
             {
+                sba_SoundPlayer->PlaySound("menu_confirm", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
                 this->AddShip("");
             }
             if (sba_Input->ButtonPressed(sba_Button::EditorRenameShip, this->m_playerIdx) && this->GetCurrentSpaceShip() != nullptr)
             {
+                sba_SoundPlayer->PlaySound("menu_confirm", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
                 this->m_State = ShipHandlerState::Rename;
                 this->m_OldShipName = this->m_pCurrentSpaceship->GetName();
                 this->m_pInputField->SetValue(this->m_OldShipName);
             }
             if (sba_Input->ButtonPressed(sba_Button::EditorDeleteShip, this->m_playerIdx) && this->GetCurrentSpaceShip() != nullptr)
             {
+                sba_SoundPlayer->PlaySound("menu_confirm", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
                 this->m_State = ShipHandlerState::Delete;
                 this->m_OldShipName = this->m_pCurrentSpaceship->GetName();
                 this->m_pInputField->SetValue(this->m_OldShipName);
@@ -116,11 +119,13 @@ namespace Editor
         case ShipHandlerState::Delete:
             if (sba_Input->ButtonPressed(sba_Button::NavigationSelect, this->m_playerIdx))
             {
+                sba_SoundPlayer->PlaySound("editor_delete_ship", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
                 this->DeleteCurrentShip();
                 this->m_State = ShipHandlerState::Select;
             }
             else if (sba_Input->ButtonPressed(sba_Button::NavigationBack, this->m_playerIdx) || sba_Input->ButtonPressed(sba_Button::Exit, this->m_playerIdx))
             {
+                sba_SoundPlayer->PlaySound("menu_back", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
                 this->m_State = ShipHandlerState::Select;
             }
             break;

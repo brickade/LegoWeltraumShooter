@@ -327,8 +327,8 @@ namespace ong
 
 	bool Body::queryRay(const vec3& origin, const vec3& dir, RayQueryResult* result,  float tmax)
 	{
-
 		memset(result, 0, sizeof(RayQueryResult));
+        result->t = FLT_MAX;
 
 		Transform t = getTransform();
 

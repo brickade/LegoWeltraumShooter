@@ -34,7 +34,6 @@ namespace Editor
             const ong::vec3 rayOrigin = TheBrick::PuReToOng(a_rBrickInstanceToCastFrom.PosToWorldSpace(nubsToCastFrom[i].Position)); //Transform nubPosition to WorldSpace
 
             ong::RayQueryResult hs = { 0 }; //Allocate
-            hs.t = FLT_MAX;
             //--------------------------------------------------------------------------------
             if (bodyToCastTo.queryRay(rayOrigin, rayDir, &hs)) //Cast Ray
             { //Ray Hit

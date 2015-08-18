@@ -52,11 +52,13 @@ namespace Editor
         {
             if (this->m_State == EEditorState::EditShip)
             {
+                sba_SoundPlayer->PlaySound("menu_back", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
                 this->m_pWorker->Suspend();
                 this->m_State = EEditorState::SelectShip;
             }
             else if (this->m_pShipHandler->GetCurrentState() == CShipHandler::ShipHandlerState::Select)
             {
+                sba_SoundPlayer->PlaySound("menu_back", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
                 return 5;
             }
         }
@@ -69,6 +71,7 @@ namespace Editor
             //------------------------------
             if (sba_Input->ButtonPressed(sba_Button::NavigationSelect, this->m_PlayerIdx) && this->m_pShipHandler->GetCurrentState() == CShipHandler::ShipHandlerState::Select && this->m_pShipHandler->GetCurrentSpaceShip() != nullptr)
             {
+                sba_SoundPlayer->PlaySound("menu_confirm", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
                 this->m_pWorker->Resume(*this->m_pShipHandler);
                 this->m_State = EEditorState::EditShip;
                 break;
