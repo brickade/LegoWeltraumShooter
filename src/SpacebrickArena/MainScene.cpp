@@ -36,6 +36,9 @@ namespace sba
         case 2: //Game Local Initialize
             this->m_pActiveScene->Exit();
             SAFE_DELETE(this->m_pActiveScene);
+            sba_SoundPlayer->PlaySound("Editor", false, true, std::stof(sba_Options->GetValue("MusicVolume")));
+            sba_SoundPlayer->PlaySound("Ingame", false, true, std::stof(sba_Options->GetValue("MusicVolume")));
+            sba_SoundPlayer->PlaySound("Theme", false, true, std::stof(sba_Options->GetValue("MusicVolume")));
             sba_SoundPlayer->StopAll();
             sba_SoundPlayer->PlaySound("Ingame", true,true, std::stof(sba_Options->GetValue("MusicVolume")));
 
@@ -46,6 +49,9 @@ namespace sba
         case 3: //Game Network Initialize
             this->m_pActiveScene->Exit();
             SAFE_DELETE(this->m_pActiveScene);
+            sba_SoundPlayer->PlaySound("Editor", false, true, std::stof(sba_Options->GetValue("MusicVolume")));
+            sba_SoundPlayer->PlaySound("Ingame", false, true, std::stof(sba_Options->GetValue("MusicVolume")));
+            sba_SoundPlayer->PlaySound("Theme", false, true, std::stof(sba_Options->GetValue("MusicVolume")));
             sba_SoundPlayer->StopAll();
             sba_SoundPlayer->PlaySound("Ingame", true, true, std::stof(sba_Options->GetValue("MusicVolume")));
 
@@ -56,6 +62,9 @@ namespace sba
         case 4: //Editor Initialize
             this->m_pActiveScene->Exit();
             SAFE_DELETE(this->m_pActiveScene);
+            sba_SoundPlayer->PlaySound("Editor", false, true, std::stof(sba_Options->GetValue("MusicVolume")));
+            sba_SoundPlayer->PlaySound("Ingame", false, true, std::stof(sba_Options->GetValue("MusicVolume")));
+            sba_SoundPlayer->PlaySound("Theme", false, true, std::stof(sba_Options->GetValue("MusicVolume")));
             sba_SoundPlayer->StopAll();
             sba_SoundPlayer->PlaySound("Editor", true,true, std::stof(sba_Options->GetValue("MusicVolume")));
 
@@ -66,6 +75,9 @@ namespace sba
         case 5: //Menu Initialize
             this->m_pActiveScene->Exit();
             SAFE_DELETE(this->m_pActiveScene);
+            sba_SoundPlayer->PlaySound("Editor", false, true, std::stof(sba_Options->GetValue("MusicVolume")));
+            sba_SoundPlayer->PlaySound("Ingame", false, true, std::stof(sba_Options->GetValue("MusicVolume")));
+            sba_SoundPlayer->PlaySound("Theme", false, true, std::stof(sba_Options->GetValue("MusicVolume")));
             sba_SoundPlayer->StopAll();
             sba_SoundPlayer->PlaySound("Theme", true, true, std::stof(sba_Options->GetValue("MusicVolume")));
 

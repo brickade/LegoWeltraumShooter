@@ -515,9 +515,8 @@ namespace ong
 				return;
 		}
 
-        if (lengthSq(manifold.normal) == 0)
+        if (manifold.numPoints > 0 && lengthSq(manifold.normal) == 0)
         {
-            printf("test\n");
             return;
         }
 

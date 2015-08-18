@@ -28,6 +28,7 @@ namespace ong
 			ContactManifold* man = &c->manifold;
 
 			// calculate tangent space
+			if (c->manifold.numPoints > 0)
 			{
 				vec3 v;
 				if (abs(man->normal.x) <= abs(man->normal.y) && abs(man->normal.x) <= abs(man->normal.z))

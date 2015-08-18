@@ -156,8 +156,11 @@ namespace ong
 		ong_START_PROFILE(CONTINUOS);
 		{
 			// find pairs with continous physics
-			Pair* cPairs = new Pair[numPairs];
+			//Pair* cPairs = new Pair[numPairs];
+			
+
 			int numCPairs = 0;
+			Pair* cPairs = (Pair*)malloc(sizeof(Pair) * numPairs);
 			for (int i = 0; i < numPairs; ++i)
 			{
 				if (pairs[i].A->getContinuousPhysics() || pairs[i].B->getContinuousPhysics())
@@ -340,6 +343,9 @@ namespace ong
 				//broadphase
 				numPairs = m_hGrid.generatePairs(pairs);
 				numCPairs = 0;
+
+				cPairs = (Pair*)realloc(cPairs, numPairs * sizeof(Pair));
+
 				for (int i = 0; i < numPairs; ++i)
 				{	
 					if (pairs[i].A->getContinuousPhysics() || pairs[i].B->getContinuousPhysics())
@@ -370,6 +376,7 @@ namespace ong
 
 			}
 
+			free(cPairs);
 		}
 		ong_END_PROFILE(CONTINUOS);
 
