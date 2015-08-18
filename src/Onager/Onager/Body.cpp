@@ -384,6 +384,10 @@ namespace ong
 		{
 			result->t = tmin;
 			result->point = origin + tmin*dir;
+            if (ong::lengthSq(result->normal) == 0)
+            {
+                printf("LOL");
+            }
 			result->normal = normalize(rotate(result->normal, t.q));
 		}
 

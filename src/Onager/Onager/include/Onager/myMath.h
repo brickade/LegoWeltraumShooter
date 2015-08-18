@@ -153,7 +153,7 @@ namespace ong
 
 
 	inline vec3 normalize(const vec3& v)
-	{
+    {
 		return 1.0f / sqrt(dot(v, v)) * v;
 	}
 

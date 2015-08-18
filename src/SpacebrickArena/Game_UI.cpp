@@ -25,6 +25,9 @@ namespace sba
         {
             if (sba_Players[i]->PadID != -1)
             {
+                size = PuRe_Vector3F(36.0f, 36.0f, 0.0f);
+                pos = PuRe_Vector3F(100.0f, 900.0f, 0.0f);
+                sba_Renderer->Draw(2, false, a_pFont, a_pFontMaterial, std::to_string(sba_Players[i]->Points), pos, PuRe_MatrixF(), size, 36.0f, c);
                 pos.X = (1920.0f/2.0f)-400.0f;
                 pos.Y = 1080.0f / 2.0f;
                 sba_Renderer->Set(2, 0.0f, "verlauf");

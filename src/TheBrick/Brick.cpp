@@ -107,6 +107,7 @@ namespace TheBrick
         {
         case Laser:
             a_rRenderer.Set(0, PuRe_Color(0.0f, 1.0f, 0.0f, 1.0f), "glow");
+            a_rRenderer.SetCulling(0,false);
             break;
         case MG:
             a_rRenderer.Set(0, PuRe_Color(0.75f, 0.0f, 0.0f, 0.75f), "glow");
@@ -123,6 +124,8 @@ namespace TheBrick
         break;
         }
         a_rRenderer.Draw(0, false, this->m_pModel, PuRe_Primitive::Triangles, this->m_pMaterial, this->m_pRenderInstances, this->m_RenderInstancesCount);
+        if (this->GetBrickId() == Laser)
+            a_rRenderer.SetCulling(0, true);
     }
 
     // **************************************************************************

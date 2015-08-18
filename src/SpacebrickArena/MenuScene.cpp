@@ -86,7 +86,7 @@ namespace Menu
                 //TODO: REMOVE THIS
                 //DON'T FORGET
                 printf("Creating extra Player\n");
-				sba_Space->CreatePlayer(1, window);
+                sba_Space->CreatePlayer(1, window);
 
                 break;
             case 3: //Multiplayer

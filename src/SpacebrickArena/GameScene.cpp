@@ -464,9 +464,30 @@ namespace sba
         for (unsigned int i = 0; i < sba_Players.size(); i++)
         {
             sba_Players[i]->Ship->CalculateData();
-            ong::vec3 pos = ong::vec3(-125.0f, 0.0f, -300.0f);
-            pos.x += sba_Players[i]->ID*50.0f;
+            ong::vec3 pos;
+            ong::Quaternion rot;
+            if (sba_Players[i]->ID == 0)
+            {
+                pos = ong::vec3(0.0f, 0.0f, -300.0f);
+                rot = ong::QuatFromEulerAngles(0.0f,0.0f,0.0f);
+            }
+            else if (sba_Players[i]->ID == 1)
+            {
+                pos = ong::vec3(0.0f, 0.0f, 300.0f);
+                rot = ong::QuatFromEulerAngles(180.0f*PuRe_DegToRad,0.0f,0.0f);
+            }
+            else if (sba_Players[i]->ID == 2)
+            {
+                pos = ong::vec3(300.0f, 0.0f, 0.0f);
+                rot = ong::QuatFromEulerAngles(270.0f*PuRe_DegToRad, 0.0f, 0.0f);
+            }
+            else if (sba_Players[i]->ID == 3)
+            {
+                pos = ong::vec3(-300.0f, 0.0f, 0.0f);
+                rot = ong::QuatFromEulerAngles(90.0f*PuRe_DegToRad, 0.0f, 0.0f);
+            }
             sba_Players[i]->Ship->m_pBody->setPosition(pos);
+            sba_Players[i]->Ship->m_pBody->setOrientation(rot);
             //Set default Weapon
             std::vector<TheBrick::CBrickInstance**> weapons;
             sba_Players[i]->Ship->GetWeapons(weapons);
