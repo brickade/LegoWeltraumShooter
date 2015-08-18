@@ -67,6 +67,9 @@ namespace Menu
         PuRe_Vector2F nav = sba_Input->Direction(sba_Direction::Navigate, a_PlayerIdx);
         nav.X = 0.0f;
 
+        if (sba_Input->ButtonPressed(sba_Button::Exit, a_PlayerIdx))
+            return 0;
+
         this->m_pNavigation->Update(*a_pTimer, nav);
         if (!this->m_HasShip)
         {

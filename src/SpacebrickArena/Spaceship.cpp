@@ -339,18 +339,18 @@ namespace sba
             this->GetWeapons(weapons);
             unsigned int wID = 0;
 
-            a_Direction.X /= 2.0f;
-            a_Direction.Y /= 3.0f;
+            //a_Direction.X /= 2.0f;
+            //a_Direction.Y /= 3.0f;
 
-            if (a_Direction.X > 0.0f)
-                a_Direction.X *= a_Direction.X;
-            else
-                a_Direction.X *= -a_Direction.X;
+            //if (a_Direction.X > 0.0f)
+            //    a_Direction.X *= a_Direction.X;
+            //else
+            //    a_Direction.X *= -a_Direction.X;
 
-            if (a_Direction.Y > 0.0f)
-                a_Direction.Y *= a_Direction.Y*4.0f;
-            else
-                a_Direction.Y *= -a_Direction.Y;
+            //if (a_Direction.Y > 0.0f)
+            //    a_Direction.Y *= a_Direction.Y*4.0f;
+            //else
+            //    a_Direction.Y *= -a_Direction.Y;
 
             for (std::vector<TheBrick::CBrickInstance**>::iterator it = weapons.begin(); it != weapons.end(); ++it)
             {
@@ -372,24 +372,26 @@ namespace sba
 
                     float len = TheBrick::OngToPuRe(this->m_pBody->getLinearVelocity()).Length();
                     PuRe_Vector3F speed;
-                    a_Direction.X -= transform.p.x / 50.0f;
-                    a_Direction.Y -= transform.p.y / 50.0f;
-                    if (PuRe_Vector3F::Dot(forward, sforward) > 0.9f) // in front
-                    {
-                        PuRe_Vector3F dir = PuRe_Vector3F(a_Direction.X, -a_Direction.Y, 1.0f) * TheBrick::OngToPuRe(wtransform.q);
-                        speed = dir*200.0f + dir * len;
-                    }
-                    else
-                        speed = forward*200.0f+forward *len;
+        /*            a_Direction.X -= transform.p.x / 50.0f;
+                    a_Direction.Y -= transform.p.y / 50.0f;*/
+                    //if (PuRe_Vector3F::Dot(forward, sforward) > 0.9f) // in front
+                    //{
+                    //    PuRe_Vector3F dir = PuRe_Vector3F(a_Direction.X, -a_Direction.Y, 1.0f) * TheBrick::OngToPuRe(wtransform.q);
+                    //    speed = dir*200.0f + dir * len;
+                    //}
+                    //else
+                    //    speed = forward*200.0f+forward *len;
+                    speed = forward*200.0f + forward *len;
 
                     speed *= 1.0f / 1000.0f;
 
                     ong::BodyDescription bdesc;
-                    ong::Quaternion diff = ong::QuatFromEulerAngles(a_Direction.X, a_Direction.Y, 0.0f);
+             /*       ong::Quaternion diff = ong::QuatFromEulerAngles(a_Direction.X, a_Direction.Y, 0.0f);*/
 
 
                     bdesc.angularMomentum = ong::vec3(0, 0, 0);
-                    bdesc.transform.q = ship.q*transform.q*diff;
+                    //bdesc.transform.q = ship.q*transform.q*diff;
+                    bdesc.transform.q = ship.q*transform.q;
                     bdesc.type = ong::BodyType::Dynamic;
 					bdesc.continuousPhysics = false;
 
@@ -402,7 +404,7 @@ namespace sba
                         id = TheBrick::Laser;
                         pos += forward*10.0f;
                         speed *= std::stof(sba_Balancing->GetValue("Laser_Speed"));
-                        bdesc.transform.q = ship.q*transform.q;
+                        //bdesc.transform.q = ship.q*transform.q;
                         col = PuRe_Color(1.0f, 1.0f, 1.0f, 1.0f);
                         //bdesc.type = ong::BodyType::Static;
                         break;

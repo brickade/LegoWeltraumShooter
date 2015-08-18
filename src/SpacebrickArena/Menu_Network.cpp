@@ -114,6 +114,15 @@ namespace Menu
             sba_Network->m_Mutex.unlock();
         }
 
+        if (sba_Input->ButtonPressed(sba_Button::Exit, a_PlayerIdx))
+        {
+            sba_SoundPlayer->PlaySound("menu_back", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
+            if (this->m_Focus)
+                this->m_Focus = false;
+            else
+                return 0;
+        }
+
         if (!this->m_Focus)
         {
             PuRe_Vector2F nav = sba_Input->Direction(sba_Direction::Navigate, a_PlayerIdx);
