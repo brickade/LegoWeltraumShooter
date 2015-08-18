@@ -29,6 +29,7 @@ namespace sba
         //Delete character
         if ((sba_Input->ButtonPressed(sba_Button::NavigationBack, a_PlayerIndex) || a_rInput.KeyPressed(PuRe_IInput::Backspace)) && this->m_Value.length() > 0)
         {
+            //sba_SoundPlayer->PlaySound("menu_back", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
             this->m_Value.erase(this->m_Value.length() - 1);
         }
 
@@ -116,11 +117,13 @@ namespace sba
         //Close InputField
         if (sba_Input->ButtonPressed(sba_Button::NavigationSelect, a_PlayerIndex))
         {
+            sba_SoundPlayer->PlaySound("menu_confirm", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
             this->m_OldValue = this->m_Value;
             return true;
         }
         if (sba_Input->ButtonPressed(sba_Button::Exit, a_PlayerIndex))
         {
+            sba_SoundPlayer->PlaySound("menu_back", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
             this->m_Value = this->m_OldValue;
             return true;
         }

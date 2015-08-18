@@ -18,8 +18,12 @@ namespace Editor
         PuRe_RenderInstance* m_pGridRenderInstancesBottom;
         int m_GridRenderInstanceCount;
 
-        PuRe_Sprite* m_pArrow;
-        float m_ArrowSize = 0.01f;
+        PuRe_ITexture2D* m_ArrowTexture;
+        PuRe_RenderInstance* m_pArrowRenderInstancesTop;
+        PuRe_RenderInstance* m_pArrowRenderInstancesBottom;
+        int m_ArrowRenderInstanceCount;
+
+        int m_ArrowSize = 10;
 
     public:
         CGrid(PuRe_IGraphics& a_rGraphics);

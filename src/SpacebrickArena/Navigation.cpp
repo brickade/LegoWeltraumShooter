@@ -51,7 +51,7 @@ namespace sba
     // **************************************************************************
     void CNavigation::Navigate(EDirection::Type a_Direction, bool a_LinkEnds)
     {
-        sba_SoundPlayer->PlaySound("menu_over", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
+        int cache = this->m_FocusedElement;
         switch (a_Direction)
         {
         case EDirection::Right:
@@ -72,6 +72,10 @@ namespace sba
             break;
         }
         this->ClampFocus(a_LinkEnds);
+        if (this->m_FocusedElement != cache)
+        {
+            sba_SoundPlayer->PlaySound("menu_over", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
+        }
     }
 
     // **************************************************************************

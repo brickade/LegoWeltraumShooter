@@ -6,8 +6,6 @@
 
 #include "Spaceship.h"
 
-//#define EDITOR_DEV
-
 namespace Editor
 {
     class CEditorScene;
