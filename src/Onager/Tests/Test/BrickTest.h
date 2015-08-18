@@ -18,10 +18,10 @@ public:
 
 		b->setPosition(vec3(1, 0, 0));
 
-		//a->removeCollider(a->getCollider()->getNext()->getNext());
-		//a->removeCollider(a->getCollider()->getNext());
-		//b->removeCollider(b->getCollider()->getNext()->getNext());
-		//b->removeCollider(b->getCollider()->getNext());
+		//a->removeCollider(a->getCollider());
+		//a->removeCollider(a->getCollider());
+		//b->removeCollider(b->getCollider());
+		//b->removeCollider(b->getCollider());
 
 	}
 

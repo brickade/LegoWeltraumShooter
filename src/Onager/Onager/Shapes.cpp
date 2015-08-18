@@ -761,10 +761,10 @@ namespace ong
 	bool overlap(const Hull* hullA, const Hull* hullB, const Transform& t1, const Transform& t2)
 	{
 
-		ContactManifold manifold;
-		SAT(hullA, &t1, hullB, &t2, &manifold);
+		//ContactManifold manifold;
+		//SAT(hullA, &t1, hullB, &t2, &manifold);
 		
-		return manifold.numPoints;
+		//return manifold.numPoints;
 
 		float aEpsilon = hullA->epsilon / FLT_EPSILON * ong_OVERLAP_EPSILON;
 		float bEpsilon = hullB->epsilon / FLT_EPSILON * ong_OVERLAP_EPSILON;
@@ -822,8 +822,8 @@ namespace ong
 				vec3 u2 = rotate(hullB->pPlanes[e2->face].n, tA.q);
 				vec3 v2 = rotate(hullB->pPlanes[t2->face].n, tA.q);
 
-				float cba = dot(-u1, -E1);
-				float dba = dot(-v1, -E1);
+				float cba = dot(-u2, -E1);
+				float dba = dot(-v2, -E1);
 				float adc = dot(u1, -E2);
 				float bdc = dot(v1, -E2);
 
@@ -837,6 +837,7 @@ namespace ong
 
 				if (lengthSq(n) < epsilon * length(E1) * length(E2))
 				{
+					continue;
 					vec3 m = cross(E1, p2 - p1);
 					n = cross(E1, m);
 					if (lengthSq(n) < epsilon * length(E1)* length(E2))
@@ -847,7 +848,7 @@ namespace ong
 				if (dot(n, p1 - hullA->centroid) < 0.0f)
 					n = -n;
 
-				float dist = dot(n, p1 - p2);
+				float dist = -dot(n, p1 - p2);
 
 				if (dist > -epsilon && dist < epsilon)
 					dist = 0.0f;
