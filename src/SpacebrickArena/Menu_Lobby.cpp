@@ -38,6 +38,24 @@ namespace Menu
     {
         this->m_pNetwork->Broadcast();
 
+        if (sba_Input->ButtonPressed(sba_Button::Exit, a_PlayerIdx))
+        {
+            sba_SoundPlayer->PlaySound("menu_back", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
+            if (this->m_ShipSelect)
+            {
+                this->m_ShipSelect = false;
+                if (sba_Network->IsConnected())
+                    if (sba_Network->GetHost())
+                        this->m_pNetwork->GoBack();
+                this->m_pNavigation->SetFocusedElementId(0);
+            }
+            else
+            {
+                this->m_pNetwork->Exit();
+                return 0;
+            }
+        }
+
         if (sba_Network->IsConnected())
             if (!sba_Network->GetHost())
             {

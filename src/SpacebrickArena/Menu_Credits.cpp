@@ -57,6 +57,12 @@ namespace Menu
     int CCredits::Update(PuRe_IInput* a_pInput, PuRe_Renderer* a_pRenderer, PuRe_Timer* a_pTimer, PuRe_IWindow* a_pWindow, PuRe_IGraphics* a_pGraphics, int a_PlayerIdx)
     {
 
+        if (sba_Input->ButtonPressed(sba_Button::Exit, a_PlayerIdx))
+        {
+            sba_SoundPlayer->PlaySound("menu_back", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
+            return 0;
+        }
+
         if (sba_Input->ButtonPressed(sba_Button::NavigationSelect, a_PlayerIdx))
             return 0;
         return 1;

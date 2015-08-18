@@ -353,7 +353,7 @@ namespace sba
                 item.Vel = a_rItems[i]->m_pBody->getLinearMomentum();
                 item.Rot = a_rItems[i]->m_pBody->getAngularMomentum();
                 item.Type = a_rItems[i]->m_ItemType;
-                item.Respawn = 10.0f;
+                item.Respawn = 60.0f;
                 a_rRespawnItems.push_back(item);
                 SAFE_DELETE(a_rItems[i]);
                 if (a_rItems.begin() + i < a_rItems.end())

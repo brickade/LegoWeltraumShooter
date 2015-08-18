@@ -56,15 +56,19 @@ namespace sba
 
 
                 //a_pUI->Draw(1, sba_Renderer, "minimap_enemy", a_pMaterial, epos, rot.GetMatrix(), a_Target, PuRe_Vector2F(1.0f, diff.y*10.0f));
+                sba_Renderer->Set(1, 0.0f, "verlauf");
                 a_pUI->Draw(1, sba_Renderer, "minimap_enemy", a_pMaterial, epos, rot.GetMatrix(), a_Target, PuRe_Vector2F(0.001f, 0.001f));
 
             }
         }
         pos += cforw*0.01f;
+        sba_Renderer->Set(1, 0.0f, "verlauf");
         a_pUI->Draw(1, sba_Renderer, "minimap_ground", a_pMaterial, pos, rot.GetMatrix(), a_Target, PuRe_Vector2F(0.0005f, 0.0005f));
         pos -= cforw*0.01f;
+        sba_Renderer->Set(1, 0.0f, "verlauf");
         a_pUI->Draw(1, sba_Renderer, "minimap_player", a_pMaterial, pos, rot.GetMatrix(), a_Target, PuRe_Vector2F(0.001f, 0.001f));
         pos += (PuRe_Vector3F(0.0f, 0.0f, -0.01f) * rot);
+        sba_Renderer->Set(1, 0.0f, "verlauf");
         a_pUI->Draw(1, sba_Renderer, "minimap_parrow", a_pMaterial, pos, rot.GetMatrix(), a_Target, PuRe_Vector2F(0.001f, 0.001f));
         pos -= (PuRe_Vector3F(0.0f, 0.0f, -0.01f) * rot);
 

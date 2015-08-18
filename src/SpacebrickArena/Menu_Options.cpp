@@ -67,6 +67,17 @@ namespace Menu
     {
         PuRe_Vector2F nav = sba_Input->Direction(sba_Direction::Navigate, a_PlayerIdx);
 
+        if (sba_Input->ButtonPressed(sba_Button::Exit, a_PlayerIdx))
+        {
+            sba_SoundPlayer->PlaySound("menu_back", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
+            if (this->m_Focus)
+                this->m_Focus = false;
+            else if (this->m_CFocus[0])
+                this->m_CFocus[0] = false;
+            else
+                return 0;
+        }
+
         PuRe_GraphicsDescription gdesc = a_pGraphics->GetDescription();
         PuRe_Vector2I size = PuRe_Vector2I(gdesc.ResolutionWidth, gdesc.ResolutionHeight);
         if (!this->m_Focus)
@@ -104,6 +115,8 @@ namespace Menu
                     bool right = sba_Input->ButtonPressed(sba::Input::EButton::MenuRight, i);
                     bool up = sba_Input->ButtonPressed(sba::Input::EButton::MenuUp, i);
                     bool down = sba_Input->ButtonPressed(sba::Input::EButton::MenuDown, i);
+                    if (left || right || up || down)
+                        sba_SoundPlayer->PlaySound("menu_over", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
                     if (!this->m_CFocus[i])
                     {
                         cnav.X = 0.0f;
@@ -174,6 +187,8 @@ namespace Menu
         {
             bool left = sba_Input->ButtonPressed(sba::Input::EButton::MenuLeft, a_PlayerIdx);
             bool right = sba_Input->ButtonPressed(sba::Input::EButton::MenuRight, a_PlayerIdx);
+            if (right || left)
+                sba_SoundPlayer->PlaySound("menu_over", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
             if (nav.X == 0.0f&&!left&&!right)
                 this->m_Switched = false;
             if (!this->m_Switched)
