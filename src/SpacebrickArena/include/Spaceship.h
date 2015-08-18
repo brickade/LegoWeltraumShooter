@@ -4,6 +4,8 @@
 #include <PuReEngine/Core.h>
 #include <PuReEngine/Defines.h>
 
+#define EDITOR_DEV
+
 #include "Onager/World.h"
 
 #include "TheBrick/GameObject.h"

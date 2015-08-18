@@ -37,7 +37,7 @@ namespace sba
         367.0f, 107.0f, 254.0f, 1.0f, 300.0f };
 #ifdef EDITOR_DEV
     const int CSpaceship::MAX_BRICK_COUNT = 750;
-    const int CSpaceship::MAX_BRICK_WIDTH = 40;
+    const int CSpaceship::MAX_BRICK_WIDTH = 50;
 #else
     const int CSpaceship::MAX_BRICK_COUNT = 200;
     const int CSpaceship::MAX_BRICK_WIDTH = 15;
