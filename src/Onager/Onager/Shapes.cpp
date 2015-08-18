@@ -3,6 +3,9 @@
 #include <algorithm>
 #include "Settings.h"
 
+#include "SAT.h"
+#include "contact.h"
+
 namespace ong
 {
 
@@ -757,6 +760,12 @@ namespace ong
 
 	bool overlap(const Hull* hullA, const Hull* hullB, const Transform& t1, const Transform& t2)
 	{
+
+		ContactManifold manifold;
+		SAT(hullA, &t1, hullB, &t2, &manifold);
+		
+		return manifold.numPoints;
+
 		float aEpsilon = hullA->epsilon / FLT_EPSILON * ong_OVERLAP_EPSILON;
 		float bEpsilon = hullB->epsilon / FLT_EPSILON * ong_OVERLAP_EPSILON;
 
@@ -826,11 +835,11 @@ namespace ong
 
 				float epsilon = ong_MAX(aEpsilon, bEpsilon);
 
-				if (lengthSq(n) < epsilon)
+				if (lengthSq(n) < epsilon * length(E1) * length(E2))
 				{
 					vec3 m = cross(E1, p2 - p1);
 					n = cross(E1, m);
-					if (lengthSq(n) < epsilon)
+					if (lengthSq(n) < epsilon * length(E1)* length(E2))
 						continue;
 				}
 				n = normalize(n);
@@ -838,7 +847,7 @@ namespace ong
 				if (dot(n, p1 - hullA->centroid) < 0.0f)
 					n = -n;
 
-				float dist = dot(n, p2 - p1);
+				float dist = dot(n, p1 - p2);
 
 				if (dist > -epsilon && dist < epsilon)
 					dist = 0.0f;

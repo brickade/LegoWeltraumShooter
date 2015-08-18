@@ -10,6 +10,7 @@
 #include "DestructionTest.h"
 #include "ForceTest.h"
 #include "ContinuosTest.h"
+#include "BrickTest.h"
 #include "myMath.h"
 
 #undef main
@@ -17,7 +18,7 @@
 int main()
 {
 
-	Test* test = new FilterTest();
+	Test* test = new BrickTest();
 	test->init();
 
 	test->run();

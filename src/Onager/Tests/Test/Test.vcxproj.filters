@@ -34,6 +34,9 @@
     <ClCompile Include="test.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="BrickLoader.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bomb.h">
@@ -94,6 +97,9 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="test.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="BrickLoader.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
