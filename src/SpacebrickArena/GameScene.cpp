@@ -161,7 +161,6 @@ namespace sba
             Move.X = a_Input->MoveX / 100.0f;
         if (a_Input->MoveY != 0)
             Move.Y = a_Input->MoveY / 100.0f;
-        printf("Move: %f %f\n",Move.X,Move.Y);
         ship->Move(Move);
 
         if (a_Input->Weapon != -1)
