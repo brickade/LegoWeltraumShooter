@@ -72,7 +72,7 @@ public:
 		m_entities.push_back(new Entity(body, vec3(1, 0, 0)));
 
 
-	/*	descr.transform.p.z = 3.0f;
+		descr.transform.p.z = 3.0f;
 		collider = m_world->createCollider(cDescr);
 		collider->setCollisionFilter(0x2);
 		body = m_world->createBody(descr);
@@ -99,7 +99,7 @@ public:
 		body->addCollider(collider);
 
 		m_entities.push_back(new Entity(body, vec3(1, 1, 0)));
-*/
+
 		sDescr.constructionType = ShapeConstruction::HULL_FROM_BOX;
 		sDescr.hullFromBox.c = vec3(0, 0, 0);
 		sDescr.hullFromBox.e = vec3(7, 0.5, 7);
