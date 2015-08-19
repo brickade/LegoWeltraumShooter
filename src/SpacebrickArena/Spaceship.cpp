@@ -58,6 +58,8 @@ namespace sba
         this->m_Name = a_Name;
         this->m_Respawn = 0.0f;
         this->m_pBrickArray = NULL;
+        this->m_Killed = false;
+        this->m_Killer = -1;
     }
 
     // **************************************************************************
@@ -127,6 +129,7 @@ namespace sba
             {
                 if (Ship->m_Respawn == 0.0f)
                 {
+                    Ship->m_Killer = bull->m_pOwner->ID;
                     Ship->m_Shake = 1.0f;
                     int damage = bull->m_Damage;
                     //If shield is on, make shield get damage before the ship
@@ -146,8 +149,20 @@ namespace sba
                     Ship->m_Life -= damage;
                     if (Ship->m_Life < 0)
                     {
-                        bull->m_pOwner->Points += 100;
-                        bull->m_pOwner->KilledTimer = 1.0f;
+                        Ship->m_Life = 0;
+                        if (!Ship->m_Killed)
+                        {
+                            for (unsigned int i = 0; i < sba_Players.size(); i++)
+                            {
+                                if (sba_Players[i]->ID == Ship->m_Killer)
+                                {
+                                    sba_Players[i]->Points += 100;
+                                    sba_Players[i]->KilledTimer = 1.0f;
+                                    break;
+                                }
+                            }
+                            Ship->m_Killed = true;
+                        }
                     }
                     sba_SoundPlayer->PlaySound("hitmarker", false, true, std::stof(sba_Options->GetValue("SoundVolume")), pos, PuRe_Vector3F(0.0f, 0.0f, 0.0f), PuRe_Vector2F(1.0f, 10.0f));
                     bull->m_pOwner->Marker = 1.0f;
@@ -226,6 +241,8 @@ namespace sba
             this->AddBrick(this->m_pBrickArray[i], sba_BrickManager->GetBrickArray(), *sba_World);
 
 
+        this->m_Killed = false;
+        this->m_Killer = -1;
         this->m_Respawn = 0.0f;
         ong::vec3 null = ong::vec3(0, 0, 0);
         this->m_pBody->setPosition(a_Position);
@@ -314,14 +331,35 @@ namespace sba
         {
 
             std::vector<TheBrick::CBrickInstance**> engines;
-            std::vector<TheBrick::CBrickInstance**> weapons;
             this->GetEngines(engines);
-            this->GetWeapons(weapons);
-            if (engines.size() == 0&&weapons.size() == 0)
+            if (engines.size() == 0)
                 this->m_Life = 0;
+            else
+            {
+                std::vector<TheBrick::CBrickInstance**> weapons;
+                this->GetWeapons(weapons);
+                if (weapons.size() == 0)
+                    this->m_Life = 0;
+            }
         }
 
-        if (this->m_Life < 0) this->m_Life = 0;
+        if (this->m_Life <= 0)
+        {
+            this->m_Life = 0;
+            if (!this->m_Killed)
+            {
+                for (unsigned int i = 0; i < sba_Players.size(); i++)
+                {
+                    if (sba_Players[i]->ID == this->m_Killer)
+                    {
+                        sba_Players[i]->Points += 100;
+                        sba_Players[i]->KilledTimer = 1.0f;
+                        break;
+                    }
+                }
+                this->m_Killed = true;
+            }
+        }
 
 		printf("damage: %i\n", damage);
 	}

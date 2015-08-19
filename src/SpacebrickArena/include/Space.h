@@ -7,7 +7,7 @@
 #include <PuReEngine/Defines.h>
 
 
-#define EDITOR_DEV
+//#define EDITOR_DEV
 
 #include <Onager/World.h>
 #include <TheBrick/Serializer.h>

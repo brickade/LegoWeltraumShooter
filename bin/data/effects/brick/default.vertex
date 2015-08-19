@@ -28,7 +28,7 @@ void main()
 	UV = vertexUV;
 
 	Color = instanceColor;
-	Normal = normalize((Model * vec4(vertexNormal,0)).xyz);
+	Normal = normalize((Model * vec4(vertexNormal,1)).xyz);
 
 }
 
