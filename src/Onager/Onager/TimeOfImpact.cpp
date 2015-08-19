@@ -141,7 +141,7 @@ namespace ong
 		}
 
 		//zero velocity
-		if (v == vec3(0, 0, 0))
+		if (absV < FLT_EPSILON)
 		{
 			return 1.0f;
 		}
@@ -185,7 +185,7 @@ namespace ong
 
 		while (numHits < MAX_HITS && (t1 - t0) > MIN_INTERVAL)
 		{
-			float t = 0.5f *(t0 + t1);
+			float t = 0.5f * (t0 + t1);
 
 			if (overlap(a, b, Transform(t*v, Quaternion(vec3(0, 0, 0), 1))))
 			{
