@@ -52,15 +52,13 @@ namespace Editor
                 instanceTop.Center = PuRe_Vector3F::Zero();
                 instanceTop.Rotation = rotTop;
 
-                instanceBottom.Position = instanceTop.Position + PuRe_Vector3F(0, 0, -TheBrick::CBrick::SEGMENT_WIDTH); //Position because flipped and center in edge
+                instanceBottom.Position = instanceTop.Position;
                 instanceBottom.Size = size;
                 instanceBottom.Color = color;
                 instanceBottom.Center = PuRe_Vector3F::Zero();
                 instanceBottom.Rotation = rotBottom;
             }
         }
-        
-
 
 
 
