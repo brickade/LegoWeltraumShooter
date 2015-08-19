@@ -55,6 +55,8 @@ namespace sba
         int m_MaxLife;
         float m_Respawn;
         float m_Shake;
+        int m_Killer;
+        bool m_Killed;
         std::vector<PuRe_ParticleEmitter*> m_EngineEmitter;
 
     public:

@@ -75,7 +75,7 @@ namespace sba
             other = contact->colliderA;
 
         CGameObject* object = static_cast<CGameObject*>(other->getBody()->getUserData());
-        if (object->m_Type != TheBrick::EGameObjectType::Bullet&&bullet->m_ID != TheBrick::Laser)
+        if (bullet->m_ID != TheBrick::Laser)
         {
             if (object->m_Type == TheBrick::EGameObjectType::Ship)
             { 
@@ -84,6 +84,8 @@ namespace sba
                 if (ship->m_Shield > 0.0f)
                     bullet->m_lifeTime = 10.0f;
             }
+            else if (object->m_Type == TheBrick::EGameObjectType::Object)
+                bullet->m_lifeTime = 10.0f;
         }
     }
 

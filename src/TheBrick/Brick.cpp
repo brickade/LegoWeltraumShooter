@@ -89,6 +89,9 @@ namespace TheBrick
             }
             */
             this->m_pRenderInstances[this->m_RenderInstancesCount].Color = instance->m_Color;
+            if (this->GetCategoryId() == 2)
+                this->m_pRenderInstances[this->m_RenderInstancesCount].Color.A = 0.5f;
+
             this->m_pRenderInstances[this->m_RenderInstancesCount].Size = PuRe_Vector3F::One();
             this->m_pRenderInstances[this->m_RenderInstancesCount].Center = PuRe_Vector3F::Zero();
             this->m_RenderInstancesCount++;
@@ -136,6 +139,7 @@ namespace TheBrick
         this->m_ModelPath = (char*)malloc(MAX_MODEL_PATH_LENGTH);
         a_pSerializer.Read(this->m_ModelPath, MAX_MODEL_PATH_LENGTH);
         this->m_pModel = new PuRe_Model(&a_pGraphics, this->m_ModelPath);
+        this->m_pModel->JoinThread();
 
         //m_BrickId
         this->m_BrickId = a_pSerializer.ReadIntUnsigned();
