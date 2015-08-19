@@ -141,7 +141,7 @@ namespace ong
 		}
 
 		//zero velocity
-		if (v == vec3(0, 0, 0))
+		if (absV < FLT_EPSILON)
 		{
 			return 1.0f;
 		}
@@ -190,7 +190,6 @@ namespace ong
             printf("t1: %f\n", t1);
             float t = 0.5f *(t0 + t1);
             printf("t: %f\n", t);
-            
 
 			if (overlap(a, b, Transform(t*v, Quaternion(vec3(0, 0, 0), 1))))
 			{
