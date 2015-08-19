@@ -6,6 +6,8 @@
 
 #include <Onager/myMath.h>
 
+#include <vector>
+
 #include <TheBrick/BrickInstance.h>
 
 namespace sba
@@ -42,9 +44,7 @@ namespace Editor
         CHistory();
         ~CHistory();
 
-        void AddStep(SHistoryStep* step);
         void AddStep(TheBrick::CBrickInstance* a_pBrickInstance, std::vector<TheBrick::CBrickInstance*>* a_AdhesiveBricks = nullptr, bool a_Delete = false);
-        void CutRedos();
         void Clear();
         SHistoryStep* Undo();
         SHistoryStep* Redo();

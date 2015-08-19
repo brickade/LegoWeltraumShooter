@@ -592,7 +592,6 @@ namespace Editor
         { //Place BrickInstance
             sba_SoundPlayer->PlaySound("editor_set_brick", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
             this->m_pCurrentBrick->m_Color = this->m_CurrentColor; //Apply right color
-            this->m_pHistory->CutRedos();
             this->m_pHistory->AddStep(a_rShipHandler.AddBrickInstanceToCurrentShip(*this->m_pCurrentBrick)); //Add History step and add new instance to ship
             a_rShipHandler.UpdateCurrentShipData();
             this->m_CurrentHeightIsInvalid = true;
@@ -617,8 +616,6 @@ namespace Editor
             //Restore Color
             this->RestoreAdhesiveBricksToDelete();
             this->m_BrickToDelete.BrickInstance->m_Color = this->m_BrickToDelete.Color;
-
-            this->m_pHistory->CutRedos(); //Cut Redos
 
             //Add History step
             std::vector<TheBrick::CBrickInstance*>* adhesiveInstances = new std::vector<TheBrick::CBrickInstance*>(this->m_AdhesiveBricksToDelete.size());

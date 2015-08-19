@@ -25,32 +25,24 @@ namespace Editor
 
     // **************************************************************************
     // **************************************************************************
-    void CHistory::AddStep(SHistoryStep* step)
-    {
-        //Add to History
-        this->m_CurrentPos++;
-        this->m_Storage.push_back(step);
-        if (!step->Delete)
-        {
-            step->Brick.BrickInstance->m_UserData = this->m_Storage[this->m_CurrentPos];
-        }
-    }
-
-    // **************************************************************************
-    // **************************************************************************
     void CHistory::AddStep(TheBrick::CBrickInstance* a_pBrickInstance, std::vector<TheBrick::CBrickInstance*>* a_AdhesiveBricks, bool a_Delete)
     {
         SHistoryStep* step = new SHistoryStep();
-        memset(step, 0, sizeof(SHistoryStep) - sizeof(std::vector<SHistoryStep*>));
-        //step.DeleteAdhesiveBricks_Steps = std::vector<SHistoryStep*>();
-        if (!(step->Delete = a_Delete))
+        step->Brick.BrickInstance = nullptr;
+        step->Brick.Brick = nullptr;
+        step->Brick.Transform = ong::Transform(ong::vec3(0, 0, 0), ong::Quaternion(ong::vec3(0, 0, 0), 1));
+        step->Brick.Color = PuRe_Color(1, 1, 1, 1);
+        step->Delete = a_Delete;
+        step->DeleteBrick_Step = nullptr;
+        step->DeleteAdhesiveBricks_Steps = std::vector<SHistoryStep*>();
+
+        if (!a_Delete)
         {
-            SHistoryBrick brick;
-            brick.BrickInstance = a_pBrickInstance;
-            brick.Brick = a_pBrickInstance->m_pBrick;
-            brick.Transform = a_pBrickInstance->GetTransform();
-            brick.Color = a_pBrickInstance->m_Color;
-            step->Brick = brick;
+            step->Brick.BrickInstance = a_pBrickInstance;
+            step->Brick.BrickInstance->m_UserData = step;
+            step->Brick.Brick = a_pBrickInstance->m_pBrick;
+            step->Brick.Transform = a_pBrickInstance->GetTransform();
+            step->Brick.Color = a_pBrickInstance->m_Color;
         }
         else
         {
@@ -64,18 +56,15 @@ namespace Editor
                 }
             }
         }
-        this->AddStep(step); //Add History step
-    }
-
-    // **************************************************************************
-    // **************************************************************************
-    void CHistory::CutRedos()
-    {
+        //Cut Redos
         while (this->m_Storage.size() > this->m_CurrentPos + 1)
         {
             SAFE_DELETE(this->m_Storage.back());
             this->m_Storage.pop_back();
         }
+        //Add to History
+        this->m_CurrentPos++;
+        this->m_Storage.push_back(step);
     }
 
     // **************************************************************************
