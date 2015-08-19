@@ -50,6 +50,8 @@ namespace Menu
         this->m_pNetwork = new CNetwork(timer);
         this->m_pCredits = new CCredits();
 
+        this->m_pSpriteReader->JoinThread();
+
     }
 
     // **************************************************************************

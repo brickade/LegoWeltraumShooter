@@ -1,4 +1,4 @@
-static@spacestation;0,0,0;0,0,0
+static@spacestation;0,0,0;0,0,0;0,0,0
 object@satellit;0,80,80;0,0,3;0,0,0
 object@satellit2;0,-80,-80;0,0,0;0,0,1
 object@satellit2;0,180,80;0,2,0;3,3,0
@@ -7,10 +7,10 @@ object@satellit2;50,120,80;0,0,0;3,0,0
 object@satellit;-50,-10,-180;0,3,0;4,0,0
 object@wrack2;250,320,80;0,0,0;0,0,0
 object@wrack;-50,-10,-180;0,0,3;1,0,0
-item@repair;140,0,110;0,0,0
-item@repair;-140,0,-110;0,0,0
-item@speed;500,0,0;0,0,0
-item@speed;-500,0,0;0,0,0
-item@speed;0,500,0;0,0,0
-item@speed;0,-500,0;0,0,0
+item@repair;140,0,110;0,0,0;0,0,0
+item@repair;-140,0,-110;0,0,0;0,0,0
+item@speed;500,0,0;0,0,0;0,0,0
+item@speed;-500,0,0;0,0,0;0,0,0
+item@speed;0,500,0;0,0,0;0,0,0
+item@speed;0,-500,0;0,0,0;0,0,0
 light@directional;1.0,0.0,0.0;1.0,1.0,1.0;0,0,0

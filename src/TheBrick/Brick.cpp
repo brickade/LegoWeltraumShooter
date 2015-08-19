@@ -139,7 +139,6 @@ namespace TheBrick
         this->m_ModelPath = (char*)malloc(MAX_MODEL_PATH_LENGTH);
         a_pSerializer.Read(this->m_ModelPath, MAX_MODEL_PATH_LENGTH);
         this->m_pModel = new PuRe_Model(&a_pGraphics, this->m_ModelPath);
-        this->m_pModel->JoinThread();
 
         //m_BrickId
         this->m_BrickId = a_pSerializer.ReadIntUnsigned();

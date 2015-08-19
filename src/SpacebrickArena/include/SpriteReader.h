@@ -84,6 +84,8 @@ namespace sba
         /// @returns the Size as Vector2F
         ///
         PuRe_Vector2F GetSize();
+
+        void JoinThread();
     };
 }
 #endif /* _SPRITEREADER_H_ */

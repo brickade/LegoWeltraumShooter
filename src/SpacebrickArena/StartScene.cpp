@@ -18,7 +18,7 @@ namespace sba
         PuRe_GraphicsDescription gdesc = graphics->GetDescription();
         this->m_pUICamera = new PuRe_Camera(PuRe_Vector2F((float)1920, (float)1080), PuRe_CameraProjection::Orthogonal);
         this->m_pTeamLogo = new PuRe_Sprite(graphics, "../data/textures/teamlogo.png");
-        this->m_pGALogo = new PuRe_Sprite(graphics, "../data/textures/GA_Logo.dds");
+        this->m_pGALogo = new PuRe_Sprite(graphics, "../data/textures/galogo.png");
         this->m_pMaterial = graphics->LoadMaterial("../data/effects/sprite/default");
         this->m_Timer = 0.0f;
         this->m_Loading = false;
@@ -64,14 +64,14 @@ namespace sba
         box.m_Position = PuRe_Vector3F(0.0f, 0.0f, 0.0f);
         box.m_Size = PuRe_Vector3F((float)gdesc.ResolutionWidth, (float)gdesc.ResolutionHeight, 0.0f);
         graphics->Begin(box);
-        PuRe_Vector3F size = PuRe_Vector3F(1920.0f / 4.0f, 1080.0f / 4.0f, 0.0f);
+        PuRe_Vector3F size = PuRe_Vector3F(1920.0f / 2.0f, 1080.0f / 2.0f, 0.0f);
 
         graphics->SetMaterial(this->m_pMaterial);
         this->m_pMaterial->SetFloat(sin(this->m_Timer*2.0f), "alpha");
         if (this->m_Timer > PuRe_PI)
-            this->m_pTeamLogo->Draw(this->m_pUICamera, this->m_pMaterial, size*2, size*2, PuRe_MatrixF::Identity());
+            this->m_pTeamLogo->Draw(this->m_pUICamera, this->m_pMaterial, size, size, PuRe_MatrixF::Identity());
         else
-            this->m_pGALogo->Draw(this->m_pUICamera, this->m_pMaterial, size+size, size, PuRe_MatrixF::Identity());
+            this->m_pGALogo->Draw(this->m_pUICamera, this->m_pMaterial, size, size, PuRe_MatrixF::Identity());
 
         graphics->End();
     }

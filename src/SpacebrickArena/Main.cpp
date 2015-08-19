@@ -8,7 +8,7 @@
 
 #include "Onager\Profiler.h"
 
-int PURE_MAIN
+int main()
 {
     //Memory Leak detection
     //static unsigned int breakId = 162;

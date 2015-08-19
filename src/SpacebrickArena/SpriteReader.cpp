@@ -102,6 +102,14 @@ namespace sba
     // **************************************************************************
     // **************************************************************************
 
+    void CSpriteReader::JoinThread()
+    {
+        this->m_pSprite->JoinThread();
+    }
+
+    // **************************************************************************
+    // **************************************************************************
+
     void CSpriteReader::Draw(int a_Index, PuRe_Renderer* a_pRenderer, const char* a_pName, PuRe_IMaterial* a_pMaterial, PuRe_Vector3F a_Position, PuRe_Vector3F a_Rotation, int a_RenderIndex, PuRe_Vector2F Size, PuRe_Vector2F UVSize, PuRe_Vector2F UVPos, PuRe_Color a_Color)
     {
 

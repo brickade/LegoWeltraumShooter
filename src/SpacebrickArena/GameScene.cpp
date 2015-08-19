@@ -577,11 +577,14 @@ namespace sba
 
         this->m_pSphere = new PuRe_Sphere(graphics);
 
+        bool otherSkyBox = false;
+
         if (sba_SkyBoxName != sba_Map->GetSkybox())
         {
             SAFE_DELETE(sba_SkyBox);
             sba_SkyBox = new PuRe_SkyBox(graphics, sba_Map->GetSkybox());
             sba_SkyBoxName = sba_Map->GetSkybox();
+            otherSkyBox = true;
         }
 
         //Load balancing
@@ -628,6 +631,9 @@ namespace sba
         if (sba_Network->IsConnected())
             this->m_pNetwork = new CGameNetwork();
 
+
+        if (otherSkyBox)
+            sba_SkyBox->JoinThread();
 
         this->StartGame();
 

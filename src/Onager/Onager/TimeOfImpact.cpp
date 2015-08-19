@@ -182,19 +182,26 @@ namespace ong
 		if (numHits == 0)
 			return 1.0f;
 
-
+        printf("START\n");
 		while (numHits < MAX_HITS && (t1 - t0) > MIN_INTERVAL)
-		{
-			float t = 0.5f *(t0 + t1);
+        {
+            printf("NUmHits: %i\n", numHits);
+            printf("t0: %f\n", t0);
+            printf("t1: %f\n", t1);
+            float t = 0.5f *(t0 + t1);
+            printf("t: %f\n", t);
+            
 
 			if (overlap(a, b, Transform(t*v, Quaternion(vec3(0, 0, 0), 1))))
 			{
 				++numHits;
-				t1 = t;
+                t1 = t;
+                printf("HIT %f\n",t1);
 			}
 			else
 			{
-				t0 = t;
+                t0 = t;
+                printf("Not Hit %f\n",t0);
 				//vec3 pa = ca + t*v;
 				//float d = dot(b->closestPoint(pa) - pa, v);
 				//if (d > 0)
@@ -210,7 +217,8 @@ namespace ong
 				//	t1 = t;
 				//}
 			}
-		}
+        }
+        printf("End\n");
 
 		if (t1 >= maxT)
 			return 1.0f; //no collision
