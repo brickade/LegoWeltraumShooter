@@ -37,11 +37,12 @@ namespace ong
 		vec3 cb = transformVec3(sb->c, *tb);
 
 		float r = sa->r + sb->r;
-		float dist = length(cb - ca) - r;
+		float l = length(cb - ca);
+		float dist = l - r;
 
 		if (dist < 0.0f)
 		{
-			manifold->normal = normalize(cb - ca);
+			manifold->normal = l > 0.0f ? normalize(cb - ca) : vec3(0,1,0);
 			manifold->numPoints = 1;
 			manifold->points[0].position = 0.5f * ((cb + sb->r*manifold->normal) + (ca - sb->r*manifold->normal));
 			manifold->points[0].penetration = dist;
