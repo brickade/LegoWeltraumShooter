@@ -8,7 +8,7 @@
 
 namespace Editor
 {
-#define SPECIALBRICK_DEBUG
+//#define SPECIALBRICK_DEBUG
     // **************************************************************************
     // **************************************************************************
     /*CAssistant::CAssistant()
