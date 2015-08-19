@@ -347,7 +347,7 @@ namespace ong
 			vec3 p;
 			if (intersectRayAABB(o, d, m_pCollider->getAABB(), tmin, p) && tmin < tmax)
 			{
-				vec3 n;
+				vec3 n = vec3(0,1,0);
 
 				const Transform& _t = m_pCollider->getTransform();
 				vec3 _o = invTransformVec3(o, _t);
