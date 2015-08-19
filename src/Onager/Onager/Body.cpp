@@ -267,7 +267,7 @@ namespace ong
 			if (n->type == NodeType::LEAF)
 			{
 				Collider* _c = n->collider;
-				vec3 n;
+				vec3 n = vec3(0,1,0);
 				const Transform& _t = _c->getTransform();
 				vec3 _o = invTransformVec3(o, _t);
 				vec3 _d = rotate(d, conjugate(_t.q));
