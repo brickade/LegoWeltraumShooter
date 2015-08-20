@@ -47,9 +47,7 @@ namespace Editor
         bool m_CurrentHeightIsInvalid;
         PuRe_Color m_CurrentColor;
         bool m_PlaceBelow;
-        bool m_CanPlaceHere = false; 
-
-        bool m_DeleteMode = false;
+        bool m_CanPlaceHere = false;
 
         TheBrick::CGameObject* m_pCurrentBrickObject;
         TheBrick::CBrickInstance* m_pCurrentBrick = nullptr;

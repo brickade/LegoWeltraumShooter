@@ -82,7 +82,7 @@ namespace Editor
         }
         //-----First Brick Placement-----
         bool firstBrick = false;
-        if (a_rShipHandler.GetCurrentSpaceShip()->m_pBricks.size() == 0)
+        if (a_rShipHandler.GetCurrentSpaceShip()->m_pBricks.size() == 0 && !a_Delete)
         { //First Brick
             firstBrick = true;
             this->m_CurrentPositionCache = PuRe_Vector2F::Zero();
