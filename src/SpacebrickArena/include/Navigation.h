@@ -84,7 +84,7 @@ namespace sba
 
         void Update(PuRe_Timer& a_pTimer, PuRe_Vector2F a_InputVector, bool a_LinkEnds = true);
         void Navigate(EDirection::Type a_Direction, bool a_LinkEnds = true);
-        void Scroll(PuRe_Vector2F a_Input, float a_DeltaSec);
+        void Scroll(PuRe_Vector2F a_Input, float a_DeltaSec, bool a_LinkEnds = true);
         EDirection::Type CNavigation::DirectionFromInputVector(PuRe_Vector2F a_ThumbInput) const;
 
         void AddElement(int a_Position = -1);

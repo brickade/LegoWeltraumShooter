@@ -42,7 +42,7 @@ namespace sba
         }
         else if (a_NewDirection != EDirection::None && this->m_pTimer->GetTotalElapsedSeconds() > this->m_ScrollingThreshold) //Scrolling
         {
-            this->Scroll(a_InputVector, a_pTimer.GetElapsedSeconds());
+            this->Scroll(a_InputVector, a_pTimer.GetElapsedSeconds(), a_LinkEnds);
         }
         this->m_PreviousState = a_NewDirection;
     }
@@ -80,27 +80,27 @@ namespace sba
 
     // **************************************************************************
     // **************************************************************************
-    void CNavigation::Scroll(PuRe_Vector2F a_Input, float a_DeltaSec)
+    void CNavigation::Scroll(PuRe_Vector2F a_Input, float a_DeltaSec, bool a_LinkEnds)
     {
         this->m_FocusPosition += a_Input * a_DeltaSec * this->m_ScrollingSpeed * 100.0f;
         if (this->m_FocusPosition.X > 100)
         {
-            this->Navigate(EDirection::Right);
+            this->Navigate(EDirection::Right, a_LinkEnds);
             this->m_FocusPosition.X -= 100;
         }
         else if (this->m_FocusPosition.X < -100)
         {
-            this->Navigate(EDirection::Left);
+            this->Navigate(EDirection::Left, a_LinkEnds);
             this->m_FocusPosition.X += 100;
         }
         else if (this->m_FocusPosition.Y > 100)
         {
-            this->Navigate(EDirection::Up);
+            this->Navigate(EDirection::Up, a_LinkEnds);
             this->m_FocusPosition.Y -= 100;
         }
         else if (this->m_FocusPosition.Y < -100)
         {
-            this->Navigate(EDirection::Down);
+            this->Navigate(EDirection::Down, a_LinkEnds);
             this->m_FocusPosition.Y += 100;
         }
     }
