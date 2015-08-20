@@ -50,6 +50,10 @@ namespace sba
         float m_OldMass;
 
     public:
+        bool hasMG;
+        bool hasLaser;
+        bool hasMine;
+        bool hasRocket;
         int m_Shield;
         int m_Life;
         int m_MaxLife;

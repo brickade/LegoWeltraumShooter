@@ -21,14 +21,14 @@ namespace sba
         int local = 0;
         //scale for the shield and life to define where it starts
         float balken_size = 246.0f;
-        for (unsigned int i = 0; i<sba_Players.size(); i++)
+        for (unsigned int i = 0; i < sba_Players.size(); i++)
         {
             if (sba_Players[i]->PadID != -1)
             {
                 size = PuRe_Vector3F(36.0f, 36.0f, 0.0f);
                 pos = PuRe_Vector3F(100.0f, 900.0f, 0.0f);
-                sba_Renderer->Draw(2, false, a_pFont, a_pFontMaterial, std::to_string(sba_Players[i]->Points), pos, PuRe_MatrixF(), size, 36.0f, c,local);
-                pos.X = (1920.0f/2.0f)-400.0f;
+                sba_Renderer->Draw(2, false, a_pFont, a_pFontMaterial, std::to_string(sba_Players[i]->Points), pos, PuRe_MatrixF(), size, 36.0f, c, local);
+                pos.X = (1920.0f / 2.0f) - 400.0f;
                 pos.Y = 1080.0f / 2.0f;
                 sba_Renderer->Set(2, 0.0f, "verlauf");
                 this->m_pUI->Draw(2, sba_Renderer, "life_shield_tile", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.5f, 0.5f));
@@ -37,7 +37,7 @@ namespace sba
 
 
                 pos.Y += 20.0f;
-                pos.X += 5.0f*(1.0f-value);
+                pos.X += 5.0f*(1.0f - value);
 
                 pos.Y -= balken_size*(1.0f - value)*0.45f;
                 sba_Renderer->Set(2, 0.0f, "verlauf");
@@ -76,16 +76,19 @@ namespace sba
                 this->m_pUI->Draw(2, sba_Renderer, "shield_icon_tile", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.5f, 0.5f));
                 pos.Y += 175.0f;
 
-                this->m_pMinimap->Draw((*a_pCameras)[local],this->m_pUI, a_pFontMaterial, i, local, a_OriginDistance);
+                this->m_pMinimap->Draw((*a_pCameras)[local], this->m_pUI, a_pFontMaterial, i, local, a_OriginDistance);
 
-                pos.X = 1920.0f/2.0f;
-                pos.Y = 1080.0f-100.0f;
+                pos.X = 1920.0f / 2.0f;
+                pos.Y = 1080.0f - 100.0f;
 
                 pos.X -= 350.0f;
                 sba_Renderer->Set(2, 0.0f, "verlauf");
                 if (sba_Players[i]->Weapon == 1)
                     this->m_pUI->Draw(2, sba_Renderer, "icon_active", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.75f, 0.75f));
-                sba_Renderer->Set(2, sba_Players[i]->LaserCD/std::stof(sba_Balancing->GetValue("Laser_CD")), "verlauf");
+                if (sba_Players[i]->Ship->hasLaser)
+                    sba_Renderer->Set(2, sba_Players[i]->LaserCD / std::stof(sba_Balancing->GetValue("Laser_CD")), "verlauf");
+                else
+                    sba_Renderer->Set(2, 1.0f, "verlauf");
                 this->m_pUI->Draw(2, sba_Renderer, "icon_kasten_gruen", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.75f, 0.75f));
                 pos.Y += 10.0f;
                 this->m_pUI->Draw(2, sba_Renderer, "laser_icon", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.75f, 0.75f));
@@ -94,7 +97,10 @@ namespace sba
                 sba_Renderer->Set(2, 0.0f, "verlauf");
                 if (sba_Players[i]->Weapon == 0)
                     this->m_pUI->Draw(2, sba_Renderer, "icon_active", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.75f, 0.75f));
-                sba_Renderer->Set(2, sba_Players[i]->MGCD / std::stof(sba_Balancing->GetValue("MG_CD")), "verlauf");
+                if (sba_Players[i]->Ship->hasMG)
+                    sba_Renderer->Set(2, sba_Players[i]->MGCD / std::stof(sba_Balancing->GetValue("MG_CD")), "verlauf");
+                else
+                    sba_Renderer->Set(2, 1.0f, "verlauf");
                 this->m_pUI->Draw(2, sba_Renderer, "icon_kasten_rot", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.75f, 0.75f));
                 this->m_pUI->Draw(2, sba_Renderer, "MG_icon", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.75f, 0.75f));
 
@@ -102,7 +108,10 @@ namespace sba
                 sba_Renderer->Set(2, 0.0f, "verlauf");
                 if (sba_Players[i]->Weapon == 3)
                     this->m_pUI->Draw(2, sba_Renderer, "icon_active", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.75f, 0.75f));
-                sba_Renderer->Set(2, sba_Players[i]->MineCD / std::stof(sba_Balancing->GetValue("Mine_CD")), "verlauf");
+                if (sba_Players[i]->Ship->hasMine)
+                    sba_Renderer->Set(2, sba_Players[i]->MineCD / std::stof(sba_Balancing->GetValue("Mine_CD")), "verlauf");
+                else
+                    sba_Renderer->Set(2, 1.0f, "verlauf");
                 this->m_pUI->Draw(2, sba_Renderer, "icon_kasten", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.75f, 0.75f));
                 this->m_pUI->Draw(2, sba_Renderer, "mines_icon", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.75f, 0.75f));
 
@@ -110,7 +119,10 @@ namespace sba
                 sba_Renderer->Set(2, 0.0f, "verlauf");
                 if (sba_Players[i]->Weapon == 2)
                     this->m_pUI->Draw(2, sba_Renderer, "icon_active", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.75f, 0.75f));
-                sba_Renderer->Set(2, sba_Players[i]->RocketCD / std::stof(sba_Balancing->GetValue("Rocket_CD")), "verlauf");
+                if (sba_Players[i]->Ship->hasRocket)
+                    sba_Renderer->Set(2, sba_Players[i]->RocketCD / std::stof(sba_Balancing->GetValue("Rocket_CD")), "verlauf");
+                else
+                    sba_Renderer->Set(2, 1.0f, "verlauf");
                 this->m_pUI->Draw(2, sba_Renderer, "icon_kasten_gelb", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.75f, 0.75f));
                 this->m_pUI->Draw(2, sba_Renderer, "missle_icon", a_pFontMaterial, pos, PuRe_Vector3F(), local, PuRe_Vector2F(0.75f, 0.75f));
 
@@ -125,7 +137,7 @@ namespace sba
                     sba_Renderer->Draw(2, false, this->m_pHitMarkerSprite, this->m_pSpriteMaterial, pos, PuRe_MatrixF(), PuRe_Vector3F(0.0f, 0.0f, 0.0f), PuRe_Vector3F(0.2f, 0.2f, 0.2f), PuRe_Color(1.0f, 1.0f, 1.0f), PuRe_Vector2F(), PuRe_Vector2F(), local);
                 }
                 sba_Renderer->Set(2, 1.0f, "alpha");
-                pos.Y = 1080.0f-100.0f;
+                pos.Y = 1080.0f - 100.0f;
                 pos.X -= 200.0f;
                 if (a_pDisplayEnd[local])
                 {
@@ -139,7 +151,7 @@ namespace sba
                 {
                     float timer = sba_Players[i]->KilledTimer / 1.0f;
                     size = PuRe_Vector3F(48.0f*timer, 48.0f*timer, 0.0f);
-                    pos = PuRe_Vector3F((1920/2.0f)-100.0f + (1.0f-timer)*100, 1080.0f - 300.0f- (100 * timer), 0.0f);
+                    pos = PuRe_Vector3F((1920 / 2.0f) - 100.0f + (1.0f - timer) * 100, 1080.0f - 300.0f - (100 * timer), 0.0f);
                     sba_Renderer->Set(2, 1.0f, "alpha");
                     sba_Renderer->Draw(2, false, a_pFont, a_pFontMaterial, "+100", pos, PuRe_MatrixF(), size, 48.0f*timer, PuRe_Color(1.0f, 1.0f, 1.0f, timer), local);
 
@@ -152,12 +164,12 @@ namespace sba
         if (a_Pause)
         {
             size = PuRe_Vector3F(48.0f, 48.0f, 0.0f);
-            pos = PuRe_Vector3F((1920.0f/2)-150.0f, 600.0f, 0.0f);
+            pos = PuRe_Vector3F((1920.0f / 2) - 150.0f, 600.0f, 0.0f);
             if (a_PauseEnd)
                 c = PuRe_Color(0.5f, 0.5f, 0.5f, 0.5f);
             else
                 c = PuRe_Color(1.0f, 1.0f, 1.0f, 1.0f);
-            sba_Renderer->Draw(2, false, a_pFont, a_pFontMaterial, "Continue", pos, PuRe_MatrixF(), size, 42.0f, c,0);
+            sba_Renderer->Draw(2, false, a_pFont, a_pFontMaterial, "Continue", pos, PuRe_MatrixF(), size, 42.0f, c, 0);
             pos.Y -= 150.0f;
             if (!a_PauseEnd)
                 c = PuRe_Color(0.5f, 0.5f, 0.5f, 0.5f);
@@ -171,12 +183,12 @@ namespace sba
         {
             size = PuRe_Vector3F(48.0f, 48.0f, 0.0f);
             pos = PuRe_Vector3F((1920.0f / 2) - 150.0f, 600.0f, 0.0f);
-            sba_Renderer->Draw(2, false, a_pFont, a_pFontMaterial, "Player " + std::to_string(a_WonID+1) + " won!", pos, PuRe_MatrixF(), size, 42.0f, c);
+            sba_Renderer->Draw(2, false, a_pFont, a_pFontMaterial, "Player " + std::to_string(a_WonID + 1) + " won!", pos, PuRe_MatrixF(), size, 42.0f, c);
         }
         else
         {
             int minLeft = (int)std::floor(a_EndTime / 60.0f);
-            int secLeft = (int)(a_EndTime - (minLeft * 60.0f) );
+            int secLeft = (int)(a_EndTime - (minLeft * 60.0f));
             std::string minString = std::to_string(minLeft);
             std::string secString = std::to_string(secLeft);
             if (secLeft < 10.0f)

@@ -109,6 +109,14 @@ namespace sba
     {
         this->m_lifeTime += a_DeltaTime;
 
+        if (this->m_ID != TheBrick::Laser)
+        {
+            float speed = ong::lengthSq(this->m_pBody->getLinearVelocity());
+            printf("Speed: %f\n",speed);
+            if (speed < 20.0f)
+                this->m_lifeTime = 10.0f;
+        }
+
         if (this->m_ID == TheBrick::Laser)
         {
                 ong::Transform transform = this->m_pWeapon->GetTransform();

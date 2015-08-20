@@ -105,7 +105,7 @@ namespace sba
                 switch (item->GetType())
                 {
                     case sba::EItemType::Repair:
-                        Ship->m_Life += 10;
+                        Ship->m_Life += (int)(Ship->m_MaxLife/2.5f);
                         if (Ship->m_Life  > Ship->m_MaxLife)
                             Ship->m_Life = Ship->m_MaxLife;
                         break;
@@ -217,6 +217,35 @@ namespace sba
             }
         }
         this->m_MaxSpeed /= mass;
+
+        std::vector<TheBrick::CBrickInstance**> weapons;
+        this->GetWeapons(weapons);
+        this->hasMG = false;
+        this->hasLaser = false;
+        this->hasMine = false;
+        this->hasRocket = false;
+        for (auto weapon : weapons)
+        {
+            switch ((*weapon)->m_pBrick->GetBrickId())
+            {
+
+            case TheBrick::Laser - 100: //Laser
+                this->hasLaser = true;
+                break;
+
+            case TheBrick::MG - 100: //MG
+                this->hasMG = true;
+                break;
+
+            case TheBrick::Mine - 100: //Mine
+                this->hasMine = true;
+                break;
+
+            case TheBrick::Rocket - 100: //Rocket
+                this->hasRocket = true;
+                break;
+            };
+        }
 		
 		this->m_Shield = 0;
     }

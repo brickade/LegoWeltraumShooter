@@ -164,7 +164,35 @@ namespace sba
         ship->Move(Move);
 
         if (a_Input->Weapon != -1)
+        {
+            if (a_Input->Weapon == 0 && a_pPlayer->Ship->hasMG ||
+                a_Input->Weapon == 1 && a_pPlayer->Ship->hasLaser ||
+                a_Input->Weapon == 2 && a_pPlayer->Ship->hasRocket ||
+                a_Input->Weapon == 3 && a_pPlayer->Ship->hasMine)
             a_pPlayer->Weapon = a_Input->Weapon;
+        }
+        else
+        {
+            //we check if he still has the currently selected weapon
+            bool has = false;
+            if (a_pPlayer->Weapon == 0 && a_pPlayer->Ship->hasMG ||
+                a_pPlayer->Weapon == 1 && a_pPlayer->Ship->hasLaser ||
+                a_pPlayer->Weapon == 2 && a_pPlayer->Ship->hasRocket ||
+                a_pPlayer->Weapon == 3 && a_pPlayer->Ship->hasMine)
+                    has = true;
+            //if he does not have it, choose another he has
+            if (!has)
+            {
+                if (a_pPlayer->Ship->hasMG)
+                    a_pPlayer->Weapon = 0;
+                else if (a_pPlayer->Ship->hasLaser)
+                    a_pPlayer->Weapon = 1;
+                else if (a_pPlayer->Ship->hasRocket)
+                    a_pPlayer->Weapon = 2;
+                else if (a_pPlayer->Ship->hasMG)
+                    a_pPlayer->Weapon = 3;
+            }
+        }
 
         float* cd = &a_pPlayer->MGCD;
         if (a_Input->Shoot&&*cd == 0.0f&&a_pPlayer->Weapon == 0)
