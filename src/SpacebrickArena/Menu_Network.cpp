@@ -35,7 +35,9 @@ namespace Menu
 
     void CNetwork::ReceiveData()
     {
+#ifdef NETWORKDEBUG
         printf("Thread Start!\n");
+        #endif
         SOCKET bsocket = sba_Network->GetBroadcast();
         sba_Network->SetBlockMode(bsocket, false);
         const int len = 1024;
@@ -71,7 +73,9 @@ namespace Menu
                 }
             }
         }
+#ifdef NETWORKDEBUG
         printf("Thread End!\n");
+        #endif
     }
 
     bool CNetwork::ConnectToServer(PuRe_IWindow* a_pWindow)

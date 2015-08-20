@@ -21,12 +21,16 @@ namespace sba
         this->m_PhysicFrame = 0;
         this->m_Run = true;
         memset(m_buffer, -1, sizeof(PlayOutBuffer) * BufferSize);
+        #ifdef NETWORKDEBUG
         printf("set block mode true\n");
+        #endif
         if (sba_Network->GetHost())
         {
             sba_Network->m_Mutex.lock();
+#ifdef NETWORKDEBUG
             printf("\n");
             printf("Resetting Buffer ... \n");
+            #endif
             for (int i = 0; i < BufferSize; ++i)
             {
                 m_buffer[i].Frame = i;
@@ -35,7 +39,9 @@ namespace sba
                 m_send[i] = 0;
                 m_numReceived[i] = 0;
             }
+#ifdef NETWORKDEBUG
             printf("Buffer Reset!\n");
+            #endif
             //send 6 frames from self, because server is also a player
             for (unsigned int i = 0; i < sba_Players.size(); i++)
             {
@@ -54,7 +60,9 @@ namespace sba
                     rthread.detach();
                 }
             }
+#ifdef NETWORKDEBUG
             printf("Send init to all.\n");
+            #endif
             sba::SHeadPacket sh;
             sh.Type = sba::EPacket::Init;
             std::vector<SOCKET> sendSockets;
@@ -80,7 +88,9 @@ namespace sba
             }
             sendSockets.clear();
             sba_Network->m_Mutex.unlock();
+#ifdef NETWORKDEBUG
             printf("Set Initial Input for Host.\n");
+            #endif
 
         }
         else
@@ -116,7 +126,9 @@ namespace sba
                     packet.Players = sba_Players.size();
                     memcpy(packet.Input, m_buffer[i].Inputs, sizeof(sba::SInputData)*sba_Players.size());
                     //send tick with input
+#ifdef NETWORKDEBUG
                     printf("send tick %d\n", m_buffer[i].Frame);
+                    #endif
                     std::vector<SOCKET> sendSockets;
                     for (unsigned int j = 0; j < sba_Players.size(); ++j)
                     {
@@ -158,7 +170,9 @@ namespace sba
             if (inputExists)
             {
                 this->m_Timeout = 0;
+#ifdef NETWORKDEBUG
                 printf("Input exists, do Physik for Frame %i!\n", this->m_PhysicFrame);
+                #endif
                 sba::SInputPacket ipacket;
                 for (unsigned int i = 0; i < sba_Players.size(); i++)
                 {
@@ -172,12 +186,16 @@ namespace sba
 
                         if (!sba_Network->GetHost())
                         {
+#ifdef NETWORKDEBUG
                             printf("send package %d\n", ipacket.Frame);
+                            #endif
                             sba_Network->SendHost((char*)&ipacket, sizeof(sba::SInputPacket), false);
                         }
                         else
                         {
+#ifdef NETWORKDEBUG
                             printf("Handle own Input %d\n", ipacket.Frame);
+                            #endif
                             m_buffer[ipacket.Frame - m_PhysicFrame].Inputs[sba_Players[i]->ID] = ipacket.Input;
                             m_numReceived[ipacket.Frame - m_PhysicFrame]++;
                             m_numGot[ipacket.Frame - m_PhysicFrame].Player[sba_Players[i]->ID] = true;
@@ -218,7 +236,9 @@ namespace sba
 
                 sba::Space::Instance()->World->step(1 / 60.0f);
                 this->m_PhysicTime -= 1.0f / 60.0f;
+#ifdef NETWORKDEBUG
                 printf("Physic: %i\n", this->m_PhysicFrame);
+                #endif
                 this->m_PhysicFrame++;
                 a_rEndTime -= 1.0f / 60.0f;
                 assert(this->m_PhysicFrame != 2147483647);
@@ -256,7 +276,9 @@ namespace sba
     void CGameNetwork::Receive(SOCKET s)
     {
         sba_Network->SetBlockMode(s, true);
+#ifdef NETWORKDEBUG
         printf("Start Thread!\n");
+        #endif
         const int bufferSize = 1024;
         char buffer[bufferSize];
         while (this->m_Run)
@@ -265,19 +287,25 @@ namespace sba
             long dataLeft = sba_Network->Receive(buffer, bufferSize, s, false);
             if (dataLeft == -1)
             {
+#ifdef NETWORKDEBUG
                 printf("Connection lost\n");
+                #endif
                 this->m_Run = false;
                 break;
             }
             sba_Network->m_Mutex.lock();
             while (dataLeft > 0)
             {
+#ifdef NETWORKDEBUG
                 printf("Data left %d!\n", dataLeft);
+                #endif
                 sba::SReceivePacket* Packet = (sba::SReceivePacket*)buffer;
                 long packetSize = 4;
                 if (Packet->Head.Type == sba::EPacket::Init)
                 {
+#ifdef NETWORKDEBUG
                     printf("Received INIT %l!\n", dataLeft);
+                    #endif
                     sba::SInputPacket package;
                     memset(&package, 0, sizeof(sba::SInputPacket));
                     package.Head.Type = sba::EPacket::STick;
@@ -287,7 +315,9 @@ namespace sba
                         {
                             //send first 6 frames
                             package.Input.Player = sba_Players[i]->ID;
+#ifdef NETWORKDEBUG
                             printf("Send initial Data!\n");
+                            #endif
                             for (int j = 0; j < sba_Delay; ++j)
                             {
                                 package.Frame = j;
@@ -307,7 +337,9 @@ namespace sba
                             m_buffer[IPacket->Frame - m_PhysicFrame].Inputs[IPacket->Input.Player] = IPacket->Input;
                             m_numReceived[IPacket->Frame - m_PhysicFrame]++;
                             m_numGot[IPacket->Frame - m_PhysicFrame].Player[IPacket->Input.Player] = true;
+#ifdef NETWORKDEBUG
                             printf("received tick %d from player %d\n", IPacket->Frame, IPacket->Input.Player);
+                            #endif
                             break;
                         }
                     }
@@ -320,7 +352,9 @@ namespace sba
                     PlayOutBuffer* pbuffer = &this->m_buffer[IPacket->Frame - this->m_PhysicFrame];
                     pbuffer->Frame = IPacket->Frame;
                     memcpy(pbuffer->Inputs, IPacket->Input, sizeof(sba::SInputData)*IPacket->Players);
+#ifdef NETWORKDEBUG
                     printf("received tick %d\n", IPacket->Frame);
+                    #endif
                     //ship left
                     packetSize = sizeof(sba::SInputsPacket);
                 }
@@ -329,7 +363,9 @@ namespace sba
             }
             sba_Network->m_Mutex.unlock();
         }
+#ifdef NETWORKDEBUG
         printf("End Thread!\n");
+        #endif
         
     }
 

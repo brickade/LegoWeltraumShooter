@@ -83,13 +83,6 @@ namespace Menu
                     //create first player
                 this->m_Displayed = Lobby;
                 sba_Space->CreatePlayer(0, window);
-
-				//bot
-                //TODO: REMOVE THIS
-                //DON'T FORGET
-                printf("Creating extra Player\n");
-                sba_Space->CreatePlayer(1, window);
-
                 break;
             case 3: //Multiplayer
                 this->m_Displayed = Network;

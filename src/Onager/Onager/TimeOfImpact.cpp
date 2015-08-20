@@ -181,26 +181,35 @@ namespace ong
 
 		if (numHits == 0)
 			return 1.0f;
-
+        #ifdef RELEASEDEBUG
         printf("START\n");
+        #endif
 		while (numHits < MAX_HITS && (t1 - t0) > MIN_INTERVAL)
         {
+#ifdef RELEASEDEBUG
             printf("NUmHits: %i\n", numHits);
             printf("t0: %f\n", t0);
             printf("t1: %f\n", t1);
+#endif
             float t = 0.5f *(t0 + t1);
+#ifdef RELEASEDEBUG
             printf("t: %f\n", t);
+#endif
 
 			if (overlap(a, b, Transform(t*v, Quaternion(vec3(0, 0, 0), 1))))
 			{
 				++numHits;
                 t1 = t;
-                printf("HIT %f\n",t1);
+#ifdef RELEASEDEBUG
+                printf("HIT %f\n", t1);
+#endif
 			}
 			else
 			{
                 t0 = t;
-                printf("Not Hit %f\n",t0);
+#ifdef RELEASEDEBUG
+                printf("Not Hit %f\n", t0);
+#endif
 				//vec3 pa = ca + t*v;
 				//float d = dot(b->closestPoint(pa) - pa, v);
 				//if (d > 0)
@@ -217,7 +226,9 @@ namespace ong
 				//}
 			}
         }
+#ifdef RELEASEDEBUG
         printf("End\n");
+#endif
 
 		if (t1 >= maxT)
 			return 1.0f; //no collision

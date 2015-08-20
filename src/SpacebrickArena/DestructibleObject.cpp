@@ -39,8 +39,10 @@ namespace sba
 		//prevent mass self destruction
 		int destructionCounter = sba_Space->DestructionManager->GetDestructionCounter();
 		if ((destrObjA && destrObjB) && (!destrObjA->CheckForParent(destrObjB, destructionCounter) || !destrObjB->CheckForParent(destrObjA, destructionCounter)))
-		{
+        {
+#ifdef DESTRUCTIONDEBUG
 			printf("destruction prevented! \n");
+            #endif
 			return;
 		}
 
@@ -96,11 +98,13 @@ namespace sba
 	}
 
 	bool CDestructibleObject::CheckForParent(TheBrick::CGameObject* a_pOther, int a_DestructionCounter)
-	{
+    {
+#ifdef DESTRUCTIONDEBUG
 		if (a_pOther == m_pDestructionParent)
 		{
 			printf("destrTime: %d, destrCounter: %d\n", m_DestructionTime, a_DestructionCounter);
 		}
+        #endif
 		return !(a_pOther == m_pDestructionParent && m_DestructionTime > a_DestructionCounter - CDestructionManager::DESTRUCTION_COOLDOWN);
 	}
 }

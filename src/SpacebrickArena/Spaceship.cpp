@@ -360,8 +360,6 @@ namespace sba
                 this->m_Killed = true;
             }
         }
-
-		printf("damage: %i\n", damage);
 	}
 
 
