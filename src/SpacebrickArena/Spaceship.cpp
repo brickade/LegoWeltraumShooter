@@ -169,7 +169,7 @@ namespace sba
                 }
                 if (bull->m_ID != TheBrick::Laser)
                 {
-                    sba_SoundPlayer->PlaySound("explosion_4", false, false, std::stof(sba_Options->GetValue("SoundVolume")), pos, PuRe_Vector3F(0.0f, 0.0f, 0.0f), PuRe_Vector2F(1.0f, 10.0f));
+                    sba_SoundPlayer->PlaySound("explosion_4", false, true, std::stof(sba_Options->GetValue("SoundVolume")), pos, PuRe_Vector3F(0.0f, 0.0f, 0.0f), PuRe_Vector2F(1.0f, 10.0f));
                     bull->m_Collided = true;
                 }
 

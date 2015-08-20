@@ -148,9 +148,7 @@ namespace Menu
             sba_SoundPlayer->PlaySound("menu_confirm", false, true, std::stof(sba_Options->GetValue("SoundVolume")));
             if (this->m_ShipSelect)
             {
-                /*if (sba_Players.size() > 1 && this->m_pNavigation->GetFocusedElementId() == 0)
-                {*/
-                if (this->m_pNavigation->GetFocusedElementId() == 0)
+                if (sba_Players.size() > 1 && this->m_pNavigation->GetFocusedElementId() == 0)
                 {
                     this->m_pNetwork->SendCommand();
                     this->m_Start = true;

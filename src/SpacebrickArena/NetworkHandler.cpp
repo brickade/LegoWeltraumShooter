@@ -261,7 +261,7 @@ namespace sba
 
         if (a_pInput->KeyPressed(a_pInput->Backspace) && text->length() != 0)
             *text = text->substr(0, text->length() - 1);
-        if (a_What == EUpdate::Name&&text->length() < MaxName || a_What != EUpdate::Name&&text->length() < MaxLength)
+        if (a_What == EUpdate::Port&&text->length() < 5 ||a_What == EUpdate::Name&&text->length() < MaxName || a_What != EUpdate::Name&&text->length() < MaxLength)
         {
             //handle numbers for all
             if (a_pInput->KeyPressed(a_pInput->Zero) || a_pInput->KeyPressed(a_pInput->Num_Zero))
@@ -287,6 +287,9 @@ namespace sba
             //handle . for IP only
             if (a_What == EUpdate::IP&& a_pInput->KeyPressed(a_pInput->Period))
                 *text += ".";
+
+            if (a_What == EUpdate::Port&&std::stof(*text) > 65535)
+                *text = "65535";
 
             //Handle A-Z for Name Update only
             if (a_What == EUpdate::Name)
