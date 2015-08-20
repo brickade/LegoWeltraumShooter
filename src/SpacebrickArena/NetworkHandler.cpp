@@ -287,10 +287,10 @@ namespace sba
             if (a_What == EUpdate::IP&& a_pInput->KeyPressed(a_pInput->Period))
                 *text += ".";
 
-            if (text->length() != 0)
+            if (a_What == EUpdate::Port&&text->length() != 0)
             {
                 int num = std::stoi(*text);
-                if (a_What == EUpdate::Port&&num > 65535)
+                if (num > 65535)
                     *text = "65535";
             }
 
