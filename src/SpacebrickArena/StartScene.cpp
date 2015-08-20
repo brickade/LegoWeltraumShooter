@@ -29,12 +29,8 @@ namespace sba
     // **************************************************************************
     int CStartScene::Update(PuRe_Application* a_pApplication)
     {
-        PuRe_IInput* input = a_pApplication->GetInput();
         PuRe_Timer* timer = a_pApplication->GetTimer();
-        PuRe_IGraphics* graphics = a_pApplication->GetGraphics();
-        PuRe_IPlatform* platform = a_pApplication->GetPlatform();
-        PuRe_IWindow* window = a_pApplication->GetWindow();
-        this->m_Timer += 0.01f;
+        this->m_Timer += timer->GetElapsedSeconds()/2.0f;
 
         //We should have drawn something, so now initialize
         float time = PuRe_PI*1.3f;
